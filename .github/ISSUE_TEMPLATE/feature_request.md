@@ -1,17 +1,17 @@
 ---
 name: Feature request
 about: Suggest an idea for this project
-title: ''
+title: 'Issue #:'
 labels: ''
 assignees: ''
 
 ---
 
-### Description
+## Description
 
 
-### Tasks
+## Tasks
 - [ ] Task 1
 
 
-### Linked issues
+## Linked issues

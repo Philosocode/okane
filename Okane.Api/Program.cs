@@ -1,6 +1,9 @@
+using Okane.Api.Infrastructure.AppSettings;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Services.
+builder.AddAppSettingsJsonFiles();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHealthChecks();
 builder.Services.AddSwaggerGen();

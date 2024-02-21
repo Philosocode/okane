@@ -18,7 +18,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseHealthChecks("/health");
+app.UseHealthChecks("/api/health");
 
 app.Run();

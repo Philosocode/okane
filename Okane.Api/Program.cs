@@ -1,14 +1,22 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Okane.Api.Infrastructure.AppSettings;
+using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.HealthCheck;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Services.
 builder.AddAppSettingsJsonFiles();
+builder.Services.Configure<DbSettings>(builder.Configuration.GetSection(nameof(DbSettings)));
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddHealthChecks();
+builder.Services.AddDbContext<ApiDbContext>();
+builder.Services.AddHealthChecks().AddDbContextCheck<ApiDbContext>();
 builder.Services.AddSwaggerGen();
+
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddUserSecrets<Program>();
+}
 
 var app = builder.Build();
 

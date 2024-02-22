@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Okane.Api.Infrastructure.AppSettings;
+using Okane.Api.Infrastructure.HealthCheck;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseHealthChecks("/api/health");
+
+app.UseHealthChecks("/api/health", new HealthCheckOptions()
+{
+    ResponseWriter = HealthCheckResponseWriter.WriteResponse
+});
 
 app.Run();

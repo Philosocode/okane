@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Okane.Api.Features.Auth.Models;
-using Okane.Api.Shared.Endpoints;
+using Okane.Api.Infrastructure.Database;
 using RegisterRequest = Okane.Api.Features.Auth.Dtos.Requests.RegisterRequest;
 
 namespace Okane.Api.Features.Auth.Endpoints;
@@ -34,6 +35,9 @@ public static class AuthEndpoints
 
         group.MapPost("/register", HandleRegister)
             .WithName(AuthEndpointNames.Register);
+
+        group.MapPost("/login", HandleLogin)
+            .WithName(AuthEndpointNames.Login);
     }
     
     // Handlers.
@@ -79,6 +83,32 @@ public static class AuthEndpoints
         }
 
         return TypedResults.Ok("Successfully registered");
+    }
+
+    private static async Task<Results<Ok<ApiUser>, EmptyHttpResult, ProblemHttpResult>> HandleLogin(
+        ApiDbContext db,
+        [FromBody] LoginRequest request, 
+        [FromServices] IServiceProvider serviceProvider)
+    {
+        var signInManager = serviceProvider.GetRequiredService<SignInManager<ApiUser>>();
+        signInManager.AuthenticationScheme = IdentityConstants.ApplicationScheme;
+
+        var result = await signInManager.PasswordSignInAsync(
+            request.Email, request.Password, true, lockoutOnFailure: true
+        );
+
+        if (!result.Succeeded)
+        {
+            return TypedResults.Problem(result.ToString(), statusCode: StatusCodes.Status401Unauthorized);
+        }
+
+        var user = await db.
+            Users.
+            Where(u => u.Email == request.Email).
+            AsNoTracking().
+            SingleOrDefaultAsync();
+
+        return TypedResults.Ok(user);
     }
     
     // Helpers.

@@ -50,7 +50,9 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.UseHealthChecks("/api/health", new HealthCheckOptions()
+app.UsePathBase("/api");
+
+app.UseHealthChecks("/health", new HealthCheckOptions()
 {
     ResponseWriter = HealthCheckResponseWriter.WriteResponse
 });

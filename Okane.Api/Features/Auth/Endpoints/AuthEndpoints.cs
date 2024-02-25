@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
@@ -15,6 +16,7 @@ public static class AuthEndpointNames
 {
     public const string Register = "Register";
     public const string Login = "Login";
+    public const string Logout = "Logout";
 }
 
 // The code in this class has been taken from https://github.com/dotnet/aspnetcore/blob/release/8.0/src/Identity/Core/src/IdentityApiEndpointRouteBuilderExtensions.cs
@@ -38,6 +40,10 @@ public static class AuthEndpoints
 
         group.MapPost("/login", HandleLogin)
             .WithName(AuthEndpointNames.Login);
+
+        group.MapPost("/logout", HandleLogout)
+            .WithName(AuthEndpointNames.Logout)
+            .RequireAuthorization();
     }
     
     // Handlers.
@@ -109,6 +115,14 @@ public static class AuthEndpoints
             SingleOrDefaultAsync();
 
         return TypedResults.Ok(user);
+    }
+
+    private static async Task<NoContent> HandleLogout(
+        HttpContext context,
+        SignInManager<ApiUser> signInManager)
+    {
+        await context.SignOutAsync();
+        return TypedResults.NoContent();
     }
     
     // Helpers.

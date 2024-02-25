@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Okane.Api.Features.Auth.Extensions;
 using Okane.Api.Features.Auth.Models;
 using Okane.Api.Infrastructure.AppSettings;
 using Okane.Api.Infrastructure.Database;
@@ -13,21 +14,7 @@ builder.Services.Configure<DbSettings>(builder.Configuration.GetSection(nameof(D
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<ApiDbContext>();
 
-builder.Services.AddAuthorization();
-builder.Services.AddIdentityApiEndpoints<ApiUser>(options => 
-    {
-        options.Password.RequireDigit = true;
-        options.Password.RequireLowercase = true;
-        options.Password.RequireUppercase = true;
-        options.Password.RequireNonAlphanumeric = true;
-        options.Password.RequiredLength = 12; // Min length
-        
-        // TODO #16: Users need to confirm their account before they can login.
-        // options.SignIn.RequireConfirmedAccount = true;
-
-        options.Lockout.AllowedForNewUsers = true; 
-    })
-    .AddEntityFrameworkStores<ApiDbContext>();
+builder.Services.AddIdentityAuth();
 
 builder.Services.AddHealthChecks().AddDbContextCheck<ApiDbContext>();
 builder.Services.AddSwaggerGen();

@@ -1,5 +1,5 @@
 // Internal
-import { isErrorWithMessage } from '@/shared/utils/errors'
+import { isErrorWithMessage } from '@/shared/utils/errorUtils'
 
 enum MIMEType {
   JSON = 'application/json',

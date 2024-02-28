@@ -41,6 +41,8 @@ async function APIClient<TResponse>(endpoint: string, options?: RequestInit): Pr
     const url = `/api/${formatEndpoint(endpoint)}`
     const response = await window.fetch(url, config)
 
+    console.log('response', response)
+
     data = await response.json()
 
     if (response.ok) return data
@@ -57,14 +59,17 @@ function formatEndpoint(endpoint: string) {
 APIClient.get = <TResponse>(endpoint: string, customConfig?: RequestInit) =>
   APIClient<TResponse>(endpoint, { ...customConfig, method: HTTPMethod.GET })
 
-APIClient.post = <TResponse>(endpoint: string, body: BodyInit | null, customConfig?: RequestInit) =>
+APIClient.post = <TResponse>(endpoint: string, body: any, customConfig?: RequestInit) =>
   APIClient<TResponse>(endpoint, { ...customConfig, body, method: HTTPMethod.POST })
 
-APIClient.put = <TResponse>(endpoint: string, body: BodyInit | null, customConfig?: RequestInit) =>
+APIClient.put = <TResponse>(endpoint: string, body: any, customConfig?: RequestInit) =>
   APIClient<TResponse>(endpoint, { ...customConfig, body, method: HTTPMethod.PUT })
 
-APIClient.patch = <TResponse>(endpoint: string, body: BodyInit | null, customConfig?: RequestInit) =>
-  APIClient<TResponse>(endpoint, { ...customConfig, body, method: HTTPMethod.PATCH })
+APIClient.patch = <TResponse>(
+  endpoint: string,
+  body: BodyInit | null,
+  customConfig?: RequestInit,
+) => APIClient<TResponse>(endpoint, { ...customConfig, body, method: HTTPMethod.PATCH })
 
 APIClient.delete = <TResponse>(endpoint: string, customConfig?: RequestInit) =>
   APIClient<TResponse>(endpoint, { ...customConfig, method: HTTPMethod.DELETE })

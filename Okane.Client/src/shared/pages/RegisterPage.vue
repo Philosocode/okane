@@ -1,21 +1,52 @@
 <script setup lang="ts">
 // External
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 // Internal
-import PageLayout from '@/shared/layouts/PageLayout.vue'
 import FormInput from '@/features/forms/components/FormInput.vue'
+import PageLayout from '@/shared/layouts/PageLayout.vue'
 
-const formData = ref({
-  email: "",
-  name: "",
-  password: ""
+import { RouteName } from '@/features/navigation/router'
+
+import { isValidPassword } from '@/features/auth/utils/authUtils'
+import { omitObjectKeys } from '@/shared/utils/objectUtils'
+
+import { APIClient } from '@/shared/services/APIClient'
+
+const router = useRouter()
+
+const formState = ref({
+  email: '',
+  name: '',
+  password: '',
+  passwordConfirm: '',
 })
 
-function handleSubmit(event: Event) {
-  console.log(event)
-}
+const formIsValid = computed<boolean>(() => {
+  const { email, name, password, passwordConfirm } = formState.value
+  const validations = [
+    Boolean(email),
+    Boolean(name),
+    Boolean(password),
+    Boolean(passwordConfirm),
+    password == passwordConfirm,
+    isValidPassword(password)[0],
+  ]
 
+  return !validations.includes(false)
+})
+
+async function handleSubmit() {
+  if (!formIsValid.value) return
+  const postData = omitObjectKeys(formState.value, ['passwordConfirm'])
+  try {
+    await APIClient.post('/auth/register', postData)
+    await router.push({ name: RouteName.LoginPage })
+  } catch (err) {
+    console.error(err)
+  }
+}
 </script>
 
 <template>
@@ -24,19 +55,16 @@ function handleSubmit(event: Event) {
 
     <form @submit.prevent="handleSubmit">
       <fieldset>
-        <div class="form-group">
-          <FormInput label="Name" name="name" type="text" v-model="formData.name" />
-        </div>
-
-        <div class="form-group">
-          <FormInput label="Email" name="email" type="email" v-model="formData.email" />
-        </div>
-
-        <div class="form-group">
-          <FormInput label="Password" name="password" type="password" v-model="formData.password" />
-        </div>
-
-        <button type="submit">Register</button>
+        <FormInput label="Name" name="name" type="text" v-model="formState.name" />
+        <FormInput label="Email" name="email" type="email" v-model="formState.email" />
+        <FormInput label="Password" name="password" type="password" v-model="formState.password" />
+        <FormInput
+          label="Confirm password"
+          name="passwordConfirm"
+          type="password"
+          v-model="formState.passwordConfirm"
+        />
+        <button :disabled="!formIsValid" type="submit">Register</button>
       </fieldset>
     </form>
   </PageLayout>
@@ -48,10 +76,5 @@ fieldset {
   flex-direction: column;
   gap: 1rem;
   max-width: 12rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
 }
 </style>

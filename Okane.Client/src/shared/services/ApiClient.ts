@@ -22,7 +22,7 @@ enum HTTPMethod {
  * @see https://kentcdodds.com/blog/replace-axios-with-a-simple-custom-fetch-wrapper
  * @see https://stackoverflow.com/a/65690669
  */
-async function APIClient<TResponse>(endpoint: string, options?: RequestInit): Promise<TResponse> {
+async function ApiClient<TResponse>(endpoint: string, options?: RequestInit): Promise<TResponse> {
   const { body, ...customConfig } = options ?? {}
 
   const config: RequestInit = {
@@ -41,8 +41,6 @@ async function APIClient<TResponse>(endpoint: string, options?: RequestInit): Pr
     const url = `/api/${formatEndpoint(endpoint)}`
     const response = await window.fetch(url, config)
 
-    console.log('response', response)
-
     data = await response.json()
 
     if (response.ok) return data
@@ -56,22 +54,22 @@ function formatEndpoint(endpoint: string) {
   return endpoint.startsWith('/') ? endpoint.substring(1) : endpoint
 }
 
-APIClient.get = <TResponse>(endpoint: string, customConfig?: RequestInit) =>
-  APIClient<TResponse>(endpoint, { ...customConfig, method: HTTPMethod.GET })
+ApiClient.get = <TResponse>(endpoint: string, customConfig?: RequestInit) =>
+  ApiClient<TResponse>(endpoint, { ...customConfig, method: HTTPMethod.GET })
 
-APIClient.post = <TResponse>(endpoint: string, body: any, customConfig?: RequestInit) =>
-  APIClient<TResponse>(endpoint, { ...customConfig, body, method: HTTPMethod.POST })
+ApiClient.post = <TResponse>(endpoint: string, body: any, customConfig?: RequestInit) =>
+  ApiClient<TResponse>(endpoint, { ...customConfig, body, method: HTTPMethod.POST })
 
-APIClient.put = <TResponse>(endpoint: string, body: any, customConfig?: RequestInit) =>
-  APIClient<TResponse>(endpoint, { ...customConfig, body, method: HTTPMethod.PUT })
+ApiClient.put = <TResponse>(endpoint: string, body: any, customConfig?: RequestInit) =>
+  ApiClient<TResponse>(endpoint, { ...customConfig, body, method: HTTPMethod.PUT })
 
-APIClient.patch = <TResponse>(
+ApiClient.patch = <TResponse>(
   endpoint: string,
   body: BodyInit | null,
   customConfig?: RequestInit,
-) => APIClient<TResponse>(endpoint, { ...customConfig, body, method: HTTPMethod.PATCH })
+) => ApiClient<TResponse>(endpoint, { ...customConfig, body, method: HTTPMethod.PATCH })
 
-APIClient.delete = <TResponse>(endpoint: string, customConfig?: RequestInit) =>
-  APIClient<TResponse>(endpoint, { ...customConfig, method: HTTPMethod.DELETE })
+ApiClient.delete = <TResponse>(endpoint: string, customConfig?: RequestInit) =>
+  ApiClient<TResponse>(endpoint, { ...customConfig, method: HTTPMethod.DELETE })
 
-export { APIClient }
+export { ApiClient }

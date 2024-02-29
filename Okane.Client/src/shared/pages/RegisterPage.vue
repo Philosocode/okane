@@ -12,7 +12,7 @@ import { RouteName } from '@/features/navigation/services/router'
 import { isValidPassword } from '@/features/auth/utils/authUtils'
 import { omitObjectKeys } from '@/shared/utils/objectUtils'
 
-import { APIClient } from '@/shared/services/APIClient'
+import { ApiClient } from '@/shared/services/ApiClient'
 
 const router = useRouter()
 
@@ -41,7 +41,7 @@ async function handleSubmit() {
   if (!formIsValid.value) return
   const postData = omitObjectKeys(formState.value, ['passwordConfirm'])
   try {
-    await APIClient.post('/auth/register', postData)
+    await ApiClient.post('/auth/register', postData)
     await router.push({ name: RouteName.LoginPage })
   } catch (err) {
     console.error(err)

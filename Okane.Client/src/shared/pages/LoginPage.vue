@@ -15,7 +15,7 @@ import { useAuthStore } from '@/features/auth/stores/useAuthStore'
 
 import { isValidPassword } from '@/features/auth/utils/authUtils'
 
-import { APIClient } from '@/shared/services/APIClient'
+import { ApiClient } from '@/shared/services/ApiClient'
 
 const router = useRouter()
 
@@ -37,7 +37,7 @@ async function handleSubmit() {
   if (!formIsValid.value) return
 
   try {
-    const user = await APIClient.post<User>('/auth/login', formState.value)
+    const user = await ApiClient.post<User>('/auth/login', formState.value)
     authStore.setAuthUser(user)
     await router.push({ name: RouteName.DashboardPage })
   } catch (err) {

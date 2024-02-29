@@ -7,17 +7,17 @@ import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
 // Internal
 import NavBar from '@/features/navigation/components/NavBar.vue'
 
-import type { User } from '@/features/users/types/userTypes';
+import type { User } from '@/features/users/types/userTypes'
 
-import { useAuthStore } from '@/features/auth/stores/useAuthStore';
+import { useAuthStore } from '@/features/auth/stores/useAuthStore'
 
-import { APIClient } from '@/shared/services/APIClient';
+import { ApiClient } from '@/shared/services/ApiClient'
 
 const authStore = useAuthStore()
 
 onMounted(async () => {
   try {
-    const user = await APIClient.get<User>('/auth/self')
+    const user = await ApiClient.get<User>('/auth/self')
     authStore.setAuthUser(user)
   } catch (err) {
     console.error('Failed to fetch self:', err)
@@ -33,5 +33,4 @@ onMounted(async () => {
   <VueQueryDevtools />
 </template>
 
-<style>
-</style>
+<style></style>

@@ -1,5 +1,5 @@
 // Internal
-import { isErrorWithMessage } from '@/shared/utils/errorUtils'
+import { HttpStatusCode } from '@/shared/constants/httpStatusCodes'
 
 enum MIMEType {
   JSON = 'application/json',
@@ -36,17 +36,19 @@ async function ApiClient<TResponse>(endpoint: string, options?: RequestInit): Pr
 
   if (body) config.body = JSON.stringify(body)
 
-  let data
   try {
     const url = `/api/${formatEndpoint(endpoint)}`
     const response = await window.fetch(url, config)
 
-    data = await response.json()
+    if (response.status === HttpStatusCode.Unauthorized) {
+      window.location.reload()
+      throw new Error('Unauthenticated')
+    }
 
-    if (response.ok) return data
-    throw new Error(response.statusText)
+    const responseText = await response.text()
+    return responseText ? JSON.parse(responseText) : null
   } catch (err) {
-    return Promise.reject(isErrorWithMessage(err) ? err.message : data)
+    return Promise.reject(err)
   }
 }
 

@@ -1,11 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Okane.Api.Features.Auth.Dtos.Responses;
 using Okane.Api.Features.Auth.Models;
 using Okane.Api.Infrastructure.Database;
 using RegisterRequest = Okane.Api.Features.Auth.Dtos.Requests.RegisterRequest;
@@ -14,9 +16,10 @@ namespace Okane.Api.Features.Auth.Endpoints;
 
 public static class AuthEndpointNames
 {
-    public const string Register = "Register";
+    public const string GetSelf = "GetSelf";
     public const string Login = "Login";
     public const string Logout = "Logout";
+    public const string Register = "Register";
 }
 
 // The code in this class has been taken from https://github.com/dotnet/aspnetcore/blob/release/8.0/src/Identity/Core/src/IdentityApiEndpointRouteBuilderExtensions.cs
@@ -43,6 +46,10 @@ public static class AuthEndpoints
 
         group.MapPost("/logout", HandleLogout)
             .WithName(AuthEndpointNames.Logout)
+            .RequireAuthorization();
+
+        group.MapGet("/self", HandleGetSelf)
+            .WithName(AuthEndpointNames.GetSelf)
             .RequireAuthorization();
     }
     
@@ -91,7 +98,7 @@ public static class AuthEndpoints
         return TypedResults.Ok("Successfully registered");
     }
 
-    private static async Task<Results<Ok<ApiUser>, EmptyHttpResult, ProblemHttpResult>> HandleLogin(
+    private static async Task<Results<Ok<UserResponse>, EmptyHttpResult, ProblemHttpResult>> HandleLogin(
         ApiDbContext db,
         [FromBody] LoginRequest request, 
         [FromServices] IServiceProvider serviceProvider)
@@ -111,6 +118,11 @@ public static class AuthEndpoints
         var user = await db.
             Users.
             Where(u => u.Email == request.Email).
+            Select(u => new UserResponse()
+            {
+                Email = u.Email ?? "",
+                Name = u.Name
+            }).
             AsNoTracking().
             SingleOrDefaultAsync();
 
@@ -123,6 +135,28 @@ public static class AuthEndpoints
     {
         await context.SignOutAsync();
         return TypedResults.NoContent();
+    }
+
+    private static async Task<Results<Ok<UserResponse>, ValidationProblem, NotFound>> HandleGetSelf(
+        ClaimsPrincipal claimsPrincipal, [FromServices] IServiceProvider serviceProvider)
+    {
+        var userManager = serviceProvider.GetRequiredService<UserManager<ApiUser>>();
+        if (await userManager.GetUserAsync(claimsPrincipal) is not {} user)
+        {
+            return TypedResults.NotFound();
+        }
+
+        string? email = await userManager.GetEmailAsync(user);
+        if (email is null)
+        {
+            throw new NotSupportedException("Users must have an email.");
+        }
+
+        return TypedResults.Ok(new UserResponse()
+        {
+            Email = email,
+            Name = user.Name
+        });
     }
     
     // Helpers.

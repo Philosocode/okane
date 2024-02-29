@@ -3,7 +3,7 @@
 import { RouterLink } from 'vue-router'
 
 // Internal
-import { RouteName } from '@/features/navigation/router'
+import { RouteName } from '@/features/navigation/services/router'
 </script>
 
 <template>

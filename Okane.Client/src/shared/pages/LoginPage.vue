@@ -7,7 +7,7 @@ import { useRouter } from 'vue-router'
 import FormInput from '@/features/forms/components/FormInput.vue'
 import PageLayout from '@/shared/layouts/PageLayout.vue'
 
-import { RouteName } from '@/features/navigation/router'
+import { RouteName } from '@/features/navigation/services/router'
 
 import { isValidPassword } from '@/features/auth/utils/authUtils'
 

@@ -1,7 +1,7 @@
 // Internal
 import { MIN_PASSWORD_LENGTH } from '@/features/auth/constants/authConstants'
 
-import type { PasswordChecks } from '@/features/auth/authTypes'
+import type { PasswordChecks } from '@/features/auth/types/authTypes'
 
 import * as stringUtils from '@/shared/utils/stringUtils'
 

@@ -9,6 +9,10 @@ import PageLayout from '@/shared/layouts/PageLayout.vue'
 
 import { RouteName } from '@/features/navigation/services/router'
 
+import type { User } from '@/features/users/types/userTypes'
+
+import { useAuthStore } from '@/features/auth/stores/useAuthStore'
+
 import { isValidPassword } from '@/features/auth/utils/authUtils'
 
 import { APIClient } from '@/shared/services/APIClient'
@@ -27,11 +31,14 @@ const formIsValid = computed<boolean>(() => {
   return !validations.includes(false)
 })
 
+const authStore = useAuthStore()
+
 async function handleSubmit() {
   if (!formIsValid.value) return
 
   try {
-    const user = await APIClient.post('/auth/login', formState.value)
+    const user = await APIClient.post<User>('/auth/login', formState.value)
+    authStore.setAuthUser(user)
     await router.push({ name: RouteName.DashboardPage })
   } catch (err) {
     console.error(err)

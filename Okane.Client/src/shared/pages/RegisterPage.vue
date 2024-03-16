@@ -9,11 +9,12 @@ import PageLayout from '@/shared/layouts/PageLayout.vue'
 
 import { RouteName } from '@/features/navigation/services/router'
 
+import { useAuthStore } from '@/features/auth/stores/useAuthStore'
+
 import { isValidPassword } from '@/features/auth/utils/authUtils'
 import { omitObjectKeys } from '@/shared/utils/objectUtils'
 
-import { ApiClient } from '@/shared/services/ApiClient'
-
+const authStore = useAuthStore()
 const router = useRouter()
 
 const formState = ref({
@@ -41,7 +42,7 @@ async function handleSubmit() {
   if (!formIsValid.value) return
   const postData = omitObjectKeys(formState.value, ['passwordConfirm'])
   try {
-    await ApiClient.post('/auth/register', postData)
+    await authStore.register(postData.email, postData.name, postData.password)
     await router.push({ name: RouteName.LoginPage })
   } catch (err) {
     console.error(err)
@@ -58,12 +59,8 @@ async function handleSubmit() {
         <FormInput label="Name" name="name" type="text" v-model="formState.name" />
         <FormInput label="Email" name="email" type="email" v-model="formState.email" />
         <FormInput label="Password" name="password" type="password" v-model="formState.password" />
-        <FormInput
-          label="Confirm password"
-          name="passwordConfirm"
-          type="password"
-          v-model="formState.passwordConfirm"
-        />
+        <FormInput label="Confirm password" name="passwordConfirm" type="password"
+          v-model="formState.passwordConfirm" />
         <button :disabled="!formIsValid" type="submit">Register</button>
       </fieldset>
     </form>
@@ -77,4 +74,4 @@ fieldset {
   gap: 1rem;
   max-width: 12rem;
 }
-</style>
+</style>@/shared/services/router@/features/auth/utils/auth

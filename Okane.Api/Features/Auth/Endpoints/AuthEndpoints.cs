@@ -4,13 +4,16 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Okane.Api.Features.Auth.Config;
+using Okane.Api.Features.Auth.Dtos.Requests;
 using Okane.Api.Features.Auth.Dtos.Responses;
-using Okane.Api.Features.Auth.Models;
+using Okane.Api.Features.Auth.Entities;
+using Okane.Api.Features.Auth.Extensions;
+using Okane.Api.Features.Auth.Services;
 using Okane.Api.Infrastructure.Database;
-using RegisterRequest = Okane.Api.Features.Auth.Dtos.Requests.RegisterRequest;
 
 namespace Okane.Api.Features.Auth.Endpoints;
 
@@ -20,40 +23,43 @@ public static class AuthEndpointNames
     public const string Login = "Login";
     public const string Logout = "Logout";
     public const string Register = "Register";
+    public const string RefreshToken = "RefreshToken";
+    public const string RevokeToken = "RevokeToken";
 }
 
-// The code in this class has been taken from https://github.com/dotnet/aspnetcore/blob/release/8.0/src/Identity/Core/src/IdentityApiEndpointRouteBuilderExtensions.cs
-// Currently (.NET 8.0), the endpoints exposed by MapIdentityApi are restrictive and can't be
-// customized. For example, when registering a user, you can only provide an email and password and
-// nothing else. Want to include a UserName? Nope, can't do that.
-// 
-// If / when the Identity endpoints have been updated to support the customization requirements by
-// this API, this class should be removed.
+// A lot of code in this class has been heavily borrowed from https://github.com/dotnet/aspnetcore/blob/476e2aa0c7cb25d6a9c774228e5c549c77620108/src/Identity/Core/src/IdentityApiEndpointRouteBuilderExtensions.cs#L57
 public static class AuthEndpoints
 {
     // Validate the email address using DataAnnotations like the UserValidator does when RequireUniqueEmail = true.
     private static readonly EmailAddressAttribute EmailAddressAttribute = new();
-    
+
     public static void MapAuthEndpoints(this IEndpointRouteBuilder app)
     {
-        RouteGroupBuilder group = app.MapGroup($"/auth").WithTags("auth");
+        RouteGroupBuilder routeGroup = app.MapGroup("/auth").WithTags("auth");
 
-        group.MapPost("/register", HandleRegister)
+        routeGroup.MapPost("/register", HandleRegister)
             .WithName(AuthEndpointNames.Register);
 
-        group.MapPost("/login", HandleLogin)
+        routeGroup.MapPost("/login", HandleLogin)
             .WithName(AuthEndpointNames.Login);
 
-        group.MapPost("/logout", HandleLogout)
+        routeGroup.MapPost("/logout", HandleLogout)
             .WithName(AuthEndpointNames.Logout)
             .RequireAuthorization();
 
-        group.MapGet("/self", HandleGetSelf)
+        routeGroup.MapPost("/refresh-token", HandleRefreshToken)
+            .WithName(AuthEndpointNames.RefreshToken);
+
+        routeGroup.MapPost("/revoke-token", HandleRevokeRefreshToken)
+            .WithName(AuthEndpointNames.RevokeToken)
+            .RequireAuthorization();
+
+        routeGroup.MapGet("/self", HandleGetSelf)
             .WithName(AuthEndpointNames.GetSelf)
             .RequireAuthorization();
     }
-    
-    // Handlers.
+
+    // Handlers
     private static async Task<Results<Ok<string>, ValidationProblem>> HandleRegister(
         HttpContext context,
         [FromBody] RegisterRequest request,
@@ -78,18 +84,21 @@ public static class AuthEndpoints
 
         if (string.IsNullOrEmpty(request.Name))
         {
-            IdentityError[] errorResult = [new()
-            {
-                Code = "EmptyName",
-                Description = "A name is required."
-            }];
+            IdentityError[] errorResult =
+            [
+                new()
+                {
+                    Code = "EmptyName",
+                    Description = "A name is required."
+                }
+            ];
             return CreateValidationProblem(IdentityResult.Failed(errorResult));
         }
 
         var user = new ApiUser { Email = email, Name = request.Name };
         await userStore.SetUserNameAsync(user, email, CancellationToken.None);
-        var result = await userManager.CreateAsync(user, request.Password);
 
+        var result = await userManager.CreateAsync(user, request.Password);
         if (!result.Succeeded)
         {
             return CreateValidationProblem(result);
@@ -98,68 +107,189 @@ public static class AuthEndpoints
         return TypedResults.Ok("Successfully registered");
     }
 
-    private static async Task<Results<Ok<UserResponse>, EmptyHttpResult, ProblemHttpResult>> HandleLogin(
-        ApiDbContext db,
-        [FromBody] LoginRequest request, 
-        [FromServices] IServiceProvider serviceProvider)
+    private static async Task<Results<Ok<LoginResponse>, EmptyHttpResult, ProblemHttpResult>>
+        HandleLogin(
+            ApiDbContext db,
+            ITokenService tokenService,
+            HttpResponse response,
+            JwtSettings jwtSettings,
+            [FromBody] LoginRequest request,
+            [FromServices] IServiceProvider serviceProvider)
     {
         var signInManager = serviceProvider.GetRequiredService<SignInManager<ApiUser>>();
         signInManager.AuthenticationScheme = IdentityConstants.ApplicationScheme;
 
-        var result = await signInManager.PasswordSignInAsync(
+        var signIn = await signInManager.PasswordSignInAsync(
             request.Email, request.Password, true, lockoutOnFailure: true
         );
 
-        if (!result.Succeeded)
+        if (!signIn.Succeeded)
         {
-            return TypedResults.Problem(result.ToString(), statusCode: StatusCodes.Status401Unauthorized);
+            return TypedResults.Problem(signIn.ToString(),
+                statusCode: StatusCodes.Status401Unauthorized);
         }
 
-        var user = await db.
-            Users.
-            Where(u => u.Email == request.Email).
-            Select(u => new UserResponse()
-            {
-                Email = u.Email ?? "",
-                Name = u.Name
-            }).
-            AsNoTracking().
-            SingleOrDefaultAsync();
+        var user = await db.Users.SingleOrDefaultAsync(u => u.Email == request.Email);
 
-        return TypedResults.Ok(user);
+        if (user is null)
+        {
+            return TypedResults.Problem(signIn.ToString(),
+                statusCode: StatusCodes.Status500InternalServerError);
+        }
+
+        string email = user.Email ?? "";
+        string jwtToken = tokenService.GenerateJwtToken(user.Id);
+        RefreshToken refreshToken = await tokenService.GenerateRefreshToken();
+
+        user.RefreshTokens.Add(refreshToken);
+        await db.SaveChangesAsync();
+
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Expires = DateTime.UtcNow.AddDays(jwtSettings.RefreshTokenTtlDays)
+        };
+        response.Cookies.Append("okane_refreshToken", refreshToken.Token, cookieOptions);
+        
+        var loginResponse = new LoginResponse
+        {
+            Email = email,
+            JwtToken = jwtToken,
+            Name = user.Name,
+        };
+
+        return TypedResults.Ok(loginResponse);
     }
 
-    private static async Task<NoContent> HandleLogout(
+    private static async Task<Results<NoContent, BadRequest<string>>> HandleLogout(
         HttpContext context,
+        HttpRequest request,
+        ApiDbContext db,
         SignInManager<ApiUser> signInManager)
     {
         await context.SignOutAsync();
+        
+        if (request.Cookies.TryGetValue("okane_refreshToken", out var refreshToken))
+        {
+            var user = await db.Users.SingleOrDefaultAsync(u => u.RefreshTokens.Any(
+                t => t.Token == refreshToken
+            ));
+            
+            if (user is null)
+            {
+                return TypedResults.BadRequest("Error removing refresh token");
+            }
+            
+            // user.RefreshTokens.RemoveAll(t => t.Token == refreshToken);
+            await db.SaveChangesAsync();
+        }
+        
+        return TypedResults.NoContent();
+    }
+
+    private static async Task<Results<Ok<string>, BadRequest>> HandleRefreshToken(
+        ApiDbContext db,
+        HttpContext context,
+        HttpRequest request,
+        ClaimsPrincipal claimsPrincipal,
+        [FromServices] ITokenService tokenService,
+        HttpResponse response,
+        UserManager<ApiUser> userManager,
+        JwtSettings jwtSettings)
+    {
+        if (!request.Cookies.TryGetValue("okane_refreshToken", out var refreshToken)
+            || refreshToken.IsNullOrEmpty())
+        {
+            return TypedResults.BadRequest();
+        }
+        
+        var user = await db.Users.
+            Include(apiUser => apiUser.RefreshTokens).
+            SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == refreshToken)
+        );
+        
+        if (user is null)
+        {
+            return TypedResults.BadRequest();
+        }
+
+        var foundToken = user.RefreshTokens.Single(t => t.Token == refreshToken);
+        if (foundToken.IsRevoked)
+        {
+            // Someone's trying to authenticate with a revoked token. Revoke all their tokens.
+            user.RefreshTokens = new List<RefreshToken>();
+            await db.SaveChangesAsync();
+        }
+
+        if (!foundToken.IsActive) return TypedResults.BadRequest();
+        string jwtToken = tokenService.GenerateJwtToken(user.Id);
+
+        // Only rotate the refresh token if it's about to expire (e.g. within 24 hours).
+        if (foundToken.ExpiresAt < DateTime.UtcNow.AddDays(-1))
+        {
+            var newRefreshToken = await tokenService.GenerateRefreshToken();
+            foundToken.RevokedAt = DateTime.UtcNow;
+            user.RefreshTokens.Add(newRefreshToken);
+
+            await db.SaveChangesAsync();
+
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTime.UtcNow.AddDays(jwtSettings.RefreshTokenTtlDays)
+            };
+            response.Cookies.Append("okane_refreshToken", newRefreshToken.Token, cookieOptions);
+        }
+
+        return TypedResults.Ok(jwtToken);
+    }
+
+    private static async Task<Results<NoContent, BadRequest<string>>> HandleRevokeRefreshToken(
+        ApiDbContext db,
+        RevokeRefreshTokenRequest tokenRequest,
+        HttpRequest request)
+    {
+        string tokenToRevoke = request.Cookies["okane_refreshToken"] ?? tokenRequest.RefreshToken;
+        if (tokenToRevoke.IsNullOrEmpty())
+        {
+            return TypedResults.BadRequest("A token is required.");
+        }
+
+        var user = await db.Users.
+            Include(apiUser => apiUser.RefreshTokens).
+            SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == tokenToRevoke)
+        );
+        
+        if (user is null)
+        {
+            return TypedResults.BadRequest("No user found for token.");
+        }
+
+        var refreshToken = user.RefreshTokens.Single(t => t.Token == tokenToRevoke);
+        refreshToken.RevokedAt = DateTime.UtcNow;
+
+        await db.SaveChangesAsync();
+
         return TypedResults.NoContent();
     }
 
     private static async Task<Results<Ok<UserResponse>, ValidationProblem, NotFound>> HandleGetSelf(
-        ClaimsPrincipal claimsPrincipal, [FromServices] IServiceProvider serviceProvider)
+        ClaimsPrincipal claimsPrincipal, ApiDbContext db)
     {
-        var userManager = serviceProvider.GetRequiredService<UserManager<ApiUser>>();
-        if (await userManager.GetUserAsync(claimsPrincipal) is not {} user)
-        {
-            return TypedResults.NotFound();
-        }
-
-        string? email = await userManager.GetEmailAsync(user);
-        if (email is null)
+        ApiUser? user = await db.Users.SingleOrDefaultAsync(u => u.Id == claimsPrincipal.GetUserId());
+        if (user is null)
         {
             throw new NotSupportedException("Users must have an email.");
         }
 
-        return TypedResults.Ok(new UserResponse()
+        return TypedResults.Ok(new UserResponse
         {
-            Email = email,
+            Email = user.Email,
             Name = user.Name
         });
     }
-    
-    // Helpers.
+
+    // Helpers
     private static ValidationProblem CreateValidationProblem(IdentityResult result)
     {
         // We expect a single error code and description in the normal case.

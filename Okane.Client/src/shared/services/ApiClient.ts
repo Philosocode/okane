@@ -1,48 +1,36 @@
 // Internal
-import { HttpStatusCode } from '@/shared/constants/httpStatusCodes'
+import { HTTPMethod, HTTPStatusCode, MIMEType } from '@/shared/constants/requests'
 
-enum MIMEType {
-  JSON = 'application/json',
-}
+import { useAuthStore } from '@/features/auth/stores/useAuthStore'
 
-enum HTTPMethod {
-  GET = 'GET',
-  POST = 'POST',
-  PUT = 'PUT',
-  PATCH = 'PATCH',
-  DELETE = 'DELETE',
-}
+import { removePrefixCharacters } from '@/shared/utils/stringUtils'
 
 /**
  * Custom wrapper around the Fetch API.
  *
- * @param endpoint
- * @param options
+ * @param method
+ * @param url
+ * @param optionOverrides
  *
- * @see https://kentcdodds.com/blog/replace-axios-with-a-simple-custom-fetch-wrapper
+ * @see https://jasonwatmore.com/vue-3-pinia-jwt-authentication-with-refresh-tokens-example-tutorial
  * @see https://stackoverflow.com/a/65690669
  */
-async function ApiClient<TResponse>(endpoint: string, options?: RequestInit): Promise<TResponse> {
-  const { body, ...customConfig } = options ?? {}
-
-  const config: RequestInit = {
-    method: body ? 'POST' : 'GET',
-    ...customConfig,
-    headers: {
-      'Content-Type': MIMEType.JSON,
-      ...customConfig.headers,
-    },
-  }
-
-  if (body) config.body = JSON.stringify(body)
+export async function APIClient<TResponse>(
+  method: HTTPMethod,
+  url: string,
+  optionOverrides: RequestInit = {},
+): Promise<TResponse> {
+  const requestOptions = getRequestOptions(method, optionOverrides)
+  const formattedURL = formatURL(url)
+  const authStore = useAuthStore()
 
   try {
-    const url = `/api/${formatEndpoint(endpoint)}`
-    const response = await window.fetch(url, config)
+    const response = await window.fetch(formattedURL, requestOptions)
 
-    if (response.status === HttpStatusCode.Unauthorized) {
-      window.location.reload()
-      throw new Error('Unauthenticated')
+    const authErrorStatusCodes = [HTTPStatusCode.Unauthorized, HTTPStatusCode.Forbidden]
+    if (authErrorStatusCodes.includes(response.status) && authStore.isLoggedIn) {
+      authStore.logout()
+      return Promise.reject('Unauthenticated.')
     }
 
     const responseText = await response.text()
@@ -52,26 +40,58 @@ async function ApiClient<TResponse>(endpoint: string, options?: RequestInit): Pr
   }
 }
 
-function formatEndpoint(endpoint: string) {
-  return endpoint.startsWith('/') ? endpoint.substring(1) : endpoint
+APIClient.get = <TResponse>(url: string, customConfig?: RequestInit) =>
+  APIClient<TResponse>(HTTPMethod.GET, url, customConfig)
+
+APIClient.post = <TResponse>(url: string, body?: any, customConfig?: RequestInit) =>
+  APIClient<TResponse>(HTTPMethod.POST, url, { ...customConfig, body })
+
+APIClient.put = <TResponse>(url: string, body?: any, customConfig?: RequestInit) =>
+  APIClient<TResponse>(HTTPMethod.PUT, url, { ...customConfig, body })
+
+APIClient.patch = <TResponse>(url: string, body: BodyInit | null, customConfig?: RequestInit) =>
+  APIClient<TResponse>(HTTPMethod.PATCH, url, { ...customConfig, body })
+
+APIClient.delete = <TResponse>(url: string, customConfig?: RequestInit) =>
+  APIClient<TResponse>(HTTPMethod.DELETE, url, customConfig)
+
+/**
+ * Get options to pass to fetch().
+ *
+ * @param method
+ * @param optionOverrides
+ */
+function getRequestOptions(method: HTTPMethod, optionOverrides: RequestInit): RequestInit {
+  const authStore = useAuthStore()
+  const { body, ...overrides } = optionOverrides
+
+  const headers: HeadersInit = {
+    'Content-Type': MIMEType.JSON,
+  }
+
+  if (authStore.isLoggedIn) {
+    headers.Authorization = `Bearer ${authStore.jwtToken}`
+  }
+
+  const options: RequestInit = {
+    method,
+    headers,
+    ...overrides,
+  }
+
+  if (body) {
+    options.body = JSON.stringify(body)
+  }
+
+  return options
 }
 
-ApiClient.get = <TResponse>(endpoint: string, customConfig?: RequestInit) =>
-  ApiClient<TResponse>(endpoint, { ...customConfig, method: HTTPMethod.GET })
-
-ApiClient.post = <TResponse>(endpoint: string, body: any, customConfig?: RequestInit) =>
-  ApiClient<TResponse>(endpoint, { ...customConfig, body, method: HTTPMethod.POST })
-
-ApiClient.put = <TResponse>(endpoint: string, body: any, customConfig?: RequestInit) =>
-  ApiClient<TResponse>(endpoint, { ...customConfig, body, method: HTTPMethod.PUT })
-
-ApiClient.patch = <TResponse>(
-  endpoint: string,
-  body: BodyInit | null,
-  customConfig?: RequestInit,
-) => ApiClient<TResponse>(endpoint, { ...customConfig, body, method: HTTPMethod.PATCH })
-
-ApiClient.delete = <TResponse>(endpoint: string, customConfig?: RequestInit) =>
-  ApiClient<TResponse>(endpoint, { ...customConfig, method: HTTPMethod.DELETE })
-
-export { ApiClient }
+/**
+ * Remove leading forward slashes from a URL.
+ *
+ * @param url
+ */
+function formatURL(url: string): string {
+  const formattedURL = removePrefixCharacters(url, '/')
+  return `/api/${formattedURL}`
+}

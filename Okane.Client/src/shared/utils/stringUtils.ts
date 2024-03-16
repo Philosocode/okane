@@ -40,3 +40,20 @@ export function isLowercaseString(s: string): boolean {
 export function isUppercaseString(s: string): boolean {
   return s === s.toUpperCase()
 }
+
+/**
+ * Remove consecutive "prefix" characters from the start of a string.
+ *
+ * @param s
+ * @param prefixCharacter
+ *
+ * @example removePrefixCharacter('/', '///abc') => 'abc'
+ */
+export function removePrefixCharacters(s: string, prefixCharacter: string): string {
+  let startIdx = 0
+  while (s[startIdx] === prefixCharacter && startIdx < s.length) {
+    startIdx++
+  }
+
+  return s.slice(startIdx)
+}

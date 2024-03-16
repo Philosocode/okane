@@ -75,3 +75,5 @@ fieldset {
   max-width: 12rem;
 }
 </style>@/shared/services/router@/features/auth/utils/auth
+@/features/auth/utils/auth.utils@/features/auth/stores/auth.store@/features/auth/useAuthStore
+@/features/navigation/services/router.service@/shared/utils/object.utils

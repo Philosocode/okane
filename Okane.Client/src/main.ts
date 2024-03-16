@@ -6,9 +6,9 @@ import { createPinia } from 'pinia'
 // Internal
 import App from '@/App.vue'
 
-import { router } from '@/features/navigation/services/router'
+import { router } from '@/features/navigation/router.service'
 
-import { useAuthStore } from '@/features/auth/stores/useAuthStore'
+import { useAuthStore } from '@/features/auth/useAuthStore'
 
 await startApp()
 

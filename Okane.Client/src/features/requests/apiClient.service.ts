@@ -1,9 +1,9 @@
 // Internal
-import { HTTPMethod, HTTPStatusCode, MIMEType } from '@/shared/constants/requests'
+import { HTTPMethod, HTTPStatusCode, MIMEType } from '@/features/requests/request.constants'
 
-import { useAuthStore } from '@/features/auth/stores/useAuthStore'
+import { useAuthStore } from '@/features/auth/useAuthStore'
 
-import { removePrefixCharacters } from '@/shared/utils/stringUtils'
+import { removePrefixCharacters } from '@/shared/utils/string.utils'
 
 /**
  * Custom wrapper around the Fetch API.
@@ -15,7 +15,7 @@ import { removePrefixCharacters } from '@/shared/utils/stringUtils'
  * @see https://jasonwatmore.com/vue-3-pinia-jwt-authentication-with-refresh-tokens-example-tutorial
  * @see https://stackoverflow.com/a/65690669
  */
-export async function APIClient<TResponse>(
+export async function apiClient<TResponse>(
   method: HTTPMethod,
   url: string,
   optionOverrides: RequestInit = {},
@@ -40,20 +40,20 @@ export async function APIClient<TResponse>(
   }
 }
 
-APIClient.get = <TResponse>(url: string, customConfig?: RequestInit) =>
-  APIClient<TResponse>(HTTPMethod.GET, url, customConfig)
+apiClient.get = <TResponse>(url: string, customConfig?: RequestInit) =>
+  apiClient<TResponse>(HTTPMethod.GET, url, customConfig)
 
-APIClient.post = <TResponse>(url: string, body?: any, customConfig?: RequestInit) =>
-  APIClient<TResponse>(HTTPMethod.POST, url, { ...customConfig, body })
+apiClient.post = <TResponse>(url: string, body?: any, customConfig?: RequestInit) =>
+  apiClient<TResponse>(HTTPMethod.POST, url, { ...customConfig, body })
 
-APIClient.put = <TResponse>(url: string, body?: any, customConfig?: RequestInit) =>
-  APIClient<TResponse>(HTTPMethod.PUT, url, { ...customConfig, body })
+apiClient.put = <TResponse>(url: string, body?: any, customConfig?: RequestInit) =>
+  apiClient<TResponse>(HTTPMethod.PUT, url, { ...customConfig, body })
 
-APIClient.patch = <TResponse>(url: string, body: BodyInit | null, customConfig?: RequestInit) =>
-  APIClient<TResponse>(HTTPMethod.PATCH, url, { ...customConfig, body })
+apiClient.patch = <TResponse>(url: string, body: BodyInit | null, customConfig?: RequestInit) =>
+  apiClient<TResponse>(HTTPMethod.PATCH, url, { ...customConfig, body })
 
-APIClient.delete = <TResponse>(url: string, customConfig?: RequestInit) =>
-  APIClient<TResponse>(HTTPMethod.DELETE, url, customConfig)
+apiClient.delete = <TResponse>(url: string, customConfig?: RequestInit) =>
+  apiClient<TResponse>(HTTPMethod.DELETE, url, customConfig)
 
 /**
  * Get options to pass to fetch().

@@ -3,9 +3,9 @@
 import { RouterLink } from 'vue-router'
 
 // Internal
-import { RouteName } from '@/features/navigation/services/router'
+import { RouteName } from '@/features/navigation/router.constants';
 
-import { useAuthStore } from '@/features/auth/stores/useAuthStore'
+import { useAuthStore } from '@/features/auth/useAuthStore'
 
 const authStore = useAuthStore()
 </script>
@@ -30,3 +30,5 @@ nav {
   gap: 1rem;
 }
 </style>
+@/features/auth/stores/auth.store@/features/auth/useAuthStore@/features/auth/useAuthStore@/features/auth/auth.store
+@/features/navigation/services/router.service./router.constants

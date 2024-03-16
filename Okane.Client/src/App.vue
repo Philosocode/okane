@@ -4,7 +4,7 @@ import { RouterView } from 'vue-router'
 import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
 
 // Internal
-import NavBar from '@/features/navigation/components/NavBar.vue'
+import NavBar from '@/features/navigation/NavBar.vue'
 </script>
 
 <template>

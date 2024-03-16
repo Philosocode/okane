@@ -8,17 +8,13 @@ import { RouteName } from '@/features/navigation/services/router'
 import { useAuthStore } from '@/features/auth/stores/useAuthStore'
 
 const authStore = useAuthStore()
-
-function handleLogout() {
-  authStore.clearAuthUser()
-}
 </script>
 
 <template>
   <nav>
     <template v-if="authStore.isLoggedIn">
       <RouterLink :to="{ name: RouteName.DashboardPage }">Dashboard</RouterLink>
-      <RouterLink to="#" @click="handleLogout">Log Out</RouterLink>
+      <RouterLink to="#" @click="authStore.logout">Log Out</RouterLink>
     </template>
     <template v-else>
       <RouterLink :to="{ name: RouteName.LoginPage }">Login</RouterLink>

@@ -9,13 +9,9 @@ import PageLayout from '@/shared/layouts/PageLayout.vue'
 
 import { RouteName } from '@/features/navigation/services/router'
 
-import type { User } from '@/features/users/types/userTypes'
-
 import { useAuthStore } from '@/features/auth/stores/useAuthStore'
 
 import { isValidPassword } from '@/features/auth/utils/authUtils'
-
-import { ApiClient } from '@/shared/services/ApiClient'
 
 const router = useRouter()
 
@@ -37,8 +33,7 @@ async function handleSubmit() {
   if (!formIsValid.value) return
 
   try {
-    const user = await ApiClient.post<User>('/auth/login', formState.value)
-    authStore.setAuthUser(user)
+    await authStore.login(formState.value.email, formState.value.password)
     await router.push({ name: RouteName.DashboardPage })
   } catch (err) {
     console.error(err)
@@ -68,4 +63,4 @@ fieldset {
   gap: 1rem;
   max-width: 12rem;
 }
-</style>
+</style>@/shared/services/router@/features/auth/utils/auth

@@ -8,10 +8,26 @@ import App from '@/App.vue'
 
 import { router } from '@/features/navigation/services/router'
 
-const app = createApp(App)
+import { useAuthStore } from '@/features/auth/stores/useAuthStore'
 
-app.use(createPinia())
-app.use(router)
-app.use(VueQueryPlugin)
+await startApp()
 
-app.mount('#app')
+async function startApp() {
+  const app = createApp(App)
+
+  app.use(createPinia())
+
+  // This should happen before the router is added so that router.beforeEach
+  // redirects the user as expected on startup.
+  try {
+    const authStore = useAuthStore()
+    await authStore.handleRefreshToken()
+  } catch {
+    console.info('Failed to authenticate user on start up.')
+  }
+
+  app.use(router)
+  app.use(VueQueryPlugin)
+
+  app.mount('#app')
+}

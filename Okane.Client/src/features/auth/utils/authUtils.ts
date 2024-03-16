@@ -1,7 +1,7 @@
 // Internal
 import { MIN_PASSWORD_LENGTH } from '@/features/auth/constants/authConstants'
 
-import type { PasswordChecks } from '@/features/auth/types/authTypes'
+import type { JWTTokenPayload, PasswordChecks } from '@/features/auth/types/authTypes'
 
 import * as stringUtils from '@/shared/utils/stringUtils'
 
@@ -47,4 +47,9 @@ export function isValidPassword(password: string): [boolean, PasswordChecks] {
   }
 
   return [!Object.values(checks).includes(false), checks]
+}
+
+export function getJWTTokenPayload(jwtToken: string): JWTTokenPayload {
+  const jwtBase64 = jwtToken.split('.')[1]
+  return JSON.parse(atob(jwtBase64))
 }

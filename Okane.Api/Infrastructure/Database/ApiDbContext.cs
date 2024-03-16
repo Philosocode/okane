@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Okane.Api.Features.Auth.Models;
+using Okane.Api.Features.Auth.Entities;
 
 namespace Okane.Api.Infrastructure.Database;
 
@@ -11,4 +11,6 @@ public class ApiDbContext(IOptions<DbSettings> options) : IdentityDbContext<ApiU
     {
         builder.UseNpgsql(options.Value.ConnectionString);
     }
+
+    public DbSet<RefreshToken> RefreshTokens { get; set; } = default!;
 }

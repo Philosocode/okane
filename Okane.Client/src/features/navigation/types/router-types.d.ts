@@ -6,7 +6,10 @@ export {}
 
 declare module 'vue-router' {
   interface RouteMeta {
-    // If the route can be accessed without logging in.
+    // Can non-authenticated users access this route?
     isPublic?: boolea
+
+    // Can authenticated users access this route?
+    isPublicOnly?: boolean
   }
 }

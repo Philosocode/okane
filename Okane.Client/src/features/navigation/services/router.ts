@@ -43,6 +43,13 @@ router.beforeEach((to) => {
   const authStore = useAuthStore()
 
   if (!to.meta.isPublic && !authStore.isLoggedIn) {
-    return { name: RouteName.LoginPage }
+    return {
+      name: RouteName.LoginPage,
+      query: { redirect_url: to.path },
+    }
+  }
+
+  if (to.meta.isPublic && to.meta.isPublicOnly && authStore.isLoggedIn) {
+    return { name: RouteName.DashboardPage }
   }
 })

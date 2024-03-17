@@ -6,27 +6,21 @@ namespace Okane.Api.Shared.Mappings;
 
 public static class ValidationMappings
 {
-    public static ApiValidationErrorsResponse MapToValidationErrorsResponse(this ValidationException exception)
+    public static IEnumerable<ApiResponseError> MapToApiResponseErrors(this ValidationException exception)
     {
-        return new ApiValidationErrorsResponse
+        return exception.Errors.Select(error => new ApiResponseError
         {
-            Errors = exception.Errors.Select(error => new ValidationError
-            {
-                PropertyName = error.PropertyName,
-                Message = error.ErrorMessage,
-            })
-        };
+            Key = error.PropertyName,
+            Message = error.ErrorMessage,
+        });
     }
 
-    public static ApiValidationErrorsResponse MapToValidationErrorsResponse(this IdentityException exception)
+    public static IEnumerable<ApiResponseError> MapToApiResponseErrors(this IdentityException exception)
     {
-        return new ApiValidationErrorsResponse
+        return exception.Errors.Select(error => new ApiResponseError
         {
-            Errors = exception.Errors.Select(error => new ValidationError
-            {
-                Message = error.Description,
-                PropertyName = error.Code,
-            })
-        };
+            Key = error.Code,
+            Message = error.Description,
+        });
     }
 }

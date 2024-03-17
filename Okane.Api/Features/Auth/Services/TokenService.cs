@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Okane.Api.Features.Auth.Config;
 using Okane.Api.Features.Auth.Entities;
+using Okane.Api.Features.Auth.Utils;
 using Okane.Api.Infrastructure.Database;
 
 namespace Okane.Api.Features.Auth.Services;
@@ -22,7 +23,7 @@ public class TokenService(ApiDbContext db, JwtSettings jwtSettings) : ITokenServ
 {
     public string GenerateJwtToken(string userId)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.IssuerSigningKey));
+        var key = AuthUtils.GetIssuerSigningKey(jwtSettings.IssuerSigningKey);
         var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
         var claimsIdentity = new ClaimsIdentity(
             new[]

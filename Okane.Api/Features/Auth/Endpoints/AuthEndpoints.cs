@@ -74,7 +74,7 @@ public static class AuthEndpoints
         });
     }
 
-    private static async Task<Results<Ok<ApiResponse<LoginResponse>>, BadRequest<ApiErrorsResponse>>> 
+    private static async Task<Results<Ok<ApiResponse<AuthenticateResponse>>, BadRequest<ApiErrorsResponse>>> 
         HandleLogin(
             IAuthService authService,
             CancellationToken cancellationToken,
@@ -82,10 +82,10 @@ public static class AuthEndpoints
             LoginRequest request,
             HttpResponse response)
     {
-        LoginResponse loginResponse;
+        AuthenticateResponse authenticateResponse;
         try
         {
-            loginResponse = await authService.Login(request, cancellationToken);
+            authenticateResponse = await authService.Login(request, cancellationToken);
         }
         catch (Exception)
         {
@@ -94,16 +94,16 @@ public static class AuthEndpoints
         
         response.Cookies.Append(
             CookieNames.RefreshToken,
-            loginResponse.RefreshToken.Token, 
+            authenticateResponse.RefreshToken.Token, 
             new CookieOptions {
                 HttpOnly = true,
                 Expires = DateTime.UtcNow.AddDays(jwtSettings.RefreshTokenTtlDays)
             }
         );
 
-        return TypedResults.Ok(new ApiResponse<LoginResponse>()
+        return TypedResults.Ok(new ApiResponse<AuthenticateResponse>()
         {
-            Items = new []{ loginResponse }
+            Items = new []{ authenticateResponse }
         });
     }
 
@@ -126,61 +126,43 @@ public static class AuthEndpoints
         return TypedResults.NoContent();
     }
 
-    private static async Task<Results<Ok<string>, BadRequest>> HandleRefreshToken(
-        ApiDbContext db,
-        HttpContext context,
-        HttpRequest request,
-        ClaimsPrincipal claimsPrincipal,
-        [FromServices] ITokenService tokenService,
-        HttpResponse response,
-        UserManager<ApiUser> userManager,
-        JwtSettings jwtSettings)
+    private static async Task<Results<Ok<ApiResponse<AuthenticateResponse>>, UnauthorizedHttpResult>> HandleRefreshToken(
+        JwtSettings jwtSettings,
+        HttpRequest request, 
+        HttpResponse response, 
+        ITokenService tokenService)
     {
-        if (!request.Cookies.TryGetValue("okane_refreshToken", out var refreshToken)
-            || refreshToken.IsNullOrEmpty())
+        if (!request.Cookies.TryGetValue(CookieNames.RefreshToken, out string? refreshToken))
         {
-            return TypedResults.BadRequest();
+            return TypedResults.Unauthorized();
+        }
+
+        AuthenticateResponse authenticateResponse;
+        try
+        {
+            authenticateResponse = await tokenService.RotateRefreshToken(refreshToken);
+        }
+        catch (Exception)
+        {
+            return TypedResults.Unauthorized();
         }
         
-        var user = await db.Users.
-            Include(apiUser => apiUser.RefreshTokens).
-            SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == refreshToken)
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Expires = DateTime.UtcNow.AddDays(jwtSettings.RefreshTokenTtlDays)
+        };
+        
+        response.Cookies.Append(
+            CookieNames.RefreshToken, 
+            authenticateResponse.RefreshToken.Token,
+            cookieOptions
         );
-        
-        if (user is null)
+
+        return TypedResults.Ok(new ApiResponse<AuthenticateResponse>
         {
-            return TypedResults.BadRequest();
-        }
-
-        var foundToken = user.RefreshTokens.Single(t => t.Token == refreshToken);
-        if (foundToken.IsRevoked)
-        {
-            // Someone's trying to authenticate with a revoked token. Revoke all their tokens.
-            user.RefreshTokens = new List<RefreshToken>();
-            await db.SaveChangesAsync();
-        }
-
-        if (!foundToken.IsActive) return TypedResults.BadRequest();
-        string jwtToken = tokenService.GenerateJwtToken(user.Id);
-
-        // Only rotate the refresh token if it's about to expire (e.g. within 24 hours).
-        if (foundToken.ExpiresAt < DateTime.UtcNow.AddDays(-1))
-        {
-            var newRefreshToken = await tokenService.GenerateRefreshToken();
-            foundToken.RevokedAt = DateTime.UtcNow;
-            user.RefreshTokens.Add(newRefreshToken);
-
-            await db.SaveChangesAsync();
-
-            var cookieOptions = new CookieOptions
-            {
-                HttpOnly = true,
-                Expires = DateTime.UtcNow.AddDays(jwtSettings.RefreshTokenTtlDays)
-            };
-            response.Cookies.Append("okane_refreshToken", newRefreshToken.Token, cookieOptions);
-        }
-
-        return TypedResults.Ok(jwtToken);
+            Items = new[]{ authenticateResponse }
+        });
     }
 
     private static async Task<Results<NoContent, BadRequest<string>>> HandleRevokeRefreshToken(

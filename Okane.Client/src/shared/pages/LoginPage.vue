@@ -4,14 +4,14 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 // Internal
-import FormInput from '@/features/forms/components/FormInput.vue'
+import FormInput from '@/features/forms/FormInput.vue'
 import PageLayout from '@/shared/layouts/PageLayout.vue'
 
-import { RouteName } from '@/features/navigation/services/router'
+import { RouteName } from '@/features/navigation/router.constants'
 
-import { useAuthStore } from '@/features/auth/stores/useAuthStore'
+import { useAuthStore } from '@/features/auth/useAuthStore'
 
-import { isValidPassword } from '@/features/auth/utils/authUtils'
+import { isValidPassword } from '@/features/auth/auth.utils'
 
 const router = useRouter()
 
@@ -63,6 +63,7 @@ fieldset {
   gap: 1rem;
   max-width: 12rem;
 }
-</style>@/shared/services/router@/features/auth/utils/auth
+</style>
+@/shared/services/router@/features/auth/utils/auth
 @/features/auth/utils/auth.utils@/features/auth/stores/auth.store@/features/auth/useAuthStore
 @/features/navigation/services/router.service

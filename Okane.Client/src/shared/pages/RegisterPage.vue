@@ -4,15 +4,15 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 // Internal
-import FormInput from '@/features/forms/components/FormInput.vue'
+import FormInput from '@/features/forms/FormInput.vue'
 import PageLayout from '@/shared/layouts/PageLayout.vue'
 
-import { RouteName } from '@/features/navigation/services/router'
+import { RouteName } from '@/features/navigation/router.constants'
 
-import { useAuthStore } from '@/features/auth/stores/useAuthStore'
+import { useAuthStore } from '@/features/auth/useAuthStore'
 
-import { isValidPassword } from '@/features/auth/utils/authUtils'
-import { omitObjectKeys } from '@/shared/utils/objectUtils'
+import { isValidPassword } from '@/features/auth/auth.utils'
+import { omitObjectKeys } from '@/shared/utils/object.utils'
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -59,8 +59,12 @@ async function handleSubmit() {
         <FormInput label="Name" name="name" type="text" v-model="formState.name" />
         <FormInput label="Email" name="email" type="email" v-model="formState.email" />
         <FormInput label="Password" name="password" type="password" v-model="formState.password" />
-        <FormInput label="Confirm password" name="passwordConfirm" type="password"
-          v-model="formState.passwordConfirm" />
+        <FormInput
+          label="Confirm password"
+          name="passwordConfirm"
+          type="password"
+          v-model="formState.passwordConfirm"
+        />
         <button :disabled="!formIsValid" type="submit">Register</button>
       </fieldset>
     </form>
@@ -74,6 +78,7 @@ fieldset {
   gap: 1rem;
   max-width: 12rem;
 }
-</style>@/shared/services/router@/features/auth/utils/auth
+</style>
+@/shared/services/router@/features/auth/utils/auth
 @/features/auth/utils/auth.utils@/features/auth/stores/auth.store@/features/auth/useAuthStore
 @/features/navigation/services/router.service@/shared/utils/object.utils

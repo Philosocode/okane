@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -26,9 +25,6 @@ namespace Okane.Api.Features.Auth.Endpoints;
 // A lot of code in this class has been heavily borrowed from https://github.com/dotnet/aspnetcore/blob/476e2aa0c7cb25d6a9c774228e5c549c77620108/src/Identity/Core/src/IdentityApiEndpointRouteBuilderExtensions.cs#L57
 public static class AuthEndpoints
 {
-    // Validate the email address using DataAnnotations like the UserValidator does when RequireUniqueEmail = true.
-    private static readonly EmailAddressAttribute EmailAddressAttribute = new();
-    
     public static void MapAuthEndpoints(this IEndpointRouteBuilder app)
     {
         RouteGroupBuilder routeGroup = app.MapGroup("/auth").WithTags("auth");
@@ -55,7 +51,7 @@ public static class AuthEndpoints
             .RequireAuthorization();
     }
 
-    private static async Task<Results<Ok<ApiResponse<ApiUser>>, BadRequest<ApiValidationErrorsResponse>>>
+    private static async Task<Results<Ok<ApiResponse<ApiUser>>, BadRequest<ApiErrorsResponse>>>
         HandleRegister(IAuthService authService, CancellationToken cancellationToken, RegisterRequest request)
     {
         ApiUser createdUser;
@@ -63,13 +59,13 @@ public static class AuthEndpoints
         {
             createdUser = await authService.Register(request, cancellationToken);
         }
-        catch (ValidationException ex)
+        catch (ValidationException exception)
         {
-            return TypedResults.BadRequest(ex.MapToValidationErrorsResponse());
+            return TypedResults.BadRequest(new ApiErrorsResponse(exception.MapToApiResponseErrors()));
         }
-        catch (IdentityException ex)
+        catch (IdentityException exception)
         {
-            return TypedResults.BadRequest(ex.MapToValidationErrorsResponse());
+            return TypedResults.BadRequest(new ApiErrorsResponse(exception.MapToApiResponseErrors()));
         }
 
         return TypedResults.Ok(new ApiResponse<ApiUser>
@@ -78,7 +74,8 @@ public static class AuthEndpoints
         });
     }
 
-    private static async Task<Results<Ok<ApiResponse<LoginResponse>>, BadRequest<ApiErrorResponse>>> HandleLogin(
+    private static async Task<Results<Ok<ApiResponse<LoginResponse>>, BadRequest<ApiErrorsResponse>>> 
+        HandleLogin(
             IAuthService authService,
             CancellationToken cancellationToken,
             JwtSettings jwtSettings,
@@ -92,10 +89,7 @@ public static class AuthEndpoints
         }
         catch (Exception)
         {
-            return TypedResults.BadRequest(new ApiErrorResponse
-            {
-                Error = "Error signing in."
-            });
+            return TypedResults.BadRequest(new ApiErrorsResponse("Failed to authenticate."));
         }
         
         response.Cookies.Append(
@@ -113,7 +107,7 @@ public static class AuthEndpoints
         });
     }
 
-    private static async Task<Results<NoContent, BadRequest<ApiErrorResponse>>> HandleLogout(
+    private static async Task<NoContent> HandleLogout(
         IAuthService authService,
         ClaimsPrincipal claimsPrincipal,
         HttpContext context,

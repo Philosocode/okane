@@ -1,4 +1,6 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Okane.Api;
 using Okane.Api.Features.Auth.Extensions;
 using Okane.Api.Features.Auth.Services;
 using Okane.Api.Infrastructure.Database;
@@ -24,7 +26,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddHealthChecks().AddDbContextCheck<ApiDbContext>();
     builder.Services.AddSwaggerGen();
 
-    builder.Services.AddScoped<ITokenService, TokenService>();
+    builder.Services.AddValidatorsFromAssemblyContaining<IApplicationMarker>();
 }
 
 var app = builder.Build();

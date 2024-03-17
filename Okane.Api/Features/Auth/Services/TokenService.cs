@@ -11,12 +11,12 @@ using Okane.Api.Infrastructure.Database;
 namespace Okane.Api.Features.Auth.Services;
 
 /// <summary>
-/// Service responsible for generating JWT and refresh tokens.
+/// Service for generating JWT and refresh tokens.
 /// </summary>
 interface ITokenService
 {
-    public string GenerateJwtToken(string userId);
-    public Task<RefreshToken> GenerateRefreshToken();
+    string GenerateJwtToken(string userId);
+    Task<RefreshToken> GenerateRefreshToken();
 }
 
 public class TokenService(ApiDbContext db, JwtSettings jwtSettings) : ITokenService

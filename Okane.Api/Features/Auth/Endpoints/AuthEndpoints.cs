@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -11,9 +10,13 @@ using Okane.Api.Features.Auth.Config;
 using Okane.Api.Features.Auth.Dtos.Requests;
 using Okane.Api.Features.Auth.Dtos.Responses;
 using Okane.Api.Features.Auth.Entities;
+using Okane.Api.Features.Auth.Exceptions;
 using Okane.Api.Features.Auth.Extensions;
 using Okane.Api.Features.Auth.Services;
 using Okane.Api.Infrastructure.Database;
+using Okane.Api.Shared.Dtos.ApiResponse;
+using Okane.Api.Shared.Mappings;
+using ValidationException = FluentValidation.ValidationException;
 
 namespace Okane.Api.Features.Auth.Endpoints;
 
@@ -32,7 +35,7 @@ public static class AuthEndpoints
 {
     // Validate the email address using DataAnnotations like the UserValidator does when RequireUniqueEmail = true.
     private static readonly EmailAddressAttribute EmailAddressAttribute = new();
-
+    
     public static void MapAuthEndpoints(this IEndpointRouteBuilder app)
     {
         RouteGroupBuilder routeGroup = app.MapGroup("/auth").WithTags("auth");
@@ -59,52 +62,31 @@ public static class AuthEndpoints
             .RequireAuthorization();
     }
 
-    // Handlers
-    private static async Task<Results<Ok<string>, ValidationProblem>> HandleRegister(
-        HttpContext context,
-        [FromBody] RegisterRequest request,
-        [FromServices] IServiceProvider serviceProvider)
+    private static async Task<Results<Ok<ApiResponse<ApiUser>>, BadRequest<ValidationErrorsApiResponse>>> HandleRegister(
+        IAuthService authService, 
+        RegisterRequest request,
+        CancellationToken cancellationToken)
     {
-        var userManager = serviceProvider.GetRequiredService<UserManager<ApiUser>>();
-        if (!userManager.SupportsUserEmail)
+        ApiUser createdUser;
+        try
         {
-            throw new NotSupportedException(
-                $"{nameof(HandleRegister)} requires a user store with email support."
-            );
+            createdUser = await authService.Register(request, cancellationToken);
         }
-
-        var userStore = serviceProvider.GetRequiredService<IUserStore<ApiUser>>();
-        string email = request.Email;
-
-        if (string.IsNullOrEmpty(email) || !EmailAddressAttribute.IsValid(email))
+        catch (ValidationException ex)
         {
-            var error = IdentityResult.Failed(userManager.ErrorDescriber.InvalidEmail(email));
-            return CreateValidationProblem(error);
+            return TypedResults.BadRequest(ex.MapToErrorResponse());
         }
-
-        if (string.IsNullOrEmpty(request.Name))
+        catch (IdentityException ex)
         {
-            IdentityError[] errorResult =
-            [
-                new()
-                {
-                    Code = "EmptyName",
-                    Description = "A name is required."
-                }
-            ];
-            return CreateValidationProblem(IdentityResult.Failed(errorResult));
+            return TypedResults.BadRequest(ex.MapToErrorResponse());
         }
-
-        var user = new ApiUser { Email = email, Name = request.Name };
-        await userStore.SetUserNameAsync(user, email, CancellationToken.None);
-
-        var result = await userManager.CreateAsync(user, request.Password);
-        if (!result.Succeeded)
+        
+        var apiResponse = new ApiResponse<ApiUser>
         {
-            return CreateValidationProblem(result);
-        }
-
-        return TypedResults.Ok("Successfully registered");
+            Items = new [] { createdUser }
+        };
+        
+        return TypedResults.Ok(apiResponse);
     }
 
     private static async Task<Results<Ok<LoginResponse>, EmptyHttpResult, ProblemHttpResult>>
@@ -287,34 +269,5 @@ public static class AuthEndpoints
             Email = user.Email,
             Name = user.Name
         });
-    }
-
-    // Helpers
-    private static ValidationProblem CreateValidationProblem(IdentityResult result)
-    {
-        // We expect a single error code and description in the normal case.
-        // This could be golfed with GroupBy and ToDictionary, but perf! :P
-        Debug.Assert(!result.Succeeded);
-        var errorDictionary = new Dictionary<string, string[]>(1);
-
-        foreach (var error in result.Errors)
-        {
-            string[] newDescriptions;
-
-            if (errorDictionary.TryGetValue(error.Code, out var descriptions))
-            {
-                newDescriptions = new string[descriptions.Length + 1];
-                Array.Copy(descriptions, newDescriptions, descriptions.Length);
-                newDescriptions[descriptions.Length] = error.Description;
-            }
-            else
-            {
-                newDescriptions = [error.Description];
-            }
-
-            errorDictionary[error.Code] = newDescriptions;
-        }
-
-        return TypedResults.ValidationProblem(errorDictionary);
     }
 }

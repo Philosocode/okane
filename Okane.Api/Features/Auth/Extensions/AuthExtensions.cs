@@ -5,12 +5,18 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Okane.Api.Features.Auth.Config;
 using Okane.Api.Features.Auth.Entities;
+using Okane.Api.Features.Auth.Utils;
 using Okane.Api.Infrastructure.Database;
 
 namespace Okane.Api.Features.Auth.Extensions;
 
 public static class AuthExtensions
 {
+    /// <summary>
+    /// Extract the user ID from this ClaimsPrincipal.
+    /// </summary>
+    /// <param name="principal"></param>
+    /// <returns>ID of the ClaimsPrincipal, if present.</returns>
     public static string? GetUserId(this ClaimsPrincipal principal)
     {
         if (principal.Identity is null || !principal.Identity.IsAuthenticated)
@@ -25,6 +31,11 @@ public static class AuthExtensions
         return idClaim?.Value;
     }
     
+    /// <summary>
+    /// Set up authentication services.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="configurationManager"></param>
     public static void AddApiAuthentication(this IServiceCollection services, ConfigurationManager configurationManager)
     {
         var jwtSettings = new JwtSettings();
@@ -38,7 +49,7 @@ public static class AuthExtensions
 
         services.AddAuthentication(options =>
             {
-                string jwtScheme = JwtBearerDefaults.AuthenticationScheme;
+                const string jwtScheme = JwtBearerDefaults.AuthenticationScheme;
 
                 options.DefaultAuthenticateScheme = jwtScheme;
                 options.DefaultChallengeScheme = jwtScheme;
@@ -56,9 +67,7 @@ public static class AuthExtensions
 
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(jwtSettings.IssuerSigningKey)
-                    ),
+                    IssuerSigningKey = AuthUtils.GetIssuerSigningKey(jwtSettings.IssuerSigningKey),
 
                     // Set ClockSkew to zero so tokens expire exactly at token expiration time
                     // (instead of 5 minutes later).

@@ -5,6 +5,7 @@ using Okane.Api.Features.Auth.Dtos.Requests;
 using Okane.Api.Features.Auth.Dtos.Responses;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Features.Auth.Exceptions;
+using Okane.Api.Features.Auth.Mappings;
 using Okane.Api.Infrastructure.Database;
 
 namespace Okane.Api.Features.Auth.Services;
@@ -15,7 +16,7 @@ namespace Okane.Api.Features.Auth.Services;
 interface IAuthService
 {
     Task<ApiUser> Register(RegisterRequest request, CancellationToken cancellationToken);
-    Task<LoginResponse> Login(LoginRequest request, CancellationToken cancellationToken);
+    Task<AuthenticateResponse> Login(LoginRequest request, CancellationToken cancellationToken);
 }
 
 public class AuthService(
@@ -46,7 +47,7 @@ public class AuthService(
         return userToCreate;
     }
 
-    public async Task<LoginResponse> Login(LoginRequest request, CancellationToken cancellationToken)
+    public async Task<AuthenticateResponse> Login(LoginRequest request, CancellationToken cancellationToken)
     {
         signInManager.AuthenticationScheme = IdentityConstants.ApplicationScheme;
         
@@ -76,12 +77,11 @@ public class AuthService(
         user.RefreshTokens.Add(refreshToken);
         await db.SaveChangesAsync(cancellationToken);
 
-        return new LoginResponse
+        return new AuthenticateResponse
         {
-            Email = user.Email!,
-            Name = user.Name,
             JwtToken = jwtToken,
             RefreshToken = refreshToken,
+            User = user.ToUserResponse(),
         };
     }
 }

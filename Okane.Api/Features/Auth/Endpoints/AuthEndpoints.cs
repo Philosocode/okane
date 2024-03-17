@@ -94,16 +94,9 @@ public static class AuthEndpoints
         {
             return TypedResults.BadRequest(new ApiErrorsResponse("Failed to authenticate."));
         }
-        
-        response.Cookies.Append(
-            CookieNames.RefreshToken,
-            authenticateResponse.RefreshToken.Token, 
-            new CookieOptions {
-                HttpOnly = true,
-                Expires = DateTime.UtcNow.AddDays(jwtSettings.RefreshTokenTtlDays)
-            }
-        );
 
+        SetRefreshTokenCookie(jwtSettings, response, authenticateResponse.RefreshToken);
+        
         return TypedResults.Ok(new ApiResponse<AuthenticateResponse>()
         {
             Items = new []{ authenticateResponse }
@@ -150,25 +143,15 @@ public static class AuthEndpoints
         {
             return TypedResults.Unauthorized();
         }
-        
-        var cookieOptions = new CookieOptions
-        {
-            HttpOnly = true,
-            Expires = DateTime.UtcNow.AddDays(jwtSettings.RefreshTokenTtlDays)
-        };
-        
-        response.Cookies.Append(
-            CookieNames.RefreshToken, 
-            authenticateResponse.RefreshToken.Token,
-            cookieOptions
-        );
 
+        SetRefreshTokenCookie(jwtSettings, response, authenticateResponse.RefreshToken);
+        
         return TypedResults.Ok(new ApiResponse<AuthenticateResponse>
         {
             Items = new[]{ authenticateResponse }
         });
     }
-
+    
     private static async Task<Results<NoContent, BadRequest<string>>> HandleRevokeRefreshToken(
         ApiDbContext db,
         RevokeRefreshTokenRequest tokenRequest,
@@ -212,5 +195,25 @@ public static class AuthEndpoints
             Email = user.Email,
             Name = user.Name
         });
+    }
+    
+    // Helpers.
+    private static async void SetRefreshTokenCookie(
+        JwtSettings jwtSettings,
+        HttpResponse response, 
+        RefreshToken refreshToken)
+    {
+        
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Expires = DateTime.UtcNow.AddDays(jwtSettings.RefreshTokenTtlDays)
+        };
+        
+        response.Cookies.Append(
+            CookieNames.RefreshToken, 
+            refreshToken.Token,
+            cookieOptions
+        );
     }
 }

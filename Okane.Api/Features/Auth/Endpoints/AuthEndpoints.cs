@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Okane.Api.Features.Auth.Config;
+using Okane.Api.Features.Auth.Constants;
 using Okane.Api.Features.Auth.Dtos.Requests;
 using Okane.Api.Features.Auth.Dtos.Responses;
 using Okane.Api.Features.Auth.Entities;
@@ -20,15 +21,7 @@ using ValidationException = FluentValidation.ValidationException;
 
 namespace Okane.Api.Features.Auth.Endpoints;
 
-public static class AuthEndpointNames
-{
-    public const string GetSelf = "GetSelf";
-    public const string Login = "Login";
-    public const string Logout = "Logout";
-    public const string Register = "Register";
-    public const string RefreshToken = "RefreshToken";
-    public const string RevokeToken = "RevokeToken";
-}
+
 
 // A lot of code in this class has been heavily borrowed from https://github.com/dotnet/aspnetcore/blob/476e2aa0c7cb25d6a9c774228e5c549c77620108/src/Identity/Core/src/IdentityApiEndpointRouteBuilderExtensions.cs#L57
 public static class AuthEndpoints
@@ -62,10 +55,8 @@ public static class AuthEndpoints
             .RequireAuthorization();
     }
 
-    private static async Task<Results<Ok<ApiResponse<ApiUser>>, BadRequest<ValidationErrorsApiResponse>>> HandleRegister(
-        IAuthService authService, 
-        RegisterRequest request,
-        CancellationToken cancellationToken)
+    private static async Task<Results<Ok<ApiResponse<ApiUser>>, BadRequest<ApiValidationErrorsResponse>>>
+        HandleRegister(IAuthService authService, CancellationToken cancellationToken, RegisterRequest request)
     {
         ApiUser createdUser;
         try
@@ -74,73 +65,52 @@ public static class AuthEndpoints
         }
         catch (ValidationException ex)
         {
-            return TypedResults.BadRequest(ex.MapToErrorResponse());
+            return TypedResults.BadRequest(ex.MapToValidationErrorsResponse());
         }
         catch (IdentityException ex)
         {
-            return TypedResults.BadRequest(ex.MapToErrorResponse());
+            return TypedResults.BadRequest(ex.MapToValidationErrorsResponse());
         }
-        
-        var apiResponse = new ApiResponse<ApiUser>
+
+        return TypedResults.Ok(new ApiResponse<ApiUser>
         {
-            Items = new [] { createdUser }
-        };
-        
-        return TypedResults.Ok(apiResponse);
+            Items = new[] { createdUser }
+        });
     }
 
-    private static async Task<Results<Ok<LoginResponse>, EmptyHttpResult, ProblemHttpResult>>
-        HandleLogin(
-            ApiDbContext db,
-            ITokenService tokenService,
-            HttpResponse response,
+    private static async Task<Results<Ok<ApiResponse<LoginResponse>>, BadRequest<ApiErrorResponse>>> HandleLogin(
+            IAuthService authService,
+            CancellationToken cancellationToken,
             JwtSettings jwtSettings,
-            [FromBody] LoginRequest request,
-            [FromServices] IServiceProvider serviceProvider)
+            LoginRequest request,
+            HttpResponse response)
     {
-        var signInManager = serviceProvider.GetRequiredService<SignInManager<ApiUser>>();
-        signInManager.AuthenticationScheme = IdentityConstants.ApplicationScheme;
-
-        var signIn = await signInManager.PasswordSignInAsync(
-            request.Email, request.Password, true, lockoutOnFailure: true
+        LoginResponse loginResponse;
+        try
+        {
+            loginResponse = await authService.Login(request, cancellationToken);
+        }
+        catch (Exception)
+        {
+            return TypedResults.BadRequest(new ApiErrorResponse
+            {
+                Error = "Error signing in."
+            });
+        }
+        
+        response.Cookies.Append(
+            CookieNames.RefreshToken,
+            loginResponse.RefreshToken.Token, 
+            new CookieOptions {
+                HttpOnly = true,
+                Expires = DateTime.UtcNow.AddDays(jwtSettings.RefreshTokenTtlDays)
+            }
         );
 
-        if (!signIn.Succeeded)
+        return TypedResults.Ok(new ApiResponse<LoginResponse>()
         {
-            return TypedResults.Problem(signIn.ToString(),
-                statusCode: StatusCodes.Status401Unauthorized);
-        }
-
-        var user = await db.Users.SingleOrDefaultAsync(u => u.Email == request.Email);
-
-        if (user is null)
-        {
-            return TypedResults.Problem(signIn.ToString(),
-                statusCode: StatusCodes.Status500InternalServerError);
-        }
-
-        string email = user.Email ?? "";
-        string jwtToken = tokenService.GenerateJwtToken(user.Id);
-        RefreshToken refreshToken = await tokenService.GenerateRefreshToken();
-
-        user.RefreshTokens.Add(refreshToken);
-        await db.SaveChangesAsync();
-
-        var cookieOptions = new CookieOptions
-        {
-            HttpOnly = true,
-            Expires = DateTime.UtcNow.AddDays(jwtSettings.RefreshTokenTtlDays)
-        };
-        response.Cookies.Append("okane_refreshToken", refreshToken.Token, cookieOptions);
-        
-        var loginResponse = new LoginResponse
-        {
-            Email = email,
-            JwtToken = jwtToken,
-            Name = user.Name,
-        };
-
-        return TypedResults.Ok(loginResponse);
+            Items = new []{ loginResponse }
+        });
     }
 
     private static async Task<Results<NoContent, BadRequest<string>>> HandleLogout(

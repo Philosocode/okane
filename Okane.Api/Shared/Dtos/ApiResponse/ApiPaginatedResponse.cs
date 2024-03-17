@@ -1,6 +1,6 @@
 namespace Okane.Api.Shared.Dtos.ApiResponse;
 
-public record PaginatedApiResponse<TItem> : ApiResponse<TItem>
+public record ApiPaginatedResponse<TItem> : ApiResponse<TItem>
 {
     public required int PageSize { get; init; }
     

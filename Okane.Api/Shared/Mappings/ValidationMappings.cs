@@ -6,9 +6,9 @@ namespace Okane.Api.Shared.Mappings;
 
 public static class ValidationMappings
 {
-    public static ValidationErrorsApiResponse MapToErrorResponse(this ValidationException exception)
+    public static ApiValidationErrorsResponse MapToValidationErrorsResponse(this ValidationException exception)
     {
-        return new ValidationErrorsApiResponse
+        return new ApiValidationErrorsResponse
         {
             Errors = exception.Errors.Select(error => new ValidationError
             {
@@ -18,9 +18,9 @@ public static class ValidationMappings
         };
     }
 
-    public static ValidationErrorsApiResponse MapToErrorResponse(this IdentityException exception)
+    public static ApiValidationErrorsResponse MapToValidationErrorsResponse(this IdentityException exception)
     {
-        return new ValidationErrorsApiResponse
+        return new ApiValidationErrorsResponse
         {
             Errors = exception.Errors.Select(error => new ValidationError
             {

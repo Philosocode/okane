@@ -13,7 +13,7 @@ namespace Okane.Api.Features.Auth.Services;
 /// <summary>
 /// Service for generating JWT and refresh tokens.
 /// </summary>
-interface ITokenService
+public interface ITokenService
 {
     string GenerateJwtToken(string userId);
     Task<RefreshToken> GenerateRefreshToken();

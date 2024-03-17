@@ -43,7 +43,7 @@ public static class AuthExtensions
         configurationManager.Bind(nameof(JwtSettings), jwtSettings);
         
         services.AddSingleton(jwtSettings);
-        services.AddSingleton<IAuthService, AuthService>();
+        services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ITokenService, TokenService>();
         
         services.AddIdentity<ApiUser, IdentityRole>()

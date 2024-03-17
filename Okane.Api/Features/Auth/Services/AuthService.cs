@@ -78,7 +78,7 @@ public class AuthService(
 
         return new LoginResponse
         {
-            Email = user.Email ?? request.Email,
+            Email = user.Email!,
             Name = user.Name,
             JwtToken = jwtToken,
             RefreshToken = refreshToken,

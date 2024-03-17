@@ -17,6 +17,7 @@ public interface ITokenService
 {
     string GenerateJwtToken(string userId);
     Task<RefreshToken> GenerateRefreshToken();
+    Task RevokeRefreshToken(string refreshToken, string userId);
 }
 
 public class TokenService(ApiDbContext db, JwtSettings jwtSettings) : ITokenService
@@ -68,5 +69,20 @@ public class TokenService(ApiDbContext db, JwtSettings jwtSettings) : ITokenServ
             CreatedAt = DateTime.UtcNow,
             ExpiresAt = DateTime.UtcNow.AddMinutes(jwtSettings.MinutesToExpiration),
         };
+    }
+
+    public async Task RevokeRefreshToken(string userId, string refreshToken)
+    {
+        var tokenToRevoke = await db.RefreshTokens.
+            Include(t => t.ApiUser.Id).
+            SingleOrDefaultAsync(
+                t => t.Token == refreshToken && t.ApiUser.Id == userId && !t.IsRevoked
+            );
+
+        if (tokenToRevoke is not null)
+        {
+            tokenToRevoke.RevokedAt = DateTime.UtcNow;
+            await db.SaveChangesAsync();
+        }
     }
 }

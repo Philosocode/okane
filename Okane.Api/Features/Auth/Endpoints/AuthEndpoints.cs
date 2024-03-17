@@ -113,27 +113,20 @@ public static class AuthEndpoints
         });
     }
 
-    private static async Task<Results<NoContent, BadRequest<string>>> HandleLogout(
+    private static async Task<Results<NoContent, BadRequest<ApiErrorResponse>>> HandleLogout(
+        IAuthService authService,
+        ClaimsPrincipal claimsPrincipal,
         HttpContext context,
         HttpRequest request,
-        ApiDbContext db,
-        SignInManager<ApiUser> signInManager)
+        ITokenService tokenService)
     {
+        string? userId = claimsPrincipal.GetUserId();
+        
         await context.SignOutAsync();
         
-        if (request.Cookies.TryGetValue("okane_refreshToken", out var refreshToken))
+        if (userId is not null && request.Cookies.TryGetValue(CookieNames.RefreshToken, out string? refreshToken))
         {
-            var user = await db.Users.SingleOrDefaultAsync(u => u.RefreshTokens.Any(
-                t => t.Token == refreshToken
-            ));
-            
-            if (user is null)
-            {
-                return TypedResults.BadRequest("Error removing refresh token");
-            }
-            
-            // user.RefreshTokens.RemoveAll(t => t.Token == refreshToken);
-            await db.SaveChangesAsync();
+            await tokenService.RevokeRefreshToken(refreshToken, userId);
         }
         
         return TypedResults.NoContent();

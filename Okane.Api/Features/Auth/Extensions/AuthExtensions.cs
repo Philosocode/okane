@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Okane.Api.Features.Auth.Config;
 using Okane.Api.Features.Auth.Entities;
+using Okane.Api.Features.Auth.Services;
 using Okane.Api.Features.Auth.Utils;
 using Okane.Api.Infrastructure.Database;
 
@@ -42,6 +43,8 @@ public static class AuthExtensions
         configurationManager.Bind(nameof(JwtSettings), jwtSettings);
         
         services.AddSingleton(jwtSettings);
+        services.AddSingleton<IAuthService, AuthService>();
+        services.AddScoped<ITokenService, TokenService>();
         
         services.AddIdentity<ApiUser, IdentityRole>()
             .AddEntityFrameworkStores<ApiDbContext>()

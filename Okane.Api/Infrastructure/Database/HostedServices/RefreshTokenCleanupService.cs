@@ -5,18 +5,23 @@ namespace Okane.Api.Infrastructure.Database.HostedServices;
 /// <summary>
 /// Background service to remove inactive refresh tokens on a daily interval.
 /// </summary>
-/// <param name="db"></param>
+/// <param name="scopeFactory"></param>
 /// <see href="https://stackoverflow.com/a/71637260" />
-public class RefreshTokenCleanupService(ApiDbContext db) : BackgroundService
+public class RefreshTokenCleanupService(IServiceScopeFactory scopeFactory) : BackgroundService
 {
-    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        using var timer = new PeriodicTimer(TimeSpan.FromDays(1));
-        while (await timer.WaitForNextTickAsync(cancellationToken))
+        while (!stoppingToken.IsCancellationRequested)
         {
-            await db.RefreshTokens.
-                Where(t => !t.IsActive).
-                ExecuteDeleteAsync(cancellationToken);
+            using (var scope = scopeFactory.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<ApiDbContext>();
+                await db.RefreshTokens.
+                    Where(t => !t.IsActive).
+                    ExecuteDeleteAsync(stoppingToken);
+            }
+            
+            await Task.Delay(TimeSpan.FromDays(1), stoppingToken);
         }
     }
 }

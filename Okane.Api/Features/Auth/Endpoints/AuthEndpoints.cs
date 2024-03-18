@@ -52,8 +52,8 @@ public static class AuthEndpoints
     private static async Task<Results<Ok<ApiResponse<ApiUser>>, BadRequest<ApiErrorsResponse>>>
         HandleRegister(
             IAuthService authService, 
-            CancellationToken cancellationToken, 
-            RegisterRequest request)
+            RegisterRequest request,
+            CancellationToken cancellationToken)
     {
         ApiUser createdUser;
         try
@@ -75,10 +75,10 @@ public static class AuthEndpoints
     private static async Task<Results<Ok<ApiResponse<AuthenticateResponse>>, BadRequest<ApiErrorsResponse>>> 
         HandleLogin(
             IAuthService authService,
-            CancellationToken cancellationToken,
             JwtSettings jwtSettings,
             LoginRequest request,
-            HttpResponse response)
+            HttpResponse response,
+            CancellationToken cancellationToken)
     {
         AuthenticateResponse authenticateResponse;
         try
@@ -97,11 +97,11 @@ public static class AuthEndpoints
 
     private static async Task<NoContent>HandleLogout(
         IAuthService authService,
-        CancellationToken cancellationToken,
         ClaimsPrincipal claimsPrincipal,
         HttpContext context,
         HttpRequest request,
-        ITokenService tokenService)
+        ITokenService tokenService,
+        CancellationToken cancellationToken)
     {
         string? userId = claimsPrincipal.GetUserId();
         
@@ -119,11 +119,11 @@ public static class AuthEndpoints
 
     private static async Task<Results<Ok<ApiResponse<AuthenticateResponse>>, UnauthorizedHttpResult>>
         HandleRefreshToken(
-            CancellationToken cancellationToken,
             JwtSettings jwtSettings,
             HttpRequest request,
             HttpResponse response,
-            ITokenService tokenService)
+            ITokenService tokenService,
+            CancellationToken cancellationToken)
     {
         if (!request.Cookies.TryGetValue(CookieNames.RefreshToken, out string? refreshToken))
         {
@@ -146,12 +146,12 @@ public static class AuthEndpoints
     }
     
     private static async Task<Results<NoContent, BadRequest<ApiErrorsResponse>>> HandleRevokeRefreshToken(
-        CancellationToken cancellationToken,
         ClaimsPrincipal claimsPrincipal,
         ApiDbContext db,
         RevokeRefreshTokenRequest tokenRequest,
         ITokenService tokenService,
-        HttpRequest request)
+        HttpRequest request,
+        CancellationToken cancellationToken)
     {
         string? refreshTokenToRevoke = tokenRequest.RefreshToken ?? GetRefreshTokenFromCookie(request);
         if (refreshTokenToRevoke is null)
@@ -172,9 +172,9 @@ public static class AuthEndpoints
 
     private static async Task<Results<Ok<ApiResponse<UserResponse>>, UnauthorizedHttpResult>> 
         HandleGetSelf(
-            CancellationToken cancellationToken,
             ClaimsPrincipal claimsPrincipal, 
-            ApiDbContext db
+            ApiDbContext db,
+            CancellationToken cancellationToken
         )
     {
         ApiUser? user = await db.Users.SingleOrDefaultAsync(

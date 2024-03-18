@@ -17,6 +17,7 @@ interface IAuthService
 {
     Task<ApiUser> Register(RegisterRequest request, CancellationToken cancellationToken);
     Task<AuthenticateResponse> Login(LoginRequest request, CancellationToken cancellationToken);
+    Task<ApiUser?> GetSelf(string userId, CancellationToken cancellationToken);
 }
 
 public class AuthService(
@@ -84,4 +85,10 @@ public class AuthService(
             User = user.ToUserResponse(),
         };
     }
+
+    public Task<ApiUser?> GetSelf(string userId, CancellationToken cancellationToken)
+        => db.Users.SingleOrDefaultAsync(
+            u => u.Id == userId,
+            cancellationToken
+        );
 }

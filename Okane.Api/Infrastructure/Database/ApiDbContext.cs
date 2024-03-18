@@ -7,10 +7,12 @@ namespace Okane.Api.Infrastructure.Database;
 
 public class ApiDbContext(IOptions<DbSettings> options) : IdentityDbContext<ApiUser>
 {
+    public DbSet<RefreshToken> RefreshTokens { get; set; } = default!;
+    
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
+        base.OnConfiguring(builder);
+        
         builder.UseNpgsql(options.Value.ConnectionString);
     }
-
-    public DbSet<RefreshToken> RefreshTokens { get; set; } = default!;
 }

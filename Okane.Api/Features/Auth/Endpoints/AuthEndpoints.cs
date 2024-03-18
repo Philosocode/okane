@@ -172,16 +172,14 @@ public static class AuthEndpoints
 
     private static async Task<Results<Ok<ApiResponse<UserResponse>>, UnauthorizedHttpResult>> 
         HandleGetSelf(
+            IAuthService authService,
             ClaimsPrincipal claimsPrincipal, 
             ApiDbContext db,
             CancellationToken cancellationToken
         )
     {
-        ApiUser? user = await db.Users.SingleOrDefaultAsync(
-            u => u.Id == claimsPrincipal.GetUserId(),
-            cancellationToken
-        );
-        
+        string? userId = claimsPrincipal.GetUserId();
+        ApiUser? user = await authService.GetSelf(userId ?? "", cancellationToken);
         if (user is null)
         {
             return TypedResults.Unauthorized();

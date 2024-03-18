@@ -17,7 +17,7 @@ public class RefreshTokenCleanupService(IServiceScopeFactory scopeFactory) : Bac
             {
                 var db = scope.ServiceProvider.GetRequiredService<ApiDbContext>();
                 await db.RefreshTokens.
-                    Where(t => !t.IsActive).
+                    Where(t => DateTime.UtcNow <= t.ExpiresAt || t.RevokedAt != null).
                     ExecuteDeleteAsync(stoppingToken);
             }
             

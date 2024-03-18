@@ -1,4 +1,10 @@
-// Create a shallow clone of an object without certain keys.
+/**
+ * Create a shallow clone of an object without certain keys.
+ *
+ * @param original
+ * @param omitKeys
+ * @returns
+ */
 export function omitObjectKeys<T, K extends keyof T>(
   original: T,
   omitKeys: K[],

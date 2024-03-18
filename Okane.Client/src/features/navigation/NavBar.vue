@@ -30,5 +30,3 @@ nav {
   gap: 1rem;
 }
 </style>
-@/features/auth/stores/auth.store@/features/auth/useAuthStore@/features/auth/useAuthStore@/features/auth/auth.store
-@/features/navigation/services/router.service./router.constants

@@ -16,6 +16,7 @@ import * as stringUtils from '@/shared/utils/string.utils'
  * - has a non-alphanumeric character
  *
  * @param password
+ * @returns Whether or not the password is valid. The password checks.
  */
 export function isValidPassword(password: string): [boolean, PasswordChecks] {
   const checks: PasswordChecks = {
@@ -49,6 +50,12 @@ export function isValidPassword(password: string): [boolean, PasswordChecks] {
   return [!Object.values(checks).includes(false), checks]
 }
 
+/**
+ * Extract the payload from a JWT token.
+ *
+ * @param jwtToken
+ * @returns The JWT payload.
+ */
 export function getJWTTokenPayload(jwtToken: string): JWTTokenPayload {
   const jwtBase64 = jwtToken.split('.')[1]
   return JSON.parse(atob(jwtBase64))

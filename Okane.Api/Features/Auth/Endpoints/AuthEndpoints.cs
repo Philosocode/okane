@@ -12,6 +12,7 @@ using Okane.Api.Features.Auth.Dtos.Responses;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Features.Auth.Exceptions;
 using Okane.Api.Features.Auth.Extensions;
+using Okane.Api.Features.Auth.Mappings;
 using Okane.Api.Features.Auth.Services;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Shared.Dtos.ApiResponse;
@@ -71,10 +72,7 @@ public static class AuthEndpoints
             return TypedResults.BadRequest(new ApiErrorsResponse(exception.MapToApiResponseErrors()));
         }
 
-        return TypedResults.Ok(new ApiResponse<ApiUser>
-        {
-            Items = new[] { createdUser }
-        });
+        return TypedResults.Ok(new ApiResponse<ApiUser>(createdUser));
     }
 
     private static async Task<Results<Ok<ApiResponse<AuthenticateResponse>>, BadRequest<ApiErrorsResponse>>> 
@@ -96,11 +94,8 @@ public static class AuthEndpoints
         }
 
         SetRefreshTokenCookie(jwtSettings, response, authenticateResponse.RefreshToken);
-        
-        return TypedResults.Ok(new ApiResponse<AuthenticateResponse>()
-        {
-            Items = new []{ authenticateResponse }
-        });
+
+        return TypedResults.Ok(new ApiResponse<AuthenticateResponse>(authenticateResponse));
     }
 
     private static async Task<NoContent>HandleLogout(
@@ -145,59 +140,50 @@ public static class AuthEndpoints
         }
 
         SetRefreshTokenCookie(jwtSettings, response, authenticateResponse.RefreshToken);
-        
-        return TypedResults.Ok(new ApiResponse<AuthenticateResponse>
-        {
-            Items = new[]{ authenticateResponse }
-        });
+
+        return TypedResults.Ok(new ApiResponse<AuthenticateResponse>(authenticateResponse));
     }
     
-    private static async Task<Results<NoContent, BadRequest<string>>> HandleRevokeRefreshToken(
+    private static async Task<Results<NoContent, BadRequest<ApiErrorsResponse>>> HandleRevokeRefreshToken(
         ApiDbContext db,
+        ClaimsPrincipal claimsPrincipal,
         RevokeRefreshTokenRequest tokenRequest,
+        ITokenService tokenService,
         HttpRequest request)
     {
-        string tokenToRevoke = request.Cookies["okane_refreshToken"] ?? tokenRequest.RefreshToken;
-        if (tokenToRevoke.IsNullOrEmpty())
+        string? refreshTokenToRevoke = tokenRequest.RefreshToken ?? GetRefreshTokenFromCookie(request);
+        if (refreshTokenToRevoke is null)
         {
-            return TypedResults.BadRequest("A token is required.");
+            return TypedResults.BadRequest(
+                new ApiErrorsResponse("Refresh token to revoke is empty.")
+            );
         }
 
-        var user = await db.Users.
-            Include(apiUser => apiUser.RefreshTokens).
-            SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == tokenToRevoke)
-        );
-        
-        if (user is null)
+        string? userId = claimsPrincipal.GetUserId();
+        if (userId is not null)
         {
-            return TypedResults.BadRequest("No user found for token.");
+            await tokenService.RevokeRefreshToken(refreshTokenToRevoke, userId);
         }
-
-        var refreshToken = user.RefreshTokens.Single(t => t.Token == tokenToRevoke);
-        refreshToken.RevokedAt = DateTime.UtcNow;
-
-        await db.SaveChangesAsync();
 
         return TypedResults.NoContent();
     }
 
-    private static async Task<Results<Ok<UserResponse>, ValidationProblem, NotFound>> HandleGetSelf(
-        ClaimsPrincipal claimsPrincipal, ApiDbContext db)
+    private static async Task<Results<Ok<ApiResponse<UserResponse>>, UnauthorizedHttpResult>> 
+        HandleGetSelf(ClaimsPrincipal claimsPrincipal, ApiDbContext db)
     {
         ApiUser? user = await db.Users.SingleOrDefaultAsync(u => u.Id == claimsPrincipal.GetUserId());
         if (user is null)
         {
-            throw new NotSupportedException("Users must have an email.");
+            return TypedResults.Unauthorized();
         }
 
-        return TypedResults.Ok(new UserResponse
-        {
-            Email = user.Email,
-            Name = user.Name
-        });
+        return TypedResults.Ok(new ApiResponse<UserResponse>(user.ToUserResponse()));
     }
     
     // Helpers.
+    private static string? GetRefreshTokenFromCookie(HttpRequest request)
+        => request.Cookies[CookieNames.RefreshToken];
+    
     private static async void SetRefreshTokenCookie(
         JwtSettings jwtSettings,
         HttpResponse response, 

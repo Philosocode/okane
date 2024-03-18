@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -24,8 +25,8 @@ public static class AuthEndpoints
 {
     public static void MapAuthEndpoints(this IEndpointRouteBuilder app)
     {
-        RouteGroupBuilder routeGroup = app.MapGroup("/auth").WithTags("auth");
-
+        RouteGroupBuilder routeGroup = app.MapGroup("/auth").WithTags("Auth");
+        
         routeGroup.MapPost("/register", HandleRegister)
             .WithName(AuthEndpointNames.Register);
 
@@ -34,30 +35,32 @@ public static class AuthEndpoints
 
         routeGroup.MapPost("/logout", HandleLogout)
             .WithName(AuthEndpointNames.Logout)
-            .RequireAuthorization();
+            .RequireAuthorization()
+            .Produces(StatusCodes.Status401Unauthorized);
 
         routeGroup.MapPost("/refresh-token", HandleRefreshToken)
             .WithName(AuthEndpointNames.RefreshToken);
 
         routeGroup.MapPost("/revoke-token", HandleRevokeRefreshToken)
             .WithName(AuthEndpointNames.RevokeToken)
-            .RequireAuthorization();
+            .RequireAuthorization()
+            .Produces(StatusCodes.Status401Unauthorized);
 
         routeGroup.MapGet("/self", HandleGetSelf)
             .WithName(AuthEndpointNames.GetSelf)
-            .RequireAuthorization();
+            .RequireAuthorization()
+            .Produces(StatusCodes.Status401Unauthorized);
     }
 
-    private static async Task<Results<Ok<ApiResponse<ApiUser>>, BadRequest<ApiErrorsResponse>>>
+    private static async Task<Results<NoContent, BadRequest<ApiErrorsResponse>>>
         HandleRegister(
             IAuthService authService, 
             RegisterRequest request,
             CancellationToken cancellationToken)
     {
-        ApiUser createdUser;
         try
         {
-            createdUser = await authService.Register(request, cancellationToken);
+            await authService.Register(request, cancellationToken);
         }
         catch (ValidationException exception)
         {
@@ -68,7 +71,7 @@ public static class AuthEndpoints
             return TypedResults.BadRequest(new ApiErrorsResponse(exception.MapToApiResponseErrors()));
         }
 
-        return TypedResults.Ok(new ApiResponse<ApiUser>(createdUser));
+        return TypedResults.NoContent();
     }
 
     private static async Task<Results<Ok<ApiResponse<AuthenticateResponse>>, BadRequest<ApiErrorsResponse>>> 
@@ -123,7 +126,7 @@ public static class AuthEndpoints
         return TypedResults.NoContent();
     }
 
-    private static async Task<Results<Ok<ApiResponse<AuthenticateResponse>>, UnauthorizedHttpResult>>
+    private static async Task<Results<Ok<ApiResponse<AuthenticateResponse>>, BadRequest<ApiErrorsResponse>>>
         HandleRefreshToken(
             JwtSettings jwtSettings,
             HttpRequest request,
@@ -134,7 +137,7 @@ public static class AuthEndpoints
         var refreshToken = GetRefreshTokenFromCookie(request);
         if (refreshToken is null)
         {
-            return TypedResults.Unauthorized();
+            return TypedResults.BadRequest(new ApiErrorsResponse("Refresh token is required."));
         }
 
         AuthenticateResponse authenticateResponse;
@@ -144,7 +147,7 @@ public static class AuthEndpoints
         }
         catch (Exception)
         {
-            return TypedResults.Unauthorized();
+            return TypedResults.BadRequest(new ApiErrorsResponse("Error rotating refresh token."));
         }
 
         SetRefreshTokenCookie(jwtSettings, response, authenticateResponse.RefreshToken);

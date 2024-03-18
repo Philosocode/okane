@@ -1,11 +1,10 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
 using Okane.Api;
 using Okane.Api.Features.Auth.Extensions;
-using Okane.Api.Features.Auth.Services;
 using Okane.Api.Infrastructure.Database;
+using Okane.Api.Infrastructure.Database.HostedServices;
 using Okane.Api.Infrastructure.HealthCheck;
 using Okane.Api.Infrastructure.Swagger;
 using Okane.Api.Shared.Endpoints;
@@ -31,7 +30,9 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddValidatorsFromAssemblyContaining<IApplicationMarker>();
 
     builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-    builder.Services.AddSwaggerGen(); 
+    builder.Services.AddSwaggerGen();
+
+    builder.Services.AddHostedService<RefreshTokenCleanupService>();
 }
 
 var app = builder.Build();

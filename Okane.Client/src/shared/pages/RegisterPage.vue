@@ -59,12 +59,8 @@ async function handleSubmit() {
         <FormInput label="Name" name="name" type="text" v-model="formState.name" />
         <FormInput label="Email" name="email" type="email" v-model="formState.email" />
         <FormInput label="Password" name="password" type="password" v-model="formState.password" />
-        <FormInput
-          label="Confirm password"
-          name="passwordConfirm"
-          type="password"
-          v-model="formState.passwordConfirm"
-        />
+        <FormInput label="Confirm password" name="passwordConfirm" type="password"
+          v-model="formState.passwordConfirm" />
         <button :disabled="!formIsValid" type="submit">Register</button>
       </fieldset>
     </form>
@@ -79,6 +75,3 @@ fieldset {
   max-width: 12rem;
 }
 </style>
-@/shared/services/router@/features/auth/utils/auth
-@/features/auth/utils/auth.utils@/features/auth/stores/auth.store@/features/auth/useAuthStore
-@/features/navigation/services/router.service@/shared/utils/object.utils

@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Okane.Api.Features.Auth.Config;
 
 namespace Okane.Api.Infrastructure.Database.HostedServices;
 
@@ -8,7 +7,7 @@ namespace Okane.Api.Infrastructure.Database.HostedServices;
 /// </summary>
 /// <param name="db"></param>
 /// <see href="https://stackoverflow.com/a/71637260" />
-public class RefreshTokenCleanupService(ApiDbContext db, JwtSettings jwtSettings) : BackgroundService
+public class RefreshTokenCleanupService(ApiDbContext db) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {

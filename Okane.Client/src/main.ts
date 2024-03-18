@@ -23,7 +23,7 @@ async function startApp() {
     const authStore = useAuthStore()
     await authStore.handleRefreshToken()
   } catch {
-    console.info('Failed to authenticate user on start up.')
+    console.info('Failed to authenticate user on startup.')
   }
 
   app.use(router)

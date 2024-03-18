@@ -8,15 +8,14 @@ public class RefreshToken
 {
     public int RefreshTokenId { get; set; }
     
-    [MaxLength(100)]
     public required string Token { get; set; }
     public required DateTime ExpiresAt { get; set; }
     public required DateTime CreatedAt { get; set; }
     public DateTime? RevokedAt { get; set; }
     
     // Navigation.
-    [Required]
-    public ApiUser ApiUser { get; set; } = default!;
+    public string UserId { get; set; } = string.Empty;
+    public ApiUser User { get; set; } = default!;
     
     // Computed.
     public bool IsExpired => DateTime.UtcNow >= ExpiresAt;

@@ -181,8 +181,7 @@ namespace Okane.Api.Infrastructure.Database
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("text");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -231,10 +230,6 @@ namespace Okane.Api.Infrastructure.Database
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RefreshTokenId"));
 
-                    b.Property<string>("ApiUserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -246,17 +241,20 @@ namespace Okane.Api.Infrastructure.Database
 
                     b.Property<string>("Token")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("RefreshTokenId");
-
-                    b.HasIndex("ApiUserId");
 
                     b.HasIndex("Token")
                         .IsUnique();
 
-                    b.ToTable("RefreshToken");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -312,13 +310,13 @@ namespace Okane.Api.Infrastructure.Database
 
             modelBuilder.Entity("Okane.Api.Features.Auth.Entities.RefreshToken", b =>
                 {
-                    b.HasOne("Okane.Api.Features.Auth.Entities.ApiUser", "ApiUser")
+                    b.HasOne("Okane.Api.Features.Auth.Entities.ApiUser", "User")
                         .WithMany("RefreshTokens")
-                        .HasForeignKey("ApiUserId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ApiUser");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Okane.Api.Features.Auth.Entities.ApiUser", b =>

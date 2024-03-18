@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
 using Okane.Api.Features.Auth.Config;
 using Okane.Api.Features.Auth.Constants;
 using Okane.Api.Features.Auth.Dtos.Requests;
@@ -95,8 +94,7 @@ public static class AuthEndpoints
         return TypedResults.Ok(new ApiResponse<AuthenticateResponse>(authenticateResponse));
     }
 
-    private static async Task<NoContent>HandleLogout(
-        IAuthService authService,
+    private static async Task<Results<NoContent, UnauthorizedHttpResult>>HandleLogout(
         ClaimsPrincipal claimsPrincipal,
         HttpContext context,
         HttpRequest request,
@@ -104,15 +102,23 @@ public static class AuthEndpoints
         CancellationToken cancellationToken)
     {
         string? userId = claimsPrincipal.GetUserId();
-        
-        await context.SignOutAsync();
-
         string? refreshToken = GetRefreshTokenFromCookie(request);
-        
-        if (userId is not null && refreshToken is not null)
+
+        if (userId is null || refreshToken is null)
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        try
         {
             await tokenService.RevokeRefreshToken(refreshToken, userId, cancellationToken);
         }
+        catch (Exception)
+        {
+            return TypedResults.Unauthorized();
+        }
+        
+        await context.SignOutAsync();
         
         return TypedResults.NoContent();
     }
@@ -125,7 +131,8 @@ public static class AuthEndpoints
             ITokenService tokenService,
             CancellationToken cancellationToken)
     {
-        if (!request.Cookies.TryGetValue(CookieNames.RefreshToken, out string? refreshToken))
+        var refreshToken = GetRefreshTokenFromCookie(request);
+        if (refreshToken is null)
         {
             return TypedResults.Unauthorized();
         }
@@ -145,7 +152,7 @@ public static class AuthEndpoints
         return TypedResults.Ok(new ApiResponse<AuthenticateResponse>(authenticateResponse));
     }
     
-    private static async Task<Results<NoContent, BadRequest<ApiErrorsResponse>>> HandleRevokeRefreshToken(
+    private static async Task<Results<NoContent, UnauthorizedHttpResult>> HandleRevokeRefreshToken(
         ClaimsPrincipal claimsPrincipal,
         ApiDbContext db,
         RevokeRefreshTokenRequest tokenRequest,
@@ -153,20 +160,22 @@ public static class AuthEndpoints
         HttpRequest request,
         CancellationToken cancellationToken)
     {
-        string? refreshTokenToRevoke = tokenRequest.RefreshToken ?? GetRefreshTokenFromCookie(request);
-        if (refreshTokenToRevoke is null)
-        {
-            return TypedResults.BadRequest(
-                new ApiErrorsResponse("Refresh token to revoke is empty.")
-            );
-        }
-
         string? userId = claimsPrincipal.GetUserId();
-        if (userId is not null)
+        string? refreshTokenToRevoke = tokenRequest.RefreshToken ?? GetRefreshTokenFromCookie(request);
+        if (userId is null || refreshTokenToRevoke is null)
+        {
+            return TypedResults.Unauthorized();
+        }
+        
+        try
         {
             await tokenService.RevokeRefreshToken(refreshTokenToRevoke, userId, cancellationToken);
         }
-
+        catch (Exception)
+        {
+            return TypedResults.Unauthorized();
+        }
+        
         return TypedResults.NoContent();
     }
 
@@ -179,7 +188,12 @@ public static class AuthEndpoints
         )
     {
         string? userId = claimsPrincipal.GetUserId();
-        ApiUser? user = await authService.GetSelf(userId ?? "", cancellationToken);
+        if (userId is null)
+        {
+            return TypedResults.Unauthorized();
+        }
+        
+        ApiUser? user = await authService.GetSelf(userId, cancellationToken);
         if (user is null)
         {
             return TypedResults.Unauthorized();

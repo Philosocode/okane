@@ -56,7 +56,7 @@ public class AuthService(
             request.Email, request.Password, true, true
         );
 
-        var signInError = "Error signing in.";
+        const string signInError = "Error signing in.";
         
         if (!signInResult.Succeeded)
         {

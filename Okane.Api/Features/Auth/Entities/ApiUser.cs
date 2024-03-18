@@ -6,7 +6,6 @@ namespace Okane.Api.Features.Auth.Entities;
 
 public class ApiUser : IdentityUser
 {
-    [MaxLength(100)]
     public required string Name { get; set; }
     
     [JsonIgnore]

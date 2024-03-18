@@ -58,10 +58,11 @@ public class TokenService(ApiDbContext db, JwtSettings jwtSettings) : ITokenServ
         while (!foundUniqueToken)
         {
             token = Guid.NewGuid().ToString();
-            var isDuplicateToken = await db.Users.AnyAsync(
-                u => u.RefreshTokens.Any(t => t.Token == token)
-            );
 
+            var isDuplicateToken = await db.RefreshTokens.AnyAsync(
+                t => t.Token == token
+            );
+            
             foundUniqueToken = !isDuplicateToken;
         }
 
@@ -76,23 +77,24 @@ public class TokenService(ApiDbContext db, JwtSettings jwtSettings) : ITokenServ
     public async Task RevokeRefreshToken(string userId, string refreshToken, CancellationToken cancellationToken)
     {
         var tokenToRevoke = await db.RefreshTokens.
-            Include(t => t.ApiUser.Id).
             SingleOrDefaultAsync(
-                t => t.Token == refreshToken && t.ApiUser.Id == userId && !t.IsRevoked,
+                t => t.Token == refreshToken && t.UserId == userId && !t.IsRevoked,
                 cancellationToken
             );
 
-        if (tokenToRevoke is not null)
+        if (tokenToRevoke is null)
         {
-            tokenToRevoke.RevokedAt = DateTime.UtcNow;
-            await db.SaveChangesAsync(cancellationToken);
+            throw new Exception("Token to revoke not found.");
         }
-    }
 
+        tokenToRevoke.RevokedAt = DateTime.UtcNow;
+        await db.SaveChangesAsync(cancellationToken);
+    }
+    
     public async Task<AuthenticateResponse> RotateRefreshToken(string oldRefreshToken, CancellationToken cancellationToken)
     {
         var tokenToRotate = await db.RefreshTokens.
-            Include(t => t.ApiUser).
+            Include(t => t.User).
             SingleOrDefaultAsync(
                 t => t.Token == oldRefreshToken,
                 cancellationToken
@@ -108,8 +110,7 @@ public class TokenService(ApiDbContext db, JwtSettings jwtSettings) : ITokenServ
             // Someone's trying to authenticate with a revoked token. As a security measure,
             // revoke all their tokens.
             await db.RefreshTokens.
-                Include(t => t.ApiUser).
-                Where(t => t.ApiUser.Id == tokenToRotate.ApiUser.Id).
+                Where(t => t.UserId == tokenToRotate.UserId).
                 ExecuteUpdateAsync(
                     s => s.SetProperty(
                         t => t.RevokedAt, DateTime.UtcNow
@@ -124,21 +125,23 @@ public class TokenService(ApiDbContext db, JwtSettings jwtSettings) : ITokenServ
         {
             throw new Exception("Can't authenticate with an expired refresh token.");
         }
-
+        
+        // Revoke the token and generate some new JWT / refresh tokens.
+        RefreshToken newRefreshToken = await GenerateRefreshToken();
+        string newJwtToken = GenerateJwtToken(tokenToRotate.UserId);
+        
+        newRefreshToken.UserId = tokenToRotate.UserId;
+        db.Add(newRefreshToken);
+        
         tokenToRotate.RevokedAt = DateTime.UtcNow;
         
-        RefreshToken newRefreshToken = await GenerateRefreshToken();
-        newRefreshToken.ApiUser = tokenToRotate.ApiUser;
-        db.Add(newRefreshToken);
-
         await db.SaveChangesAsync(cancellationToken);
         
-        string newJwtToken = GenerateJwtToken(tokenToRotate.ApiUser.Id);
         return new AuthenticateResponse
         {
             JwtToken = newJwtToken,
             RefreshToken = newRefreshToken,
-            User = tokenToRotate.ApiUser.ToUserResponse()
+            User = tokenToRotate.User.ToUserResponse()
         };
     }
 }

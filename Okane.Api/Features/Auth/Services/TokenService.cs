@@ -70,7 +70,7 @@ public class TokenService(ApiDbContext db, JwtSettings jwtSettings) : ITokenServ
         {
             Token = token,
             CreatedAt = DateTime.UtcNow,
-            ExpiresAt = DateTime.UtcNow.AddMinutes(jwtSettings.MinutesToExpiration),
+            ExpiresAt = DateTime.UtcNow.AddDays(jwtSettings.RefreshTokenTtlDays),
         };
     }
 

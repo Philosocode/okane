@@ -4,6 +4,7 @@ public record ApiResponse<TItem>
 {
     public IEnumerable<TItem> Items { get; init; } = Enumerable.Empty<TItem>();
     public IEnumerable<ApiResponseError> Errors { get; init; } = Enumerable.Empty<ApiResponseError>();
+    public bool HasErrors => Errors.Any();
 
     public ApiResponse() {}
 

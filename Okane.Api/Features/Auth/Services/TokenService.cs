@@ -93,9 +93,9 @@ public class TokenService(ApiDbContext db, JwtSettings jwtSettings) : ITokenServ
     
     public async Task<AuthenticateResponse> RotateRefreshToken(string oldRefreshToken, CancellationToken cancellationToken)
     {
-        var tokenToRotate = await db.RefreshTokens.
-            Include(t => t.User).
-            SingleOrDefaultAsync(
+        var tokenToRotate = await db.RefreshTokens
+            .Include(t => t.User)
+            .SingleOrDefaultAsync(
                 t => t.Token == oldRefreshToken,
                 cancellationToken
             );
@@ -109,9 +109,9 @@ public class TokenService(ApiDbContext db, JwtSettings jwtSettings) : ITokenServ
         {
             // Someone's trying to authenticate with a revoked token. As a security measure,
             // revoke all their tokens.
-            await db.RefreshTokens.
-                Where(t => t.UserId == tokenToRotate.UserId).
-                ExecuteUpdateAsync(
+            await db.RefreshTokens
+                .Where(t => t.UserId == tokenToRotate.UserId)
+                .ExecuteUpdateAsync(
                     s => s.SetProperty(
                         t => t.RevokedAt, DateTime.UtcNow
                     ),

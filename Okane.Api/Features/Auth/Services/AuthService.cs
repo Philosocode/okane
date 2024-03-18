@@ -63,9 +63,9 @@ public class AuthService(
             throw new Exception(signInError);
         }
 
-        var user = await db.Users.
-            Include(u => u.RefreshTokens).
-            SingleOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
+        var user = await db.Users
+            .Include(u => u.RefreshTokens)
+            .SingleOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
         
         if (user is null)
         {
@@ -87,8 +87,7 @@ public class AuthService(
     }
 
     public Task<ApiUser?> GetSelf(string userId, CancellationToken cancellationToken)
-        => db.Users.SingleOrDefaultAsync(
-            u => u.Id == userId,
-            cancellationToken
-        );
+        => db.Users
+            .AsNoTracking()
+            .SingleOrDefaultAsync(u => u.Id == userId, cancellationToken);
 }

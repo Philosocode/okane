@@ -16,9 +16,33 @@ namespace Okane.Api.Features.Auth.Services;
 /// </summary>
 public interface ITokenService
 {
+    /// <summary>
+    /// Generate a JWT token.
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns>Generated JWT token.</returns>
     string GenerateJwtToken(string userId);
+    
+    /// <summary>
+    /// Generate a unique refresh token.
+    /// </summary>
+    /// <returns>Application-wide unique refresh token.</returns>
     Task<RefreshToken> GenerateRefreshToken();
+    
+    /// <summary>
+    /// Revoke a refresh token belonging to a specific user.
+    /// </summary>
+    /// <param name="refreshToken"></param>
+    /// <param name="userId"></param>
+    /// <param name="cancellationToken"></param>
     Task RevokeRefreshToken(string refreshToken, string userId, CancellationToken cancellationToken);
+    
+    /// <summary>
+    /// Revoke a refresh token. Generate a new JWT and refresh token.
+    /// </summary>
+    /// <param name="oldRefreshToken"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>User details, new JWT & refresh token.</returns>
     Task<AuthenticateResponse> RotateRefreshToken(string oldRefreshToken, CancellationToken cancellationToken);
 }
 

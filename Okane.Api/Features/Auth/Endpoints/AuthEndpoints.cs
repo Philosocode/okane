@@ -1,4 +1,3 @@
-using System.Net.Mime;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -18,9 +17,11 @@ using ValidationException = FluentValidation.ValidationException;
 
 namespace Okane.Api.Features.Auth.Endpoints;
 
-// A lot of code in this class has been heavily borrowed from:
-// - https://github.com/dotnet/aspnetcore/blob/476e2aa0c7cb25d6a9c774228e5c549c77620108/src/Identity/Core/src/IdentityApiEndpointRouteBuilderExtensions.cs#L57
-// - https://jasonwatmore.com/net-6-jwt-authentication-with-refresh-tokens-tutorial-with-example-api#project-structure
+/// <summary>
+/// Endpoints for authentication.
+/// </summary>
+/// <see href="https://github.com/dotnet/aspnetcore/blob/476e2aa0c7cb25d6a9c774228e5c549c77620108/src/Identity/Core/src/IdentityApiEndpointRouteBuilderExtensions.cs#L57" />
+/// <see href="https://jasonwatmore.com/net-6-jwt-authentication-with-refresh-tokens-tutorial-with-example-api#project-structure" />
 public static class AuthEndpoints
 {
     public static void MapAuthEndpoints(this IEndpointRouteBuilder app)

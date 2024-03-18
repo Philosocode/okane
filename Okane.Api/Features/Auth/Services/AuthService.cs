@@ -15,8 +15,28 @@ namespace Okane.Api.Features.Auth.Services;
 /// </summary>
 interface IAuthService
 {
+    /// <summary>
+    /// Register a new user.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>The registered user.</returns>
     Task<ApiUser> Register(RegisterRequest request, CancellationToken cancellationToken);
+    
+    /// <summary>
+    /// Log in a user.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>User details, JWT token, refresh token.</returns>
     Task<AuthenticateResponse> Login(LoginRequest request, CancellationToken cancellationToken);
+    
+    /// <summary>
+    /// Get user details. This is intended to be used for the currently-authenticated user.
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Current authenticated user.</returns>
     Task<ApiUser?> GetSelf(string userId, CancellationToken cancellationToken);
 }
 

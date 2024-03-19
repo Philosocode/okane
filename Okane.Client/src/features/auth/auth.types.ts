@@ -1,5 +1,6 @@
 // Internal
 import type { User } from '@/features/users/user.types'
+import type { APIResponse } from '@/shared/services/apiClient.service'
 
 export type AuthFormType = 'register' | 'login'
 
@@ -15,10 +16,10 @@ export type JWTTokenPayload = {
   sub: string
 }
 
-export type AuthenticateResponse = {
+export type AuthenticateResponse = APIResponse<{
   jwtToken: string
   user: User
-}
+}>
 
 export type PasswordChecks = {
   hasDigit: boolean

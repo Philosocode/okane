@@ -3,7 +3,6 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 // Internal
-
 import type { AuthenticateResponse } from '@/features/auth/auth.types'
 import type { User } from '@/features/users/user.types'
 import type { Timeout } from '@/shared/types/shared.type'
@@ -55,8 +54,11 @@ export const useAuthStore = defineStore('AuthStore', () => {
    * @param response
    */
   function initState(response: AuthenticateResponse) {
-    authUser.value = response.user
-    jwtToken.value = response.jwtToken
+    if (response.items.length == 0) return
+
+    const { jwtToken: token, user } = response.items[0]
+    authUser.value = user
+    jwtToken.value = token
 
     startRefreshTokenTimer()
   }

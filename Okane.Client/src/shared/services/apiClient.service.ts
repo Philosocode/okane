@@ -26,7 +26,7 @@ type APIError = {
  * @see https://jasonwatmore.com/vue-3-pinia-jwt-authentication-with-refresh-tokens-example-tutorial
  * @see https://stackoverflow.com/a/65690669
  */
-export async function apiClient<TResponse>(
+export async function apiClient<TResponse extends APIResponse = never>(
   method: HTTPMethod,
   url: string,
   optionOverrides: RequestInit = {},
@@ -56,20 +56,31 @@ export async function apiClient<TResponse>(
   }
 }
 
-apiClient.get = <TResponse>(url: string, customConfig?: RequestInit) =>
+apiClient.get = <TResponse extends APIResponse = never>(url: string, customConfig?: RequestInit) =>
   apiClient<TResponse>(HTTPMethod.GET, url, customConfig)
 
-apiClient.post = <TResponse>(url: string, body?: any, customConfig?: RequestInit) =>
-  apiClient<TResponse>(HTTPMethod.POST, url, { ...customConfig, body })
+apiClient.post = <TResponse extends APIResponse = never>(
+  url: string,
+  body?: any,
+  customConfig?: RequestInit,
+) => apiClient<TResponse>(HTTPMethod.POST, url, { ...customConfig, body })
 
-apiClient.put = <TResponse>(url: string, body?: any, customConfig?: RequestInit) =>
-  apiClient<TResponse>(HTTPMethod.PUT, url, { ...customConfig, body })
+apiClient.put = <TResponse extends APIResponse = never>(
+  url: string,
+  body?: any,
+  customConfig?: RequestInit,
+) => apiClient<TResponse>(HTTPMethod.PUT, url, { ...customConfig, body })
 
-apiClient.patch = <TResponse>(url: string, body: BodyInit | null, customConfig?: RequestInit) =>
-  apiClient<TResponse>(HTTPMethod.PATCH, url, { ...customConfig, body })
+apiClient.patch = <TResponse extends APIResponse = never>(
+  url: string,
+  body: BodyInit | null,
+  customConfig?: RequestInit,
+) => apiClient<TResponse>(HTTPMethod.PATCH, url, { ...customConfig, body })
 
-apiClient.delete = <TResponse>(url: string, customConfig?: RequestInit) =>
-  apiClient<TResponse>(HTTPMethod.DELETE, url, customConfig)
+apiClient.delete = <TResponse extends APIResponse = never>(
+  url: string,
+  customConfig?: RequestInit,
+) => apiClient<TResponse>(HTTPMethod.DELETE, url, customConfig)
 
 /**
  * Get options to pass to fetch().

@@ -102,22 +102,15 @@ public class TokenService(ApiDbContext db, JwtSettings jwtSettings) : ITokenServ
     {
         var tokenToRevoke = await db.RefreshTokens.
             SingleOrDefaultAsync(
-                t => t.Token == refreshToken && t.UserId == userId,
+                t => t.Token == refreshToken && t.UserId == userId && t.RevokedAt == null,
                 cancellationToken
             );
 
-        if (tokenToRevoke is null)
+        if (tokenToRevoke is not null)
         {
-            throw new Exception("Token to revoke not found.");
+            tokenToRevoke.RevokedAt = DateTime.UtcNow;
+            await db.SaveChangesAsync(cancellationToken);
         }
-
-        if (tokenToRevoke.IsRevoked)
-        {
-            throw new Exception("Token is already revoked.");
-        }
-
-        tokenToRevoke.RevokedAt = DateTime.UtcNow;
-        await db.SaveChangesAsync(cancellationToken);
     }
     
     public async Task<AuthenticateResponse> RotateRefreshToken(string oldRefreshToken, CancellationToken cancellationToken)

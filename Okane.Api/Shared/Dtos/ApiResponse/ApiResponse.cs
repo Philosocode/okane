@@ -18,5 +18,5 @@ public record ApiResponse<TItem>
 public record ApiResponseError
 {
     public required string Message { get; init; }
-    public string Key { get; init; } = string.Empty;
+    public string? Key { get; init; }
 }

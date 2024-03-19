@@ -10,5 +10,5 @@ public record AuthenticateResponse
     
     // The refresh token should be set on an HTTP-only cookie. It shouldn't be returned to clients.
     [JsonIgnore]
-    public required RefreshToken RefreshToken { get; init; }
+    public RefreshToken RefreshToken { get; init; } = default!;
 }

@@ -113,15 +113,7 @@ public static class AuthEndpoints
             return TypedResults.Unauthorized();
         }
 
-        try
-        {
-            await tokenService.RevokeRefreshToken(refreshToken, userId, cancellationToken);
-        }
-        catch (Exception)
-        {
-            return TypedResults.Unauthorized();
-        }
-        
+        await tokenService.RevokeRefreshToken(refreshToken, userId, cancellationToken);
         await context.SignOutAsync();
         
         return TypedResults.NoContent();

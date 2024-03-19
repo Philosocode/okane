@@ -3,21 +3,20 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 // Internal
-import { RouteName } from '../navigation/router.constants'
 
 import type { AuthenticateResponse } from '@/features/auth/auth.types'
 import type { User } from '@/features/users/user.types'
 import type { Timeout } from '@/shared/types/shared.type'
 
-import { apiClient } from '@/features/requests/apiClient.service'
-import { router } from '@/features/navigation/router.service'
+import { apiClient } from '@/shared/services/apiClient.service'
+import { RouteName, router } from '@/shared/services/router.service'
 
 import { getJWTTokenPayload } from '@/features/auth/auth.utils'
 
 export const useAuthStore = defineStore('AuthStore', () => {
   const authUser = ref<User>()
   const jwtToken = ref<string>()
-  const isLoggedIn = computed(() => Boolean(authUser.value && jwtToken.value))
+  const isLoggedIn = computed<boolean>(() => Boolean(authUser.value && jwtToken.value))
   const refreshTokenInterval = ref<Timeout>()
 
   /**

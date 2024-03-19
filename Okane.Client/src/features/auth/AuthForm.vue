@@ -3,7 +3,7 @@
 import { computed, ref } from 'vue'
 
 // Internal
-import FormInput from '@/features/forms/FormInput.vue'
+import FormInput from '@/shared/components/FormInput.vue'
 
 import type { AuthFormState, AuthFormType } from '@/features/auth/auth.types'
 import { isValidPassword } from '@/features/auth/auth.utils'

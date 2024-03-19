@@ -3,12 +3,14 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 // Internal
-import type { LoginResponse } from '@/features/auth/auth.types'
+import { RouteName } from '../navigation/router.constants'
+
+import type { AuthenticateResponse } from '@/features/auth/auth.types'
 import type { User } from '@/features/users/user.types'
+import type { Timeout } from '@/shared/types/shared.type'
 
 import { apiClient } from '@/features/requests/apiClient.service'
 import { router } from '@/features/navigation/router.service'
-import { RouteName } from '../navigation/router.constants'
 
 import { getJWTTokenPayload } from '@/features/auth/auth.utils'
 
@@ -16,7 +18,7 @@ export const useAuthStore = defineStore('AuthStore', () => {
   const authUser = ref<User>()
   const jwtToken = ref<string>()
   const isLoggedIn = computed(() => Boolean(authUser.value && jwtToken.value))
-  const refreshTokenInterval = ref<NodeJS.Timeout>()
+  const refreshTokenInterval = ref<Timeout>()
 
   /**
    * Register a user.
@@ -36,32 +38,26 @@ export const useAuthStore = defineStore('AuthStore', () => {
    * @param password
    */
   async function login(email: string, password: string) {
-    const response = await apiClient.post<LoginResponse>(`/auth/login`, { email, password })
-    initStateFromToken(response.jwtToken)
+    const response = await apiClient.post<AuthenticateResponse>(`/auth/login`, { email, password })
+    initState(response)
   }
 
   /**
    * Get a new JWT token and update the auth store.
    */
   async function handleRefreshToken() {
-    const newJWTToken = await apiClient.post<string>('/auth/refresh-token')
-    initStateFromToken(newJWTToken)
+    const response = await apiClient.post<AuthenticateResponse>('/auth/refresh-token')
+    initState(response)
   }
 
   /**
-   * Initialize auth store state from a JWT token.
+   * Initialize auth store state.
    *
-   * @param token
+   * @param response
    */
-  function initStateFromToken(token: string) {
-    const payload = getJWTTokenPayload(token)
-
-    authUser.value = {
-      email: payload.email,
-      name: payload.name,
-    }
-
-    jwtToken.value = token
+  function initState(response: AuthenticateResponse) {
+    authUser.value = response.user
+    jwtToken.value = response.jwtToken
 
     startRefreshTokenTimer()
   }

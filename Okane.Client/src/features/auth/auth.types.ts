@@ -1,3 +1,6 @@
+// Internal
+import type { User } from '@/features/users/user.types'
+
 export type AuthFormType = 'register' | 'login'
 
 export interface AuthFormState {
@@ -12,10 +15,9 @@ export type JWTTokenPayload = {
   sub: string
 }
 
-export type LoginResponse = {
-  email: string
+export type AuthenticateResponse = {
   jwtToken: string
-  name: string
+  user: User
 }
 
 export type PasswordChecks = {

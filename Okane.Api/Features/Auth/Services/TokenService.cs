@@ -98,7 +98,8 @@ public class TokenService(ApiDbContext db, JwtSettings jwtSettings) : ITokenServ
         };
     }
 
-    public async Task RevokeRefreshToken(string userId, string refreshToken, CancellationToken cancellationToken)
+    public async Task RevokeRefreshToken(string refreshToken, string userId, CancellationToken 
+            cancellationToken)
     {
         var tokenToRevoke = await db.RefreshTokens.
             SingleOrDefaultAsync(

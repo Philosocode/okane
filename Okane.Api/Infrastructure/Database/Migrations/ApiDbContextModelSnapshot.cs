@@ -224,11 +224,8 @@ namespace Okane.Api.Infrastructure.Database
 
             modelBuilder.Entity("Okane.Api.Features.Auth.Entities.RefreshToken", b =>
                 {
-                    b.Property<int>("RefreshTokenId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RefreshTokenId"));
+                    b.Property<string>("Token")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -239,18 +236,11 @@ namespace Okane.Api.Infrastructure.Database
                     b.Property<DateTime?>("RevokedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("RefreshTokenId");
-
-                    b.HasIndex("Token")
-                        .IsUnique();
+                    b.HasKey("Token");
 
                     b.HasIndex("UserId");
 

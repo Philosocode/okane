@@ -1,12 +1,10 @@
-using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Okane.Api.Features.Auth.Entities;
 
-[Index(nameof(Token), IsUnique = true)]
 public class RefreshToken
 {
-    public int RefreshTokenId { get; set; }
-    
+    [Key]
     public required string Token { get; set; }
     public required DateTime ExpiresAt { get; set; }
     public required DateTime CreatedAt { get; set; }

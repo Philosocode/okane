@@ -150,7 +150,7 @@ public class TokenService(ApiDbContext db, JwtSettings jwtSettings) : ITokenServ
             throw new Exception("Can't authenticate with revoked refresh token");
         }
 
-        if (!tokenToRotate.IsExpired)
+        if (tokenToRotate.IsExpired)
         {
             throw new Exception("Can't authenticate with an expired refresh token.");
         }

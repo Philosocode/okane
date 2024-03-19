@@ -21,17 +21,19 @@ type APIError = {
  *
  * @param method
  * @param url
+ * @param body
  * @param optionOverrides
  *
  * @see https://jasonwatmore.com/vue-3-pinia-jwt-authentication-with-refresh-tokens-example-tutorial
  * @see https://stackoverflow.com/a/65690669
  */
-export async function apiClient<TResponse extends APIResponse = never>(
+async function makeRequest<TResponse extends APIResponse = never>(
   method: HTTPMethod,
   url: string,
-  optionOverrides: RequestInit = {},
+  body?: any,
+  optionOverrides?: RequestInit,
 ): Promise<TResponse> {
-  const requestOptions = getRequestOptions(method, optionOverrides)
+  const requestOptions = getRequestOptions(method, body, optionOverrides)
   const formattedURL = formatURL(url)
   const authStore = useAuthStore()
 
@@ -56,46 +58,44 @@ export async function apiClient<TResponse extends APIResponse = never>(
   }
 }
 
-apiClient.get = <TResponse extends APIResponse = never>(url: string, customConfig?: RequestInit) =>
-  apiClient<TResponse>(HTTPMethod.GET, url, customConfig)
+function makeRequestWithBody(method: HTTPMethod) {
+  return <TResponse extends APIResponse = never>(
+    url: string,
+    body?: any,
+    optionOverrides?: RequestInit,
+  ) => makeRequest<TResponse>(method, url, body, optionOverrides)
+}
 
-apiClient.post = <TResponse extends APIResponse = never>(
-  url: string,
-  body?: any,
-  customConfig?: RequestInit,
-) => apiClient<TResponse>(HTTPMethod.POST, url, { ...customConfig, body })
+function makeRequestWithoutBody(method: HTTPMethod) {
+  return <TResponse extends APIResponse = never>(url: string, optionOverrides?: RequestInit) =>
+    makeRequest<TResponse>(method, url, undefined, optionOverrides)
+}
 
-apiClient.put = <TResponse extends APIResponse = never>(
-  url: string,
-  body?: any,
-  customConfig?: RequestInit,
-) => apiClient<TResponse>(HTTPMethod.PUT, url, { ...customConfig, body })
-
-apiClient.patch = <TResponse extends APIResponse = never>(
-  url: string,
-  body: BodyInit | null,
-  customConfig?: RequestInit,
-) => apiClient<TResponse>(HTTPMethod.PATCH, url, { ...customConfig, body })
-
-apiClient.delete = <TResponse extends APIResponse = never>(
-  url: string,
-  customConfig?: RequestInit,
-) => apiClient<TResponse>(HTTPMethod.DELETE, url, customConfig)
+export const apiClient = {
+  get: makeRequestWithoutBody(HTTPMethod.GET),
+  post: makeRequestWithBody(HTTPMethod.POST),
+  patch: makeRequestWithBody(HTTPMethod.PATCH),
+  put: makeRequestWithBody(HTTPMethod.PUT),
+  delete: makeRequestWithoutBody(HTTPMethod.DELETE),
+}
 
 /**
  * Get options to pass to fetch().
  *
  * @param method
+ * @param body
  * @param optionOverrides
  */
-function getRequestOptions(method: HTTPMethod, optionOverrides: RequestInit): RequestInit {
-  const authStore = useAuthStore()
-  const { body, ...overrides } = optionOverrides
-
+function getRequestOptions(
+  method: string,
+  body?: any,
+  optionOverrides: RequestInit = {},
+): RequestInit {
   const headers: HeadersInit = {
     'Content-Type': MIMEType.JSON,
   }
 
+  const authStore = useAuthStore()
   if (authStore.isLoggedIn) {
     headers.Authorization = `Bearer ${authStore.jwtToken}`
   }
@@ -103,7 +103,7 @@ function getRequestOptions(method: HTTPMethod, optionOverrides: RequestInit): Re
   const options: RequestInit = {
     method,
     headers,
-    ...overrides,
+    ...optionOverrides,
   }
 
   if (body) {

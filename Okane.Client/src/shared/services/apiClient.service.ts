@@ -5,7 +5,7 @@ import { useAuthStore } from '@/features/auth/useAuthStore'
 
 import { removePrefixCharacters } from '@/shared/utils/string.utils'
 
-export type APIResponse<TItem = unknown> = {
+export interface APIResponse<TItem = unknown> {
   errors: APIError[]
   hasErrors: boolean
   items: TItem[]
@@ -37,15 +37,20 @@ export async function apiClient<TResponse>(
 
   try {
     const response = await window.fetch(formattedURL, requestOptions)
+    const responseText = await response.text()
+    const parsedResponse = responseText ? JSON.parse(responseText) : null
+
+    if (response.ok) {
+      return Promise.resolve(parsedResponse)
+    }
 
     const authErrorStatusCodes = [HTTPStatusCode.Unauthorized, HTTPStatusCode.Forbidden]
     if (authErrorStatusCodes.includes(response.status) && authStore.isLoggedIn) {
       await authStore.logout()
-      return Promise.reject('Unauthenticated.')
+      return Promise.reject('Authentication error. Logging out...')
     }
 
-    const responseText = await response.text()
-    return responseText ? JSON.parse(responseText) : null
+    return Promise.reject(parsedResponse?.errors)
   } catch (err) {
     return Promise.reject(err)
   }

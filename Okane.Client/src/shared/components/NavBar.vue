@@ -3,7 +3,7 @@
 import { RouterLink } from 'vue-router'
 
 // Internal
-import { RouteName } from '@/features/navigation/router.constants';
+import { RouteName } from '@/shared/services/router.service'
 
 import { useAuthStore } from '@/features/auth/useAuthStore'
 

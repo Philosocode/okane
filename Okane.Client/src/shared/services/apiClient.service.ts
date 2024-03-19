@@ -1,9 +1,20 @@
 // Internal
-import { HTTPMethod, HTTPStatusCode, MIMEType } from '@/features/requests/request.constants'
+import { HTTPMethod, HTTPStatusCode, MIMEType } from '@/shared/constants/http.constants'
 
 import { useAuthStore } from '@/features/auth/useAuthStore'
 
 import { removePrefixCharacters } from '@/shared/utils/string.utils'
+
+export type APIResponse<TItem = unknown> = {
+  errors: APIError[]
+  hasErrors: boolean
+  items: TItem[]
+}
+
+type APIError = {
+  message: string
+  key?: string
+}
 
 /**
  * Custom wrapper around the Fetch API.
@@ -29,7 +40,7 @@ export async function apiClient<TResponse>(
 
     const authErrorStatusCodes = [HTTPStatusCode.Unauthorized, HTTPStatusCode.Forbidden]
     if (authErrorStatusCodes.includes(response.status) && authStore.isLoggedIn) {
-      authStore.logout()
+      await authStore.logout()
       return Promise.reject('Unauthenticated.')
     }
 

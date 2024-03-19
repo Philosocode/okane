@@ -5,14 +5,13 @@ import { useRouter } from 'vue-router'
 // Internal
 import PageLayout from '@/shared/layouts/PageLayout.vue'
 
-import { RouteName } from '@/features/navigation/router.constants'
-
 import type { AuthFormState } from '@/features/auth/auth.types'
 
 import { useAuthStore } from '@/features/auth/useAuthStore'
 
 import { omitObjectKeys } from '@/shared/utils/object.utils'
 import AuthForm from '@/features/auth/AuthForm.vue'
+import { RouteName } from '@/shared/services/router.service'
 
 const authStore = useAuthStore()
 const router = useRouter()

@@ -3,7 +3,7 @@
 import { type InputTypeHTMLAttribute } from 'vue'
 
 // Internal
-import { getUniqueFormId } from '@/features/forms/form.utils'
+import { getUniqueFormId } from '@/shared/utils/form.utils'
 
 type Props = {
   label: string
@@ -14,15 +14,22 @@ type Props = {
 }
 
 const controlId = getUniqueFormId()
-const model = defineModel<number | string>();
+const model = defineModel<number | string>()
 const props = defineProps<Props>()
 </script>
 
 <template>
   <div>
     <label :for="controlId">{{ label }}</label>
-    <input v-bind="$attrs" v-model="model" :aria-describedby="props.error ? `${controlId}-error` : undefined"
-      :aria-invalid="props.error ? true : undefined" :id="controlId" :name="props.name" :type="props.type">
+    <input
+      v-bind="$attrs"
+      v-model="model"
+      :aria-describedby="props.error ? `${controlId}-error` : undefined"
+      :aria-invalid="props.error ? true : undefined"
+      :id="controlId"
+      :name="props.name"
+      :type="props.type"
+    />
     <p aria-live="assertive" class="error" :id="`${controlId}-error`" v-if="error">
       {{ error }}
     </p>

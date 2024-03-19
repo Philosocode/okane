@@ -7,7 +7,12 @@ import LoginPage from '@/shared/pages/LoginPage.vue'
 import RegisterPage from '@/shared/pages/RegisterPage.vue'
 
 import { useAuthStore } from '@/features/auth/useAuthStore'
-import { RouteName } from './router.constants'
+
+export enum RouteName {
+  DashboardPage = 'DashboardPage',
+  LoginPage = 'LoginPage',
+  RegisterPage = 'RegisterPage',
+}
 
 export const ROUTES: Array<RouteRecordRaw> = [
   {

@@ -26,7 +26,7 @@ export const useAuthStore = defineStore('AuthStore', () => {
    * @param password
    */
   async function register(email: string, name: string, password: string): Promise<void> {
-    return apiClient.post('/auth/register', { email, name, password })
+    await apiClient.post('/auth/register', { email, name, password })
   }
 
   /**
@@ -82,7 +82,7 @@ export const useAuthStore = defineStore('AuthStore', () => {
    * Log out the user by clearing the store state.
    */
   async function logout() {
-    await apiClient.post('/auth/logout', null)
+    await apiClient.post('/auth/logout')
     clearTimeout(refreshTokenInterval.value)
 
     authUser.value = undefined

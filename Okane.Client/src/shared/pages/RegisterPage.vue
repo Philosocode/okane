@@ -1,51 +1,30 @@
 <script setup lang="ts">
 // External
-import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 // Internal
-import FormInput from '@/features/forms/FormInput.vue'
 import PageLayout from '@/shared/layouts/PageLayout.vue'
 
 import { RouteName } from '@/features/navigation/router.constants'
 
+import type { AuthFormState } from '@/features/auth/auth.types'
+
 import { useAuthStore } from '@/features/auth/useAuthStore'
 
-import { isValidPassword } from '@/features/auth/auth.utils'
 import { omitObjectKeys } from '@/shared/utils/object.utils'
+import AuthForm from '@/features/auth/AuthForm.vue'
 
 const authStore = useAuthStore()
 const router = useRouter()
 
-const formState = ref({
-  email: '',
-  name: '',
-  password: '',
-  passwordConfirm: '',
-})
+async function handleSubmit(formState: AuthFormState) {
+  const postData = omitObjectKeys(formState, ['passwordConfirm'])
 
-const formIsValid = computed<boolean>(() => {
-  const { email, name, password, passwordConfirm } = formState.value
-  const validations = [
-    Boolean(email),
-    Boolean(name),
-    Boolean(password),
-    Boolean(passwordConfirm),
-    password == passwordConfirm,
-    isValidPassword(password)[0],
-  ]
-
-  return !validations.includes(false)
-})
-
-async function handleSubmit() {
-  if (!formIsValid.value) return
-  const postData = omitObjectKeys(formState.value, ['passwordConfirm'])
   try {
     await authStore.register(postData.email, postData.name, postData.password)
     await router.push({ name: RouteName.LoginPage })
   } catch (err) {
-    console.error(err)
+    console.error('Error registering:', err)
   }
 }
 </script>
@@ -53,17 +32,7 @@ async function handleSubmit() {
 <template>
   <PageLayout>
     <h1>Register</h1>
-
-    <form @submit.prevent="handleSubmit">
-      <fieldset>
-        <FormInput label="Name" name="name" type="text" v-model="formState.name" />
-        <FormInput label="Email" name="email" type="email" v-model="formState.email" />
-        <FormInput label="Password" name="password" type="password" v-model="formState.password" />
-        <FormInput label="Confirm password" name="passwordConfirm" type="password"
-          v-model="formState.passwordConfirm" />
-        <button :disabled="!formIsValid" type="submit">Register</button>
-      </fieldset>
-    </form>
+    <AuthForm form-type="register" @submit="handleSubmit" />
   </PageLayout>
 </template>
 

@@ -1,42 +1,26 @@
 <script setup lang="ts">
 // External
-import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 // Internal
-import FormInput from '@/features/forms/FormInput.vue'
+import AuthForm from '@/features/auth/AuthForm.vue'
 import PageLayout from '@/shared/layouts/PageLayout.vue'
 
 import { RouteName } from '@/features/navigation/router.constants'
 
+import type { AuthFormState } from '@/features/auth/auth.types'
+
 import { useAuthStore } from '@/features/auth/useAuthStore'
 
-import { isValidPassword } from '@/features/auth/auth.utils'
-
+const authStore = useAuthStore()
 const router = useRouter()
 
-const formState = ref({
-  email: '',
-  password: '',
-})
-
-const formIsValid = computed<boolean>(() => {
-  const { email, password } = formState.value
-  const validations = [Boolean(email), Boolean(password), isValidPassword(password)[0]]
-
-  return !validations.includes(false)
-})
-
-const authStore = useAuthStore()
-
-async function handleSubmit() {
-  if (!formIsValid.value) return
-
+async function handleSubmit(formState: AuthFormState) {
   try {
-    await authStore.login(formState.value.email, formState.value.password)
+    await authStore.login(formState.email, formState.password)
     await router.push({ name: RouteName.DashboardPage })
   } catch (err) {
-    console.error(err)
+    console.error('Error logging in:', err)
   }
 }
 </script>
@@ -44,23 +28,6 @@ async function handleSubmit() {
 <template>
   <PageLayout>
     <h1>Login</h1>
-
-    <form @submit.prevent="handleSubmit">
-      <fieldset>
-        <FormInput label="Email" name="email" type="email" v-model="formState.email" />
-        <FormInput label="Password" name="password" type="password" v-model="formState.password" />
-
-        <button :disabled="!formIsValid" type="submit">Login</button>
-      </fieldset>
-    </form>
+    <AuthForm form-type="login" @submit="handleSubmit" />
   </PageLayout>
 </template>
-
-<style scoped>
-fieldset {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  max-width: 12rem;
-}
-</style>

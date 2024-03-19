@@ -6,7 +6,7 @@ import type { JWTTokenPayload, PasswordChecks } from '@/features/auth/auth.types
 import * as stringUtils from '@/shared/utils/string.utils'
 
 /**
- * Check if a password is valid. See Okane.Api/AddIdentityApiEndpoints for valid password criteria.
+ * Check if a password is valid. See Okane.Api/Features/Auth/Extensions/AuthExtensions.cs for valid password criteria.
  *
  * This is true if:
  * - length >= MIN_PASSWORD_LENGTH

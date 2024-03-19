@@ -10,6 +10,8 @@ import { router } from '@/shared/services/router.service'
 
 import { useAuthStore } from '@/features/auth/useAuthStore'
 
+import '@/shared/styles/index.scss'
+
 await startApp()
 
 async function startApp() {

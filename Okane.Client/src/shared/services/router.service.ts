@@ -24,13 +24,13 @@ export const ROUTES: Array<RouteRecordRaw> = [
     path: '/login',
     name: RouteName.LoginPage,
     component: LoginPage,
-    meta: { isPublic: true },
+    meta: { isPublic: true, isPublicOnly: true },
   },
   {
     path: '/register',
     name: RouteName.RegisterPage,
     component: RegisterPage,
-    meta: { isPublic: true },
+    meta: { isPublic: true, isPublicOnly: true },
   },
 ] as const
 

@@ -6,9 +6,11 @@ using Okane.Api.Features.Auth.Extensions;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Database.HostedServices;
 using Okane.Api.Infrastructure.HealthCheck;
+using Okane.Api.Infrastructure.Logging;
 using Okane.Api.Infrastructure.Swagger;
 using Okane.Api.Shared.Endpoints;
 using Okane.Api.Shared.Middlewares;
+using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +32,8 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddHealthChecks().AddDbContextCheck<ApiDbContext>();
     builder.Services.AddValidatorsFromAssemblyContaining<IApplicationMarker>();
 
+    builder.ConfigureLogging();
+
     builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
     builder.Services.AddSwaggerGen();
 
@@ -39,26 +43,30 @@ var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
 // Request pipeline.
-if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseDeveloperExceptionPage();
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    app.UseSerilogRequestLogging();
+
+    app.UseMiddleware<ApiExceptionMiddleware>();
+
+    app.UseHttpsRedirection();
+
+    app.UsePathBase("/api");
+
+    app.UseHealthChecks("/health", new HealthCheckOptions()
+    {
+        ResponseWriter = HealthCheckResponseWriter.WriteResponse
+    });
+
+    app.MapApiEndpoints();
+
+    app.UseAuthorization();
+
+    app.Run();
 }
-
-app.UseMiddleware<ApiExceptionMiddleware>();
-
-app.UseHttpsRedirection();
-
-app.UsePathBase("/api");
-
-app.UseHealthChecks("/health", new HealthCheckOptions()
-{
-    ResponseWriter = HealthCheckResponseWriter.WriteResponse
-});
-
-app.MapApiEndpoints();
-
-app.UseAuthorization();
-
-app.Run();

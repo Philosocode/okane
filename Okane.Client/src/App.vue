@@ -14,5 +14,3 @@ import NavBar from '@/shared/components/NavBar.vue'
   <RouterView />
   <VueQueryDevtools />
 </template>
-
-<style></style>

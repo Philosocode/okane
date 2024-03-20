@@ -8,6 +8,7 @@ using Okane.Api.Infrastructure.Database.HostedServices;
 using Okane.Api.Infrastructure.HealthCheck;
 using Okane.Api.Infrastructure.Swagger;
 using Okane.Api.Shared.Endpoints;
+using Okane.Api.Shared.Middlewares;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,6 +45,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ApiExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 

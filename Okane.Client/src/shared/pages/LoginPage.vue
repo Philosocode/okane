@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 
 // Internal
 import AuthForm from '@/features/auth/AuthForm.vue'
+import Heading from '@/shared/components/Heading.vue'
 import PageLayout from '@/shared/layouts/PageLayout.vue'
 
 import type { AuthFormState } from '@/features/auth/auth.types'
@@ -26,7 +27,13 @@ async function handleSubmit(formState: AuthFormState) {
 
 <template>
   <PageLayout>
-    <h1>Login</h1>
+    <Heading tag="h1">Login</Heading>
     <AuthForm form-type="login" @submit="handleSubmit" />
   </PageLayout>
 </template>
+
+<style scoped>
+.page-heading {
+  margin-bottom: var(--spacing-xs);
+}
+</style>

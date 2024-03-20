@@ -4,9 +4,16 @@
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .root {
-  margin: 0 auto;
-  max-width: 60vw;
+  margin-left: var(--spacing-md);
+  margin-right: var(--spacing-md);
+  max-width: 50em;
+}
+
+@include respond(md) {
+  .root {
+    margin: 0 auto;
+  }
 }
 </style>

@@ -37,6 +37,11 @@ const props = defineProps<Props>()
 </template>
 
 <style scoped>
+input {
+  display: block;
+  width: 100%;
+}
+
 .error {
   color: red;
   margin-top: 0.5rem;

@@ -21,5 +21,12 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: '@use "@/shared/styles/mixins.scss" as *;',
+        },
+      },
+    },
   }
 })

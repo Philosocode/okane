@@ -67,16 +67,30 @@ const formIsValid = computed<boolean>(() => {
         type="password"
       />
 
-      <button :disabled="!formIsValid" type="submit">{{ submitButtonText }}</button>
+      <button class="submit-button" :disabled="!formIsValid" type="submit">
+        {{ submitButtonText }}
+      </button>
     </fieldset>
   </form>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+form {
+  max-width: 22rem;
+}
+
 fieldset {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  max-width: 12rem;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+}
+
+.submit-button {
+  margin-top: var(--spacing-sm);
+
+  &:disabled {
+    color: var(--color-gray-300);
+  }
 }
 </style>

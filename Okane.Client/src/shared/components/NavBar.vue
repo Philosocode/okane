@@ -23,10 +23,19 @@ const authStore = useAuthStore()
   </nav>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 nav {
   display: flex;
   justify-content: center;
   gap: 1rem;
+  padding: 1rem;
+}
+
+a {
+  color: var(--color-green-200);
+
+  &:hover {
+    color: var(--color-green-400);
+  }
 }
 </style>

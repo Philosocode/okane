@@ -21,7 +21,7 @@ public static class AuthExtensions
     {
         if (principal.Identity is null || !principal.Identity.IsAuthenticated)
         {
-            return "";
+            return null;
         }
 
         var idClaim = principal.Claims.SingleOrDefault(

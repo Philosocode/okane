@@ -7,8 +7,6 @@ Log.Logger = new LoggerConfiguration()
 
 try
 {
-    Log.Information("Starting API");
-    
     var builder = WebApplication.CreateBuilder(args);
     builder.AddServices();
     
@@ -19,7 +17,10 @@ try
 }
 catch (Exception exception)
 {
-    Log.Fatal(exception, "API terminated unexpectedly");
+    if (exception is not HostAbortedException)
+    {
+        Log.Fatal(exception, "API terminated unexpectedly");
+    }
 }
 finally
 {

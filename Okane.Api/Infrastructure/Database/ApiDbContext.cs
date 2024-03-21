@@ -7,7 +7,7 @@ namespace Okane.Api.Infrastructure.Database;
 
 public class ApiDbContext(IOptions<DbSettings> options) : IdentityDbContext<ApiUser>
 {
-    public DbSet<RefreshToken> RefreshTokens { get; set; } = default!;
+    public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

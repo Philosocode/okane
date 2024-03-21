@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -19,10 +20,10 @@ public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
         {
             In = ParameterLocation.Header,
             Description = "Please provide a valid token",
-            Name = "Authorization",
+            Name = JwtBearerDefaults.AuthenticationScheme,
             Type = SecuritySchemeType.Http,
             BearerFormat = "JWT",
-            Scheme = "Bearer"
+            Scheme = JwtBearerDefaults.AuthenticationScheme,
         });
 
         options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -33,7 +34,7 @@ public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
                     Reference = new OpenApiReference
                     {
                         Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
+                        Id = JwtBearerDefaults.AuthenticationScheme
                     }
                 },
                 Array.Empty<string>()

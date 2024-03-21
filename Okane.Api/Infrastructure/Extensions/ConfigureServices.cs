@@ -1,5 +1,4 @@
 using FluentValidation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -40,10 +39,10 @@ public static class ConfigureServices
     
     private static void AddLogging(this WebApplicationBuilder builder)
     {
-        builder.Host.UseSerilog(((context, config) =>
+        builder.Host.UseSerilog((context, config) =>
         {
             config.ReadFrom.Configuration(context.Configuration);
-        }));
+        });
     }
 
     private static void AddDatabase(this WebApplicationBuilder builder)
@@ -81,7 +80,7 @@ public static class ConfigureServices
                     
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = AuthUtils.GetIssuerSigningKey(jwtSigningKey),
+                    IssuerSigningKey = TokenUtils.GetIssuerSigningKey(jwtSigningKey),
 
                     // Set ClockSkew to zero so tokens expire exactly at token expiration time
                     // (instead of 5 minutes later).
@@ -110,7 +109,6 @@ public static class ConfigureServices
 
     private static void AddServiceLayer(this WebApplicationBuilder builder)
     {
-        builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
     }
     

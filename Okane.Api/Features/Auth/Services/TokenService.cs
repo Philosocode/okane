@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Okane.Api.Features.Auth.Config;
 using Okane.Api.Features.Auth.Dtos.Responses;
@@ -46,11 +47,13 @@ public interface ITokenService
     Task<AuthenticateResponse> RotateRefreshToken(string oldRefreshToken, CancellationToken cancellationToken);
 }
 
-public class TokenService(ApiDbContext db, JwtSettings jwtSettings) : ITokenService
+public class TokenService(ApiDbContext db, IOptions<JwtSettings> jwtOptions) : ITokenService
 {
     public string GenerateJwtToken(string userId)
     {
-        var key = AuthUtils.GetIssuerSigningKey(jwtSettings.IssuerSigningKey);
+        var jwtSettings = jwtOptions.Value;
+        
+        var key = AuthUtils.GetIssuerSigningKey(jwtSettings. IssuerSigningKey);
         var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
         var claimsIdentity = new ClaimsIdentity(
             new[]
@@ -94,7 +97,7 @@ public class TokenService(ApiDbContext db, JwtSettings jwtSettings) : ITokenServ
         {
             Token = token,
             CreatedAt = DateTime.UtcNow,
-            ExpiresAt = DateTime.UtcNow.AddDays(jwtSettings.RefreshTokenTtlDays),
+            ExpiresAt = DateTime.UtcNow.AddDays(jwtOptions.Value.RefreshTokenTtlDays),
         };
     }
 

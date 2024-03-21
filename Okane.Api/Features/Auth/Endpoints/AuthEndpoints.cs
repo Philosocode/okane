@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Extensions.Options;
 using Okane.Api.Features.Auth.Config;
 using Okane.Api.Features.Auth.Constants;
 using Okane.Api.Features.Auth.Dtos.Requests;
@@ -78,7 +79,7 @@ public static class AuthEndpoints
     private static async Task<Results<Ok<ApiResponse<AuthenticateResponse>>, BadRequest<ApiErrorsResponse>>> 
         HandleLogin(
             IAuthService authService,
-            JwtSettings jwtSettings,
+            IOptions<JwtSettings> jwtSettings,
             LoginRequest request,
             HttpResponse response,
             CancellationToken cancellationToken)
@@ -93,7 +94,7 @@ public static class AuthEndpoints
             return TypedResults.BadRequest(new ApiErrorsResponse("Failed to authenticate."));
         }
 
-        SetRefreshTokenCookie(jwtSettings, response, authenticateResponse.RefreshToken);
+        SetRefreshTokenCookie(jwtSettings.Value.RefreshTokenTtlDays, response, authenticateResponse.RefreshToken);
 
         return TypedResults.Ok(new ApiResponse<AuthenticateResponse>(authenticateResponse));
     }
@@ -121,7 +122,7 @@ public static class AuthEndpoints
 
     private static async Task<Results<Ok<ApiResponse<AuthenticateResponse>>, BadRequest<ApiErrorsResponse>>>
         HandleRefreshToken(
-            JwtSettings jwtSettings,
+            IOptions<JwtSettings> jwtSettings,
             HttpRequest request,
             HttpResponse response,
             ITokenService tokenService,
@@ -143,7 +144,7 @@ public static class AuthEndpoints
             return TypedResults.BadRequest(new ApiErrorsResponse("Error rotating refresh token."));
         }
 
-        SetRefreshTokenCookie(jwtSettings, response, authenticateResponse.RefreshToken);
+        SetRefreshTokenCookie(jwtSettings.Value.RefreshTokenTtlDays, response, authenticateResponse.RefreshToken);
 
         return TypedResults.Ok(new ApiResponse<AuthenticateResponse>(authenticateResponse));
     }
@@ -203,7 +204,7 @@ public static class AuthEndpoints
         => request.Cookies[CookieNames.RefreshToken];
     
     private static void SetRefreshTokenCookie(
-        JwtSettings jwtSettings,
+        int ttlDays,
         HttpResponse response, 
         RefreshToken refreshToken)
     {
@@ -211,7 +212,7 @@ public static class AuthEndpoints
         var cookieOptions = new CookieOptions
         {
             HttpOnly = true,
-            Expires = DateTime.UtcNow.AddDays(jwtSettings.RefreshTokenTtlDays)
+            Expires = DateTime.UtcNow.AddDays(ttlDays)
         };
         
         response.Cookies.Append(

@@ -1,6 +1,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Okane.Api.Features.Auth.Config;
@@ -10,9 +11,10 @@ using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Features.Auth.Mappers;
 using Okane.Api.Features.Auth.Services;
 using Okane.Api.Features.Auth.Utils;
+using Okane.Api.Infrastructure.ApiResponse;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Endpoints;
-using Okane.Api.Shared.Dtos.ApiResponse;
+using Okane.Api.Shared.Exceptions;
 
 namespace Okane.Api.Features.Auth.Endpoints;
 
@@ -37,7 +39,7 @@ public class Login : IEndpoint
         }
     }
     
-    private static async Task<Results<Ok<ApiResponse<AuthenticateResponse>>, BadRequest<ApiErrorsResponse>>> 
+    private static async Task<Results<Ok<ApiResponse<AuthenticateResponse>>, BadRequest<ProblemDetails>>> 
         Handle(
             HttpContext context,
             Request request,
@@ -54,13 +56,12 @@ public class Login : IEndpoint
             request.Email, request.Password, true, true
         );
         
-        var errorsResponse = new ApiErrorsResponse("Error logging in.");
-        
         if (!signInResult.Succeeded)
         {
-            logger.LogInformation("Login failure: {Email}", request.Email);
-            
-            return TypedResults.BadRequest(errorsResponse);
+            logger.LogWarning("Login failure: {Email}", request.Email);
+
+            var exception = new ApiException("Error authenticating.");
+            return TypedResults.BadRequest(exception.ToProblemDetails());
         }
  
         var user = await db.Users
@@ -70,8 +71,7 @@ public class Login : IEndpoint
         if (user is null)
         {
             logger.LogError("Login succeeded but user not found");
-            
-            return TypedResults.BadRequest(errorsResponse);
+            throw new InvalidOperationException();
         }
         
         string jwtToken = tokenService.GenerateJwtToken(user.Id);
@@ -82,7 +82,7 @@ public class Login : IEndpoint
 
         TokenUtils.SetRefreshTokenCookie(jwtSettings.Value, context.Response, refreshToken);
 
-        AuthenticateResponse response = new AuthenticateResponse
+        var response = new AuthenticateResponse
         {
             User = user.ToUserResponse(),
             JwtToken = jwtToken,

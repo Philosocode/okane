@@ -5,7 +5,7 @@ using Okane.Api.Features.Auth.Extensions;
 using Okane.Api.Features.Auth.Services;
 using Okane.Api.Features.Auth.Utils;
 using Okane.Api.Infrastructure.Endpoints;
-using Okane.Api.Shared.Dtos.ApiResponse;
+using Okane.Api.Infrastructure.Exceptions;
 
 namespace Okane.Api.Features.Auth.Endpoints;
 
@@ -21,7 +21,7 @@ public class RevokeRefreshToken : IEndpoint
 
     private record Request(string? RefreshToken);
 
-    private static async Task<Results<NoContent, BadRequest<ApiErrorsResponse>>> 
+    private static async Task<Results<NoContent, ValidationErrorResult>> 
         Handle(
             ClaimsPrincipal claimsPrincipal,
             HttpContext context,
@@ -33,7 +33,11 @@ public class RevokeRefreshToken : IEndpoint
         
         if (refreshTokenToRevoke is null)
         {
-            return TypedResults.BadRequest(new ApiErrorsResponse("Refresh token is required."));
+            return new ValidationErrorResult
+            {
+                Property = "refreshToken",
+                Message = "A valid refresh token must be provided in request body or cookie."
+            };
         }
 
         string userId = claimsPrincipal.GetUserId();

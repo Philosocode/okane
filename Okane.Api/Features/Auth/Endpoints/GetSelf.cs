@@ -6,9 +6,10 @@ using Okane.Api.Features.Auth.Dtos.Responses;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Features.Auth.Extensions;
 using Okane.Api.Features.Auth.Mappers;
+using Okane.Api.Infrastructure.ApiResponse;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Endpoints;
-using Okane.Api.Shared.Dtos.ApiResponse;
+using Okane.Api.Infrastructure.Exceptions;
 
 namespace Okane.Api.Features.Auth.Endpoints;
 
@@ -20,7 +21,7 @@ public class GetSelf : IEndpoint
             .WithName(AuthEndpointNames.GetSelf)
             .WithSummary("Get user details for the currently-authenticated user.");
 
-    private static async Task<Results<Ok<ApiResponse<UserResponse>>, UnauthorizedHttpResult>> Handle(
+    private static async Task<Results<Ok<ApiResponse<UserResponse>>, UnauthorizedResult>> Handle(
         ClaimsPrincipal claimsPrincipal,
         ApiDbContext db,
         CancellationToken cancellationToken)
@@ -33,7 +34,7 @@ public class GetSelf : IEndpoint
         
         if (user is null)
         {
-            return TypedResults.Unauthorized();
+            return new UnauthorizedResult();
         }
 
         return TypedResults.Ok(new ApiResponse<UserResponse>(user.ToUserResponse()));

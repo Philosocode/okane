@@ -3,6 +3,11 @@
 run:
 	dotnet run
 
+
+.PHONY: watch
+watch:
+	dotnet watch
+
 # Build restores and builds the API.
 .PHONY: build
 build:

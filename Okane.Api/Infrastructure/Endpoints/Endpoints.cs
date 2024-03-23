@@ -2,6 +2,11 @@ using Okane.Api.Features.Auth.Endpoints;
 
 namespace Okane.Api.Infrastructure.Endpoints;
 
+public interface IEndpoint
+{
+    static abstract void Map(IEndpointRouteBuilder builder);
+}
+
 public static class Endpoints
 {
     public static void MapApiEndpoints(this IEndpointRouteBuilder builder)
@@ -10,7 +15,7 @@ public static class Endpoints
             builder.
                 MapGroup("").
                 RequireAuthorization();
-        
+
         endpoints
             .MapGroup("/auth")
             .WithTags("Authentication")

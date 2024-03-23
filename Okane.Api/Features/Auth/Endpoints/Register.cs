@@ -1,11 +1,13 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Okane.Api.Features.Auth.Constants;
+using Okane.Api.Features.Auth.Dtos.Responses;
 using Okane.Api.Features.Auth.Entities;
+using Okane.Api.Features.Auth.Mappers;
 using Okane.Api.Features.Auth.Services;
 using Okane.Api.Infrastructure.Endpoints;
-using Okane.Api.Shared.Dtos.ApiResponse;
 
 namespace Okane.Api.Features.Auth.Endpoints;
 
@@ -31,9 +33,11 @@ public class Register : IEndpoint
         }
     }
     
-    private static async Task<Results<NoContent, BadRequest<ApiErrorsResponse>>>
+    // See: https://github.com/dotnet/aspnetcore/blob/e737c6fe54fa596289268140864c127957c0b1a1/src/Identity/Core/src/IdentityApiEndpointRouteBuilderExtensions.cs#L57
+    private static async Task<Results<Created<UserResponse>, BadRequest<ProblemDetails>, ValidationProblem>>
         Handle(
             Request request, 
+            LinkGenerator linkGenerator,
             ILogger<Register> logger,
             ITokenService tokenService,
             UserManager<ApiUser> userManager,
@@ -51,13 +55,14 @@ public class Register : IEndpoint
         var registerResult = await userManager.CreateAsync(userToCreate, request.Password);
         if (!registerResult.Succeeded)
         {
-            logger.LogInformation("Error registering user: {Request}", request);
-            
-            return TypedResults.BadRequest(new ApiErrorsResponse("Failed to register."));
+            logger.LogInformation("Error registering user: {User}", userToCreate);
+
+            return TypedResults.ValidationProblem(registerResult.ToErrorDictionary());
         }
 
-        logger.LogInformation("New user registered: {Request}", request);
+        logger.LogInformation("New user registered: {User}", userToCreate);
 
-        return TypedResults.NoContent();
+        var location = linkGenerator.GetPathByName(AuthEndpointNames.GetSelf);
+        return TypedResults.Created(location, userToCreate.ToUserResponse());
     }
 }

@@ -1,9 +1,8 @@
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Okane.Api.Shared.Exceptions;
 
-namespace Okane.Api.Infrastructure.Exceptions;
+namespace Okane.Api.Shared.Exceptions;
 
 /// <summary>
 /// Handler for unhandled exceptions.

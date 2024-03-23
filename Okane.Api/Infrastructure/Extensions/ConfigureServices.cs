@@ -9,7 +9,7 @@ using Okane.Api.Features.Auth.Services;
 using Okane.Api.Features.Auth.Utils;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Database.HostedServices;
-using Okane.Api.Infrastructure.Exceptions;
+using Okane.Api.Shared.Exceptions;
 using Serilog;
 
 namespace Okane.Api.Infrastructure.Extensions;

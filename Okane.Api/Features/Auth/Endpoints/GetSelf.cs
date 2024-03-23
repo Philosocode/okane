@@ -8,8 +8,8 @@ using Okane.Api.Features.Auth.Extensions;
 using Okane.Api.Features.Auth.Mappers;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Endpoints;
-using Okane.Api.Infrastructure.Exceptions;
 using Okane.Api.Shared.Dtos.ApiResponses;
+using Okane.Api.Shared.Exceptions;
 
 namespace Okane.Api.Features.Auth.Endpoints;
 

@@ -1,29 +1,29 @@
 using System.Net.Mime;
 using System.Reflection;
 using Microsoft.AspNetCore.Http.Metadata;
+using Microsoft.AspNetCore.Mvc;
 
-namespace Okane.Api.Infrastructure.Exceptions;
+namespace Okane.Api.Shared.Exceptions;
 
-public record ValidationErrorResult : IResult, IEndpointMetadataProvider{
-    public required string Property { get; init; }
-    public required string Message { get; init; }
-    
+public record UnauthorizedResult : IResult, IEndpointMetadataProvider
+{
     public async Task ExecuteAsync(HttpContext httpContext)
     {
-        var response = TypedResults.ValidationProblem(new Dictionary<string, string[]>
+        var response = TypedResults.Problem(new ProblemDetails
         {
-            [Property] = [Message]
+            Status = StatusCodes.Status401Unauthorized,
+            Detail = "Please authenticate to access this endpoint."
         });
 
         await response.ExecuteAsync(httpContext);
     }
-    
+
     public static void PopulateMetadata(MethodInfo method, EndpointBuilder builder)
     {
         builder.Metadata.Add(
             new ProducesResponseTypeMetadata(
-                StatusCodes.Status400BadRequest, 
-                typeof(HttpValidationProblemDetails), 
+                StatusCodes.Status401Unauthorized, 
+                typeof(ProblemDetails), 
                 [MediaTypeNames.Application.ProblemJson]
             )
         );

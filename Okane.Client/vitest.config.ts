@@ -1,5 +1,5 @@
 // External
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, URL } from 'node:url'
 import { mergeConfig, defineConfig, configDefaults } from 'vitest/config'
 
 // Internal
@@ -10,9 +10,14 @@ export default defineConfig((configEnv) =>
     viteConfig(configEnv),
     defineConfig({
       test: {
+        coverage: {
+          provider: 'v8',
+        },
         environment: 'jsdom',
         exclude: [...configDefaults.exclude],
+        globals: true,
         root: fileURLToPath(new URL('./', import.meta.url)),
+        setupFiles: './src/__tests__/setUpTests.ts',
       },
     }),
   ),

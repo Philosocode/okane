@@ -6,10 +6,10 @@ using Okane.Api.Features.Auth.Dtos.Responses;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Features.Auth.Extensions;
 using Okane.Api.Features.Auth.Mappers;
-using Okane.Api.Infrastructure.ApiResponse;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Endpoints;
 using Okane.Api.Infrastructure.Exceptions;
+using Okane.Api.Shared.Dtos.ApiResponses;
 
 namespace Okane.Api.Features.Auth.Endpoints;
 

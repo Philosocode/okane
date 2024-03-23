@@ -11,9 +11,9 @@ using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Features.Auth.Mappers;
 using Okane.Api.Features.Auth.Services;
 using Okane.Api.Features.Auth.Utils;
-using Okane.Api.Infrastructure.ApiResponse;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Endpoints;
+using Okane.Api.Shared.Dtos.ApiResponses;
 using Okane.Api.Shared.Exceptions;
 
 namespace Okane.Api.Features.Auth.Endpoints;

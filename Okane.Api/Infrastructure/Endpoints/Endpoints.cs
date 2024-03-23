@@ -11,10 +11,9 @@ public static class Endpoints
 {
     public static void MapApiEndpoints(this IEndpointRouteBuilder builder)
     {
-        var endpoints =
-            builder.
-                MapGroup("").
-                RequireAuthorization();
+        var endpoints = builder.MapGroup("")
+            .RequireAuthorization()
+            .WithOpenApi();
 
         endpoints
             .MapGroup("/auth")
@@ -26,12 +25,12 @@ public static class Endpoints
             .MapEndpoint<RevokeRefreshToken>()
             .MapEndpoint<GetSelf>();
     }
-    
-    private static IEndpointRouteBuilder MapEndpoint<TEndpoint>(this IEndpointRouteBuilder builder) 
+
+    private static IEndpointRouteBuilder MapEndpoint<TEndpoint>(this IEndpointRouteBuilder builder)
         where TEndpoint : IEndpoint
     {
         TEndpoint.Map(builder);
-        
+
         return builder;
     }
 }

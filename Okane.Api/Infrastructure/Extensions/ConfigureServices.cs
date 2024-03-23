@@ -8,6 +8,7 @@ using Okane.Api.Features.Auth.Services;
 using Okane.Api.Features.Auth.Utils;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Database.HostedServices;
+using Okane.Api.Infrastructure.Exceptions;
 using Okane.Api.Infrastructure.Swagger;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -18,44 +19,53 @@ public static class ConfigureServices
 {
     public static void AddServices(this WebApplicationBuilder builder)
     {
-        builder.AddUserSecrets();
-        builder.AddLogging();
-        builder.AddDatabase();
-        builder.Services.AddValidatorsFromAssembly(typeof(ConfigureServices).Assembly);
-        builder.AddApiAuthentication();
-        builder.AddServiceLayer();
-        builder.AddHealthChecks();
-        builder.AddSwagger();
-        builder.AddHostedServices();
-    }
-
-    private static void AddUserSecrets(this WebApplicationBuilder builder)
-    {
         if (builder.Environment.IsDevelopment())
         {
             builder.Configuration.AddUserSecrets<Program>();
         }
-    }
-    
-    private static void AddLogging(this WebApplicationBuilder builder)
-    {
+        
         builder.Host.UseSerilog((context, config) =>
         {
             config.ReadFrom.Configuration(context.Configuration);
         });
-    }
 
-    private static void AddDatabase(this WebApplicationBuilder builder)
-    {
+        builder.AddSwagger();
+        
         builder.Services.Configure<DbSettings>(builder.Configuration.GetSection(nameof(DbSettings)));
         builder.Services.AddDbContext<ApiDbContext>();
+        
+        builder.Services.AddValidatorsFromAssembly(typeof(ConfigureServices).Assembly);
+        builder.AddApiAuthentication();
+        
+        builder.Services.AddScoped<ITokenService, TokenService>();
+
+        builder.Services.AddProblemDetails();
+        
+        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+        
+        builder.Services.AddHealthChecks().AddDbContextCheck<ApiDbContext>();
+ 
+        builder.Services.AddHostedService<RefreshTokenCleanupService>();
     }
     
+    private static void AddSwagger(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+        builder.Services.AddSwaggerGen(options =>
+        {
+            options.CustomSchemaIds(type => type.FullName?.Replace('+', '.'));
+            options.InferSecuritySchemes();
+        });
+    }
+
+
     private static void AddApiAuthentication(this WebApplicationBuilder builder)
     {
         builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(nameof(JwtSettings)));
         
-        builder.Services.AddIdentity<ApiUser, IdentityRole>()
+        builder.Services
+            .AddIdentity<ApiUser, IdentityRole>()
             .AddEntityFrameworkStores<ApiDbContext>()
             .AddDefaultTokenProviders();
 
@@ -105,32 +115,5 @@ public static class ConfigureServices
         });
         
         builder.Services.AddAuthorization();
-    }
-
-    private static void AddServiceLayer(this WebApplicationBuilder builder)
-    {
-        builder.Services.AddScoped<ITokenService, TokenService>();
-    }
-    
-    private static void AddHealthChecks(this WebApplicationBuilder builder)
-    {
-        builder.Services
-            .AddHealthChecks()
-            .AddDbContextCheck<ApiDbContext>();
-    }
-    
-    private static void AddSwagger(this WebApplicationBuilder builder)
-    {
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-        builder.Services.AddSwaggerGen(options =>
-        {
-            options.InferSecuritySchemes();
-        });
-    }
-    
-    private static void AddHostedServices(this WebApplicationBuilder builder)
-    {
-        builder.Services.AddHostedService<RefreshTokenCleanupService>();
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Endpoints;
 using Okane.Api.Infrastructure.HealthCheck;
-using Okane.Api.Shared.Middlewares;
+using Okane.Api.Shared.Exceptions;
 using Serilog;
 
 namespace Okane.Api.Infrastructure.Extensions;
@@ -15,11 +15,13 @@ public static class ConfigureApp {
         
         if (app.Environment.IsDevelopment())
         {
+            app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI();
         }
 
-        app.UseMiddleware<ApiExceptionMiddleware>();
+        app.UseStatusCodePages();
+        app.UseExceptionHandler();
 
         app.UseHttpsRedirection();
 

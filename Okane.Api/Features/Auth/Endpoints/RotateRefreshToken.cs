@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Okane.Api.Features.Auth.Config;
@@ -8,9 +9,10 @@ using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Features.Auth.Mappers;
 using Okane.Api.Features.Auth.Services;
 using Okane.Api.Features.Auth.Utils;
+using Okane.Api.Infrastructure.ApiResponse;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Endpoints;
-using Okane.Api.Shared.Dtos.ApiResponse;
+using Okane.Api.Shared.Exceptions;
 
 namespace Okane.Api.Features.Auth.Endpoints;
 
@@ -25,7 +27,7 @@ public class RotateRefreshToken : IEndpoint
             .WithSummary("Revoke a refresh token and generate a new refresh and JWT token.");
     }
 
-    private static async Task<Results<Ok<ApiResponse<AuthenticateResponse>>, UnauthorizedHttpResult>>
+    private static async Task<Results<Ok<ApiResponse<AuthenticateResponse>>, BadRequest<ProblemDetails>>>
         Handle(
             HttpContext context,
             ApiDbContext db,
@@ -38,16 +40,20 @@ public class RotateRefreshToken : IEndpoint
             .Include(t => t.User)
             .SingleOrDefaultAsync(t => t.Token == oldRefreshToken);
 
+        var invalidRefreshTokenResponse = TypedResults.BadRequest(
+            new ApiException("Invalid refresh token.").ToProblemDetails()
+        );
+
         if (refreshTokenToRotate is null)
         {
-            return TypedResults.Unauthorized();
+            return invalidRefreshTokenResponse;
         }
 
         if (refreshTokenToRotate.IsRevoked)
         {
             // Someone's trying to authenticate with a revoked token. As a security measure,
             // revoke all their tokens.
-            logger.LogInformation(
+            logger.LogWarning(
                 "Revoked refresh token for user {UserId} received when rotating refresh token",
                 refreshTokenToRotate.UserId
             );
@@ -59,19 +65,26 @@ public class RotateRefreshToken : IEndpoint
                         t => t.RevokedAt, DateTime.UtcNow
                 ));
 
-            return TypedResults.Unauthorized();
+            return invalidRefreshTokenResponse;
         }
         
         if (refreshTokenToRotate.IsExpired)
         {
-            return TypedResults.Unauthorized();
+            return invalidRefreshTokenResponse;
         }
-        
+
         RefreshToken newRefreshToken = await tokenService.GenerateRefreshToken();
         string newJwtToken = tokenService.GenerateJwtToken(refreshTokenToRotate.UserId);
         
         refreshTokenToRotate.RevokedAt = DateTime.UtcNow;
         await db.SaveChangesAsync();
+
+        logger.LogInformation(
+            "Generated refresh token {NewRefreshToken} for user {UserId}. Old revoked token: {OldRefreshToken}",
+            newRefreshToken.Token,
+            refreshTokenToRotate.UserId,
+            refreshTokenToRotate.Token
+        );
         
         TokenUtils.SetRefreshTokenCookie(jwtSettings.Value, context.Response, newRefreshToken);
 

@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using System.Reflection;
 using Microsoft.AspNetCore.Http.Metadata;
 
@@ -23,7 +24,7 @@ public record ValidationErrorResult : IResult, IEndpointMetadataProvider{
             new ProducesResponseTypeMetadata(
                 StatusCodes.Status400BadRequest, 
                 typeof(HttpValidationProblemDetails), 
-                ["application/problem+json"]
+                [MediaTypeNames.Application.ProblemJson]
             )
         );
     }

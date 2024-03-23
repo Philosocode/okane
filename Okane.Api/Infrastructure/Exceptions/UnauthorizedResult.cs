@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using System.Reflection;
 using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,7 @@ public record UnauthorizedResult : IResult, IEndpointMetadataProvider
             new ProducesResponseTypeMetadata(
                 StatusCodes.Status401Unauthorized, 
                 typeof(ProblemDetails), 
-                ["application/problem+json"]
+                [MediaTypeNames.Application.ProblemJson]
             )
         );
     }

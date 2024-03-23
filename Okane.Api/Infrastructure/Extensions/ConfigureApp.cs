@@ -32,10 +32,7 @@ public static class ConfigureApp {
             ResponseWriter = HealthCheckResponseWriter.WriteResponse
         });
 
-        app.UseMiddleware<ProblemDetailsContentTypeMiddleware>();
-        
         app.MapApiEndpoints();
-
         
         app.UseAuthorization();
 

@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace Okane.Api.Infrastructure.ApiResponse;
+namespace Okane.Api.Shared.Dtos.ApiResponses;
 
 public record ApiResponse<TItem>
 {

@@ -1,4 +1,4 @@
-namespace Okane.Api.Infrastructure.ApiResponse;
+namespace Okane.Api.Shared.Dtos.ApiResponses;
 
 public record ApiPaginatedResponse<TItem> : ApiResponse<TItem>
 {

@@ -1,19 +1,25 @@
 # Project Structure
 ## Okane.Api
-Contains all the API-related code. This project follows a feature-based structure:
+Contains all the API-related code. This project follows a vertical slice architecture:
 ```text
 src/Features/Feature
+             |--Config
              |--Constants
-             |--Dtos
-             |--Mappings
-             |--Models
-             |--Routes
-             '--Validators
+             |--Dtos: DTOs shared across multiple endpoints
+             |--Endpoints: colocate endpoint, validator, request / response DTOs, and handler in 1 file
+             |--Entities
+             |--Mappers
+             |--Services
+             '--Utils
  
 src/Infrastructure
-    |--Configuration: appsettings, API configuration stuff
+    |--ApiResponse: response DTOs shared across various endpoints
     |--Database: DB configuration, migrations, seeds
-    '--Swagger
+    |--Endpoints
+    |--Exceptions
+    |--Extensions: extension methods to configure services & middleware pipeline
+    |--HealthCheck
+    '--Logs
 ```
 In the future, it may make sense to separate API logic from business logic. In this case, I
 should keep code for routing, endpoints, and application configuration in an Api project and

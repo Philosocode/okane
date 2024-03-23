@@ -5,7 +5,7 @@ using Okane.Api.Features.Auth.Extensions;
 using Okane.Api.Features.Auth.Services;
 using Okane.Api.Features.Auth.Utils;
 using Okane.Api.Infrastructure.Endpoints;
-using Okane.Api.Infrastructure.Exceptions;
+using Okane.Api.Shared.Exceptions;
 
 namespace Okane.Api.Features.Auth.Endpoints;
 

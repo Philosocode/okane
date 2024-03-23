@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Endpoints;
-using Okane.Api.Infrastructure.Exceptions;
 using Okane.Api.Infrastructure.HealthCheck;
 using Okane.Api.Shared.Exceptions;
 using Serilog;

@@ -1,6 +1,6 @@
 using System.Net.Mime;
 
-namespace Okane.Api.Infrastructure.Exceptions;
+namespace Okane.Api.Shared.Exceptions;
 
 public class ProblemDetailsContentTypeMiddleware(RequestDelegate next)
 {

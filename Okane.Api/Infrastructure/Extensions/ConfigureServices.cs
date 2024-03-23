@@ -1,7 +1,8 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Okane.Api.Features.Auth.Config;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Features.Auth.Services;
@@ -9,9 +10,7 @@ using Okane.Api.Features.Auth.Utils;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Database.HostedServices;
 using Okane.Api.Infrastructure.Exceptions;
-using Okane.Api.Infrastructure.Swagger;
 using Serilog;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Okane.Api.Infrastructure.Extensions;
 
@@ -51,11 +50,41 @@ public static class ConfigureServices
     private static void AddSwagger(this WebApplicationBuilder builder)
     {
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
         builder.Services.AddSwaggerGen(options =>
         {
+            options.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Version = "v1",
+                Title = "Okane API",
+                Description = "API for managing finance and investment records"
+            });
+            
             options.CustomSchemaIds(type => type.FullName?.Replace('+', '.'));
-            options.InferSecuritySchemes();
+            
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Description = "Please provide a valid token",
+                Name = JwtBearerDefaults.AuthenticationScheme,
+                Type = SecuritySchemeType.Http,
+                BearerFormat = "JWT",
+                Scheme = JwtBearerDefaults.AuthenticationScheme,
+            });
+            
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = JwtBearerDefaults.AuthenticationScheme
+                        }
+                    },
+                    []
+                }
+            });
         });
     }
 

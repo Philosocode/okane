@@ -1,6 +1,7 @@
 // Internal
 import type { User } from '@/features/users/user.types'
-import type { APIResponse } from '@/shared/services/apiClient.service'
+
+import type { APIResponse } from '@/shared/services/apiClient/apiClient.types'
 
 export type AuthFormType = 'register' | 'login'
 

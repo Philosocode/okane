@@ -1,5 +1,5 @@
 // Internal
-import { server } from '@/tests/msw/server'
+import { server } from '@tests/msw/server'
 
 beforeAll(() => {
   server.listen({ onUnhandledRequest: 'error' })

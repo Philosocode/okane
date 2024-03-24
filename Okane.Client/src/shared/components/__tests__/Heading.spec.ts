@@ -3,7 +3,7 @@ import type { HeadingTag } from '@/shared/types/html.types'
 import { mount } from '@vue/test-utils'
 
 // Internal
-import Heading from 'src/shared/components/Heading.vue'
+import Heading from '@/shared/components/Heading.vue'
 
 const table: HeadingTag[][] = [['h1'], ['h2'], ['h3'], ['h4'], ['h5'], ['h6']]
 

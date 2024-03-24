@@ -3,7 +3,7 @@ import { HTTPStatusCode } from '@/shared/constants/http.constants'
 
 import type { ProblemDetails } from '@/shared/services/apiClient/apiClient.types'
 
-import { baseMockFactory } from '@/tests/factories/base.factory'
+import { baseMockFactory } from '@tests/factories/base.factory'
 
 const defaultProblemDetails: ProblemDetails = {
   detail: 'An exception occurred while editing a finance record.',

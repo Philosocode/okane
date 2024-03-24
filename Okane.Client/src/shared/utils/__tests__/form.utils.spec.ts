@@ -1,5 +1,5 @@
 // Internal
-import * as formUtils from 'src/shared/utils/form.utils'
+import * as formUtils from '@/shared/utils/form.utils'
 
 describe('getUniqueFormId', () => {
   it('returns a unique, numeric ID', () => {

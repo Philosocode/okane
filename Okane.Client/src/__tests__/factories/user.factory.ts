@@ -1,5 +1,5 @@
 // Internal
-import { baseMockFactory } from '@/tests/factories/base.factory'
+import { baseMockFactory } from '@tests/factories/base.factory'
 
 import type { User } from '@/features/users/user.types'
 

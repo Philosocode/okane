@@ -73,10 +73,13 @@ public class RotateRefreshToken : IEndpoint
             return invalidRefreshTokenResponse;
         }
 
-        RefreshToken newRefreshToken = await tokenService.GenerateRefreshToken();
-        string newJwtToken = tokenService.GenerateJwtToken(refreshTokenToRotate.UserId);
-        
         refreshTokenToRotate.RevokedAt = DateTime.UtcNow;
+        
+        RefreshToken newRefreshToken = await tokenService.GenerateRefreshToken();
+        newRefreshToken.UserId = refreshTokenToRotate.UserId;
+
+        db.Add(newRefreshToken);
+        
         await db.SaveChangesAsync();
 
         logger.LogInformation(
@@ -88,6 +91,8 @@ public class RotateRefreshToken : IEndpoint
         
         TokenUtils.SetRefreshTokenCookie(jwtSettings.Value, context.Response, newRefreshToken);
 
+        string newJwtToken = tokenService.GenerateJwtToken(refreshTokenToRotate.UserId);
+        
         var response = new AuthenticateResponse
         {
             User = refreshTokenToRotate.User.ToUserResponse(),

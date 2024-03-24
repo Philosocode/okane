@@ -17,7 +17,10 @@ export default defineConfig((configEnv) =>
         exclude: [...configDefaults.exclude],
         globals: true,
         root: fileURLToPath(new URL('./', import.meta.url)),
-        setupFiles: './src/__tests__/setUpTests.ts',
+        setupFiles: [
+          './src/__tests__/config/setUpTests.ts',
+          './src/__tests__/config/setUpCustomMatchers.ts',
+        ],
       },
     }),
   ),

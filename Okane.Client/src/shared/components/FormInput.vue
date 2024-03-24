@@ -3,9 +3,9 @@
 import { type InputTypeHTMLAttribute } from 'vue'
 
 // Internal
-import { getUniqueFormId } from '@/shared/utils/form.utils'
+import { getUniqueFormControlId } from '@/shared/utils/form.utils'
 
-type Props = {
+export type FormInputProps = {
   label: string
   name: string
   type: InputTypeHTMLAttribute
@@ -13,9 +13,9 @@ type Props = {
   error?: string
 }
 
-const controlId = getUniqueFormId()
+const controlId = getUniqueFormControlId()
 const model = defineModel<number | string>()
-const props = defineProps<Props>()
+const props = defineProps<FormInputProps>()
 </script>
 
 <template>

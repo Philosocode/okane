@@ -3,7 +3,6 @@
  *
  * @param original
  * @param omitKeys
- * @returns
  */
 export function omitObjectKeys<T, K extends keyof T>(
   original: T,

@@ -11,6 +11,8 @@ const alphanumericSet = new Set([...digitSet, ...alphabetSet])
  * @returns Whether or not each character is in the A-Z alphabet.
  */
 export function isAlphabetString(s: string): boolean {
+  if (!s.length) return false
+
   for (let i = 0; i < s.length; i++) {
     if (!alphabetSet.has(s[i])) return false
   }
@@ -25,6 +27,8 @@ export function isAlphabetString(s: string): boolean {
  * @returns Whether or not if each character is alphanumeric.
  */
 export function isAlphanumericString(s: string): boolean {
+  if (!s.length) return false
+
   for (let i = 0; i < s.length; i++) {
     if (!alphanumericSet.has(s[i])) return false
   }
@@ -39,6 +43,8 @@ export function isAlphanumericString(s: string): boolean {
  * @returns Whether or not each character is a digit.
  */
 export function isIntegerString(s: string): boolean {
+  if (!s.length) return false
+
   for (let i = 0; i < s.length; i++) {
     if (!digitSet.has(s[i])) return false
   }
@@ -75,8 +81,10 @@ export function isUppercaseString(s: string): boolean {
  * @example removePrefixCharacter('/', '///abc') => 'abc'
  */
 export function removePrefixCharacters(s: string, prefixCharacter: string): string {
+  if (prefixCharacter.length === 0) return s
+
   let startIdx = 0
-  while (s[startIdx] === prefixCharacter && startIdx < s.length) {
+  while (s[startIdx] === prefixCharacter[0] && startIdx < s.length) {
     startIdx++
   }
 

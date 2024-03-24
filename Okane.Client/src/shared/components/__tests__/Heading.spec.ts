@@ -1,14 +1,16 @@
 // External
 import type { HeadingTag } from '@/shared/types/html.types'
-import { mount } from '@vue/test-utils'
 
 // Internal
 import Heading from '@/shared/components/Heading.vue'
+import { getMountComponent } from '@tests/utils/mount.utils'
+
+const mountComponent = getMountComponent(Heading)
 
 const table: HeadingTag[][] = [['h1'], ['h2'], ['h3'], ['h4'], ['h5'], ['h6']]
 
 test.each(table)('<Heading tag="%s" />', (tag) => {
-  const wrapper = mount(Heading, {
+  const wrapper = mountComponent({
     props: { tag },
   })
 
@@ -17,7 +19,7 @@ test.each(table)('<Heading tag="%s" />', (tag) => {
 
 test('renders the passed content', () => {
   const slotText = 'Hello world'
-  const wrapper = mount(Heading, {
+  const wrapper = mountComponent({
     props: { tag: 'h1' },
     slots: {
       default: () => slotText,

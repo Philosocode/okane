@@ -8,7 +8,7 @@ const formIdRef = ref(0)
  *
  * @returns Unique form control ID.
  */
-export function getUniqueFormId() {
+export function getUniqueFormControlId() {
   formIdRef.value++
   return String(formIdRef.value)
 }

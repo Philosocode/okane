@@ -2,16 +2,16 @@
 import { http, HttpResponse, RequestHandler } from 'msw'
 
 // Internal
-import { server } from '@tests/msw/server'
+import { mockServer } from '@tests/msw/mockServer'
 
-const authHandlers: RequestHandler[] = [
-  http.post('/auth/register', () => {
-    return HttpResponse.json({
-      items: [],
-    })
+export const AUTH_HANDLER_MAP = {
+  LOGOUT_SUCCESS: http.post('/api/auth/logout', () => {
+    return HttpResponse.json()
   }),
-]
+} as const
+
+const authHandlers: RequestHandler[] = Object.values(AUTH_HANDLER_MAP)
 
 export function setUpAuthHandlers() {
-  server.use(...authHandlers)
+  mockServer.use(...authHandlers)
 }

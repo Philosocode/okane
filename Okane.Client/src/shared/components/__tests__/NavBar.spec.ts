@@ -5,7 +5,7 @@ import { flushPromises } from '@vue/test-utils'
 import NavBar from '@/shared/components/NavBar.vue'
 
 import { AUTH_HANDLER_MAP } from '@tests/msw/handlers/auth.handlers'
-import { ROUTE_NAME } from '@/shared/services/router/router.service'
+import { ROUTE_NAME } from '@/shared/services/router/router.constants'
 
 import { useAuthStore } from '@/features/auth/useAuthStore'
 

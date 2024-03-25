@@ -34,10 +34,14 @@ export const ROUTES: Array<RouteRecordRaw> = [
   },
 ] as const
 
-export const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: ROUTES,
-})
+export function createAppRouter() {
+  return createRouter({
+    history: createWebHistory(import.meta.env.BASE_URL),
+    routes: ROUTES,
+  })
+}
+
+export const router = createAppRouter()
 
 router.beforeEach((to) => {
   const authStore = useAuthStore()

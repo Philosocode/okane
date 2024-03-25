@@ -7,7 +7,7 @@ import AuthForm from '@/features/auth/AuthForm.vue'
 import Heading from '@/shared/components/Heading.vue'
 import PageLayout from '@/shared/layouts/PageLayout.vue'
 
-import { RouteName } from '@/shared/services/router.service'
+import { RouteName } from '@/shared/services/router/router.service'
 
 import type { AuthFormState } from '@/features/auth/auth.types'
 

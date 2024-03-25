@@ -12,7 +12,6 @@ import { useAuthStore } from '@/features/auth/useAuthStore'
 import { mockServer } from '@tests/msw/mockServer'
 
 import { createMockUser } from '@tests/factories/user.factory'
-import { getMountComponent } from '@tests/utils/mount.utils'
 import { getURLByRouteName } from '@/shared/services/router/router.utils'
 
 const mountComponent = getMountComponent(NavBar, {

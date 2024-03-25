@@ -5,7 +5,7 @@ import { flushPromises } from '@vue/test-utils'
 import NavBar from '@/shared/components/NavBar.vue'
 
 import { AUTH_HANDLER_MAP } from '@tests/msw/handlers/auth.handlers'
-import { RouteName } from '@/shared/services/router/router.service'
+import { ROUTE_NAME } from '@/shared/services/router/router.service'
 
 import { useAuthStore } from '@/features/auth/useAuthStore'
 
@@ -27,10 +27,10 @@ test('renders links for unauthenticated users', () => {
   expect(allLinks).toHaveLength(2)
 
   const loginLink = wrapper.findByText('a', 'Login')
-  expect(loginLink.attributes('href')).toBe(getURLByRouteName(RouteName.LoginPage))
+  expect(loginLink.attributes('href')).toBe(getURLByRouteName(ROUTE_NAME.LOGIN))
 
   const registerLink = wrapper.findByText('a', 'Register')
-  expect(registerLink.attributes('href')).toBe(getURLByRouteName(RouteName.RegisterPage))
+  expect(registerLink.attributes('href')).toBe(getURLByRouteName(ROUTE_NAME.REGISTER))
 })
 
 describe('when authenticated', () => {
@@ -47,7 +47,7 @@ describe('when authenticated', () => {
     const allLinks = wrapper.findAll('a')
     expect(allLinks).toHaveLength(2)
 
-    const dashboardURL = getURLByRouteName(RouteName.DashboardPage)
+    const dashboardURL = getURLByRouteName(ROUTE_NAME.DASHBOARD)
     const dashboardLink = wrapper.get(`a[href="${dashboardURL}"]`)
     expect(dashboardLink.text()).toBe('Dashboard')
 
@@ -67,6 +67,6 @@ describe('when authenticated', () => {
     const authStore = useAuthStore()
     expect(authStore.authUser).toBeUndefined()
     expect(authStore.jwtToken).toBeUndefined()
-    expect(globalThis.location.pathname).toBe(getURLByRouteName(RouteName.LoginPage))
+    expect(globalThis.location.pathname).toBe(getURLByRouteName(ROUTE_NAME.LOGIN))
   })
 })

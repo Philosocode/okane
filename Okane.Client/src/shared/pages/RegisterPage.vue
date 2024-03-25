@@ -7,7 +7,7 @@ import AuthForm from '@/features/auth/AuthForm.vue'
 import Heading from '@/shared/components/Heading.vue'
 import PageLayout from '@/shared/layouts/PageLayout.vue'
 
-import { RouteName } from '@/shared/services/router/router.service'
+import { ROUTE_NAME } from '@/shared/services/router/router.service'
 
 import type { AuthFormState } from '@/features/auth/auth.types'
 
@@ -23,7 +23,7 @@ async function handleSubmit(formState: AuthFormState) {
 
   try {
     await authStore.register(postData.email, postData.name, postData.password)
-    await router.push({ name: RouteName.LoginPage })
+    await router.push({ name: ROUTE_NAME.LOGIN })
   } catch (err) {
     console.error('Error registering:', err)
   }

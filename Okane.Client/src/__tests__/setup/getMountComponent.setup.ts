@@ -1,11 +1,24 @@
 // External
 import type { Plugin } from 'vue'
-import { type ComponentMountingOptions, mount } from '@vue/test-utils'
+import { createPinia, setActivePinia, type Pinia } from 'pinia'
+import { mount, type ComponentMountingOptions } from '@vue/test-utils'
 
-// Internal
 import { createAppRouter } from '@/shared/services/router/router.service'
 
-type GlobalMountOptions<T> = ComponentMountingOptions<T>['global']
+global.getMountComponent = customMount
+
+declare global {
+  // @ts-ignore
+  // eslint-disable-next-line no-var
+  var getMountComponent: typeof customMount
+}
+
+let pinia: Pinia
+
+beforeEach(() => {
+  pinia = createPinia()
+  setActivePinia(pinia)
+})
 
 type CustomMountingOptions = {
   withPinia?: boolean
@@ -13,6 +26,7 @@ type CustomMountingOptions = {
 }
 
 type MountingOptionsWithPlugins<TComponent> = ComponentMountingOptions<TComponent> & {
+  // For convenience, plugins can be passed directly rather than through global.plugins.
   plugins?: Plugin[]
 }
 
@@ -22,12 +36,9 @@ type MountingOptionsWithPlugins<TComponent> = ComponentMountingOptions<TComponen
  * @param component
  * @param customOptions
  */
-export function getMountComponent<TComponent>(
-  component: TComponent,
-  customOptions?: CustomMountingOptions,
-) {
+function customMount<TComponent>(component: TComponent, customOptions?: CustomMountingOptions) {
   return function (options?: MountingOptionsWithPlugins<TComponent>) {
-    const mergedGlobal: GlobalMountOptions<TComponent> = {
+    const mergedGlobal: ComponentMountingOptions<TComponent>['global'] = {
       ...options?.global,
     }
 
@@ -43,8 +54,8 @@ export function getMountComponent<TComponent>(
       mergedGlobal.plugins.push(createAppRouter())
     }
 
-    if (customOptions?.withPinia && globalThis.pinia) {
-      mergedGlobal.plugins.push(globalThis.pinia)
+    if (customOptions?.withPinia) {
+      mergedGlobal.plugins.push(pinia)
     }
 
     return mount(component, {

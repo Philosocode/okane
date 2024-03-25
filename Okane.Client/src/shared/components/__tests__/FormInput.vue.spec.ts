@@ -2,7 +2,6 @@
 import FormInput, { type FormInputProps } from '@/shared/components/FormInput.vue'
 
 import * as formUtils from '@/shared/utils/form.utils'
-import { getMountComponent } from '@tests/utils/mount.utils'
 
 // Data.
 const props: FormInputProps = {

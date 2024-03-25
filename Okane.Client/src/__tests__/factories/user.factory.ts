@@ -1,5 +1,8 @@
 // Internal
-import { baseMockFactory } from '@tests/factories/base.factory'
+import {
+  baseMockFactory,
+  type MockFactoryFunction,
+} from '@tests/factories/base.factory'
 
 import type { User } from '@/features/users/user.types'
 
@@ -8,6 +11,9 @@ const defaultUser: User = {
   name: 'Okane User',
 }
 
-export function createMockUser() {
-  return baseMockFactory.bind(null, defaultUser)
+export const createMockUser: MockFactoryFunction<User> = (
+  overrides,
+  options,
+): User => {
+  return baseMockFactory(defaultUser, overrides, options)
 }

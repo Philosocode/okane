@@ -10,16 +10,23 @@ export type MockFactoryOptions = {
   deepClone?: boolean
 }
 
-export function baseMockFactory<TData>(data: TData) {
-  return function createMock(overrides: Partial<TData>, options?: MockFactoryOptions): TData {
-    const dataWithOverrides = {
-      ...data,
-      ...overrides,
-    }
+export type MockFactoryFunction<TData> = (
+  overrides?: Partial<TData>,
+  options?: MockFactoryOptions,
+) => TData
 
-    if (options?.deepClone) return cloneDeep(dataWithOverrides)
-    return dataWithOverrides
+export function baseMockFactory<TData>(
+  defaultData: TData,
+  overrides?: Partial<TData>,
+  options?: MockFactoryOptions,
+): TData {
+  const dataWithOverrides = {
+    ...defaultData,
+    ...overrides,
   }
+
+  if (options?.deepClone) return cloneDeep(dataWithOverrides)
+  return dataWithOverrides
 }
 
 export function wrapInAPIResponse<TData>(

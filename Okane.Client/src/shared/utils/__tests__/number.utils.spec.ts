@@ -14,7 +14,9 @@ describe('isNumeric', () => {
     ['', false],
     [' ', false],
     [true, false],
+    [false, false],
     [{}, false],
+    [NaN, false],
   ])('isNumeric(%s) => %s', (actual, expected) => {
     expect(numberUtils.isNumeric(actual)).toBe(expected)
   })

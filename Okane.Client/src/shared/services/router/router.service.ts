@@ -8,27 +8,27 @@ import RegisterPage from '@/shared/pages/RegisterPage.vue'
 
 import { useAuthStore } from '@/features/auth/useAuthStore'
 
-export enum RouteName {
-  DashboardPage = 'DashboardPage',
-  LoginPage = 'LoginPage',
-  RegisterPage = 'RegisterPage',
+export enum ROUTE_NAME {
+  DASHBOARD = 'DASHBOARD',
+  LOGIN = 'LOGIN',
+  REGISTER = 'REGISTER',
 }
 
 export const ROUTES: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: RouteName.DashboardPage,
+    name: ROUTE_NAME.DASHBOARD,
     component: DashboardPage,
   },
   {
     path: '/login',
-    name: RouteName.LoginPage,
+    name: ROUTE_NAME.LOGIN,
     component: LoginPage,
     meta: { isPublic: true, isPublicOnly: true },
   },
   {
     path: '/register',
-    name: RouteName.RegisterPage,
+    name: ROUTE_NAME.REGISTER,
     component: RegisterPage,
     meta: { isPublic: true, isPublicOnly: true },
   },
@@ -48,12 +48,12 @@ router.beforeEach((to) => {
 
   if (!to.meta.isPublic && !authStore.isLoggedIn) {
     return {
-      name: RouteName.LoginPage,
+      name: ROUTE_NAME.LOGIN,
       query: { redirect_url: to.path },
     }
   }
 
   if (to.meta.isPublic && to.meta.isPublicOnly && authStore.isLoggedIn) {
-    return { name: RouteName.DashboardPage }
+    return { name: ROUTE_NAME.DASHBOARD }
   }
 })

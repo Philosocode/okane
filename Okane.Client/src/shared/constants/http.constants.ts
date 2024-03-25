@@ -1,4 +1,4 @@
-export enum HTTPMethod {
+export enum HTTP_METHOD {
   GET = 'GET',
   POST = 'POST',
   PUT = 'PUT',
@@ -6,17 +6,17 @@ export enum HTTPMethod {
   DELETE = 'DELETE',
 }
 
-export enum HTTPStatusCode {
-  Ok = 200,
-  Created = 201,
-  NoContent = 204,
+export enum HTTP_STATUS_CODE {
+  OK = 200,
+  CREATED = 201,
+  NO_CONTENT = 204,
 
-  BadRequest = 400,
-  Unauthorized = 401,
-  Forbidden = 403,
-  NotFound = 404,
+  BAD_REQUEST = 400,
+  UNAUTHORIZED = 401,
+  FORBIDDEN = 403,
+  NOT_FOUND = 404,
 }
 
-export enum MIMEType {
+export enum MIME_TYPE {
   JSON = 'application/json',
 }

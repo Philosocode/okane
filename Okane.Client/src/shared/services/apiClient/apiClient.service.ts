@@ -1,5 +1,5 @@
 // Internal
-import { HTTPMethod, HTTPStatusCode, MIMEType } from '@/shared/constants/http.constants'
+import { HTTP_METHOD, HTTP_STATUS_CODE, MIME_TYPE } from '@/shared/constants/http.constants'
 
 import { useAuthStore } from '@/features/auth/useAuthStore'
 
@@ -18,7 +18,7 @@ import type { APIResponse } from '@/shared/services/apiClient/apiClient.types'
  * @see https://stackoverflow.com/a/65690669
  */
 async function makeRequest<TResponse extends APIResponse = never>(
-  method: HTTPMethod,
+  method: HTTP_METHOD,
   url: string,
   body?: any,
   optionOverrides?: RequestInit,
@@ -36,7 +36,7 @@ async function makeRequest<TResponse extends APIResponse = never>(
       return Promise.resolve(parsedResponse)
     }
 
-    const authErrorStatusCodes = [HTTPStatusCode.Unauthorized, HTTPStatusCode.Forbidden]
+    const authErrorStatusCodes = [HTTP_STATUS_CODE.UNAUTHORIZED, HTTP_STATUS_CODE.FORBIDDEN]
     if (authErrorStatusCodes.includes(response.status) && authStore.isLoggedIn) {
       await authStore.logout()
       return Promise.reject('Authentication error. Logging out...')
@@ -48,7 +48,7 @@ async function makeRequest<TResponse extends APIResponse = never>(
   }
 }
 
-function makeRequestWithBody(method: HTTPMethod) {
+function makeRequestWithBody(method: HTTP_METHOD) {
   return <TResponse extends APIResponse = never>(
     url: string,
     body?: any,
@@ -56,17 +56,17 @@ function makeRequestWithBody(method: HTTPMethod) {
   ) => makeRequest<TResponse>(method, url, body, optionOverrides)
 }
 
-function makeRequestWithoutBody(method: HTTPMethod) {
+function makeRequestWithoutBody(method: HTTP_METHOD) {
   return <TResponse extends APIResponse = never>(url: string, optionOverrides?: RequestInit) =>
     makeRequest<TResponse>(method, url, undefined, optionOverrides)
 }
 
 export const apiClient = {
-  get: makeRequestWithoutBody(HTTPMethod.GET),
-  post: makeRequestWithBody(HTTPMethod.POST),
-  patch: makeRequestWithBody(HTTPMethod.PATCH),
-  put: makeRequestWithBody(HTTPMethod.PUT),
-  delete: makeRequestWithoutBody(HTTPMethod.DELETE),
+  get: makeRequestWithoutBody(HTTP_METHOD.GET),
+  post: makeRequestWithBody(HTTP_METHOD.POST),
+  patch: makeRequestWithBody(HTTP_METHOD.PATCH),
+  put: makeRequestWithBody(HTTP_METHOD.PUT),
+  delete: makeRequestWithoutBody(HTTP_METHOD.DELETE),
 }
 
 /**
@@ -82,7 +82,7 @@ function getRequestOptions(
   optionOverrides: RequestInit = {},
 ): RequestInit {
   const headers: HeadersInit = {
-    'Content-Type': MIMEType.JSON,
+    'Content-Type': MIME_TYPE.JSON,
   }
 
   const authStore = useAuthStore()

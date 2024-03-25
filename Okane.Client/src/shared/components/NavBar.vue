@@ -3,7 +3,7 @@
 import { RouterLink } from 'vue-router'
 
 // Internal
-import { RouteName } from '@/shared/services/router/router.service'
+import { ROUTE_NAME } from '@/shared/services/router/router.service'
 
 import { useAuthStore } from '@/features/auth/useAuthStore'
 
@@ -13,12 +13,12 @@ const authStore = useAuthStore()
 <template>
   <nav>
     <template v-if="authStore.isLoggedIn">
-      <RouterLink :to="{ name: RouteName.DashboardPage }">Dashboard</RouterLink>
+      <RouterLink :to="{ name: ROUTE_NAME.DASHBOARD }">Dashboard</RouterLink>
       <RouterLink to="#" @click="authStore.logout">Logout</RouterLink>
     </template>
     <template v-else>
-      <RouterLink :to="{ name: RouteName.LoginPage }">Login</RouterLink>
-      <RouterLink :to="{ name: RouteName.RegisterPage }">Register</RouterLink>
+      <RouterLink :to="{ name: ROUTE_NAME.LOGIN }">Login</RouterLink>
+      <RouterLink :to="{ name: ROUTE_NAME.REGISTER }">Register</RouterLink>
     </template>
   </nav>
 </template>

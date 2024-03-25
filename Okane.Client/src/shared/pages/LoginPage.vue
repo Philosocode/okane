@@ -10,7 +10,7 @@ import PageLayout from '@/shared/layouts/PageLayout.vue'
 import type { AuthFormState } from '@/features/auth/auth.types'
 
 import { useAuthStore } from '@/features/auth/useAuthStore'
-import { RouteName } from '@/shared/services/router/router.service'
+import { ROUTE_NAME } from '@/shared/services/router/router.service'
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -18,7 +18,7 @@ const router = useRouter()
 async function handleSubmit(formState: AuthFormState) {
   try {
     await authStore.login(formState.email, formState.password)
-    await router.push({ name: RouteName.DashboardPage })
+    await router.push({ name: ROUTE_NAME.DASHBOARD })
   } catch (err) {
     console.error('Error logging in:', err)
   }

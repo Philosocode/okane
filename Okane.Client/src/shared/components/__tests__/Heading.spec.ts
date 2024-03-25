@@ -3,6 +3,7 @@ import type { HeadingTag } from '@/shared/types/html.types'
 
 // Internal
 import Heading from '@/shared/components/Heading.vue'
+
 import { getMountComponent } from '@tests/utils/mount.utils'
 
 const mountComponent = getMountComponent(Heading)

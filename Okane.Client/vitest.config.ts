@@ -18,8 +18,9 @@ export default defineConfig((configEnv) =>
         globals: true,
         root: fileURLToPath(new URL('./', import.meta.url)),
         setupFiles: [
-          './src/__tests__/config/setUpTests.ts',
-          './src/__tests__/config/setUpCustomMatchers.ts',
+          './src/__tests__/setup/vitest.setup.ts',
+          './src/__tests__/setup/matchers.setup.ts',
+          './src/__tests__/setup/vueTestUtilExtensions.setup.ts',
         ],
       },
     }),

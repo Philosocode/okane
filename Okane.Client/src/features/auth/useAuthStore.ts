@@ -8,7 +8,7 @@ import type { User } from '@/features/users/user.types'
 import type { Timeout } from '@/shared/types/shared.type'
 
 import { apiClient } from '@/shared/services/apiClient/apiClient.service'
-import { RouteName, router } from '@/shared/services/router.service'
+import { RouteName, router } from '@/shared/services/router/router.service'
 
 import { getJWTTokenPayload } from '@/features/auth/auth.utils'
 

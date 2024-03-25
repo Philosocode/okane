@@ -10,7 +10,7 @@ import PageLayout from '@/shared/layouts/PageLayout.vue'
 import type { AuthFormState } from '@/features/auth/auth.types'
 
 import { useAuthStore } from '@/features/auth/useAuthStore'
-import { RouteName } from '@/shared/services/router.service'
+import { RouteName } from '@/shared/services/router/router.service'
 
 const authStore = useAuthStore()
 const router = useRouter()

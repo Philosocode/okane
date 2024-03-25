@@ -6,7 +6,7 @@ import { createPinia } from 'pinia'
 // Internal
 import App from '@/App.vue'
 
-import { router } from '@/shared/services/router.service'
+import { router } from '@/shared/services/router/router.service'
 
 import { useAuthStore } from '@/features/auth/useAuthStore'
 

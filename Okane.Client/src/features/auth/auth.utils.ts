@@ -16,9 +16,12 @@ import * as stringUtils from '@/shared/utils/string.utils'
  * - has a non-alphanumeric character
  *
  * @param password
- * @returns Whether or not the password is valid. The password checks.
+ * @returns Whether or not the password is valid along with the password checks.
  */
-export function isValidPassword(password: string): [boolean, PasswordChecks] {
+export function isValidPassword(password: string): {
+  isValid: boolean
+  passwordChecks: PasswordChecks
+} {
   const checks: PasswordChecks = {
     hasDigit: false,
     hasLowercase: false,
@@ -47,7 +50,10 @@ export function isValidPassword(password: string): [boolean, PasswordChecks] {
     }
   }
 
-  return [!Object.values(checks).includes(false), checks]
+  return {
+    isValid: !Object.values(checks).includes(false),
+    passwordChecks: checks,
+  }
 }
 
 /**

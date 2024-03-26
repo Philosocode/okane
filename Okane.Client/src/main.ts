@@ -6,7 +6,7 @@ import { createPinia } from 'pinia'
 // Internal
 import App from '@/App.vue'
 
-import { router } from '@/shared/services/router/router.service'
+import { getRouter } from '@/shared/services/router/router.service'
 
 import { useAuthStore } from '@/features/auth/useAuthStore'
 
@@ -28,7 +28,7 @@ async function startApp() {
     console.info('Failed to authenticate user on startup.')
   }
 
-  app.use(router)
+  app.use(getRouter())
   app.use(VueQueryPlugin)
 
   app.mount('#app')

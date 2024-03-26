@@ -3,15 +3,16 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 // Internal
-
 import type { AuthenticateResponse } from '@/features/auth/auth.types'
 import type { User } from '@/features/users/user.types'
 import type { Timeout } from '@/shared/types/shared.type'
 
 import { apiClient } from '@/shared/services/apiClient/apiClient.service'
-import { ROUTE_NAME, router } from '@/shared/services/router/router.service'
+import { ROUTE_NAME, getRouter } from '@/shared/services/router/router.service'
 
 import { getJWTTokenPayload } from '@/features/auth/auth.utils'
+
+export type AuthStore = ReturnType<typeof useAuthStore>
 
 export const useAuthStore = defineStore('AuthStore', () => {
   const authUser = ref<User>()
@@ -89,7 +90,7 @@ export const useAuthStore = defineStore('AuthStore', () => {
     authUser.value = undefined
     jwtToken.value = undefined
 
-    await router.push({ name: ROUTE_NAME.LOGIN })
+    await getRouter().push({ name: ROUTE_NAME.LOGIN })
   }
 
   return {

@@ -47,7 +47,9 @@ export function createAppRouter() {
   })
 }
 
-export const router = createAppRouter()
+const router = createAppRouter()
+
+export const getRouter = () => router
 
 router.beforeEach((to) => {
   const authStore = useAuthStore()

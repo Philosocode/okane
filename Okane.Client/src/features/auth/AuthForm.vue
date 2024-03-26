@@ -37,7 +37,7 @@ const formIsValid = computed<boolean>(() => {
       Boolean(name),
       Boolean(passwordConfirm),
       password == passwordConfirm,
-      isValidPassword(password)[0],
+      isValidPassword(password).isValid,
     )
   }
 

@@ -12,6 +12,7 @@ import { useAuthStore } from '@/features/auth/useAuthStore'
 import { apiClient } from '@/shared/services/apiClient/apiClient.service'
 import { mockServer } from '@tests/msw/mockServer'
 
+import { createMockJWTToken } from '@tests/factories/jwtToken.factory'
 import { createMockProblemDetails } from '@tests/factories/problemDetails.factory'
 import { createMockUser } from '@tests/factories/user.factory'
 
@@ -88,7 +89,7 @@ describe('when not logged in', () => {
 })
 
 describe('when logged in', () => {
-  const jwtToken = 'cool-jwt-token'
+  const jwtToken = createMockJWTToken()
   const authUser = createMockUser()
 
   beforeEach(() => {

@@ -4,7 +4,7 @@ import { http, HttpResponse } from 'msw'
 // Internal
 import { type APIResponse } from '@/shared/services/apiClient/apiClient.types'
 
-import { ROUTE_MAP } from '@/shared/services/router/router.constants'
+import { ROUTE_MAP } from '@/shared/services/router/router.service'
 import { HTTP_STATUS_CODE, MIME_TYPE } from '@/shared/constants/http.constants'
 
 import { useAuthStore } from '@/features/auth/useAuthStore'

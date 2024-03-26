@@ -3,9 +3,9 @@
 import { RouterLink } from 'vue-router'
 
 // Internal
-import { ROUTE_NAME } from '@/shared/services/router/router.constants'
 
 import { useAuthStore } from '@/features/auth/useAuthStore'
+import { ROUTE_NAME } from '@/shared/services/router/router.service'
 
 const authStore = useAuthStore()
 </script>

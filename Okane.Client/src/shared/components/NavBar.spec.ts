@@ -11,6 +11,7 @@ import { useAuthStore } from '@/features/auth/useAuthStore'
 
 import { mockServer } from '@tests/msw/mockServer'
 
+import { createMockJWTToken } from '@tests/factories/jwtToken.factory'
 import { createMockUser } from '@tests/factories/user.factory'
 
 const mountComponent = getMountComponent(NavBar, {
@@ -36,7 +37,7 @@ describe('when authenticated', () => {
     const authStore = useAuthStore()
 
     authStore.authUser = createMockUser()
-    authStore.jwtToken = 'test-token'
+    authStore.jwtToken = createMockJWTToken()
   })
 
   test('renders links for authenticated users', () => {

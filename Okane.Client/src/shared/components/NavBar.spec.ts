@@ -5,14 +5,13 @@ import { flushPromises } from '@vue/test-utils'
 import NavBar from '@/shared/components/NavBar.vue'
 
 import { AUTH_HANDLER_MAP } from '@tests/msw/handlers/auth.handlers'
-import { ROUTE_NAME } from '@/shared/services/router/router.constants'
+import { ROUTE_MAP } from '@/shared/services/router/router.service'
 
 import { useAuthStore } from '@/features/auth/useAuthStore'
 
 import { mockServer } from '@tests/msw/mockServer'
 
 import { createMockUser } from '@tests/factories/user.factory'
-import { getURLByRouteName } from '@/shared/services/router/router.utils'
 
 const mountComponent = getMountComponent(NavBar, {
   withPinia: true,
@@ -26,10 +25,10 @@ test('renders links for unauthenticated users', () => {
   expect(allLinks).toHaveLength(2)
 
   const loginLink = wrapper.findByText('a', 'Login')
-  expect(loginLink.attributes('href')).toBe(getURLByRouteName(ROUTE_NAME.LOGIN))
+  expect(loginLink.attributes('href')).toBe(ROUTE_MAP.LOGIN.buildPath())
 
   const registerLink = wrapper.findByText('a', 'Register')
-  expect(registerLink.attributes('href')).toBe(getURLByRouteName(ROUTE_NAME.REGISTER))
+  expect(registerLink.attributes('href')).toBe(ROUTE_MAP.REGISTER.buildPath())
 })
 
 describe('when authenticated', () => {
@@ -46,7 +45,7 @@ describe('when authenticated', () => {
     const allLinks = wrapper.findAll('a')
     expect(allLinks).toHaveLength(2)
 
-    const dashboardURL = getURLByRouteName(ROUTE_NAME.DASHBOARD)
+    const dashboardURL = ROUTE_MAP.DASHBOARD.buildPath()
     const dashboardLink = wrapper.get(`a[href="${dashboardURL}"]`)
     expect(dashboardLink.text()).toBe('Dashboard')
 
@@ -66,6 +65,6 @@ describe('when authenticated', () => {
     const authStore = useAuthStore()
     expect(authStore.authUser).toBeUndefined()
     expect(authStore.jwtToken).toBeUndefined()
-    expect(globalThis.location.pathname).toBe(getURLByRouteName(ROUTE_NAME.LOGIN))
+    expect(globalThis.location.pathname).toBe(ROUTE_MAP.LOGIN.buildPath())
   })
 })

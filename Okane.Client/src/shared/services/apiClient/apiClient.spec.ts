@@ -14,7 +14,8 @@ import { mockServer } from '@tests/msw/mockServer'
 
 import { createMockProblemDetails } from '@tests/factories/problemDetails.factory'
 import { createMockUser } from '@tests/factories/user.factory'
-import { wrapInAPIResponse } from '@tests/factories/base.factory'
+
+import { wrapInAPIResponse } from '@tests/factories/apiResponse.factory'
 
 test('makes a basic GET request', async () => {
   const handler = http.get('/api/ping', () => HttpResponse.json(wrapInAPIResponse('pong')))

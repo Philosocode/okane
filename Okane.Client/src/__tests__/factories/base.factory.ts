@@ -1,11 +1,6 @@
 // External
 import cloneDeep from 'lodash.clonedeep'
 
-// Internal
-import { HTTP_STATUS_CODE } from '@/shared/constants/http.constants'
-
-import type { APIResponse } from '@/shared/services/apiClient/apiClient.types'
-
 export type MockFactoryOptions = {
   deepClone?: boolean
 }
@@ -27,14 +22,4 @@ export function baseMockFactory<TData>(
 
   if (options?.deepClone) return cloneDeep(dataWithOverrides)
   return dataWithOverrides
-}
-
-export function wrapInAPIResponse<TData>(
-  data: TData | TData[],
-  status: number = HTTP_STATUS_CODE.OK_200,
-): APIResponse<TData> {
-  return {
-    items: Array.isArray(data) ? data : [data],
-    status,
-  }
 }

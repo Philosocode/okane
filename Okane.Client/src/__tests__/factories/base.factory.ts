@@ -31,7 +31,7 @@ export function baseMockFactory<TData>(
 
 export function wrapInAPIResponse<TData>(
   data: TData | TData[],
-  status: number = HTTP_STATUS_CODE.OK,
+  status: number = HTTP_STATUS_CODE.OK_200,
 ): APIResponse<TData> {
   return {
     items: Array.isArray(data) ? data : [data],

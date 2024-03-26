@@ -1,10 +1,11 @@
 // Internal
 import { HTTP_METHOD, HTTP_STATUS_CODE, MIME_TYPE } from '@/shared/constants/http.constants'
 
+import type { APIResponse } from '@/shared/services/apiClient/apiClient.types'
+
 import { useAuthStore } from '@/features/auth/useAuthStore'
 
 import { removePrefixCharacters } from '@/shared/utils/string.utils'
-import type { APIResponse } from '@/shared/services/apiClient/apiClient.types'
 
 /**
  * Custom wrapper around the Fetch API.
@@ -36,7 +37,7 @@ async function makeRequest<TResponse extends APIResponse = never>(
       return Promise.resolve(parsedResponse)
     }
 
-    const authErrorStatusCodes = [HTTP_STATUS_CODE.UNAUTHORIZED, HTTP_STATUS_CODE.FORBIDDEN]
+    const authErrorStatusCodes = [HTTP_STATUS_CODE.UNAUTHORIZED_401, HTTP_STATUS_CODE.FORBIDDEN_403]
     if (authErrorStatusCodes.includes(response.status) && authStore.isLoggedIn) {
       await authStore.logout()
       return Promise.reject('Authentication error. Logging out...')

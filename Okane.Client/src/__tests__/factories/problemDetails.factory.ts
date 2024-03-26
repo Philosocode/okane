@@ -8,7 +8,7 @@ import { baseMockFactory, type MockFactoryFunction } from '@tests/factories/base
 const defaultProblemDetails: ProblemDetails = {
   detail: 'An exception occurred while editing a finance record.',
   instance: '/api/finance-records/1',
-  status: HTTP_STATUS_CODE.BAD_REQUEST,
+  status: HTTP_STATUS_CODE.BAD_REQUEST_400,
   title: 'Bad Request',
   type: 'https://datatracker.ietf.org/doc/html/rfc9110#section-15.5.1',
 }

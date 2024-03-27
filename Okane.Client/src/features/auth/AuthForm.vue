@@ -6,6 +6,7 @@ import { computed, ref } from 'vue'
 import FormInput from '@/shared/components/FormInput.vue'
 
 import type { AuthFormState, AuthFormType } from '@/features/auth/auth.types'
+
 import { isValidPassword } from '@/features/auth/auth.utils'
 
 const emit = defineEmits<{

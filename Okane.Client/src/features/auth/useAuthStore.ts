@@ -75,7 +75,7 @@ export const useAuthStore = defineStore('AuthStore', () => {
 
     // Set a timeout to refresh the token 1 minute before it expires.
     const expiresAt = new Date(payload.exp * 1000)
-    const timeout = expiresAt.getTime() - Date.now() - 60 * 1000
+    const timeout = expiresAt.getTime() - Date.now() - 60000
 
     refreshTokenInterval.value = setTimeout(handleRefreshToken, timeout)
   }

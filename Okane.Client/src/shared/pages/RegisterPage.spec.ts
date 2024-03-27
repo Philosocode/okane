@@ -5,22 +5,16 @@ import { flushPromises } from '@vue/test-utils'
 import AuthForm from '@/features/auth/AuthForm.vue'
 import RegisterPage from '@/shared/pages/RegisterPage.vue'
 
-import { type AuthFormState } from '@/features/auth/auth.types'
-
 import { useAuthStore } from '@/features/auth/useAuthStore'
 import { useMockedStore } from '@tests/composables/useMockedStore.composable'
 
+import { createMockAuthFormState } from '@tests/factories/authFormState.factory'
 import { createAppRouter, ROUTE_MAP, ROUTE_NAME } from '@/shared/services/router/router.service'
 
 const router = createAppRouter()
 const mountComponent = getMountComponent(RegisterPage, { withPinia: true, withRouter: router })
 
-const formData: AuthFormState = {
-  email: 'test@okane.com',
-  name: 'Okane',
-  password: 'coolPassword123',
-  passwordConfirm: 'coolPassword123',
-}
+const formData = createMockAuthFormState()
 
 beforeEach(async () => {
   await router.push({ name: ROUTE_NAME.REGISTER })

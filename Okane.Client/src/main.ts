@@ -1,10 +1,10 @@
 // External
 import { createApp } from 'vue'
-import { VueQueryPlugin } from '@tanstack/vue-query'
 import { createPinia } from 'pinia'
+import { VueQueryPlugin } from '@tanstack/vue-query'
 
 // Internal
-import App from 'App.vue'
+import App from './App.vue'
 
 import { getRouter } from '@shared/services/router/router.service'
 
@@ -12,7 +12,7 @@ import { useAuthStore } from '@features/auth/useAuthStore'
 
 import '@shared/styles/index.scss'
 
-await startApp()
+startApp()
 
 async function startApp() {
   const app = createApp(App)

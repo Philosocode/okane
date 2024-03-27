@@ -1,5 +1,5 @@
 // Internal
-import { getRouter, ROUTE_MAP } from '@/shared/services/router/router.service'
+import { getRouter, ROUTE_MAP } from '@shared/services/router/router.service'
 
 import { useAuthenticatedAuthStore } from '@tests/composables/auth.composables'
 

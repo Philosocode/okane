@@ -1,8 +1,8 @@
 // External
-import type { HeadingTag } from '@/shared/types/html.types'
+import type { HeadingTag } from '@shared/types/html.types'
 
 // Internal
-import Heading from '@/shared/components/Heading.vue'
+import Heading from '@shared/components/Heading.vue'
 
 const mountComponent = getMountComponent(Heading)
 

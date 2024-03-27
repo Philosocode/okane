@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // Internal
-import Heading from '@/shared/components/Heading.vue'
-import PageLayout from '@/shared/layouts/PageLayout.vue'
+import Heading from '@shared/components/Heading.vue'
+import PageLayout from '@shared/layouts/PageLayout.vue'
 </script>
 
 <template>

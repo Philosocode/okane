@@ -2,11 +2,11 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 // Internal
-import DashboardPage from '@/shared/pages/DashboardPage.vue'
-import LoginPage from '@/shared/pages/LoginPage.vue'
-import RegisterPage from '@/shared/pages/RegisterPage.vue'
+import DashboardPage from '@shared/pages/DashboardPage.vue'
+import LoginPage from '@shared/pages/LoginPage.vue'
+import RegisterPage from '@shared/pages/RegisterPage.vue'
 
-import { useAuthStore } from '@/features/auth/useAuthStore'
+import { useAuthStore } from '@features/auth/useAuthStore'
 
 export enum ROUTE_NAME {
   DASHBOARD = 'DASHBOARD',

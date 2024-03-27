@@ -1,5 +1,5 @@
 // Internal
-import * as stringUtils from '@/shared/utils/string.utils'
+import * as stringUtils from '@shared/utils/string.utils'
 
 describe('capitalize', () => {
   test.each([

@@ -1,5 +1,5 @@
 // Internal
-import { useAuthStore, type AuthStore } from '@/features/auth/useAuthStore'
+import { useAuthStore, type AuthStore } from '@features/auth/useAuthStore'
 
 import { createMockUser } from '@tests/factories/user.factory'
 import { createMockJWTToken } from '@tests/factories/jwtToken.factory'

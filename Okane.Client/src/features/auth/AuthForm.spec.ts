@@ -1,9 +1,9 @@
 // Internal
-import AuthForm from '@/features/auth/AuthForm.vue'
+import AuthForm from '@features/auth/AuthForm.vue'
 
-import { type AuthFormType } from '@/features/auth/auth.types'
+import { type AuthFormType } from '@features/auth/auth.types'
 
-import { capitalize } from '@/shared/utils/string.utils'
+import { capitalize } from '@shared/utils/string.utils'
 
 const mountComponent = getMountComponent(AuthForm)
 

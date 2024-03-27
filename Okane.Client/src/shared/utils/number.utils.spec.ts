@@ -1,5 +1,5 @@
 // Internal
-import * as numberUtils from '@/shared/utils/number.utils'
+import * as numberUtils from '@shared/utils/number.utils'
 
 describe('isNumeric', () => {
   test.each([

@@ -3,14 +3,14 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 // Internal
-import type { AuthenticateResponse } from '@/features/auth/auth.types'
-import type { User } from '@/features/users/user.types'
-import type { Timeout } from '@/shared/types/shared.type'
+import type { AuthenticateResponse } from '@features/auth/auth.types'
+import type { User } from '@features/users/user.types'
+import type { Timeout } from '@shared/types/shared.type'
 
-import { apiClient } from '@/shared/services/apiClient/apiClient.service'
-import { ROUTE_NAME, getRouter } from '@/shared/services/router/router.service'
+import { apiClient } from '@shared/services/apiClient/apiClient.service'
+import { ROUTE_NAME, getRouter } from '@shared/services/router/router.service'
 
-import { getJWTTokenPayload } from '@/features/auth/auth.utils'
+import { getJWTTokenPayload } from '@features/auth/auth.utils'
 
 export type AuthStore = ReturnType<typeof useAuthStore>
 

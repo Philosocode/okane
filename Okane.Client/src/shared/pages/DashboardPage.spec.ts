@@ -1,5 +1,5 @@
 // Internal
-import DashboardPage from '@/shared/pages/DashboardPage.vue'
+import DashboardPage from '@shared/pages/DashboardPage.vue'
 
 const mountComponent = getMountComponent(DashboardPage)
 

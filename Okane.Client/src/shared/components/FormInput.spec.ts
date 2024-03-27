@@ -1,7 +1,7 @@
 // Internal
-import FormInput, { type FormInputProps } from '@/shared/components/FormInput.vue'
+import FormInput, { type FormInputProps } from '@shared/components/FormInput.vue'
 
-import * as formUtils from '@/shared/utils/form.utils'
+import * as formUtils from '@shared/utils/form.utils'
 
 // Data.
 const props: FormInputProps = {

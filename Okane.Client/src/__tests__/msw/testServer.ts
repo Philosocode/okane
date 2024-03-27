@@ -1,4 +1,4 @@
 // External
 import { setupServer } from 'msw/node'
 
-export const mockServer = setupServer()
+export const testServer = setupServer()

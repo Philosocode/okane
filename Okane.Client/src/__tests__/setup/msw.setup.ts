@@ -1,14 +1,14 @@
 // Internal
-import { mockServer } from '@tests/msw/mockServer'
+import { testServer } from '@tests/msw/testServer'
 
 beforeAll(() => {
-  mockServer.listen({ onUnhandledRequest: 'error' })
+  testServer.listen({ onUnhandledRequest: 'error' })
 })
 
 afterEach(() => {
-  mockServer.resetHandlers()
+  testServer.resetHandlers()
 })
 
 afterAll(() => {
-  mockServer.close()
+  testServer.close()
 })

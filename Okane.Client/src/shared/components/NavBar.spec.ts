@@ -9,7 +9,7 @@ import { ROUTE_MAP } from '@/shared/services/router/router.service'
 
 import { useAuthStore } from '@/features/auth/useAuthStore'
 
-import { mockServer } from '@tests/msw/mockServer'
+import { testServer } from '@tests/msw/testServer'
 
 import { createMockJWTToken } from '@tests/factories/jwtToken.factory'
 import { createMockUser } from '@tests/factories/user.factory'
@@ -55,7 +55,7 @@ describe('when authenticated', () => {
   })
 
   test('logs the user out', async () => {
-    mockServer.use(AUTH_HANDLER_MAP.LOGOUT_SUCCESS)
+    testServer.use(AUTH_HANDLER_MAP.LOGOUT_SUCCESS)
 
     const wrapper = mountComponent()
     const logoutLink = wrapper.findByText('a', 'Logout')

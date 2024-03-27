@@ -10,7 +10,7 @@ import { HTTP_STATUS_CODE, MIME_TYPE } from '@/shared/constants/http.constants'
 import { useAuthStore } from '@/features/auth/useAuthStore'
 
 import { apiClient } from '@/shared/services/apiClient/apiClient.service'
-import { mockServer } from '@tests/msw/mockServer'
+import { testServer } from '@tests/msw/testServer'
 
 import { createMockJWTToken } from '@tests/factories/jwtToken.factory'
 import { createMockProblemDetails } from '@tests/factories/problemDetails.factory'
@@ -21,7 +21,7 @@ import { wrapInAPIResponse } from '@tests/factories/apiResponse.factory'
 test('makes a basic GET request', async () => {
   const handler = http.get('/api/ping', () => HttpResponse.json(wrapInAPIResponse('pong')))
 
-  mockServer.use(handler)
+  testServer.use(handler)
 
   const response = await apiClient.get<APIResponse<string>>('/ping')
   expect(response.items[0]).toBe('pong')
@@ -30,7 +30,7 @@ test('makes a basic GET request', async () => {
 test('prepends a forward slash to the request URL', async () => {
   const handler = http.get('/api/ping', () => HttpResponse.json(wrapInAPIResponse('pong')))
 
-  mockServer.use(handler)
+  testServer.use(handler)
 
   const response = await apiClient.get<APIResponse<string>>('ping')
   expect(response.items[0]).toBe('pong')
@@ -47,7 +47,7 @@ test('returns a rejected promise on failed request', async () => {
     return HttpResponse.json(errorResponse, { status: HTTP_STATUS_CODE.BAD_REQUEST_400 })
   })
 
-  mockServer.use(handler)
+  testServer.use(handler)
 
   try {
     await apiClient.get('/ping')
@@ -74,7 +74,7 @@ describe('when not logged in', () => {
   })
 
   beforeEach(() => {
-    mockServer.use(handler)
+    testServer.use(handler)
   })
 
   test('includes the Content-Type', async () => {
@@ -112,7 +112,7 @@ describe('when logged in', () => {
       return HttpResponse.json(wrapInAPIResponse('pong'))
     })
 
-    mockServer.use(handler)
+    testServer.use(handler)
 
     const response = await apiClient.patch<APIResponse<string>>('/ping')
 
@@ -130,7 +130,7 @@ describe('when logged in', () => {
     `logs the user out when the status code is %d`,
     async (statusCode) => {
       const errorHandler = getErrorHandler(statusCode)
-      mockServer.use(errorHandler, logoutHandler)
+      testServer.use(errorHandler, logoutHandler)
 
       try {
         await apiClient.get('/ping')
@@ -146,7 +146,7 @@ describe('when logged in', () => {
   test('does not log the user out with a different error status code', async () => {
     const errorHandler = getErrorHandler(HTTP_STATUS_CODE.BAD_REQUEST_400)
 
-    mockServer.use(errorHandler)
+    testServer.use(errorHandler)
 
     try {
       await apiClient.get('/ping')

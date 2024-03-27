@@ -1,11 +1,11 @@
 // Internal
-import { HTTP_METHOD, HTTP_STATUS_CODE, MIME_TYPE } from '@/shared/constants/http.constants'
+import { HTTP_METHOD, HTTP_STATUS_CODE, MIME_TYPE } from '@shared/constants/http.constants'
 
-import type { APIResponse } from '@/shared/services/apiClient/apiClient.types'
+import type { APIResponse } from '@shared/services/apiClient/apiClient.types'
 
-import { useAuthStore } from '@/features/auth/useAuthStore'
+import { useAuthStore } from '@features/auth/useAuthStore'
 
-import { removePrefixCharacters } from '@/shared/utils/string.utils'
+import { removePrefixCharacters } from '@shared/utils/string.utils'
 
 /**
  * Custom wrapper around the Fetch API.

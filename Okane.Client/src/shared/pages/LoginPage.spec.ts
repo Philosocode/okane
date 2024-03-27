@@ -2,13 +2,13 @@
 import { flushPromises } from '@vue/test-utils'
 
 // Internal
-import AuthForm from '@/features/auth/AuthForm.vue'
-import LoginPage from '@/shared/pages/LoginPage.vue'
+import AuthForm from '@features/auth/AuthForm.vue'
+import LoginPage from '@shared/pages/LoginPage.vue'
 
-import { useAuthStore } from '@/features/auth/useAuthStore'
+import { useAuthStore } from '@features/auth/useAuthStore'
 import { useMockedStore } from '@tests/composables/useMockedStore.composable'
 
-import { createAppRouter, ROUTE_MAP, ROUTE_NAME } from '@/shared/services/router/router.service'
+import { createAppRouter, ROUTE_MAP, ROUTE_NAME } from '@shared/services/router/router.service'
 import { createMockAuthFormState } from '@tests/factories/authFormState.factory'
 
 const router = createAppRouter()

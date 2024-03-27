@@ -3,11 +3,11 @@
 import { computed, ref } from 'vue'
 
 // Internal
-import FormInput from '@/shared/components/FormInput.vue'
+import FormInput from '@shared/components/FormInput.vue'
 
-import type { AuthFormState, AuthFormType } from '@/features/auth/auth.types'
+import type { AuthFormState, AuthFormType } from '@features/auth/auth.types'
 
-import { isValidPassword } from '@/features/auth/auth.utils'
+import { isValidPassword } from '@features/auth/auth.utils'
 
 const emit = defineEmits<{
   (e: 'submit', formState: AuthFormState): void
@@ -49,24 +49,13 @@ const formIsValid = computed<boolean>(() => {
 <template>
   <form @submit.prevent="emit('submit', formState)">
     <fieldset>
-      <FormInput
-        v-if="isRegisterForm"
-        v-model="formState.name"
-        label="Name"
-        name="name"
-        type="text"
-      />
+      <FormInput v-if="isRegisterForm" v-model="formState.name" label="Name" name="name" type="text" />
 
       <FormInput label="Email" name="email" type="email" v-model="formState.email" />
       <FormInput label="Password" name="password" type="password" v-model="formState.password" />
 
-      <FormInput
-        v-if="isRegisterForm"
-        v-model="formState.passwordConfirm"
-        label="Confirm password"
-        name="passwordConfirm"
-        type="password"
-      />
+      <FormInput v-if="isRegisterForm" v-model="formState.passwordConfirm" label="Confirm password"
+        name="passwordConfirm" type="password" />
 
       <button class="submit-button" :disabled="!formIsValid" type="submit">
         {{ submitButtonText }}

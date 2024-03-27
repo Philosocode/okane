@@ -2,19 +2,19 @@
 import { http, HttpResponse } from 'msw'
 
 // Internal
-import { HTTP_STATUS_CODE } from '@/shared/constants/http.constants'
+import { HTTP_STATUS_CODE } from '@shared/constants/http.constants'
 
-import type { AuthenticateResponse } from '@/features/auth/auth.types'
+import type { AuthenticateResponse } from '@features/auth/auth.types'
 
-import { useAuthStore } from '@/features/auth/useAuthStore'
+import { useAuthStore } from '@features/auth/useAuthStore'
 
-import { apiClient } from '@/shared/services/apiClient/apiClient.service'
+import { apiClient } from '@shared/services/apiClient/apiClient.service'
 import { testServer } from '@tests/msw/testServer'
 
 import { createMockAuthFormState } from '@tests/factories/authFormState.factory'
 import { createMockJWTToken } from '@tests/factories/jwtToken.factory'
 import { createMockUser } from '@tests/factories/user.factory'
-import { omitObjectKeys } from '@/shared/utils/object.utils'
+import { omitObjectKeys } from '@shared/utils/object.utils'
 import { wrapInAPIResponse } from '@tests/factories/apiResponse.factory'
 
 const formData = createMockAuthFormState()

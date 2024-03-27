@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { HeadingTag } from '@/shared/types/html.types'
+import type { HeadingTag } from '@shared/types/html.types'
 
 type Props = {
   tag: HeadingTag

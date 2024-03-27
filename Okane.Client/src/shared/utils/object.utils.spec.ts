@@ -1,5 +1,5 @@
 // Internal
-import * as objectUtils from '@/shared/utils/object.utils'
+import * as objectUtils from '@shared/utils/object.utils'
 
 describe('omitObjectKeys', () => {
   const { omitObjectKeys } = objectUtils

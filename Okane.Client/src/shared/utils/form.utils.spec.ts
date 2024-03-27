@@ -1,5 +1,5 @@
 // Internal
-import * as formUtils from '@/shared/utils/form.utils'
+import * as formUtils from '@shared/utils/form.utils'
 
 describe('getUniqueFormControlId', () => {
   test('returns a unique, numeric ID', () => {

@@ -3,16 +3,16 @@
 import { useRouter } from 'vue-router'
 
 // Internal
-import AuthForm from '@/features/auth/AuthForm.vue'
-import Heading from '@/shared/components/Heading.vue'
-import PageLayout from '@/shared/layouts/PageLayout.vue'
+import AuthForm from '@features/auth/AuthForm.vue'
+import Heading from '@shared/components/Heading.vue'
+import PageLayout from '@shared/layouts/PageLayout.vue'
 
-import type { AuthFormState } from '@/features/auth/auth.types'
+import type { AuthFormState } from '@features/auth/auth.types'
 
-import { useAuthStore } from '@/features/auth/useAuthStore'
+import { useAuthStore } from '@features/auth/useAuthStore'
 
-import { omitObjectKeys } from '@/shared/utils/object.utils'
-import { ROUTE_NAME } from '@/shared/services/router/router.service'
+import { omitObjectKeys } from '@shared/utils/object.utils'
+import { ROUTE_NAME } from '@shared/services/router/router.service'
 
 const authStore = useAuthStore()
 const router = useRouter()

@@ -10,7 +10,9 @@ export default defineConfig(({ mode }) => {
   return {
     resolve: {
       alias: {
-        '@': fileURLToPath(new URL('./src', import.meta.url)),
+        '@assets': fileURLToPath(new URL('./src/assets', import.meta.url)),
+        '@features': fileURLToPath(new URL('./src/features', import.meta.url)),
+        '@shared': fileURLToPath(new URL('./src/shared', import.meta.url)),
         '@tests': fileURLToPath(new URL('./src/__tests__', import.meta.url)),
       },
     },
@@ -26,7 +28,7 @@ export default defineConfig(({ mode }) => {
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: '@use "@/shared/styles/mixins.scss" as *;',
+          additionalData: '@use "@shared/styles/mixins.scss" as *;',
         },
       },
     },

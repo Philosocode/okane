@@ -2,12 +2,12 @@
 import { flushPromises } from '@vue/test-utils'
 
 // Internal
-import NavBar from '@/shared/components/NavBar.vue'
+import NavBar from '@shared/components/NavBar.vue'
 
 import { AUTH_HANDLER_MAP } from '@tests/msw/handlers/auth.handlers'
-import { ROUTE_MAP } from '@/shared/services/router/router.service'
+import { ROUTE_MAP } from '@shared/services/router/router.service'
 
-import { useAuthStore } from '@/features/auth/useAuthStore'
+import { useAuthStore } from '@features/auth/useAuthStore'
 
 import { testServer } from '@tests/msw/testServer'
 

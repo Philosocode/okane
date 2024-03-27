@@ -2,14 +2,14 @@
 import { flushPromises } from '@vue/test-utils'
 
 // Internal
-import AuthForm from '@/features/auth/AuthForm.vue'
-import RegisterPage from '@/shared/pages/RegisterPage.vue'
+import AuthForm from '@features/auth/AuthForm.vue'
+import RegisterPage from '@shared/pages/RegisterPage.vue'
 
-import { useAuthStore } from '@/features/auth/useAuthStore'
+import { useAuthStore } from '@features/auth/useAuthStore'
 import { useMockedStore } from '@tests/composables/useMockedStore.composable'
 
 import { createMockAuthFormState } from '@tests/factories/authFormState.factory'
-import { createAppRouter, ROUTE_MAP, ROUTE_NAME } from '@/shared/services/router/router.service'
+import { createAppRouter, ROUTE_MAP, ROUTE_NAME } from '@shared/services/router/router.service'
 
 const router = createAppRouter()
 const mountComponent = getMountComponent(RegisterPage, { withPinia: true, withRouter: router })

@@ -1,7 +1,7 @@
 // Internal
-import { HTTP_STATUS_CODE } from '@/shared/constants/http.constants'
+import { HTTP_STATUS_CODE } from '@shared/constants/http.constants'
 
-import type { ProblemDetails } from '@/shared/services/apiClient/apiClient.types'
+import type { ProblemDetails } from '@shared/services/apiClient/apiClient.types'
 
 import { baseMockFactory, type MockFactoryFunction } from '@tests/factories/base.factory'
 

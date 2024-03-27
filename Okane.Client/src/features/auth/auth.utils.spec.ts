@@ -1,9 +1,9 @@
 // Internal
-import { MIN_PASSWORD_LENGTH } from '@/features/auth/auth.constants'
+import { MIN_PASSWORD_LENGTH } from '@features/auth/auth.constants'
 
-import { type JWTTokenPayload, type PasswordChecks } from '@/features/auth/auth.types'
+import { type JWTTokenPayload, type PasswordChecks } from '@features/auth/auth.types'
 
-import * as utils from '@/features/auth/auth.utils'
+import * as utils from '@features/auth/auth.utils'
 import { createMockJWTToken } from '@tests/factories/jwtToken.factory'
 
 const invalidPasswordChecks: PasswordChecks = {

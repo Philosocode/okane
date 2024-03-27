@@ -2,7 +2,7 @@
 import jwt from 'jsonwebtoken'
 
 // Internal
-import type { JWTTokenPayload } from '@/features/auth/auth.types'
+import type { JWTTokenPayload } from '@features/auth/auth.types'
 
 export const createMockJWTToken = (overrides?: Partial<JWTTokenPayload>): string => {
   const defaultJWTTokenPayload: JWTTokenPayload = {

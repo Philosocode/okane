@@ -1,5 +1,5 @@
 // Internal
-import { isNumeric } from '@/shared/utils/number.utils'
+import { isNumeric } from '@shared/utils/number.utils'
 
 export interface CustomMatchers<T = unknown> {
   toBeNumeric: () => T

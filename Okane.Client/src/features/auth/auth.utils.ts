@@ -1,9 +1,9 @@
 // Internal
-import { MIN_PASSWORD_LENGTH } from '@/features/auth/auth.constants'
+import { MIN_PASSWORD_LENGTH } from '@features/auth/auth.constants'
 
-import type { JWTTokenPayload, PasswordChecks } from '@/features/auth/auth.types'
+import type { JWTTokenPayload, PasswordChecks } from '@features/auth/auth.types'
 
-import * as stringUtils from '@/shared/utils/string.utils'
+import * as stringUtils from '@shared/utils/string.utils'
 
 /**
  * Check if a password is valid. See Okane.Api/Features/Auth/Extensions/AuthExtensions.cs for valid password criteria.

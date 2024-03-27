@@ -5,7 +5,7 @@ import { createPinia, setActivePinia, type Pinia } from 'pinia'
 import { mount, type ComponentMountingOptions } from '@vue/test-utils'
 
 // Internal
-import { createAppRouter } from '@/shared/services/router/router.service'
+import { createAppRouter } from '@shared/services/router/router.service'
 
 global.getMountComponent = customMount
 

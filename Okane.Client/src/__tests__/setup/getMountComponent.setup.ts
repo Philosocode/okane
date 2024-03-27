@@ -1,5 +1,6 @@
 // External
 import type { Plugin } from 'vue'
+import type { Router } from 'vue-router'
 import { createPinia, setActivePinia, type Pinia } from 'pinia'
 import { mount, type ComponentMountingOptions } from '@vue/test-utils'
 
@@ -22,8 +23,8 @@ beforeEach(() => {
 })
 
 type CustomMountingOptions = {
-  withPinia?: boolean
-  withRouter?: boolean
+  withPinia?: boolean | Pinia
+  withRouter?: boolean | Router
 }
 
 type MountingOptionsWithPlugins<TComponent> = ComponentMountingOptions<TComponent> & {
@@ -52,11 +53,25 @@ function customMount<TComponent>(component: TComponent, customOptions?: CustomMo
     }
 
     if (customOptions?.withRouter) {
-      mergedGlobal.plugins.push(createAppRouter())
+      let routerToUse: Router
+
+      if (typeof customOptions.withRouter === 'boolean') {
+        routerToUse = createAppRouter()
+      } else {
+        routerToUse = customOptions.withRouter
+      }
+
+      mergedGlobal.plugins.push(routerToUse)
     }
 
     if (customOptions?.withPinia) {
-      mergedGlobal.plugins.push(pinia)
+      let piniaToUse = pinia
+
+      if (typeof customOptions?.withPinia !== 'boolean') {
+        piniaToUse = customOptions.withPinia
+      }
+
+      mergedGlobal.plugins.push(piniaToUse)
     }
 
     return mount(component, {

@@ -1,6 +1,19 @@
 // Internal
 import * as stringUtils from '@/shared/utils/string.utils'
 
+describe('capitalize', () => {
+  test.each([
+    ['abc', 'Abc'],
+    ['abc abc', 'Abc abc'],
+    ['', ''],
+    [' ', ' '],
+    [' a', ' a'],
+    ['1234', '1234'],
+  ])(`capitalize('%s') -> '%s'`, (value, expected) => {
+    expect(stringUtils.capitalize(value)).toBe(expected)
+  })
+})
+
 describe('isAlphabetString', () => {
   test.each([
     ['a', true],

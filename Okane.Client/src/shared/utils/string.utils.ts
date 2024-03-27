@@ -5,6 +5,16 @@ const alphabetSet = new Set(alphabetLowercase + alphabetUppercase)
 const alphanumericSet = new Set([...digitSet, ...alphabetSet])
 
 /**
+ * Make the first letter of a string uppercase.
+ *
+ * @param s
+ */
+export function capitalize(s: string): string {
+  if (s.length <= 1) return s.toUpperCase()
+  return s[0].toUpperCase() + s.slice(1)
+}
+
+/**
  * Check if each character in s is in the A-Z alphabet.
  *
  * @param s

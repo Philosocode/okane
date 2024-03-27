@@ -9,7 +9,7 @@ import type { AuthenticateResponse } from '@/features/auth/auth.types'
 import { useAuthStore } from '@/features/auth/useAuthStore'
 
 import { apiClient } from '@/shared/services/apiClient/apiClient.service'
-import { mockServer } from '@tests/msw/mockServer'
+import { testServer } from '@tests/msw/testServer'
 
 import { createMockAuthFormState } from '@tests/factories/authFormState.factory'
 import { createMockJWTToken } from '@tests/factories/jwtToken.factory'
@@ -24,7 +24,7 @@ const authResponse: AuthenticateResponse = {
 }
 
 beforeEach(() => {
-  mockServer.use(
+  testServer.use(
     http.post('/api/auth/login', () => HttpResponse.json(authResponse)),
     http.post('/api/auth/refresh-token', () => HttpResponse.json(authResponse)),
     http.post('/api/auth/logout', () => HttpResponse.json(wrapInAPIResponse(null))),

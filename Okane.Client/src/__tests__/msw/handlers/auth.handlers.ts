@@ -1,5 +1,5 @@
 // External
-import { http, HttpResponse, RequestHandler } from 'msw'
+import { http, HttpResponse, RequestHandler, type HttpHandler } from 'msw'
 
 // Internal
 import { testServer } from '@tests/msw/testServer'

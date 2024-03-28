@@ -12,9 +12,9 @@ import { useAuthStore } from '@features/auth/useAuthStore'
 import { apiClient } from '@shared/services/apiClient/apiClient.service'
 import { testServer } from '@tests/msw/testServer'
 
-import { createMockJWTToken } from '@tests/factories/jwtToken.factory'
-import { createMockProblemDetails } from '@tests/factories/problemDetails.factory'
-import { createMockUser } from '@tests/factories/user.factory'
+import { createStubJWTToken } from '@tests/factories/jwtToken.factory'
+import { createStubProblemDetails } from '@tests/factories/problemDetails.factory'
+import { createStubUser } from '@tests/factories/user.factory'
 
 import { wrapInAPIResponse } from '@tests/factories/apiResponse.factory'
 
@@ -37,7 +37,7 @@ test('prepends a forward slash to the request URL', async () => {
 })
 
 test('returns a rejected promise on failed request', async () => {
-  const errorResponse = createMockProblemDetails({
+  const errorResponse = createStubProblemDetails({
     errors: {
       email: ['Invalid email'],
     },
@@ -89,8 +89,8 @@ describe('when not logged in', () => {
 })
 
 describe('when logged in', () => {
-  const jwtToken = createMockJWTToken()
-  const authUser = createMockUser()
+  const jwtToken = createStubJWTToken()
+  const authUser = createStubUser()
 
   beforeEach(() => {
     const authStore = useAuthStore()
@@ -122,7 +122,7 @@ describe('when logged in', () => {
   const logoutHandler = http.post('/api/auth/logout', () => HttpResponse.json())
   const getErrorHandler = (statusCode: HTTP_STATUS_CODE) =>
     http.get('/api/ping', () => {
-      const errorResponse = JSON.stringify(createMockProblemDetails())
+      const errorResponse = JSON.stringify(createStubProblemDetails())
       return new HttpResponse(errorResponse, { status: statusCode })
     })
 

@@ -4,7 +4,7 @@ import { MIN_PASSWORD_LENGTH } from '@features/auth/auth.constants'
 import { type JWTTokenPayload, type PasswordChecks } from '@features/auth/auth.types'
 
 import * as utils from '@features/auth/auth.utils'
-import { createMockJWTToken } from '@tests/factories/jwtToken.factory'
+import { createStubJWTToken } from '@tests/factories/jwtToken.factory'
 
 const invalidPasswordChecks: PasswordChecks = {
   hasDigit: false,
@@ -48,7 +48,7 @@ test('getJWTTokenPayload', () => {
     exp: Date.now(),
   }
 
-  const signedToken = createMockJWTToken(originalToken)
+  const signedToken = createStubJWTToken(originalToken)
   const parsedToken = utils.getJWTTokenPayload(signedToken)
 
   expect(parsedToken.exp).toBe(originalToken.exp)

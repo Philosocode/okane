@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 // Internal
 import type { JWTTokenPayload } from '@features/auth/auth.types'
 
-export const createMockJWTToken = (overrides?: Partial<JWTTokenPayload>): string => {
+export const createStubJWTToken = (overrides?: Partial<JWTTokenPayload>): string => {
   const defaultJWTTokenPayload: JWTTokenPayload = {
     sub: crypto.randomUUID(),
     exp: Date.now() / 1000, // exp should be in seconds, not milliseconds.

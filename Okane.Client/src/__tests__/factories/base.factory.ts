@@ -1,19 +1,19 @@
 // External
 import cloneDeep from 'lodash.clonedeep'
 
-export type MockFactoryOptions = {
+export type StubFactoryOptions = {
   deepClone?: boolean
 }
 
-export type MockFactoryFunction<TData> = (
+export type StubFactoryFunction<TData> = (
   overrides?: Partial<TData>,
-  options?: MockFactoryOptions,
+  options?: StubFactoryOptions,
 ) => TData
 
-export function baseMockFactory<TData>(
+export function baseStubFactory<TData>(
   defaultData: TData,
   overrides?: Partial<TData>,
-  options?: MockFactoryOptions,
+  options?: StubFactoryOptions,
 ): TData {
   const dataWithOverrides = {
     ...defaultData,

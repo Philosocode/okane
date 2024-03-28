@@ -11,8 +11,8 @@ import { useAuthStore } from '@features/auth/useAuthStore'
 
 import { testServer } from '@tests/msw/testServer'
 
-import { createMockJWTToken } from '@tests/factories/jwtToken.factory'
-import { createMockUser } from '@tests/factories/user.factory'
+import { createStubJWTToken } from '@tests/factories/jwtToken.factory'
+import { createStubUser } from '@tests/factories/user.factory'
 
 const mountComponent = getMountComponent(NavBar, {
   withPinia: true,
@@ -36,8 +36,8 @@ describe('when authenticated', () => {
   beforeEach(() => {
     const authStore = useAuthStore()
 
-    authStore.authUser = createMockUser()
-    authStore.jwtToken = createMockJWTToken()
+    authStore.authUser = createStubUser()
+    authStore.jwtToken = createStubJWTToken()
   })
 
   test('renders links for authenticated users', () => {

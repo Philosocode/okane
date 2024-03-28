@@ -9,12 +9,12 @@ import { useAuthStore } from '@features/auth/useAuthStore'
 import { useMockedStore } from '@tests/composables/useMockedStore.composable'
 
 import { createAppRouter, ROUTE_MAP, ROUTE_NAME } from '@shared/services/router/router.service'
-import { createMockAuthFormState } from '@tests/factories/authFormState.factory'
+import { createStubAuthFormState } from '@tests/factories/authFormState.factory'
 
 const router = createAppRouter()
 const mountComponent = getMountComponent(LoginPage, { withPinia: true, withRouter: router })
 
-const formData = createMockAuthFormState()
+const formData = createStubAuthFormState()
 
 beforeEach(async () => {
   await router.push({ name: ROUTE_NAME.LOGIN })

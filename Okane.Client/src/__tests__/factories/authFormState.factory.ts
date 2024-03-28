@@ -1,7 +1,7 @@
 // Internal
 import type { AuthFormState } from '@features/auth/auth.types'
 
-import { baseMockFactory, type MockFactoryFunction } from '@tests/factories/base.factory'
+import { baseStubFactory, type StubFactoryFunction } from '@tests/factories/base.factory'
 
 const defaultState: AuthFormState = {
   email: 'test@okane.com',
@@ -10,6 +10,6 @@ const defaultState: AuthFormState = {
   passwordConfirm: 'coolPassword123',
 }
 
-export const createMockAuthFormState: MockFactoryFunction<AuthFormState> = (overrides, options) => {
-  return baseMockFactory(defaultState, overrides, options)
+export const createStubAuthFormState: StubFactoryFunction<AuthFormState> = (overrides, options) => {
+  return baseStubFactory(defaultState, overrides, options)
 }

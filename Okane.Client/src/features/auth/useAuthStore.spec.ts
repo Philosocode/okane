@@ -11,15 +11,15 @@ import { useAuthStore } from '@features/auth/useAuthStore'
 import { apiClient } from '@shared/services/apiClient/apiClient.service'
 import { testServer } from '@tests/msw/testServer'
 
-import { createMockAuthFormState } from '@tests/factories/authFormState.factory'
-import { createMockJWTToken } from '@tests/factories/jwtToken.factory'
-import { createMockUser } from '@tests/factories/user.factory'
+import { createStubAuthFormState } from '@tests/factories/authFormState.factory'
+import { createStubJWTToken } from '@tests/factories/jwtToken.factory'
+import { createStubUser } from '@tests/factories/user.factory'
 import { omitObjectKeys } from '@shared/utils/object.utils'
 import { wrapInAPIResponse } from '@tests/factories/apiResponse.factory'
 
-const formData = createMockAuthFormState()
+const formData = createStubAuthFormState()
 const authResponse: AuthenticateResponse = {
-  items: [{ jwtToken: createMockJWTToken(), user: createMockUser() }],
+  items: [{ jwtToken: createStubJWTToken(), user: createStubUser() }],
   status: HTTP_STATUS_CODE.OK_200,
 }
 
@@ -70,8 +70,8 @@ test('handleRefreshToken', async () => {
 test('logout', async () => {
   const authStore = useAuthStore()
   authStore.$patch({
-    authUser: createMockUser(),
-    jwtToken: createMockJWTToken(),
+    authUser: createStubUser(),
+    jwtToken: createStubJWTToken(),
   })
 
   await authStore.logout()

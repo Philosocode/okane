@@ -9,6 +9,10 @@ public class ApiException : Exception
     public string? Title { get; init; }
     public string? Instance { get; init; }
 
+    public ApiException() : base()
+    {
+    }
+
     public ApiException(string detail) : base(detail)
     {
     }

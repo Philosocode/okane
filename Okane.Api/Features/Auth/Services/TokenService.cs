@@ -7,6 +7,7 @@ using Okane.Api.Features.Auth.Config;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Features.Auth.Utils;
 using Okane.Api.Infrastructure.Database;
+using Okane.Api.Shared.Wrappers.GuidGenerator;
 
 namespace Okane.Api.Features.Auth.Services;
 
@@ -37,7 +38,10 @@ public interface ITokenService
     Task RevokeRefreshToken(string refreshToken, string userId, CancellationToken cancellationToken);
 }
 
-public class TokenService(ApiDbContext db, IOptions<JwtSettings> jwtOptions) : ITokenService
+public class TokenService(
+    ApiDbContext db,
+    IGuidGenerator guidGenerator,
+    IOptions<JwtSettings> jwtOptions) : ITokenService
 {
     public string GenerateJwtToken(string userId)
     {
@@ -49,7 +53,7 @@ public class TokenService(ApiDbContext db, IOptions<JwtSettings> jwtOptions) : I
             new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userId),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Jti, guidGenerator.NewGuid().ToString())
             }
         );
 
@@ -74,7 +78,7 @@ public class TokenService(ApiDbContext db, IOptions<JwtSettings> jwtOptions) : I
         var foundUniqueToken = false;
         while (!foundUniqueToken)
         {
-            token = Guid.NewGuid().ToString();
+            token = guidGenerator.NewGuid().ToString();
 
             var isDuplicateToken = await db.RefreshTokens.AnyAsync(t => t.Token == token);
             

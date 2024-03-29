@@ -11,6 +11,7 @@ using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Database.HostedServices;
 using Okane.Api.Shared.Exceptions;
 using Okane.Api.Shared.Wrappers.Clock;
+using Okane.Api.Shared.Wrappers.GuidGenerator;
 using Serilog;
 
 namespace Okane.Api.Infrastructure.Extensions;
@@ -34,7 +35,7 @@ public static class ConfigureServices
         builder.Services.Configure<DbSettings>(builder.Configuration.GetSection(nameof(DbSettings)));
         builder.Services.AddDbContext<ApiDbContext>();
 
-        builder.Services.AddSingleton<IClock, SystemClock>();
+        builder.AddWrappers();
         
         builder.Services.AddValidatorsFromAssembly(typeof(ConfigureServices).Assembly);
         builder.AddApiAuthentication();
@@ -89,6 +90,12 @@ public static class ConfigureServices
                 }
             });
         });
+    }
+
+    private static void AddWrappers(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddSingleton<IClock, SystemClock>();
+        builder.Services.AddSingleton<IGuidGenerator, GuidGenerator>();
     }
 
 

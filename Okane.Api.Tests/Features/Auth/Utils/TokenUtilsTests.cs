@@ -3,12 +3,12 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using NSubstitute;
-using Okane.Api.Features.Auth.Config;
 using Okane.Api.Features.Auth.Constants;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Features.Auth.Utils;
 using Okane.Api.Tests.Tests.Extensions;
 using Okane.Api.Tests.Tests.Mocks.Wrappers;
+using Okane.Api.Tests.Tests.StubFactories;
 using Xunit.Abstractions;
 
 namespace Okane.Api.Tests.Features.Auth.Utils;
@@ -47,7 +47,7 @@ public class TokenUtilsTests(ITestOutputHelper testOutputHelper)
     public void SetRefreshTokenCookie_AddsARefreshTokenCookie()
     {
         var clock = new TestingClock();
-        var jwtSettings = new JwtSettings { RefreshTokenTtlDays = 2 };
+        var jwtSettings = JwtSettingsStubFactory.Create();
         var httpContext = new DefaultHttpContext();
         var refreshToken = new RefreshToken
         {

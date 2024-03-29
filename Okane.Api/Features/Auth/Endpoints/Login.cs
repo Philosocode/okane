@@ -15,6 +15,7 @@ using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Endpoints;
 using Okane.Api.Shared.Dtos.ApiResponses;
 using Okane.Api.Shared.Exceptions;
+using Okane.Api.Shared.Wrappers.Clock;
 
 namespace Okane.Api.Features.Auth.Endpoints;
 
@@ -41,6 +42,7 @@ public class Login : IEndpoint
     
     private static async Task<Results<Ok<ApiResponse<AuthenticateResponse>>, BadRequest<ProblemDetails>>> 
         Handle(
+            IClock clock,
             HttpContext context,
             Request request,
             ApiDbContext db,
@@ -80,7 +82,7 @@ public class Login : IEndpoint
         user.RefreshTokens.Add(refreshToken);
         await db.SaveChangesAsync(cancellationToken);
 
-        TokenUtils.SetRefreshTokenCookie(jwtSettings.Value, context.Response, refreshToken);
+        TokenUtils.SetRefreshTokenCookie(clock, jwtSettings.Value, context.Response, refreshToken);
 
         var response = new AuthenticateResponse
         {

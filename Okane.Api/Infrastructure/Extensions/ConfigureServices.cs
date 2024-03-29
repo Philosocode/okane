@@ -10,6 +10,7 @@ using Okane.Api.Features.Auth.Utils;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Database.HostedServices;
 using Okane.Api.Shared.Exceptions;
+using Okane.Api.Shared.Wrappers.Clock;
 using Serilog;
 
 namespace Okane.Api.Infrastructure.Extensions;
@@ -32,6 +33,8 @@ public static class ConfigureServices
         
         builder.Services.Configure<DbSettings>(builder.Configuration.GetSection(nameof(DbSettings)));
         builder.Services.AddDbContext<ApiDbContext>();
+
+        builder.Services.AddSingleton<IClock, SystemClock>();
         
         builder.Services.AddValidatorsFromAssembly(typeof(ConfigureServices).Assembly);
         builder.AddApiAuthentication();

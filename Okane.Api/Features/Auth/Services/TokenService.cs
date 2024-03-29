@@ -7,6 +7,7 @@ using Okane.Api.Features.Auth.Config;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Features.Auth.Utils;
 using Okane.Api.Infrastructure.Database;
+using Okane.Api.Shared.Wrappers.Clock;
 using Okane.Api.Shared.Wrappers.GuidGenerator;
 
 namespace Okane.Api.Features.Auth.Services;
@@ -39,6 +40,7 @@ public interface ITokenService
 }
 
 public class TokenService(
+    IClock clock,
     ApiDbContext db,
     IGuidGenerator guidGenerator,
     IOptions<JwtSettings> jwtOptions) : ITokenService
@@ -61,7 +63,7 @@ public class TokenService(
         {
             Audience = jwtSettings.Audience,
             Issuer = jwtSettings.Issuer,
-            Expires = DateTime.UtcNow.AddMinutes(jwtSettings.MinutesToExpiration),
+            Expires = clock.UtcNow.AddMinutes(jwtSettings.MinutesToExpiration),
             SigningCredentials = signingCredentials,
             Subject = claimsIdentity,
         };
@@ -88,8 +90,8 @@ public class TokenService(
         return new RefreshToken
         {
             Token = token,
-            CreatedAt = DateTime.UtcNow,
-            ExpiresAt = DateTime.UtcNow.AddDays(jwtOptions.Value.RefreshTokenTtlDays),
+            CreatedAt = clock.UtcNow,
+            ExpiresAt = clock.UtcNow.AddDays(jwtOptions.Value.RefreshTokenTtlDays),
         };
     }
 
@@ -103,7 +105,7 @@ public class TokenService(
 
         if (tokenToRevoke is not null)
         {
-            tokenToRevoke.RevokedAt = DateTime.UtcNow;
+            tokenToRevoke.RevokedAt = clock.UtcNow;
             await db.SaveChangesAsync(cancellationToken);
         }
     }

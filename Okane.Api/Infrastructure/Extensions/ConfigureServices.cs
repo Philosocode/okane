@@ -1,6 +1,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Okane.Api.Features.Auth.Config;
@@ -31,10 +32,7 @@ public static class ConfigureServices
         });
 
         builder.AddSwagger();
-        
-        builder.Services.Configure<DbSettings>(builder.Configuration.GetSection(nameof(DbSettings)));
-        builder.Services.AddDbContext<ApiDbContext>();
-
+        builder.AddDatabase();
         builder.AddWrappers();
         
         builder.Services.AddValidatorsFromAssembly(typeof(ConfigureServices).Assembly);
@@ -89,6 +87,18 @@ public static class ConfigureServices
                     []
                 }
             });
+        });
+    }
+
+    private static void AddDatabase(this WebApplicationBuilder builder)
+    {
+        var dbSettingsSection = builder.Configuration.GetSection(nameof(DbSettings));
+        var dbSettings = dbSettingsSection.Get<DbSettings>();
+
+        builder.Services.Configure<DbSettings>(dbSettingsSection);
+        builder.Services.AddDbContext<ApiDbContext>(options =>
+        {
+            options.UseNpgsql(dbSettings?.ConnectionString);
         });
     }
 

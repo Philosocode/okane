@@ -4,7 +4,7 @@ namespace Okane.Api.Tests.Tests.Mocks.Wrappers;
 
 public class TestingGuidGenerator(IList<Guid> guids) : IGuidGenerator
 {
-    private int _index = 0;
+    private int _index;
 
     public Guid NewGuid()
     {

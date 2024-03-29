@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Okane.Api.Features.Auth.Config;
 using Okane.Api.Features.Auth.Constants;
 using Okane.Api.Features.Auth.Entities;
+using Okane.Api.Shared.Wrappers.Clock;
 
 namespace Okane.Api.Features.Auth.Utils;
 
@@ -15,22 +16,27 @@ public static class TokenUtils
     /// <returns>Signing key converted to SymmetricSecurityKey.</returns>
     public static SymmetricSecurityKey GetIssuerSigningKey(string signingKey)
         => new(Encoding.UTF8.GetBytes(signingKey));
-    
+
     /// <summary>
     /// Get refresh token from cookie.
     /// </summary>
     /// <param name="request"></param>
     /// <returns>Refresh token.</returns>
     public static string? GetRefreshTokenFromCookie(HttpRequest request)
-        => request.Cookies[CookieNames.RefreshToken];
-    
+    {
+        request.Cookies.TryGetValue(CookieNames.RefreshToken, out string? refreshToken);
+        return refreshToken;
+    }
+
     /// <summary>
     /// Set refresh token on response cookie.
     /// </summary>
+    /// <param name="clock"></param>
     /// <param name="jwtSettings"></param>
     /// <param name="response"></param>
     /// <param name="refreshToken"></param>
     public static void SetRefreshTokenCookie(
+        IClock clock,
         JwtSettings jwtSettings,
         HttpResponse response,
         RefreshToken refreshToken)
@@ -38,7 +44,7 @@ public static class TokenUtils
         var cookieOptions = new CookieOptions
         {
             HttpOnly = true,
-            Expires = DateTime.UtcNow.AddDays(jwtSettings.RefreshTokenTtlDays)
+            Expires = clock.UtcNow.AddDays(jwtSettings.RefreshTokenTtlDays)
         };
         
         response.Cookies.Append(

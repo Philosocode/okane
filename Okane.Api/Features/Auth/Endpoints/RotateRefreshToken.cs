@@ -13,6 +13,7 @@ using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Endpoints;
 using Okane.Api.Shared.Dtos.ApiResponses;
 using Okane.Api.Shared.Exceptions;
+using Okane.Api.Shared.Wrappers.Clock;
 
 namespace Okane.Api.Features.Auth.Endpoints;
 
@@ -29,6 +30,7 @@ public class RotateRefreshToken : IEndpoint
 
     private static async Task<Results<Ok<ApiResponse<AuthenticateResponse>>, BadRequest<ProblemDetails>>>
         Handle(
+            IClock clock,
             HttpContext context,
             ApiDbContext db,
             IOptions<JwtSettings> jwtSettings,
@@ -89,7 +91,7 @@ public class RotateRefreshToken : IEndpoint
             refreshTokenToRotate.Token
         );
         
-        TokenUtils.SetRefreshTokenCookie(jwtSettings.Value, context.Response, newRefreshToken);
+        TokenUtils.SetRefreshTokenCookie(clock, jwtSettings.Value, context.Response, newRefreshToken);
 
         string newJwtToken = tokenService.GenerateJwtToken(refreshTokenToRotate.UserId);
         

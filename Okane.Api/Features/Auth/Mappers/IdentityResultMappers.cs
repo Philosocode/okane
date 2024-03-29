@@ -1,5 +1,4 @@
 using Ardalis.GuardClauses;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Okane.Api.Shared.Guards;
 

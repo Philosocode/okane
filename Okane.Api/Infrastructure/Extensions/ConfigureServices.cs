@@ -29,7 +29,7 @@ public static class ConfigureServices
         builder.Host.UseSerilog((context, config) =>
         {
             config.ReadFrom.Configuration(context.Configuration);
-        });
+        }, true);
 
         builder.AddSwagger();
         builder.AddDatabase();

@@ -4,13 +4,9 @@ using Okane.Api.Features.Auth.Entities;
 
 namespace Okane.Api.Infrastructure.Database;
 
-public class ApiDbContext : IdentityDbContext<ApiUser>
+public class ApiDbContext(DbContextOptions<ApiDbContext> options) : IdentityDbContext<ApiUser>(options)
 {
     public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
-    
-    public ApiDbContext(DbContextOptions<ApiDbContext> options) : base(options)
-    {
-    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

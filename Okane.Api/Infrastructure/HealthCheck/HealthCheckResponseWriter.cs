@@ -16,26 +16,7 @@ public static class HealthCheckResponseWriter
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 
-        string json = JsonSerializer.Serialize(
-            new
-            {
-                Status = report.Status.ToString(),
-                Duration = report.TotalDuration,
-                Info = report.Entries
-                    .Select(e =>
-                        new
-                        {
-                            e.Key,
-                            e.Value.Description,
-                            e.Value.Duration,
-                            Status = Enum.GetName(typeof(HealthStatus), e.Value.Status),
-                            Error = e.Value.Exception?.Message,
-                            e.Value.Data
-                        })
-                    .ToList()
-            },
-            options
-        );
+        string json = JsonSerializer.Serialize(report.ToHealthCheckResponse(), options);
 
         return context.Response.WriteAsync(json);
     }

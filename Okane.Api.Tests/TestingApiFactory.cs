@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using Okane.Api.Infrastructure.Database;
 
 namespace Okane.Api.Tests;
 
@@ -29,7 +28,7 @@ public class TestingApiFactory : WebApplicationFactory<IApiMarker>
     {
         builder.ConfigureTestServices(services =>
         {
-            services.RemoveAll(typeof(IHostedService));
+            services.RemoveAll<IHostedService>();
         });
     }
 }

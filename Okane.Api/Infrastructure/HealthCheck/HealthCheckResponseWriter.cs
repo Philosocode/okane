@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -9,6 +10,8 @@ public static class HealthCheckResponseWriter
 {
     public static Task WriteResponse(HttpContext context, HealthReport report)
     {
+        context.Response.ContentType = MediaTypeNames.Application.Json;
+        
         JsonSerializerOptions options = new()
         {
             WriteIndented = false,

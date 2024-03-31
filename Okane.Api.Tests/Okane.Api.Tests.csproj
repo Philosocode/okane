@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
@@ -7,26 +7,33 @@
 
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
-    </PropertyGroup>
+      <UserSecretsId>2d7a687f-fd10-4126-892e-ce2b7609310c</UserSecretsId>
+  </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Bogus" Version="35.5.0" />
-        <PackageReference Include="coverlet.collector" Version="6.0.0"/>
+        <PackageReference Include="coverlet.collector" Version="6.0.0" />
         <PackageReference Include="FluentAssertions" Version="6.12.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.2" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.2" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
         <PackageReference Include="NSubstitute" Version="5.1.0" />
-        <PackageReference Include="xunit" Version="2.5.3"/>
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3"/>
+        <PackageReference Include="xunit" Version="2.5.3" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
     </ItemGroup>
 
     <ItemGroup>
-        <Using Include="Xunit"/>
+        <Using Include="Xunit" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Okane.Api\Okane.Api.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="appsettings.Test.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

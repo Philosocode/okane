@@ -33,12 +33,6 @@ ALTER USER okane CREATEDB;
 dotnet user-secrets set 'DbSettings:ConnectionString' 'Host=localhost;Username=okane;Password=your-secure-password;Database=okane'
 ```
 
-#### Okane.Api.Tests
-```text
-dotnet user-secrets set 'DbSettings:ConnectionString' 'Host=localhost;Username=okane;Password=your-secure-password;Database=okane_test'
-```
-
-
 ### Initialize database
 ```text
 dotnet tool install -g dotnet-ef

@@ -8,6 +8,7 @@ using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Features.Auth.Mappers;
 using Okane.Api.Features.Auth.Services;
 using Okane.Api.Infrastructure.Endpoints;
+using Okane.Api.Shared.Dtos.ApiResponses;
 
 namespace Okane.Api.Features.Auth.Endpoints;
 
@@ -34,7 +35,7 @@ public class Register : IEndpoint
     }
     
     // See: https://github.com/dotnet/aspnetcore/blob/e737c6fe54fa596289268140864c127957c0b1a1/src/Identity/Core/src/IdentityApiEndpointRouteBuilderExtensions.cs#L57
-    private static async Task<Results<Created<UserResponse>, BadRequest<ProblemDetails>, ValidationProblem>>
+    private static async Task<Results<Created<ApiResponse<UserResponse>>, BadRequest<ProblemDetails>, ValidationProblem>>
         Handle(
             Request request, 
             LinkGenerator linkGenerator,
@@ -63,6 +64,7 @@ public class Register : IEndpoint
         logger.LogInformation("New user registered: {User}", userToCreate);
 
         var location = linkGenerator.GetPathByName(AuthEndpointNames.GetSelf);
-        return TypedResults.Created(location, userToCreate.ToUserResponse());
+        var response = new ApiResponse<UserResponse>(userToCreate.ToUserResponse());
+        return TypedResults.Created(location, response);
     }
 }

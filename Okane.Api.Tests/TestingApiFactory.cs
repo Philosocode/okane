@@ -15,9 +15,7 @@ using Testcontainers.PostgreSql;
 namespace Okane.Api.Tests;
 
 [CollectionDefinition(nameof(DatabaseTestCollection))]
-public class DatabaseTestCollection : ICollectionFixture<TestingApiFactory>
-{
-}
+public class DatabaseTestCollection : ICollectionFixture<TestingApiFactory>;
 
 // Referenced: https://github.com/danielwarddev/TestingWithDb
 public class TestingApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
@@ -52,7 +50,7 @@ public class TestingApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifeti
         _respawner = await Respawner.CreateAsync(_connection, new RespawnerOptions
         {
             DbAdapter = DbAdapter.Postgres,
-            SchemasToInclude = new[] { "public" }
+            SchemasToInclude = ["public"]
         });
     }
 

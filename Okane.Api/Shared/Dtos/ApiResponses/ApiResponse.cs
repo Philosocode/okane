@@ -4,7 +4,7 @@ namespace Okane.Api.Shared.Dtos.ApiResponses;
 
 public record ApiResponse<TItem>
 {
-    public IEnumerable<TItem> Items { get; init; } = [];
+    public IList<TItem> Items { get; init; } = [];
     
     public HttpStatusCode Status { get; init; } = HttpStatusCode.OK;
 
@@ -13,6 +13,6 @@ public record ApiResponse<TItem>
     public ApiResponse(TItem item)
         => Items = [item];
 
-    public ApiResponse(IEnumerable<TItem> items)
+    public ApiResponse(IList<TItem> items)
         => Items = items;
 }

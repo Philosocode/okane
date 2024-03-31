@@ -28,14 +28,24 @@ ALTER USER okane CREATEDB;
 ```
 
 ### Add DB connection string to user secrets
+#### Okane.Api
 ```text
 dotnet user-secrets set 'DbSettings:ConnectionString' 'Host=localhost;Username=okane;Password=your-secure-password;Database=okane'
 ```
+
+#### Okane.Api.Tests
+```text
+dotnet user-secrets set 'DbSettings:ConnectionString' 'Host=localhost;Username=okane;Password=your-secure-password;Database=okane_test'
+```
+
 
 ### Initialize database
 ```text
 dotnet tool install -g dotnet-ef
 
-// If in solution root.
+// If in API project:
+dotnet ef database update
+
+// If in solution root:
 dotnet ef database update --project ./Okane.Api
 ```

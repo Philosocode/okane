@@ -108,7 +108,6 @@ public static class ConfigureServices
         builder.Services.AddSingleton<IGuidGenerator, GuidGenerator>();
     }
 
-
     private static void AddApiAuthentication(this WebApplicationBuilder builder)
     {
         builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(nameof(JwtSettings)));

@@ -10,6 +10,7 @@ using Okane.Api.Features.Auth.Services;
 using Okane.Api.Features.Auth.Utils;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Database.HostedServices;
+using Okane.Api.Infrastructure.HealthCheck;
 using Okane.Api.Shared.Exceptions;
 using Okane.Api.Shared.Wrappers.Clock;
 using Okane.Api.Shared.Wrappers.GuidGenerator;
@@ -62,6 +63,8 @@ public static class ConfigureServices
             });
             
             options.CustomSchemaIds(type => type.FullName?.Replace('+', '.'));
+
+            options.DocumentFilter<HealthCheckDocumentFilter>();
             
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {

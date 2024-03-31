@@ -27,7 +27,7 @@ public static class ConfigureApp {
 
         app.UsePathBase("/api");
 
-        app.UseHealthChecks("/health", new HealthCheckOptions()
+        app.UseHealthChecks("/health", new HealthCheckOptions
         {
             ResponseWriter = HealthCheckResponseWriter.WriteResponse
         });

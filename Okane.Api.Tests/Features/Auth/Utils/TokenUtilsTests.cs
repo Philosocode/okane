@@ -6,14 +6,12 @@ using NSubstitute;
 using Okane.Api.Features.Auth.Constants;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Features.Auth.Utils;
-using Okane.Api.Tests.Testing.Extensions;
 using Okane.Api.Tests.Testing.Mocks.Wrappers;
 using Okane.Api.Tests.Testing.StubFactories;
-using Xunit.Abstractions;
 
 namespace Okane.Api.Tests.Features.Auth.Utils;
 
-public class TokenUtilsTests(ITestOutputHelper testOutputHelper)
+public class TokenUtilsTests
 {
     [Fact]
     public void GetIssuerSigningKey_ReturnsAnEncodedSigningKey()
@@ -57,17 +55,19 @@ public class TokenUtilsTests(ITestOutputHelper testOutputHelper)
         };
 
         TokenUtils.SetRefreshTokenCookie(clock, jwtSettings, httpContext.Response, refreshToken);
-        
-        IDictionary<string, string?> cookieData = httpContext.Response.Headers.GetCookieData(CookieNames.RefreshToken);
-        
-        cookieData.Should().ContainKey(refreshToken.Token);
-        cookieData[refreshToken.Token].Should().BeNullOrEmpty();
 
-        cookieData.Should().ContainKey("expires");
-        DateTime expiresAt = DateTime.Parse(cookieData["expires"] ?? "");
+        IDictionary<string, string> cookieData = CookieUtils.GetCookieHeaderDictionary(
+            httpContext.Response.Headers,
+            CookieNames.RefreshToken
+        );
+
+        cookieData.Should()
+            .Contain(CookieNames.RefreshToken, refreshToken.Token)
+            .And.ContainKey("httponly")
+            .And.ContainKey("expires");
+
+        DateTime expiresAt = DateTime.Parse(cookieData["expires"]);
         DateTime expectedExpiresAt = clock.UtcNow.AddDays(jwtSettings.RefreshTokenTtlDays);
         expiresAt.Should().Be(expectedExpiresAt);
-        
-        cookieData.Should().ContainKey("httponly");
     }
 }

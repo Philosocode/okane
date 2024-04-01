@@ -27,19 +27,21 @@ public static class TestUser
         await client.PostAsJsonAsync("/auth/register", request);
     }
 
-    public static async Task<AuthenticateResponse> LogInTestUserAsync(this HttpClient client)
+    public static async Task<HttpResponseMessage> LogInTestUserAsync(this HttpClient client)
     {
         var request = new Login.Request(User.Email!, Password);
-        var response = await client.PostAsJsonAsync("/auth/login", request);
-        var body = await response.Content.ReadFromJsonAsync<ApiResponse<AuthenticateResponse>>();
-        return body?.Items[0]!;
+        return await client.PostAsJsonAsync("/auth/login", request);
     }
     
     public static async Task<AuthenticateResponse> RegisterAndLogInTestUserAsync(this HttpClient client)
     {
         await client.RegisterTestUserAsync();
-        var authResponse = await client.LogInTestUserAsync();
+        var loginResponse = await client.LogInTestUserAsync();
+        
+        var body = await loginResponse.Content.ReadFromJsonAsync<ApiResponse<AuthenticateResponse>>();
+        var authResponse = body?.Items[0]!;
         client.SetBearerToken(authResponse.JwtToken);
+        
         return authResponse;
     }
     

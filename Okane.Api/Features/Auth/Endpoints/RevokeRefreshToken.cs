@@ -19,17 +19,17 @@ public class RevokeRefreshToken : IEndpoint
             .WithSummary("Revoke a refresh token in a cookie or the response body.");
     }
 
-    private record Request(string? RefreshToken);
+    public record Request(string? RefreshToken);
 
     private static async Task<Results<NoContent, ValidationErrorResult>> 
         Handle(
             ClaimsPrincipal claimsPrincipal,
             HttpContext context,
-            Request request,
+            Request? request,
             ITokenService tokenService,
             CancellationToken cancellationToken)
     {
-        string? refreshTokenToRevoke = request.RefreshToken ?? TokenUtils.GetRefreshTokenFromCookie(context.Request);
+        string? refreshTokenToRevoke = request?.RefreshToken ?? TokenUtils.GetRefreshTokenFromCookie(context.Request);
         
         if (refreshTokenToRevoke is null)
         {

@@ -2,7 +2,7 @@ using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 
-namespace Okane.Api.Tests.Features.Auth.Utils;
+namespace Okane.Api.Tests.Testing.Utils;
 
 public static class CookieUtils
 {

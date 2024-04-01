@@ -6,8 +6,8 @@ using Microsoft.Net.Http.Headers;
 using Okane.Api.Features.Auth.Constants;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Tests.Features.Auth.Extensions;
-using Okane.Api.Tests.Features.Auth.Utils;
 using Okane.Api.Tests.Testing.Integration;
+using Okane.Api.Tests.Testing.Utils;
 
 namespace Okane.Api.Tests.Features.Auth.Endpoints;
 

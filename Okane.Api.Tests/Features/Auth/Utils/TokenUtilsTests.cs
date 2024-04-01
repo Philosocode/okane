@@ -8,6 +8,7 @@ using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Features.Auth.Utils;
 using Okane.Api.Tests.Testing.Mocks.Wrappers;
 using Okane.Api.Tests.Testing.StubFactories;
+using Okane.Api.Tests.Testing.Utils;
 
 namespace Okane.Api.Tests.Features.Auth.Utils;
 

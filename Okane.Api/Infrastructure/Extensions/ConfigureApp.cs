@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Endpoints;
 using Okane.Api.Infrastructure.HealthCheck;
-using Okane.Api.Shared.Exceptions;
 using Serilog;
 
 namespace Okane.Api.Infrastructure.Extensions;
@@ -33,7 +32,8 @@ public static class ConfigureApp {
         });
 
         app.MapApiEndpoints();
-        
+
+        app.UseAuthentication();
         app.UseAuthorization();
 
         if (app.Environment.IsProduction())

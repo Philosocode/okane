@@ -22,7 +22,6 @@ public class Logout : IEndpoint
     private static async Task<NoContent> Handle(
         ClaimsPrincipal claimsPrincipal,
         HttpContext context,
-        ILogger<Logout> logger,
         ITokenService tokenService,
         CancellationToken cancellationToken)
     {

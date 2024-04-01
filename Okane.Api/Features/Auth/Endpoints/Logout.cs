@@ -22,13 +22,12 @@ public class Logout : IEndpoint
     private static async Task<NoContent> Handle(
         ClaimsPrincipal claimsPrincipal,
         HttpContext context,
-        ILogger logger,
+        ILogger<Logout> logger,
         ITokenService tokenService,
         CancellationToken cancellationToken)
     {
         string userId = claimsPrincipal.GetUserId();
         string? refreshToken = TokenUtils.GetRefreshTokenFromCookie(context.Request);
-
         if (refreshToken is not null)
         {
             await tokenService.RevokeRefreshToken(refreshToken, userId, cancellationToken);

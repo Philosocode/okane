@@ -6,9 +6,9 @@ using NSubstitute;
 using Okane.Api.Features.Auth.Constants;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Features.Auth.Utils;
-using Okane.Api.Tests.Tests.Extensions;
-using Okane.Api.Tests.Tests.Mocks.Wrappers;
-using Okane.Api.Tests.Tests.StubFactories;
+using Okane.Api.Tests.Testing.Extensions;
+using Okane.Api.Tests.Testing.Mocks.Wrappers;
+using Okane.Api.Tests.Testing.StubFactories;
 using Xunit.Abstractions;
 
 namespace Okane.Api.Tests.Features.Auth.Utils;

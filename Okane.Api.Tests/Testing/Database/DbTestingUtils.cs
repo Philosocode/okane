@@ -1,8 +1,8 @@
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Infrastructure.Database;
-using Okane.Api.Tests.Tests.StubFactories;
+using Okane.Api.Tests.Testing.StubFactories;
 
-namespace Okane.Api.Tests.Tests.Database;
+namespace Okane.Api.Tests.Testing.Database;
 
 public static class DbTestingUtils
 {

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Okane.Api.Features.Auth.Dtos.Responses;
 using Okane.Api.Features.Auth.Endpoints;
 using Okane.Api.Shared.Dtos.ApiResponses;
-using Okane.Api.Tests.Tests.Database;
+using Okane.Api.Tests.Testing;
 
 namespace Okane.Api.Tests.Features.Auth.Endpoints;
 

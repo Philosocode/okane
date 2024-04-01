@@ -4,7 +4,7 @@ using Okane.Api.Features.Auth.Endpoints;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Infrastructure.Database;
 
-namespace Okane.Api.Tests.Tests.Database;
+namespace Okane.Api.Tests.Testing;
 
 [Collection(nameof(DatabaseTestCollection))]
 public abstract class DatabaseTest(TestingApiFactory apiFactory) : IAsyncLifetime

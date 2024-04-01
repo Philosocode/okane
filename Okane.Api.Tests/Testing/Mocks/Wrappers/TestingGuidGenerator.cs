@@ -1,7 +1,7 @@
 using Ardalis.GuardClauses;
 using Okane.Api.Shared.Wrappers.GuidGenerator;
 
-namespace Okane.Api.Tests.Tests.Mocks.Wrappers;
+namespace Okane.Api.Tests.Testing.Mocks.Wrappers;
 
 public class TestingGuidGenerator(IList<Guid> guids) : IGuidGenerator
 {

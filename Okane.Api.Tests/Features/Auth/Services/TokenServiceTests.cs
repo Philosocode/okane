@@ -10,9 +10,9 @@ using Okane.Api.Features.Auth.Services;
 using Okane.Api.Features.Auth.Utils;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Shared.Wrappers.Clock;
-using Okane.Api.Tests.Tests.Database;
-using Okane.Api.Tests.Tests.Mocks.Wrappers;
-using Okane.Api.Tests.Tests.StubFactories;
+using Okane.Api.Tests.Testing.Database;
+using Okane.Api.Tests.Testing.Mocks.Wrappers;
+using Okane.Api.Tests.Testing.StubFactories;
 
 namespace Okane.Api.Tests.Features.Auth.Services;
 

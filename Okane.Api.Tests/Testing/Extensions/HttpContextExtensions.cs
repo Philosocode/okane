@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 
-namespace Okane.Api.Tests.Tests.Extensions;
+namespace Okane.Api.Tests.Testing.Extensions;
 
 public static class HttpContextExtensions
 {

@@ -7,7 +7,7 @@ using Okane.Api.Tests.Testing.Integration;
 namespace Okane.Api.Tests.Infrastructure.HealthCheck;
 
 public class HealthCheckResponseWriterTests(
-    TestingApiFactory apiFactory) : IClassFixture<TestingApiFactory>
+    PostgresApiFactory apiFactory) : IClassFixture<PostgresApiFactory>
 {
     private readonly HttpClient _httpClient = apiFactory.CreateClient();
     private const string HealthyText = "Healthy";

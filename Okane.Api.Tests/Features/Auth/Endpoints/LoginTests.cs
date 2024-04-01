@@ -34,7 +34,7 @@ public class LoginTests : DatabaseTest, IAsyncLifetime
     // The current time needs to be in the future for JWT token generation to work.
     private readonly DateTime _now = DateTime.UtcNow.AddHours(1);
 
-    public LoginTests(TestingApiFactory apiFactory) : base(apiFactory)
+    public LoginTests(PostgresApiFactory apiFactory) : base(apiFactory)
     {
         _apiFactory = apiFactory.WithWebHostBuilder(builder =>
         {

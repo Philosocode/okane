@@ -15,9 +15,9 @@ using Okane.Api.Tests.Testing.Utils;
 
 namespace Okane.Api.Tests.Features.Auth.Endpoints;
 
-public class RotateRefreshTokenTests(TestingApiFactory apiFactory) : DatabaseTest(apiFactory), IAsyncLifetime
+public class RotateRefreshTokenTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFactory), IAsyncLifetime
 {
-    private readonly TestingApiFactory _apiFactory = apiFactory;
+    private readonly PostgresApiFactory _apiFactory = apiFactory;
 
     private async Task<HttpResponseMessage> MakeRequest(HttpClient client)
     {

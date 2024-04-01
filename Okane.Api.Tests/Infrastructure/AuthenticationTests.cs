@@ -5,9 +5,9 @@ using Okane.Api.Tests.Testing.Integration;
 
 namespace Okane.Api.Tests.Infrastructure;
 
-public class AuthenticationTests(TestingApiFactory apiFactory) : DatabaseTest(apiFactory), IAsyncLifetime
+public class AuthenticationTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFactory), IAsyncLifetime
 {
-    private readonly TestingApiFactory _apiFactory = apiFactory;
+    private readonly PostgresApiFactory _apiFactory = apiFactory;
 
     [Fact]
     public async Task CanAuthenticateWithBearerToken()

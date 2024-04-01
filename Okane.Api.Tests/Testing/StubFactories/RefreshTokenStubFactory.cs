@@ -1,7 +1,7 @@
 using Bogus;
 using Okane.Api.Features.Auth.Entities;
 
-namespace Okane.Api.Tests.Tests.StubFactories;
+namespace Okane.Api.Tests.Testing.StubFactories;
 
 public class RefreshTokenStubFactory
 {

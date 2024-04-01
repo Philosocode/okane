@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Okane.Api.Infrastructure.Database;
 
-namespace Okane.Api.Tests.Tests.Extensions;
+namespace Okane.Api.Tests.Testing.Extensions;
 
 public static class ServiceCollectionExtensions
 {

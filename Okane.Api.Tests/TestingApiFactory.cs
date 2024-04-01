@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Okane.Api.Infrastructure.Database;
-using Okane.Api.Tests.Tests.Extensions;
+using Okane.Api.Tests.Testing.Extensions;
 using Respawn;
 using Testcontainers.PostgreSql;
 

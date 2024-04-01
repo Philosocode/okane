@@ -1,7 +1,7 @@
 using Bogus;
 using Okane.Api.Features.Auth.Config;
 
-namespace Okane.Api.Tests.Tests.StubFactories;
+namespace Okane.Api.Tests.Testing.StubFactories;
 
 public class JwtSettingsStubFactory : IStubFactory<JwtSettings>
 {

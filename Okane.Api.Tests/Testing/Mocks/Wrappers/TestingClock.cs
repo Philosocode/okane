@@ -1,6 +1,6 @@
 using Okane.Api.Shared.Wrappers.Clock;
 
-namespace Okane.Api.Tests.Tests.Mocks.Wrappers;
+namespace Okane.Api.Tests.Testing.Mocks.Wrappers;
 
 public class TestingClock : IClock
 {

@@ -1,6 +1,6 @@
 using Bogus;
 
-namespace Okane.Api.Tests.Tests.StubFactories;
+namespace Okane.Api.Tests.Testing.StubFactories;
 
 public interface IStubFactory<T> where T : class
 {

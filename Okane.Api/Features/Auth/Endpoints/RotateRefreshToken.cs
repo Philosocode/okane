@@ -64,7 +64,7 @@ public class RotateRefreshToken : IEndpoint
                 .Where(t => t.UserId == refreshTokenToRotate.UserId)
                 .ExecuteUpdateAsync(
                     s => s.SetProperty(
-                        t => t.RevokedAt, DateTime.UtcNow
+                        t => t.RevokedAt, clock.UtcNow
                 ));
 
             return invalidRefreshTokenResponse;
@@ -75,7 +75,7 @@ public class RotateRefreshToken : IEndpoint
             return invalidRefreshTokenResponse;
         }
 
-        refreshTokenToRotate.RevokedAt = DateTime.UtcNow;
+        refreshTokenToRotate.RevokedAt = clock.UtcNow;
         
         RefreshToken newRefreshToken = await tokenService.GenerateRefreshToken(generateUniqueToken: true);
         newRefreshToken.UserId = refreshTokenToRotate.UserId;

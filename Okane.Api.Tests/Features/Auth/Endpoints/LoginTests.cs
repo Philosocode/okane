@@ -19,9 +19,9 @@ using Okane.Api.Features.Auth.Services;
 using Okane.Api.Shared.Dtos.ApiResponses;
 using Okane.Api.Shared.Wrappers.Clock;
 using Okane.Api.Shared.Wrappers.GuidGenerator;
-using Okane.Api.Tests.Features.Auth.Utils;
 using Okane.Api.Tests.Testing.Integration;
 using Okane.Api.Tests.Testing.Mocks.Wrappers;
+using Okane.Api.Tests.Testing.Utils;
 
 namespace Okane.Api.Tests.Features.Auth.Endpoints;
 

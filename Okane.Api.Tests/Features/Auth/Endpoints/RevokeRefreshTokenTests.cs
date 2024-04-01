@@ -9,8 +9,8 @@ using Okane.Api.Features.Auth.Dtos.Responses;
 using Okane.Api.Features.Auth.Endpoints;
 using Okane.Api.Shared.Dtos.ApiResponses;
 using Okane.Api.Tests.Features.Auth.Extensions;
-using Okane.Api.Tests.Features.Auth.Utils;
 using Okane.Api.Tests.Testing.Integration;
+using Okane.Api.Tests.Testing.Utils;
 
 namespace Okane.Api.Tests.Features.Auth.Endpoints;
 

@@ -34,6 +34,8 @@ public class Logout : IEndpoint
         }
         
         await context.SignOutAsync();
+
+        context.Response.Cookies.Delete(CookieNames.RefreshToken);
         
         return TypedResults.NoContent();
     }

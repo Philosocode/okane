@@ -14,9 +14,9 @@ using Okane.Api.Tests.Testing.Utils;
 
 namespace Okane.Api.Tests.Features.Auth.Endpoints;
 
-public class RevokeRefreshTokenTests(TestingApiFactory apiFactory) : DatabaseTest(apiFactory), IAsyncLifetime
+public class RevokeRefreshTokenTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFactory), IAsyncLifetime
 {
-    private readonly TestingApiFactory _apiFactory = apiFactory;
+    private readonly PostgresApiFactory _apiFactory = apiFactory;
     
     [Fact]
     public async Task ReturnsAnError_WhenNoRefreshTokenIsProvided()

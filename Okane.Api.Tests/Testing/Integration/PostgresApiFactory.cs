@@ -15,10 +15,10 @@ using Testcontainers.PostgreSql;
 namespace Okane.Api.Tests.Testing.Integration;
 
 [CollectionDefinition(nameof(DatabaseTestCollection))]
-public class DatabaseTestCollection : ICollectionFixture<TestingApiFactory>;
+public class DatabaseTestCollection : ICollectionFixture<PostgresApiFactory>;
 
 // Referenced: https://github.com/danielwarddev/TestingWithDb
-public class TestingApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
+public class PostgresApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
 {
     private readonly PostgreSqlContainer _container =
         new PostgreSqlBuilder()

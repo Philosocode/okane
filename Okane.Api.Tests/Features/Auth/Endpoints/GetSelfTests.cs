@@ -8,7 +8,7 @@ using Okane.Api.Tests.Testing.Integration;
 
 namespace Okane.Api.Tests.Features.Auth.Endpoints;
 
-public class GetSelfTests(TestingApiFactory apiFactory) : DatabaseTest(apiFactory), IAsyncLifetime
+public class GetSelfTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFactory), IAsyncLifetime
 {
     private readonly HttpClient _client = apiFactory.CreateClient();
     

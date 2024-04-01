@@ -9,7 +9,7 @@ using Okane.Api.Tests.Testing.Integration;
 
 namespace Okane.Api.Tests.Features.Auth.Endpoints;
 
-public class RegisterTests(TestingApiFactory apiFactory) : DatabaseTest(apiFactory), IAsyncLifetime
+public class RegisterTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFactory), IAsyncLifetime
 {
     private readonly Register.Request _validRequest = new Register.Request(
         TestUser.Name,

@@ -11,9 +11,9 @@ using Okane.Api.Tests.Testing.Utils;
 
 namespace Okane.Api.Tests.Features.Auth.Endpoints;
 
-public class LogoutTests(TestingApiFactory apiFactory) : DatabaseTest(apiFactory), IAsyncLifetime
+public class LogoutTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFactory), IAsyncLifetime
 {
-    private readonly TestingApiFactory _apiFactory = apiFactory;
+    private readonly PostgresApiFactory _apiFactory = apiFactory;
     
     [Fact]
     public async Task LogsTheUserOut()

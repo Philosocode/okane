@@ -30,7 +30,6 @@ public class LoginTests : DatabaseTest, IAsyncLifetime
     private readonly Guid _guid = new Guid();
     private readonly HttpClient _client;
     private readonly WebApplicationFactory<IApiMarker> _apiFactory;
-    private readonly ITestOutputHelper _testOutputHelper;
     
     // The current time needs to be in the future for JWT token generation to work.
     private readonly DateTime _now = DateTime.UtcNow.AddHours(1);
@@ -50,12 +49,11 @@ public class LoginTests : DatabaseTest, IAsyncLifetime
         });
 
         _client = _apiFactory.CreateClient();
-        _testOutputHelper = testOutputHelper;
     }
     
     public new async Task InitializeAsync()
     {
-        await RegisterTestUser(_client);
+        await _client.RegisterTestUserAsync();
     }
     
     [Fact]
@@ -63,15 +61,15 @@ public class LoginTests : DatabaseTest, IAsyncLifetime
     {
         using var scope = _apiFactory.Services.CreateScope();
         
-        var testUser = await GetTestUser();
-        var request = new Login.Request(testUser.Email!, TestUserPassword);
+        var testUser = await Db.FindTestUserAsync();
+        var request = new Login.Request(testUser.Email!, TestUser.Password);
         var response = await _client.PostAsJsonAsync("/auth/login", request);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         
         // User.
         var body = await response.Content.ReadFromJsonAsync<ApiResponse<AuthenticateResponse>>();
         var authResponse = body!.Items[0];
-        authResponse.User.Should().BeEquivalentTo(TestUser.ToUserResponse());
+        authResponse.User.Should().BeEquivalentTo(testUser.ToUserResponse());
         
         // JWT token.
         JwtSecurityToken jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(authResponse.JwtToken);
@@ -116,7 +114,7 @@ public class LoginTests : DatabaseTest, IAsyncLifetime
     [Fact]
     public async Task ReturnsAnError_WhenUserDoesNotExist()
     {
-        var request = new Login.Request("non-existent-user@gmail.com", TestUserPassword);
+        var request = new Login.Request("non-existent-user@gmail.com", TestUser.Password);
         var response = await _client.PostAsJsonAsync("/auth/login", request);
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }

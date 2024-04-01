@@ -12,9 +12,9 @@ namespace Okane.Api.Tests.Features.Auth.Endpoints;
 public class RegisterTests(TestingApiFactory apiFactory) : DatabaseTest(apiFactory), IAsyncLifetime
 {
     private readonly Register.Request _validRequest = new Register.Request(
-        "Okane",
-        "test@okane.com",
-        "12434Password@@@@"
+        TestUser.Name,
+        TestUser.Email,
+        TestUser.Password
     );
 
     private readonly HttpClient _client = apiFactory.CreateClient();
@@ -78,7 +78,7 @@ public class RegisterTests(TestingApiFactory apiFactory) : DatabaseTest(apiFacto
     [Fact]
     public async Task ReturnsAnError_WhenRegisteringADuplicateEmail()
     {
-        await RegisterTestUser(_client);
+        await _client.RegisterTestUserAsync();
         
         var duplicateRequest = _validRequest with { Email = TestUser.Email! };
         var response = await _client.PostAsJsonAsync("/auth/register", duplicateRequest);

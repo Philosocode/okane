@@ -12,7 +12,7 @@ using Okane.Api.Tests.Testing.Extensions;
 using Respawn;
 using Testcontainers.PostgreSql;
 
-namespace Okane.Api.Tests;
+namespace Okane.Api.Tests.Testing.Integration;
 
 [CollectionDefinition(nameof(DatabaseTestCollection))]
 public class DatabaseTestCollection : ICollectionFixture<TestingApiFactory>;

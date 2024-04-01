@@ -21,7 +21,6 @@ using Okane.Api.Shared.Wrappers.Clock;
 using Okane.Api.Shared.Wrappers.GuidGenerator;
 using Okane.Api.Tests.Testing.Integration;
 using Okane.Api.Tests.Testing.Mocks.Wrappers;
-using Xunit.Abstractions;
 
 namespace Okane.Api.Tests.Features.Auth.Endpoints;
 
@@ -34,7 +33,7 @@ public class LoginTests : DatabaseTest, IAsyncLifetime
     // The current time needs to be in the future for JWT token generation to work.
     private readonly DateTime _now = DateTime.UtcNow.AddHours(1);
 
-    public LoginTests(TestingApiFactory apiFactory, ITestOutputHelper testOutputHelper) : base(apiFactory)
+    public LoginTests(TestingApiFactory apiFactory) : base(apiFactory)
     {
         _apiFactory = apiFactory.WithWebHostBuilder(builder =>
         {

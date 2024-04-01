@@ -5,6 +5,7 @@ using Okane.Api.Features.Auth.Endpoints;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Shared.Dtos.ApiResponses;
+using Okane.Api.Tests.Features.Auth.Extensions;
 
 namespace Okane.Api.Tests.Testing.Integration;
 
@@ -26,18 +27,20 @@ public static class TestUser
         await client.PostAsJsonAsync("/auth/register", request);
     }
 
-    public static async Task<AuthenticateResponse?> LogInTestUserAsync(this HttpClient client)
+    public static async Task<AuthenticateResponse> LogInTestUserAsync(this HttpClient client)
     {
         var request = new Login.Request(User.Email!, Password);
         var response = await client.PostAsJsonAsync("/auth/login", request);
         var body = await response.Content.ReadFromJsonAsync<ApiResponse<AuthenticateResponse>>();
-        return body?.Items[0];
+        return body?.Items[0]!;
     }
     
-    public static async Task<AuthenticateResponse?> RegisterAndLogInTestUserAsync(this HttpClient client)
+    public static async Task<AuthenticateResponse> RegisterAndLogInTestUserAsync(this HttpClient client)
     {
         await client.RegisterTestUserAsync();
-        return await client.LogInTestUserAsync();
+        var authResponse = await client.LogInTestUserAsync();
+        client.SetBearerToken(authResponse.JwtToken);
+        return authResponse;
     }
     
     public static async Task<ApiUser> FindTestUserAsync(this ApiDbContext db)

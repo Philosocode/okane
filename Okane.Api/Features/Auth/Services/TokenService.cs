@@ -27,8 +27,9 @@ public interface ITokenService
     /// <summary>
     /// Generate a unique refresh token.
     /// </summary>
+    /// <param name="generateUniqueToken"></param>
     /// <returns>Application-wide unique refresh token.</returns>
-    Task<RefreshToken> GenerateRefreshToken();
+    Task<RefreshToken> GenerateRefreshToken(bool generateUniqueToken);
     
     /// <summary>
     /// Revoke a refresh token belonging to a specific user.
@@ -74,18 +75,18 @@ public class TokenService(
         return tokenHandler.WriteToken(token);
     }
 
-    public async Task<RefreshToken> GenerateRefreshToken()
+    public async Task<RefreshToken> GenerateRefreshToken(bool generateUniqueToken = true)
     {
         var token = "";
         var foundUniqueToken = false;
-        while (!foundUniqueToken)
+        do
         {
             token = guidGenerator.NewGuid().ToString();
 
             var isDuplicateToken = await db.RefreshTokens.AnyAsync(t => t.Token == token);
             
             foundUniqueToken = !isDuplicateToken;
-        }
+        } while (generateUniqueToken && !foundUniqueToken);
 
         return new RefreshToken
         {

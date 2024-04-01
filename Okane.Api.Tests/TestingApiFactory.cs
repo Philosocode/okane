@@ -64,13 +64,14 @@ public class TestingApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifeti
     {
         builder.ConfigureTestServices(services =>
         {
-            services.RemoveAll<IHostedService>();
             services.RemoveDbContext();
             services.AddDbContext<ApiDbContext>(options =>
             {
                 options.UseNpgsql(_container.GetConnectionString());
             });
             services.EnsureDbCreated();
+            
+            services.RemoveAll<IHostedService>();
         });
     }
 }

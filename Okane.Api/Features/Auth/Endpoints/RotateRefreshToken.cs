@@ -77,7 +77,7 @@ public class RotateRefreshToken : IEndpoint
 
         refreshTokenToRotate.RevokedAt = DateTime.UtcNow;
         
-        RefreshToken newRefreshToken = await tokenService.GenerateRefreshToken();
+        RefreshToken newRefreshToken = await tokenService.GenerateRefreshToken(generateUniqueToken: true);
         newRefreshToken.UserId = refreshTokenToRotate.UserId;
 
         db.Add(newRefreshToken);

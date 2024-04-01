@@ -77,7 +77,7 @@ public class Login : IEndpoint
         }
         
         string jwtToken = tokenService.GenerateJwtToken(user.Id);
-        RefreshToken refreshToken = await tokenService.GenerateRefreshToken();
+        RefreshToken refreshToken = await tokenService.GenerateRefreshToken(generateUniqueToken: true);
         
         user.RefreshTokens.Add(refreshToken);
         await db.SaveChangesAsync(cancellationToken);

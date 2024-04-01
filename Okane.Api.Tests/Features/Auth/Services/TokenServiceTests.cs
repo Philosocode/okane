@@ -94,8 +94,20 @@ public class TokenServiceTests : IDisposable
         InsertRefreshToken(_guids[0].ToString(), apiUser.Id);
         await _db.SaveChangesAsync();
 
-        var newRefreshToken = await _tokenService.GenerateRefreshToken();
+        var newRefreshToken = await _tokenService.GenerateRefreshToken(generateUniqueToken: true);
         newRefreshToken.Token.Should().Be(_guids[1].ToString());
+    }
+
+    [Fact]
+    public async Task GenerateRefreshToken_ReturnsADuplicateRefreshToken()
+    {
+        // The GUID generator has been seeded with two GUIDs, so we'll need to generate 3 GUIDs
+        // to force a duplicate.
+        var token1 = await _tokenService.GenerateRefreshToken(generateUniqueToken: false);
+        await _tokenService.GenerateRefreshToken(generateUniqueToken: false);
+        var token2 = await _tokenService.GenerateRefreshToken(generateUniqueToken: false);
+
+        token1.Token.Should().Be(token2.Token);
     }
     
     [Fact]

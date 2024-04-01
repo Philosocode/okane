@@ -19,6 +19,7 @@ using Okane.Api.Features.Auth.Services;
 using Okane.Api.Shared.Dtos.ApiResponses;
 using Okane.Api.Shared.Wrappers.Clock;
 using Okane.Api.Shared.Wrappers.GuidGenerator;
+using Okane.Api.Tests.Features.Auth.Utils;
 using Okane.Api.Tests.Testing.Integration;
 using Okane.Api.Tests.Testing.Mocks.Wrappers;
 
@@ -90,21 +91,17 @@ public class LoginTests : DatabaseTest, IAsyncLifetime
             t => t.Token == expectedRefreshToken.Token && t.UserId == testUser.Id
         );
         createdRefreshToken.Should().NotBeNull();
-
-        var cookieOptions = new CookieOptions
-        {
-            HttpOnly = true,
-            Expires = _now.AddDays(jwtOptions.Value.RefreshTokenTtlDays)
-        };
-
-        var testResponse = new DefaultHttpContext().Response;
-        testResponse.Cookies.Append(
-            CookieNames.RefreshToken, 
-            expectedRefreshToken.Token, 
-            cookieOptions
-        );
-        var expectedCookie = testResponse.Headers[HeaderNames.SetCookie][0];
         
+        var expectedCookie = CookieUtils.CreateCookieHeader(
+            CookieNames.RefreshToken,
+            expectedRefreshToken.Token,
+            new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = _now.AddDays(jwtOptions.Value.RefreshTokenTtlDays)
+            }
+        );
+
         response.Headers.GetValues(HeaderNames.SetCookie).Should().ContainSingle(
             h => h == expectedCookie
         );

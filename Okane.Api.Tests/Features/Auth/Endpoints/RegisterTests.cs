@@ -30,9 +30,10 @@ public class RegisterTests(TestingApiFactory apiFactory) : DatabaseTest(apiFacto
         responseBody?.Items.Should().HaveCount(1);
         responseBody?.Items[0].Should().BeEquivalentTo(new UserResponse
         {
+            Id = "",
             Email = _validRequest.Email,
             Name = _validRequest.Name
-        });
+        }, options => options.Excluding(u => u.Id));
     }
     
     private async Task AssertInvalidInput(Register.Request request)

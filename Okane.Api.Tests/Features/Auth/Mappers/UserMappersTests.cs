@@ -20,6 +20,7 @@ public class UserMappersTests
         var actual = apiUser.ToUserResponse();
         var expected = new UserResponse
         {
+            Id = apiUser.Id,
             Email = apiUser.Email,
             Name = apiUser.Name,
         };

@@ -9,6 +9,7 @@ public static class UserMappers
     {
         return new UserResponse
         {
+            Id = apiUser.Id,
             Email = apiUser.Email,
             Name = apiUser.Name,
         };

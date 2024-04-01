@@ -19,7 +19,7 @@ using Okane.Api.Features.Auth.Services;
 using Okane.Api.Shared.Dtos.ApiResponses;
 using Okane.Api.Shared.Wrappers.Clock;
 using Okane.Api.Shared.Wrappers.GuidGenerator;
-using Okane.Api.Tests.Testing;
+using Okane.Api.Tests.Testing.Integration;
 using Okane.Api.Tests.Testing.Mocks.Wrappers;
 using Xunit.Abstractions;
 

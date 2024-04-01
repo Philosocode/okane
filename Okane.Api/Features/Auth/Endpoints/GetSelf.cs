@@ -38,6 +38,5 @@ public class GetSelf : IEndpoint
         }
 
         return TypedResults.Ok(new ApiResponse<UserResponse>(user.ToUserResponse()));
-
     }
 }

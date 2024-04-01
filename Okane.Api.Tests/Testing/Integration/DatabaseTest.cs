@@ -1,10 +1,12 @@
 using System.Net.Http.Json;
 using Microsoft.EntityFrameworkCore;
+using Okane.Api.Features.Auth.Dtos.Responses;
 using Okane.Api.Features.Auth.Endpoints;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Infrastructure.Database;
+using Okane.Api.Shared.Dtos.ApiResponses;
 
-namespace Okane.Api.Tests.Testing;
+namespace Okane.Api.Tests.Testing.Integration;
 
 [Collection(nameof(DatabaseTestCollection))]
 public abstract class DatabaseTest(TestingApiFactory apiFactory) : IAsyncLifetime
@@ -36,6 +38,20 @@ public abstract class DatabaseTest(TestingApiFactory apiFactory) : IAsyncLifetim
         await client.PostAsJsonAsync("/auth/register", request);
     }
 
+    protected async Task<AuthenticateResponse?> LogInTestUser(HttpClient client)
+    {
+        var request = new Login.Request(TestUser.Email!, TestUserPassword);
+        var response = await client.PostAsJsonAsync("/auth/login", request);
+        var body = await response.Content.ReadFromJsonAsync<ApiResponse<AuthenticateResponse>>();
+        return body?.Items[0];
+    }
+    
+    protected async Task<AuthenticateResponse?> RegisterAndLogInTestUser(HttpClient client)
+    {
+        await RegisterTestUser(client);
+        return await LogInTestUser(client);
+    }
+    
     protected async Task<ApiUser> GetTestUser()
     {
         var testUser = await Db.Users.SingleOrDefaultAsync(u => u.Email == TestUser.Email);

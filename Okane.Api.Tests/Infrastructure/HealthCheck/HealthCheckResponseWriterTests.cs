@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
 using Okane.Api.Infrastructure.HealthCheck;
+using Okane.Api.Tests.Testing.Integration;
 
 namespace Okane.Api.Tests.Infrastructure.HealthCheck;
 

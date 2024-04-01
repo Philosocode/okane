@@ -3,7 +3,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Okane.Api.Infrastructure.Database;
 
-namespace Okane.Api.Tests.Testing.Database;
+namespace Okane.Api.Tests.Testing.InMemory;
 
 // Referenced: https://stackoverflow.com/q/67174971
 public class InMemoryContextFactory : IDisposable

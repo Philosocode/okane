@@ -115,29 +115,31 @@ public static class ConfigureServices
     {
         builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(nameof(JwtSettings)));
         
+        var jwtSettings = new JwtSettings();
+        builder.Configuration.Bind(nameof(JwtSettings), jwtSettings);
+        
         builder.Services
             .AddIdentity<ApiUser, IdentityRole>()
             .AddEntityFrameworkStores<ApiDbContext>()
             .AddDefaultTokenProviders();
 
-        builder.Services.AddAuthentication()
+        builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddJwtBearer(options =>
             {
-                string? jwtSigningKey = builder.Configuration["JwtSettings:IssuerSigningKey"];
-                if (jwtSigningKey is null)
-                {
-                    throw new InvalidOperationException(
-                        "JwtSettings:IssuerSigningKey missing from configuration file."
-                    );
-                }
+                string jwtSigningKey = jwtSettings.IssuerSigningKey;
                 
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidIssuer = builder.Configuration["JwtSettings.Issuer"],
+                    ValidIssuer = jwtSettings.Issuer,
                     
                     ValidateAudience = true,
-                    ValidAudience = builder.Configuration["JwtSettings.Audience"],
+                    ValidAudience = jwtSettings.Audience,
                     
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,

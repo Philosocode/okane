@@ -3,7 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Okane.Api.Features.Auth.Config;
 using Okane.Api.Features.Auth.Constants;
 using Okane.Api.Features.Auth.Entities;
-using Okane.Api.Shared.Wrappers.Clock;
+using Okane.Api.Shared.Wrappers;
 
 namespace Okane.Api.Features.Auth.Utils;
 

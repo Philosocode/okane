@@ -7,8 +7,7 @@ using Okane.Api.Features.Auth.Config;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Features.Auth.Utils;
 using Okane.Api.Infrastructure.Database;
-using Okane.Api.Shared.Wrappers.Clock;
-using Okane.Api.Shared.Wrappers.GuidGenerator;
+using Okane.Api.Shared.Wrappers;
 
 namespace Okane.Api.Features.Auth.Services;
 

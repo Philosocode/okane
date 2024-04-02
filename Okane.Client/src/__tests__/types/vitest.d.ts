@@ -1,6 +1,3 @@
-// External
-import type { Assertion, AsymmetricMatchersContaining } from 'vitest'
-
 // Internal
 import { CustomMatchers } from '@tests/setup/matchers.setup'
 

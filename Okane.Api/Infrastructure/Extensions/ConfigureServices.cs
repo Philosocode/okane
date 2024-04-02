@@ -12,8 +12,7 @@ using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.HealthCheck;
 using Okane.Api.Infrastructure.HostedServices;
 using Okane.Api.Shared.Exceptions;
-using Okane.Api.Shared.Wrappers.Clock;
-using Okane.Api.Shared.Wrappers.GuidGenerator;
+using Okane.Api.Shared.Wrappers;
 using Serilog;
 
 namespace Okane.Api.Infrastructure.Extensions;
@@ -107,7 +106,7 @@ public static class ConfigureServices
 
     private static void AddWrappers(this WebApplicationBuilder builder)
     {
-        builder.Services.AddSingleton<IClock, SystemClock>();
+        builder.Services.AddSingleton<IClock, Clock>();
         builder.Services.AddSingleton<IGuidGenerator, GuidGenerator>();
     }
 

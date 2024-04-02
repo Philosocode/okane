@@ -1,4 +1,4 @@
-using Okane.Api.Shared.Wrappers.Clock;
+using Okane.Api.Shared.Wrappers;
 
 namespace Okane.Api.Tests.Testing.Mocks.Wrappers;
 

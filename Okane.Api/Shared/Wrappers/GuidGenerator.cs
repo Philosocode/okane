@@ -1,4 +1,4 @@
-namespace Okane.Api.Shared.Wrappers.GuidGenerator;
+namespace Okane.Api.Shared.Wrappers;
 
 public interface IGuidGenerator
 {

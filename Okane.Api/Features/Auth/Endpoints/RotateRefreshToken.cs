@@ -13,7 +13,7 @@ using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Endpoints;
 using Okane.Api.Shared.Dtos.ApiResponses;
 using Okane.Api.Shared.Exceptions;
-using Okane.Api.Shared.Wrappers.Clock;
+using Okane.Api.Shared.Wrappers;
 
 namespace Okane.Api.Features.Auth.Endpoints;
 

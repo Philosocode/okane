@@ -1,5 +1,5 @@
 using Ardalis.GuardClauses;
-using Okane.Api.Shared.Wrappers.GuidGenerator;
+using Okane.Api.Shared.Wrappers;
 
 namespace Okane.Api.Tests.Testing.Mocks.Wrappers;
 

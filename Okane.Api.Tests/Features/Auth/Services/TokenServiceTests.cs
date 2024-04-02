@@ -91,7 +91,7 @@ public class TokenServiceTests : IDisposable
     [Fact]
     public async Task GenerateRefreshToken_ReturnsANewUniqueRefreshToken()
     {
-        var apiUser = DbTestingUtils.InsertApiUser(_db);
+        var apiUser = DbContextUtils.AddApiUser(_db);
         InsertRefreshToken(_guids[0].ToString(), apiUser.Id);
         await _db.SaveChangesAsync();
 
@@ -114,7 +114,7 @@ public class TokenServiceTests : IDisposable
     [Fact]
     public async Task RevokeRefreshToken_UpdatesTheRevokedAtField()
     {
-        var apiUser = DbTestingUtils.InsertApiUser(_db);
+        var apiUser = DbContextUtils.AddApiUser(_db);
         InsertRefreshToken(_guids[0].ToString(), apiUser.Id);
         var refreshTokenToRevoke = InsertRefreshToken(_guids[1].ToString(), apiUser.Id);
         
@@ -132,7 +132,7 @@ public class TokenServiceTests : IDisposable
     [Fact]
     public async Task RevokeRefreshToken_DoesNothing_WhenTokenNotFound()
     {
-        var apiUser = DbTestingUtils.InsertApiUser(_db);
+        var apiUser = DbContextUtils.AddApiUser(_db);
         InsertRefreshToken(_guids[0].ToString(), apiUser.Id);
         await _db.SaveChangesAsync();
 
@@ -145,7 +145,7 @@ public class TokenServiceTests : IDisposable
     [Fact]
     public async Task RevokeRefreshToken_DoesNothing_WhenTokenBelongsToDifferentUser()
     {
-        var apiUser = DbTestingUtils.InsertApiUser(_db);
+        var apiUser = DbContextUtils.AddApiUser(_db);
         var refreshToken = InsertRefreshToken(_guids[0].ToString(), apiUser.Id);
         await _db.SaveChangesAsync();
 
@@ -158,7 +158,7 @@ public class TokenServiceTests : IDisposable
     [Fact]
     public async Task RevokeRefreshToken_DoesNothing_WhenTokenAlreadyRevoked()
     {
-        var apiUser = DbTestingUtils.InsertApiUser(_db);
+        var apiUser = DbContextUtils.AddApiUser(_db);
         var revokedAt = new DateTime(2024, 1, 1);
         var alreadyRevokedRefreshToken = new RefreshToken
         {

@@ -13,7 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Okane.Api.Shared.Exceptions;
-using Okane.Api.Tests.Testing.InMemory;
+using Okane.Api.Tests.Testing.Integration;
 using Okane.Api.Tests.Testing.Utils;
 
 namespace Okane.Api.Tests.Shared.Exceptions;

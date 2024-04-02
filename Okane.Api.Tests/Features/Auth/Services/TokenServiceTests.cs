@@ -19,12 +19,11 @@ namespace Okane.Api.Tests.Features.Auth.Services;
 
 public class TokenServiceTests : IDisposable
 {
+    private readonly InMemoryContextFactory _contextFactory = new();
     private readonly IDateTimeWrapper _dateTimeWrapper = new TestingDateTimeWrapper { UtcNow = DateTime.UtcNow };
+    private readonly ApiDbContext _db;
     private readonly IList<Guid> _guids = [Guid.NewGuid(), Guid.NewGuid()];
     private readonly JwtSettings _jwtSettings = JwtSettingsStubFactory.Create();
-
-    private readonly InMemoryContextFactory _contextFactory = new InMemoryContextFactory();
-    private readonly ApiDbContext _db;
     private readonly TokenService _tokenService;
 
     public TokenServiceTests()
@@ -46,20 +45,20 @@ public class TokenServiceTests : IDisposable
 
     private RefreshToken InsertRefreshToken(string token, string userId)
     {
-        var refreshToken = RefreshTokenStubFactory.Create(userId);
+        RefreshToken refreshToken = RefreshTokenStubFactory.Create(userId);
         refreshToken.Token = token;
         _db.Add(refreshToken);
 
         return refreshToken;
     }
-    
+
     [Fact]
     public void GenerateJwtToken_ReturnsANewJwtToken()
     {
         var userId = Guid.NewGuid().ToString();
-        var key = TokenUtils.GetIssuerSigningKey(_jwtSettings.IssuerSigningKey);
+        SymmetricSecurityKey key = TokenUtils.GetIssuerSigningKey(_jwtSettings.IssuerSigningKey);
         var signingCredentials = new SigningCredentials(
-            key, 
+            key,
             SecurityAlgorithms.HmacSha512Signature
         );
         var claimsIdentity = new ClaimsIdentity(
@@ -70,20 +69,20 @@ public class TokenServiceTests : IDisposable
             }
         );
 
-        var tokenDescriptor = new SecurityTokenDescriptor()
+        var tokenDescriptor = new SecurityTokenDescriptor
         {
             Audience = _jwtSettings.Audience,
             Issuer = _jwtSettings.Issuer,
             Expires = _dateTimeWrapper.UtcNow.AddMinutes(_jwtSettings.MinutesToExpiration),
             SigningCredentials = signingCredentials,
-            Subject = claimsIdentity,
+            Subject = claimsIdentity
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
         SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
 
-        string expected = tokenHandler.WriteToken(token);
-        string actual = _tokenService.GenerateJwtToken(userId);
+        var expected = tokenHandler.WriteToken(token);
+        var actual = _tokenService.GenerateJwtToken(userId);
 
         actual.Should().Be(expected);
     }
@@ -91,11 +90,11 @@ public class TokenServiceTests : IDisposable
     [Fact]
     public async Task GenerateRefreshTokenAsync_ReturnsANewUniqueRefreshToken()
     {
-        var apiUser = DbContextUtils.AddApiUser(_db);
+        ApiUser apiUser = DbContextUtils.AddApiUser(_db);
         InsertRefreshToken(_guids[0].ToString(), apiUser.Id);
         await _db.SaveChangesAsync();
 
-        var newRefreshToken = await _tokenService.GenerateRefreshTokenAsync(generateUniqueToken: true);
+        RefreshToken newRefreshToken = await _tokenService.GenerateRefreshTokenAsync(true);
         newRefreshToken.Token.Should().Be(_guids[1].ToString());
     }
 
@@ -104,71 +103,71 @@ public class TokenServiceTests : IDisposable
     {
         // The GUID generator has been seeded with two GUIDs, so we'll need to generate 3 GUIDs
         // to force a duplicate.
-        var token1 = await _tokenService.GenerateRefreshTokenAsync(generateUniqueToken: false);
-        await _tokenService.GenerateRefreshTokenAsync(generateUniqueToken: false);
-        var token2 = await _tokenService.GenerateRefreshTokenAsync(generateUniqueToken: false);
+        RefreshToken token1 = await _tokenService.GenerateRefreshTokenAsync(false);
+        await _tokenService.GenerateRefreshTokenAsync(false);
+        RefreshToken token2 = await _tokenService.GenerateRefreshTokenAsync(false);
 
         token1.Token.Should().Be(token2.Token);
     }
-    
+
     [Fact]
     public async Task RevokeRefreshTokenAsync_UpdatesTheRevokedAtField()
     {
-        var apiUser = DbContextUtils.AddApiUser(_db);
+        ApiUser apiUser = DbContextUtils.AddApiUser(_db);
         InsertRefreshToken(_guids[0].ToString(), apiUser.Id);
-        var refreshTokenToRevoke = InsertRefreshToken(_guids[1].ToString(), apiUser.Id);
-        
+        RefreshToken refreshTokenToRevoke = InsertRefreshToken(_guids[1].ToString(), apiUser.Id);
+
         await _db.SaveChangesAsync();
 
         await _tokenService.RevokeRefreshTokenAsync(refreshTokenToRevoke.Token, apiUser.Id, CancellationToken.None);
 
-        var revokedToken = await _db.RefreshTokens.SingleOrDefaultAsync(
+        RefreshToken? revokedToken = await _db.RefreshTokens.SingleOrDefaultAsync(
             t => t.Token == refreshTokenToRevoke.Token
         );
         revokedToken?.RevokedAt.Should().NotBeNull();
         revokedToken?.RevokedAt.Should().Be(_dateTimeWrapper.UtcNow);
     }
-    
+
     [Fact]
     public async Task RevokeRefreshTokenAsync_DoesNothing_WhenTokenNotFound()
     {
-        var apiUser = DbContextUtils.AddApiUser(_db);
+        ApiUser apiUser = DbContextUtils.AddApiUser(_db);
         InsertRefreshToken(_guids[0].ToString(), apiUser.Id);
         await _db.SaveChangesAsync();
 
         await _tokenService.RevokeRefreshTokenAsync("non-existent-token", apiUser.Id, CancellationToken.None);
 
-        bool hasRevokedToken = await _db.RefreshTokens.AnyAsync(t => t.RevokedAt != null);
+        var hasRevokedToken = await _db.RefreshTokens.AnyAsync(t => t.RevokedAt != null);
         hasRevokedToken.Should().BeFalse();
     }
-    
+
     [Fact]
     public async Task RevokeRefreshTokenAsync_DoesNothing_WhenTokenBelongsToDifferentUser()
     {
-        var apiUser = DbContextUtils.AddApiUser(_db);
-        var refreshToken = InsertRefreshToken(_guids[0].ToString(), apiUser.Id);
+        ApiUser apiUser = DbContextUtils.AddApiUser(_db);
+        RefreshToken refreshToken = InsertRefreshToken(_guids[0].ToString(), apiUser.Id);
         await _db.SaveChangesAsync();
 
         await _tokenService.RevokeRefreshTokenAsync(refreshToken.Token, "other-user", CancellationToken.None);
 
-        bool hasRevokedToken = await _db.RefreshTokens.AnyAsync(t => t.RevokedAt != null);
+        var hasRevokedToken = await _db.RefreshTokens.AnyAsync(t => t.RevokedAt != null);
         hasRevokedToken.Should().BeFalse();
     }
-    
+
     [Fact]
     public async Task RevokeRefreshTokenAsync_DoesNothing_WhenTokenAlreadyRevoked()
     {
-        var apiUser = DbContextUtils.AddApiUser(_db);
+        ApiUser apiUser = DbContextUtils.AddApiUser(_db);
         var revokedAt = new DateTime(2024, 1, 1);
         var alreadyRevokedRefreshToken = new RefreshToken
         {
             Token = _guids[0].ToString(),
             ExpiresAt = default,
             RevokedAt = revokedAt,
-            UserId = apiUser.Id,
+            UserId = apiUser.Id
         };
         _db.Add(alreadyRevokedRefreshToken);
-        
+
         await _db.SaveChangesAsync();
 
         await _tokenService.RevokeRefreshTokenAsync(
@@ -177,7 +176,7 @@ public class TokenServiceTests : IDisposable
             CancellationToken.None
         );
 
-        var refreshToken = await _db.RefreshTokens.SingleOrDefaultAsync(
+        RefreshToken? refreshToken = await _db.RefreshTokens.SingleOrDefaultAsync(
             t => t.Token == alreadyRevokedRefreshToken.Token
         );
         refreshToken?.RevokedAt.Should().Be(alreadyRevokedRefreshToken.RevokedAt);

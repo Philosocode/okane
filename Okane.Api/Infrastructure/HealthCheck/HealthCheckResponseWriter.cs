@@ -11,7 +11,7 @@ public static class HealthCheckResponseWriter
     public static Task WriteResponse(HttpContext context, HealthReport report)
     {
         context.Response.ContentType = MediaTypeNames.Application.Json;
-        
+
         JsonSerializerOptions options = new()
         {
             WriteIndented = false,
@@ -19,7 +19,7 @@ public static class HealthCheckResponseWriter
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 
-        string json = JsonSerializer.Serialize(report.ToHealthCheckResponse(), options);
+        var json = JsonSerializer.Serialize(report.ToHealthCheckResponse(), options);
 
         return context.Response.WriteAsync(json);
     }

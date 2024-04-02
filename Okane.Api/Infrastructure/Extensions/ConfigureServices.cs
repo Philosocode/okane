@@ -25,7 +25,7 @@ public static class ConfigureServices
         {
             builder.Configuration.AddUserSecrets<Program>();
         }
-        
+
         builder.Host.UseSerilog((context, config) =>
         {
             config.ReadFrom.Configuration(context.Configuration);
@@ -34,22 +34,22 @@ public static class ConfigureServices
         builder.AddSwagger();
         builder.AddDatabase();
         builder.AddWrappers();
-        
+
         builder.Services.AddValidatorsFromAssembly(typeof(ConfigureServices).Assembly);
         builder.AddApiAuthentication();
-        
+
         builder.Services.AddScoped<ITokenService, TokenService>();
 
         builder.Services.AddProblemDetails();
-        
+
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-        
+
         builder.Services.AddHealthChecks().AddDbContextCheck<ApiDbContext>();
 
         builder.Services.AddScoped<RefreshTokenCleaner>();
         builder.Services.AddHostedService<RefreshTokenCleanupService>();
     }
-    
+
     private static void AddSwagger(this WebApplicationBuilder builder)
     {
         builder.Services.AddEndpointsApiExplorer();
@@ -61,11 +61,11 @@ public static class ConfigureServices
                 Title = "Okane API",
                 Description = "API for managing finance and investment records"
             });
-            
+
             options.CustomSchemaIds(type => type.FullName?.Replace('+', '.'));
 
             options.DocumentFilter<HealthCheckDocumentFilter>();
-            
+
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,
@@ -73,9 +73,9 @@ public static class ConfigureServices
                 Name = JwtBearerDefaults.AuthenticationScheme,
                 Type = SecuritySchemeType.Http,
                 BearerFormat = "JWT",
-                Scheme = JwtBearerDefaults.AuthenticationScheme,
+                Scheme = JwtBearerDefaults.AuthenticationScheme
             });
-            
+
             options.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {
@@ -95,7 +95,7 @@ public static class ConfigureServices
 
     private static void AddDatabase(this WebApplicationBuilder builder)
     {
-        var dbSettingsSection = builder.Configuration.GetSection(nameof(DbSettings));
+        IConfigurationSection dbSettingsSection = builder.Configuration.GetSection(nameof(DbSettings));
         var dbSettings = dbSettingsSection.Get<DbSettings>();
 
         builder.Services.Configure<DbSettings>(dbSettingsSection);
@@ -114,10 +114,10 @@ public static class ConfigureServices
     private static void AddApiAuthentication(this WebApplicationBuilder builder)
     {
         builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(nameof(JwtSettings)));
-        
+
         var jwtSettings = new JwtSettings();
         builder.Configuration.Bind(nameof(JwtSettings), jwtSettings);
-        
+
         builder.Services
             .AddIdentity<ApiUser, IdentityRole>()
             .AddEntityFrameworkStores<ApiDbContext>()
@@ -131,26 +131,26 @@ public static class ConfigureServices
             })
             .AddJwtBearer(options =>
             {
-                string jwtSigningKey = jwtSettings.IssuerSigningKey;
-                
+                var jwtSigningKey = jwtSettings.IssuerSigningKey;
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidIssuer = jwtSettings.Issuer,
-                    
+
                     ValidateAudience = true,
                     ValidAudience = jwtSettings.Audience,
-                    
+
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = TokenUtils.GetIssuerSigningKey(jwtSigningKey),
 
                     // Set ClockSkew to zero so tokens expire exactly at token expiration time
                     // (instead of 5 minutes later).
-                    ClockSkew = TimeSpan.Zero,
+                    ClockSkew = TimeSpan.Zero
                 };
             });
-        
+
         builder.Services.Configure<IdentityOptions>(options =>
         {
             options.Password.RequireDigit = true;
@@ -166,7 +166,7 @@ public static class ConfigureServices
 
             options.User.RequireUniqueEmail = true;
         });
-        
+
         builder.Services.AddAuthorization();
     }
 }

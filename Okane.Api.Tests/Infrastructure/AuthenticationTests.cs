@@ -1,5 +1,6 @@
 using System.Net;
 using FluentAssertions;
+using Okane.Api.Features.Auth.Dtos.Responses;
 using Okane.Api.Tests.Features.Auth.Extensions;
 using Okane.Api.Tests.Testing.Integration;
 
@@ -12,13 +13,13 @@ public class AuthenticationTests(PostgresApiFactory apiFactory) : DatabaseTest(a
     [Fact]
     public async Task CanAuthenticateWithBearerToken()
     {
-        var client = _apiFactory.CreateClient();
-        var authResponse = await client.RegisterAndLogInTestUserAsync();
+        HttpClient client = _apiFactory.CreateClient();
+        AuthenticateResponse authResponse = await client.RegisterAndLogInTestUserAsync();
 
         client = _apiFactory.CreateClient();
         client.SetBearerToken(authResponse.JwtToken);
-        
-        var response = await client.GetAsync("/auth/self");
+
+        HttpResponseMessage response = await client.GetAsync("/auth/self");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 }

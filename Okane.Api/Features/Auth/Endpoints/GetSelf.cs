@@ -16,22 +16,24 @@ namespace Okane.Api.Features.Auth.Endpoints;
 public class GetSelf : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder builder)
-        => builder
+    {
+        builder
             .MapGet("/self", HandleAsync)
             .WithName(AuthEndpointNames.GetSelf)
             .WithSummary("Get user details for the currently-authenticated user.");
+    }
 
     private static async Task<Results<Ok<ApiResponse<UserResponse>>, UnauthorizedResult>> HandleAsync(
         ClaimsPrincipal claimsPrincipal,
         ApiDbContext db,
         CancellationToken cancellationToken)
     {
-        string userId = claimsPrincipal.GetUserId();
-        
+        var userId = claimsPrincipal.GetUserId();
+
         ApiUser? user = await db.Users
             .AsNoTracking()
             .SingleOrDefaultAsync(u => u.Id == userId, cancellationToken);
-        
+
         if (user is null)
         {
             return new UnauthorizedResult();

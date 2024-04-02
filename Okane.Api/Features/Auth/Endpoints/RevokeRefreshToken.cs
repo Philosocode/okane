@@ -19,9 +19,7 @@ public class RevokeRefreshToken : IEndpoint
             .WithSummary("Revoke a refresh token in a cookie or the response body.");
     }
 
-    public record Request(string? RefreshToken);
-
-    private static async Task<Results<NoContent, ValidationErrorResult>> 
+    private static async Task<Results<NoContent, ValidationErrorResult>>
         HandleAsync(
             ClaimsPrincipal claimsPrincipal,
             HttpContext context,
@@ -29,8 +27,8 @@ public class RevokeRefreshToken : IEndpoint
             ITokenService tokenService,
             CancellationToken cancellationToken)
     {
-        string? refreshTokenToRevoke = request?.RefreshToken ?? TokenUtils.GetRefreshTokenFromCookie(context.Request);
-        
+        var refreshTokenToRevoke = request?.RefreshToken ?? TokenUtils.GetRefreshTokenFromCookie(context.Request);
+
         if (refreshTokenToRevoke is null)
         {
             return new ValidationErrorResult
@@ -40,9 +38,11 @@ public class RevokeRefreshToken : IEndpoint
             };
         }
 
-        string userId = claimsPrincipal.GetUserId();
+        var userId = claimsPrincipal.GetUserId();
         await tokenService.RevokeRefreshTokenAsync(refreshTokenToRevoke, userId, cancellationToken);
-        
+
         return TypedResults.NoContent();
     }
+
+    public record Request(string? RefreshToken);
 }

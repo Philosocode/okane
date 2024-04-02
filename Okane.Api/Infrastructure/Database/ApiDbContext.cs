@@ -13,7 +13,7 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options) : IdentityDbCo
         base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(typeof(ApiDbContext).Assembly);
     }
-    
+
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
         base.OnConfiguring(builder);

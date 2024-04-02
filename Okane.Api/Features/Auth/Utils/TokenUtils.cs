@@ -10,26 +10,28 @@ namespace Okane.Api.Features.Auth.Utils;
 public static class TokenUtils
 {
     /// <summary>
-    /// Convert a string JWT issuer signing key to a SymmetricSecurityKey.
+    ///     Convert a string JWT issuer signing key to a SymmetricSecurityKey.
     /// </summary>
     /// <param name="signingKey">String signing key from settings.</param>
     /// <returns>Signing key converted to SymmetricSecurityKey.</returns>
     public static SymmetricSecurityKey GetIssuerSigningKey(string signingKey)
-        => new(Encoding.UTF8.GetBytes(signingKey));
+    {
+        return new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKey));
+    }
 
     /// <summary>
-    /// Get refresh token from cookie.
+    ///     Get refresh token from cookie.
     /// </summary>
     /// <param name="request"></param>
     /// <returns>Refresh token.</returns>
     public static string? GetRefreshTokenFromCookie(HttpRequest request)
     {
-        request.Cookies.TryGetValue(CookieNames.RefreshToken, out string? refreshToken);
+        request.Cookies.TryGetValue(CookieNames.RefreshToken, out var refreshToken);
         return refreshToken;
     }
 
     /// <summary>
-    /// Set refresh token on response cookie.
+    ///     Set refresh token on response cookie.
     /// </summary>
     /// <param name="dateTime"></param>
     /// <param name="jwtSettings"></param>
@@ -46,9 +48,9 @@ public static class TokenUtils
             HttpOnly = true,
             Expires = dateTime.UtcNow.AddDays(jwtSettings.RefreshTokenTtlDays)
         };
-        
+
         response.Cookies.Append(
-            CookieNames.RefreshToken, 
+            CookieNames.RefreshToken,
             refreshToken.Token,
             cookieOptions
         );

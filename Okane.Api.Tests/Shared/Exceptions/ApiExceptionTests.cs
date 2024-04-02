@@ -10,12 +10,12 @@ public class ApiExceptionTests
     [Fact]
     public void ToProblemDetails_ReturnsProblemDetails()
     {
-        string message = "An error occurred";
+        var message = "An error occurred";
         var exception = new ApiException(message)
         {
             Status = HttpStatusCode.Accepted,
             Instance = "Cool Instance",
-            Title = "Cool Title",
+            Title = "Cool Title"
         };
 
         var actual = exception.ToProblemDetails();
@@ -24,9 +24,9 @@ public class ApiExceptionTests
             Detail = message,
             Instance = exception.Instance,
             Status = (int)exception.Status,
-            Title = exception.Title,
+            Title = exception.Title
         };
-        
+
         actual.Should().BeEquivalentTo(expected);
     }
 }

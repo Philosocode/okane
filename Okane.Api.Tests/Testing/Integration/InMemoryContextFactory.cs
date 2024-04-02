@@ -15,25 +15,25 @@ public class InMemoryContextFactory : IDisposable
         _connection.CreateFunction("now", () => DateTime.UtcNow);
         _connection.Open();
 
-        var options = CreateOptions();
+        DbContextOptions<ApiDbContext> options = CreateOptions();
         using var db = new ApiDbContext(options);
         db.Database.EnsureCreated();
-    }
-    
-    public ApiDbContext CreateContext()
-    {
-        return new ApiDbContext(CreateOptions());
-    }
-    
-    private DbContextOptions<ApiDbContext> CreateOptions()
-    {
-        return new DbContextOptionsBuilder<ApiDbContext>()
-            .UseSqlite(_connection)
-            .Options;
     }
 
     public void Dispose()
     {
         _connection.Dispose();
+    }
+
+    public ApiDbContext CreateContext()
+    {
+        return new ApiDbContext(CreateOptions());
+    }
+
+    private DbContextOptions<ApiDbContext> CreateOptions()
+    {
+        return new DbContextOptionsBuilder<ApiDbContext>()
+            .UseSqlite(_connection)
+            .Options;
     }
 }

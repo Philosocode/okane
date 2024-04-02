@@ -14,11 +14,11 @@ public static class TestUser
     public const string Email = "test@okane.com";
     public const string Name = "Test User";
     public const string Password = "SuperCoolTestingPassword1234!!!!";
-    
-    public static readonly ApiUser User = new ApiUser
+
+    public static readonly ApiUser User = new()
     {
         Email = Email,
-        Name = Name,
+        Name = Name
     };
 
     public static async Task RegisterTestUserAsync(this HttpClient client)
@@ -32,19 +32,21 @@ public static class TestUser
         var request = new Login.Request(User.Email!, Password);
         return await client.PostAsJsonAsync("/auth/login", request);
     }
-    
+
     public static async Task<AuthenticateResponse> RegisterAndLogInTestUserAsync(this HttpClient client)
     {
         await client.RegisterTestUserAsync();
-        var loginResponse = await client.LogInTestUserAsync();
-        
+        HttpResponseMessage loginResponse = await client.LogInTestUserAsync();
+
         var body = await loginResponse.Content.ReadFromJsonAsync<ApiResponse<AuthenticateResponse>>();
-        var authResponse = body?.Items[0]!;
+        AuthenticateResponse authResponse = body?.Items[0]!;
         client.SetBearerToken(authResponse.JwtToken);
-        
+
         return authResponse;
     }
-    
+
     public static async Task<ApiUser> FindTestUserAsync(this ApiDbContext db)
-        => await db.Users.SingleAsync(u => u.Email == User.Email);
+    {
+        return await db.Users.SingleAsync(u => u.Email == User.Email);
+    }
 }

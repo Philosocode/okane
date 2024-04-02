@@ -10,7 +10,7 @@ public class TestingGuidWrapper(IList<Guid> guids) : IGuidWrapper
     public Guid NewGuid()
     {
         Guid nextGuid = guids[_index];
-            
+
         // If last guid in the list, loop around.
         if (_index == guids.Count - 1)
         {
@@ -20,16 +20,16 @@ public class TestingGuidWrapper(IList<Guid> guids) : IGuidWrapper
         {
             _index++;
         }
-        
+
         return nextGuid;
     }
-    
+
     public static IList<Guid> GenerateGuidList(int n)
     {
         Guard.Against.NegativeOrZero(n);
 
         var guidList = new List<Guid>();
-        for (int i = 0; i < n; i++)
+        for (var i = 0; i < n; i++)
         {
             guidList.Add(Guid.NewGuid());
         }

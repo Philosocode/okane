@@ -5,11 +5,7 @@ namespace Okane.Api.Shared.Exceptions;
 
 public class ApiException : Exception
 {
-    public HttpStatusCode Status { get; init; } = HttpStatusCode.BadRequest;
-    public string? Title { get; init; }
-    public string? Instance { get; init; }
-
-    public ApiException() : base()
+    public ApiException()
     {
     }
 
@@ -20,6 +16,10 @@ public class ApiException : Exception
     public ApiException(string detail, Exception innerException) : base(detail, innerException)
     {
     }
+
+    public HttpStatusCode Status { get; init; } = HttpStatusCode.BadRequest;
+    public string? Title { get; init; }
+    public string? Instance { get; init; }
 }
 
 public static class ApiExceptionMappers

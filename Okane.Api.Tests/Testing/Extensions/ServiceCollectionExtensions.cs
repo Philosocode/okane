@@ -8,16 +8,19 @@ public static class ServiceCollectionExtensions
 {
     public static void RemoveDbContext(this IServiceCollection services)
     {
-        var descriptor = services.SingleOrDefault(
+        ServiceDescriptor? descriptor = services.SingleOrDefault(
             d => d.ServiceType == typeof(DbContextOptions<ApiDbContext>)
         );
-        if (descriptor != null) services.Remove(descriptor);
+        if (descriptor != null)
+        {
+            services.Remove(descriptor);
+        }
     }
 
     public static void EnsureDbCreated(this IServiceCollection services)
     {
-        using var scope = services.BuildServiceProvider().CreateScope();
-        var serviceProvider = scope.ServiceProvider;
+        using IServiceScope scope = services.BuildServiceProvider().CreateScope();
+        IServiceProvider serviceProvider = scope.ServiceProvider;
         var context = serviceProvider.GetRequiredService<ApiDbContext>();
         context.Database.EnsureCreated();
     }

@@ -12,26 +12,26 @@ using Okane.Api.Shared.Wrappers;
 namespace Okane.Api.Features.Auth.Services;
 
 /// <summary>
-/// Service for generating JWT and refresh tokens.
+///     Service for generating JWT and refresh tokens.
 /// </summary>
 public interface ITokenService
 {
     /// <summary>
-    /// Generate a JWT token.
+    ///     Generate a JWT token.
     /// </summary>
     /// <param name="userId"></param>
     /// <returns>Generated JWT token.</returns>
     string GenerateJwtToken(string userId);
-    
+
     /// <summary>
-    /// Generate a unique refresh token.
+    ///     Generate a unique refresh token.
     /// </summary>
     /// <param name="generateUniqueToken"></param>
     /// <returns>Application-wide unique refresh token.</returns>
     Task<RefreshToken> GenerateRefreshTokenAsync(bool generateUniqueToken);
-    
+
     /// <summary>
-    /// Revoke a refresh token belonging to a specific user.
+    ///     Revoke a refresh token belonging to a specific user.
     /// </summary>
     /// <param name="refreshToken"></param>
     /// <param name="userId"></param>
@@ -47,9 +47,9 @@ public class TokenService(
 {
     public string GenerateJwtToken(string userId)
     {
-        var jwtSettings = jwtOptions.Value;
-        
-        var key = TokenUtils.GetIssuerSigningKey(jwtSettings. IssuerSigningKey);
+        JwtSettings jwtSettings = jwtOptions.Value;
+
+        SymmetricSecurityKey key = TokenUtils.GetIssuerSigningKey(jwtSettings.IssuerSigningKey);
         var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
         var claimsIdentity = new ClaimsIdentity(
             new[]
@@ -59,18 +59,18 @@ public class TokenService(
             }
         );
 
-        var tokenDescriptor = new SecurityTokenDescriptor()
+        var tokenDescriptor = new SecurityTokenDescriptor
         {
             Audience = jwtSettings.Audience,
             Issuer = jwtSettings.Issuer,
             Expires = dateTime.UtcNow.AddMinutes(jwtSettings.MinutesToExpiration),
             SigningCredentials = signingCredentials,
-            Subject = claimsIdentity,
+            Subject = claimsIdentity
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
         SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
-        
+
         return tokenHandler.WriteToken(token);
     }
 
@@ -83,24 +83,23 @@ public class TokenService(
             token = guidWrapper.NewGuid().ToString();
 
             var isDuplicateToken = await db.RefreshTokens.AnyAsync(t => t.Token == token);
-            
+
             foundUniqueToken = !isDuplicateToken;
         } while (generateUniqueToken && !foundUniqueToken);
 
         return new RefreshToken
         {
             Token = token,
-            ExpiresAt = dateTime.UtcNow.AddDays(jwtOptions.Value.RefreshTokenTtlDays),
+            ExpiresAt = dateTime.UtcNow.AddDays(jwtOptions.Value.RefreshTokenTtlDays)
         };
     }
 
     public async Task RevokeRefreshTokenAsync(string refreshToken, string userId, CancellationToken cancellationToken)
     {
-        var tokenToRevoke = await db.RefreshTokens.
-            SingleOrDefaultAsync(
-                t => t.Token == refreshToken && t.UserId == userId && t.RevokedAt == null,
-                cancellationToken
-            );
+        RefreshToken? tokenToRevoke = await db.RefreshTokens.SingleOrDefaultAsync(
+            t => t.Token == refreshToken && t.UserId == userId && t.RevokedAt == null,
+            cancellationToken
+        );
 
         if (tokenToRevoke is not null)
         {

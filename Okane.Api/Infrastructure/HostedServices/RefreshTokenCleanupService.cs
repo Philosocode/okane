@@ -5,7 +5,7 @@ using Okane.Api.Shared.Wrappers;
 namespace Okane.Api.Infrastructure.HostedServices;
 
 /// <summary>
-/// Background service to remove inactive refresh tokens on a daily interval.
+///     Background service to remove inactive refresh tokens on a daily interval.
 /// </summary>
 /// <param name="scopeFactory"></param>
 /// <see href="https://stackoverflow.com/a/71637260" />
@@ -25,7 +25,7 @@ public class RefreshTokenCleanupService(IServiceScopeFactory scopeFactory)
 }
 
 /// <summary>
-/// Class that houses the business logic for removing expired and revoked refresh tokens. 
+///     Class that houses the business logic for removing expired and revoked refresh tokens.
 /// </summary>
 /// <param name="db"></param>
 /// <param name="logger"></param>
@@ -36,7 +36,7 @@ internal class RefreshTokenCleaner(
 {
     public async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        int deletedCount = await db.RefreshTokens
+        var deletedCount = await db.RefreshTokens
             .Where(t => dateTime.UtcNow >= t.ExpiresAt || t.RevokedAt != null)
             .ExecuteDeleteAsync(stoppingToken);
 

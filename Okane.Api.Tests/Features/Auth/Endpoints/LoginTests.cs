@@ -39,11 +39,11 @@ public class LoginTests : DatabaseTest, IAsyncLifetime
         {
             builder.ConfigureTestServices(services =>
             {
-                services.RemoveAll<IGuidGenerator>();
-                services.AddSingleton<IGuidGenerator>(_ => new TestingGuidGenerator([_guid]));
+                services.RemoveAll<IGuidWrapper>();
+                services.AddSingleton<IGuidWrapper>(_ => new TestingGuidWrapper([_guid]));
 
-                services.RemoveAll<IClock>();
-                services.AddSingleton<IClock>(_ => new TestingClock { UtcNow = _now });
+                services.RemoveAll<IDateTimeWrapper>();
+                services.AddSingleton<IDateTimeWrapper>(_ => new TestingDateTimeWrapper { UtcNow = _now });
             });
         });
 

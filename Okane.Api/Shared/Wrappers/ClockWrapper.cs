@@ -1,11 +1,11 @@
 namespace Okane.Api.Shared.Wrappers;
 
-public interface IClock
+public interface IDateTimeWrapper
 {
     DateTime UtcNow { get; }
 }
 
-public class Clock : IClock
+public class DateTimeWrapper : IDateTimeWrapper
 {
     public DateTime UtcNow => DateTime.UtcNow;
 }

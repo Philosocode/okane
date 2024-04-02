@@ -40,9 +40,9 @@ public interface ITokenService
 }
 
 public class TokenService(
-    IClock clock,
+    IDateTimeWrapper dateTime,
     ApiDbContext db,
-    IGuidGenerator guidGenerator,
+    IGuidWrapper guidWrapper,
     IOptions<JwtSettings> jwtOptions) : ITokenService
 {
     public string GenerateJwtToken(string userId)
@@ -55,7 +55,7 @@ public class TokenService(
             new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userId),
-                new Claim(JwtRegisteredClaimNames.Jti, guidGenerator.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Jti, guidWrapper.NewGuid().ToString())
             }
         );
 
@@ -63,7 +63,7 @@ public class TokenService(
         {
             Audience = jwtSettings.Audience,
             Issuer = jwtSettings.Issuer,
-            Expires = clock.UtcNow.AddMinutes(jwtSettings.MinutesToExpiration),
+            Expires = dateTime.UtcNow.AddMinutes(jwtSettings.MinutesToExpiration),
             SigningCredentials = signingCredentials,
             Subject = claimsIdentity,
         };
@@ -80,7 +80,7 @@ public class TokenService(
         var foundUniqueToken = false;
         do
         {
-            token = guidGenerator.NewGuid().ToString();
+            token = guidWrapper.NewGuid().ToString();
 
             var isDuplicateToken = await db.RefreshTokens.AnyAsync(t => t.Token == token);
             
@@ -90,8 +90,8 @@ public class TokenService(
         return new RefreshToken
         {
             Token = token,
-            CreatedAt = clock.UtcNow,
-            ExpiresAt = clock.UtcNow.AddDays(jwtOptions.Value.RefreshTokenTtlDays),
+            CreatedAt = dateTime.UtcNow,
+            ExpiresAt = dateTime.UtcNow.AddDays(jwtOptions.Value.RefreshTokenTtlDays),
         };
     }
 
@@ -105,7 +105,7 @@ public class TokenService(
 
         if (tokenToRevoke is not null)
         {
-            tokenToRevoke.RevokedAt = clock.UtcNow;
+            tokenToRevoke.RevokedAt = dateTime.UtcNow;
             await db.SaveChangesAsync(cancellationToken);
         }
     }

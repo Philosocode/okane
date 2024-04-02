@@ -42,7 +42,7 @@ public class Login : IEndpoint
     
     private static async Task<Results<Ok<ApiResponse<AuthenticateResponse>>, BadRequest<ProblemDetails>>> 
         HandleAsync(
-            IClock clock,
+            IDateTimeWrapper dateTime,
             HttpContext context,
             Request request,
             ApiDbContext db,
@@ -82,7 +82,7 @@ public class Login : IEndpoint
         user.RefreshTokens.Add(refreshToken);
         await db.SaveChangesAsync(cancellationToken);
 
-        TokenUtils.SetRefreshTokenCookie(clock, jwtSettings.Value, context.Response, refreshToken);
+        TokenUtils.SetRefreshTokenCookie(dateTime, jwtSettings.Value, context.Response, refreshToken);
 
         var response = new AuthenticateResponse
         {

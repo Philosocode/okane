@@ -107,8 +107,8 @@ public static class ConfigureServices
 
     private static void AddWrappers(this WebApplicationBuilder builder)
     {
-        builder.Services.AddSingleton<IClock, Clock>();
-        builder.Services.AddSingleton<IGuidGenerator, GuidGenerator>();
+        builder.Services.AddSingleton<IDateTimeWrapper, DateTimeWrapper>();
+        builder.Services.AddSingleton<IGuidWrapper, GuidWrapper>();
     }
 
     private static void AddApiAuthentication(this WebApplicationBuilder builder)

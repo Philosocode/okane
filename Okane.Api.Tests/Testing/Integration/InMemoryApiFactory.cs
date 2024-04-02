@@ -10,7 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Tests.Testing.Extensions;
 
-namespace Okane.Api.Tests.Testing.InMemory;
+namespace Okane.Api.Tests.Testing.Integration;
 
 // Referenced: https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-8.0#customize-webapplicationfactory
 public class InMemoryApiFactory : WebApplicationFactory<IApiMarker>

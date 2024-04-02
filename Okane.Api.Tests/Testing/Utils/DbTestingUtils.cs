@@ -2,7 +2,7 @@ using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Tests.Testing.StubFactories;
 
-namespace Okane.Api.Tests.Testing.InMemory;
+namespace Okane.Api.Tests.Testing.Utils;
 
 public static class DbTestingUtils
 {

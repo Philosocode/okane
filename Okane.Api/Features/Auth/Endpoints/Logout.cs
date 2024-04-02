@@ -14,12 +14,12 @@ public class Logout : IEndpoint
     public static void Map(IEndpointRouteBuilder builder)
     {
         builder
-            .MapPost("/logout", Handle)
+            .MapPost("/logout", HandleAsync)
             .WithName(AuthEndpointNames.Logout)
             .WithSummary("Log out a user.");
     }
 
-    private static async Task<NoContent> Handle(
+    private static async Task<NoContent> HandleAsync(
         ClaimsPrincipal claimsPrincipal,
         HttpContext context,
         ITokenService tokenService,
@@ -29,7 +29,7 @@ public class Logout : IEndpoint
         string? refreshToken = TokenUtils.GetRefreshTokenFromCookie(context.Request);
         if (refreshToken is not null)
         {
-            await tokenService.RevokeRefreshToken(refreshToken, userId, cancellationToken);
+            await tokenService.RevokeRefreshTokenAsync(refreshToken, userId, cancellationToken);
         }
         
         await context.SignOutAsync();

@@ -89,30 +89,30 @@ public class TokenServiceTests : IDisposable
     }
 
     [Fact]
-    public async Task GenerateRefreshToken_ReturnsANewUniqueRefreshToken()
+    public async Task GenerateRefreshTokenAsync_ReturnsANewUniqueRefreshToken()
     {
         var apiUser = DbContextUtils.AddApiUser(_db);
         InsertRefreshToken(_guids[0].ToString(), apiUser.Id);
         await _db.SaveChangesAsync();
 
-        var newRefreshToken = await _tokenService.GenerateRefreshToken(generateUniqueToken: true);
+        var newRefreshToken = await _tokenService.GenerateRefreshTokenAsync(generateUniqueToken: true);
         newRefreshToken.Token.Should().Be(_guids[1].ToString());
     }
 
     [Fact]
-    public async Task GenerateRefreshToken_ReturnsADuplicateRefreshToken()
+    public async Task GenerateRefreshTokenAsync_ReturnsADuplicateRefreshToken()
     {
         // The GUID generator has been seeded with two GUIDs, so we'll need to generate 3 GUIDs
         // to force a duplicate.
-        var token1 = await _tokenService.GenerateRefreshToken(generateUniqueToken: false);
-        await _tokenService.GenerateRefreshToken(generateUniqueToken: false);
-        var token2 = await _tokenService.GenerateRefreshToken(generateUniqueToken: false);
+        var token1 = await _tokenService.GenerateRefreshTokenAsync(generateUniqueToken: false);
+        await _tokenService.GenerateRefreshTokenAsync(generateUniqueToken: false);
+        var token2 = await _tokenService.GenerateRefreshTokenAsync(generateUniqueToken: false);
 
         token1.Token.Should().Be(token2.Token);
     }
     
     [Fact]
-    public async Task RevokeRefreshToken_UpdatesTheRevokedAtField()
+    public async Task RevokeRefreshTokenAsync_UpdatesTheRevokedAtField()
     {
         var apiUser = DbContextUtils.AddApiUser(_db);
         InsertRefreshToken(_guids[0].ToString(), apiUser.Id);
@@ -120,7 +120,7 @@ public class TokenServiceTests : IDisposable
         
         await _db.SaveChangesAsync();
 
-        await _tokenService.RevokeRefreshToken(refreshTokenToRevoke.Token, apiUser.Id, CancellationToken.None);
+        await _tokenService.RevokeRefreshTokenAsync(refreshTokenToRevoke.Token, apiUser.Id, CancellationToken.None);
 
         var revokedToken = await _db.RefreshTokens.SingleOrDefaultAsync(
             t => t.Token == refreshTokenToRevoke.Token
@@ -130,33 +130,33 @@ public class TokenServiceTests : IDisposable
     }
     
     [Fact]
-    public async Task RevokeRefreshToken_DoesNothing_WhenTokenNotFound()
+    public async Task RevokeRefreshTokenAsync_DoesNothing_WhenTokenNotFound()
     {
         var apiUser = DbContextUtils.AddApiUser(_db);
         InsertRefreshToken(_guids[0].ToString(), apiUser.Id);
         await _db.SaveChangesAsync();
 
-        await _tokenService.RevokeRefreshToken("non-existent-token", apiUser.Id, CancellationToken.None);
+        await _tokenService.RevokeRefreshTokenAsync("non-existent-token", apiUser.Id, CancellationToken.None);
 
         bool hasRevokedToken = await _db.RefreshTokens.AnyAsync(t => t.RevokedAt != null);
         hasRevokedToken.Should().BeFalse();
     }
     
     [Fact]
-    public async Task RevokeRefreshToken_DoesNothing_WhenTokenBelongsToDifferentUser()
+    public async Task RevokeRefreshTokenAsync_DoesNothing_WhenTokenBelongsToDifferentUser()
     {
         var apiUser = DbContextUtils.AddApiUser(_db);
         var refreshToken = InsertRefreshToken(_guids[0].ToString(), apiUser.Id);
         await _db.SaveChangesAsync();
 
-        await _tokenService.RevokeRefreshToken(refreshToken.Token, "other-user", CancellationToken.None);
+        await _tokenService.RevokeRefreshTokenAsync(refreshToken.Token, "other-user", CancellationToken.None);
 
         bool hasRevokedToken = await _db.RefreshTokens.AnyAsync(t => t.RevokedAt != null);
         hasRevokedToken.Should().BeFalse();
     }
     
     [Fact]
-    public async Task RevokeRefreshToken_DoesNothing_WhenTokenAlreadyRevoked()
+    public async Task RevokeRefreshTokenAsync_DoesNothing_WhenTokenAlreadyRevoked()
     {
         var apiUser = DbContextUtils.AddApiUser(_db);
         var revokedAt = new DateTime(2024, 1, 1);
@@ -172,7 +172,7 @@ public class TokenServiceTests : IDisposable
         
         await _db.SaveChangesAsync();
 
-        await _tokenService.RevokeRefreshToken(
+        await _tokenService.RevokeRefreshTokenAsync(
             alreadyRevokedRefreshToken.Token,
             apiUser.Id,
             CancellationToken.None

@@ -19,7 +19,7 @@ public class RotateRefreshTokenTests(PostgresApiFactory apiFactory) : DatabaseTe
 {
     private readonly PostgresApiFactory _apiFactory = apiFactory;
 
-    private async Task<HttpResponseMessage> MakeRequest(HttpClient client)
+    private async Task<HttpResponseMessage> MakeRequestAsync(HttpClient client)
     {
         return await client.PostAsync("/auth/refresh-token", null);
     }
@@ -32,7 +32,7 @@ public class RotateRefreshTokenTests(PostgresApiFactory apiFactory) : DatabaseTe
         var oldRefreshToken = await Db.RefreshTokens
             .SingleAsync(t => t.UserId == loginResponse.User.Id);
 
-        var response = await MakeRequest(client);
+        var response = await MakeRequestAsync(client);
         response.Should().HaveStatusCode(HttpStatusCode.OK);
         
         var responseCookies = CookieUtils.GetCookieHeaderDictionary(
@@ -58,9 +58,9 @@ public class RotateRefreshTokenTests(PostgresApiFactory apiFactory) : DatabaseTe
         oldRefreshTokenWasRevoked.Should().BeTrue();
     }
 
-    private async Task AssertInvalidRefreshTokenError(HttpClient client)
+    private async Task AssertInvalidRefreshTokenErrorAsync(HttpClient client)
     {
-        var response = await MakeRequest(client);
+        var response = await MakeRequestAsync(client);
         response.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
         var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
@@ -82,7 +82,7 @@ public class RotateRefreshTokenTests(PostgresApiFactory apiFactory) : DatabaseTe
         client = _apiFactory.CreateClient();
         client.SetBearerToken(authResponse.JwtToken);
         
-        await AssertInvalidRefreshTokenError(client);
+        await AssertInvalidRefreshTokenErrorAsync(client);
     }
     
     [Fact]
@@ -97,7 +97,7 @@ public class RotateRefreshTokenTests(PostgresApiFactory apiFactory) : DatabaseTe
         refreshToken.Token = Guid.NewGuid().ToString();
         await Db.SaveChangesAsync();
 
-        await AssertInvalidRefreshTokenError(client);
+        await AssertInvalidRefreshTokenErrorAsync(client);
     }
 
     [Fact]
@@ -112,7 +112,7 @@ public class RotateRefreshTokenTests(PostgresApiFactory apiFactory) : DatabaseTe
         refreshToken.ExpiresAt = DateTime.UtcNow;
         await Db.SaveChangesAsync();
         
-        await AssertInvalidRefreshTokenError(client);
+        await AssertInvalidRefreshTokenErrorAsync(client);
     }
     
     [Fact]
@@ -135,7 +135,7 @@ public class RotateRefreshTokenTests(PostgresApiFactory apiFactory) : DatabaseTe
         }
         
         // We'll also register another user and check that their tokens are NOT affected.
-        var otherUser = await UserUtils.RegisterUser(client, new Register.Request(
+        var otherUser = await UserUtils.RegisterUserAsync(client, new Register.Request(
             "Other User",
             "other@okane.com",
             TestUser.Password
@@ -148,7 +148,7 @@ public class RotateRefreshTokenTests(PostgresApiFactory apiFactory) : DatabaseTe
         
         await Db.SaveChangesAsync();
 
-        await AssertInvalidRefreshTokenError(client);
+        await AssertInvalidRefreshTokenErrorAsync(client);
         
         // If we don't do this, the updates from ExecuteUpdateAsync won't be available; stale data
         // will be returned instead.

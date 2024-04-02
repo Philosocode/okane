@@ -28,7 +28,7 @@ public interface ITokenService
     /// </summary>
     /// <param name="generateUniqueToken"></param>
     /// <returns>Application-wide unique refresh token.</returns>
-    Task<RefreshToken> GenerateRefreshToken(bool generateUniqueToken);
+    Task<RefreshToken> GenerateRefreshTokenAsync(bool generateUniqueToken);
     
     /// <summary>
     /// Revoke a refresh token belonging to a specific user.
@@ -36,7 +36,7 @@ public interface ITokenService
     /// <param name="refreshToken"></param>
     /// <param name="userId"></param>
     /// <param name="cancellationToken"></param>
-    Task RevokeRefreshToken(string refreshToken, string userId, CancellationToken cancellationToken);
+    Task RevokeRefreshTokenAsync(string refreshToken, string userId, CancellationToken cancellationToken);
 }
 
 public class TokenService(
@@ -74,7 +74,7 @@ public class TokenService(
         return tokenHandler.WriteToken(token);
     }
 
-    public async Task<RefreshToken> GenerateRefreshToken(bool generateUniqueToken = true)
+    public async Task<RefreshToken> GenerateRefreshTokenAsync(bool generateUniqueToken = true)
     {
         var token = "";
         var foundUniqueToken = false;
@@ -95,7 +95,7 @@ public class TokenService(
         };
     }
 
-    public async Task RevokeRefreshToken(string refreshToken, string userId, CancellationToken cancellationToken)
+    public async Task RevokeRefreshTokenAsync(string refreshToken, string userId, CancellationToken cancellationToken)
     {
         var tokenToRevoke = await db.RefreshTokens.
             SingleOrDefaultAsync(

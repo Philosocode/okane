@@ -16,7 +16,7 @@ public class Register : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder builder)
         => builder
-            .MapPost("/register", Handle)
+            .MapPost("/register", HandleAsync)
             .AllowAnonymous()
             .WithName(AuthEndpointNames.Register)
             .WithSummary("Register a new user.")
@@ -36,7 +36,7 @@ public class Register : IEndpoint
     
     // See: https://github.com/dotnet/aspnetcore/blob/e737c6fe54fa596289268140864c127957c0b1a1/src/Identity/Core/src/IdentityApiEndpointRouteBuilderExtensions.cs#L57
     private static async Task<Results<Created<ApiResponse<UserResponse>>, BadRequest<ProblemDetails>, ValidationProblem>>
-        Handle(
+        HandleAsync(
             Request request, 
             LinkGenerator linkGenerator,
             ILogger<Register> logger,

@@ -1,11 +1,10 @@
-using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Okane.Api.Shared.Exceptions;
 
 /// <summary>
-/// Handler for unhandled exceptions.
+///     Handler for unhandled exceptions.
 /// </summary>
 public class GlobalExceptionHandler(
     ILogger<GlobalExceptionHandler> logger,
@@ -20,7 +19,7 @@ public class GlobalExceptionHandler(
         logger.LogError("Exception occurred: {Message}", exception.Message);
 
         httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
-        
+
         var problemDetails = new ProblemDetails
         {
             Status = StatusCodes.Status500InternalServerError,

@@ -30,23 +30,19 @@ public class PostgresApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifet
             .WithCleanUp(true)
             .Build();
 
-    public ApiDbContext Db { get; private set; } = null!;
-    private Respawner _respawner = null!;
     private DbConnection _connection = null!;
-    
-    public async Task ResetDatabaseAsync()
-    {
-        await _respawner.ResetAsync(_connection);
-    }
-    
+    private Respawner _respawner = null!;
+
+    public ApiDbContext Db { get; private set; } = null!;
+
     public async Task InitializeAsync()
     {
         await _container.StartAsync();
-        
+
         Db = Services.CreateScope().ServiceProvider.GetRequiredService<ApiDbContext>();
         _connection = Db.Database.GetDbConnection();
         await _connection.OpenAsync();
-        
+
         _respawner = await Respawner.CreateAsync(_connection, new RespawnerOptions
         {
             DbAdapter = DbAdapter.Postgres,
@@ -60,6 +56,11 @@ public class PostgresApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifet
         await _container.DisposeAsync();
     }
 
+    public async Task ResetDatabaseAsync()
+    {
+        await _respawner.ResetAsync(_connection);
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureTestServices(services =>
@@ -70,7 +71,7 @@ public class PostgresApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifet
                 options.UseNpgsql(_container.GetConnectionString());
             });
             services.EnsureDbCreated();
-            
+
             services.RemoveAll<IHostedService>();
         });
     }

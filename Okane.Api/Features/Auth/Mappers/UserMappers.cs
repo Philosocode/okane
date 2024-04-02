@@ -11,7 +11,7 @@ public static class UserMappers
         {
             Id = apiUser.Id,
             Email = apiUser.Email,
-            Name = apiUser.Name,
+            Name = apiUser.Name
         };
     }
 }

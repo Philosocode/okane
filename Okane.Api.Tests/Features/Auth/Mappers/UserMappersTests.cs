@@ -14,7 +14,7 @@ public class UserMappersTests
         {
             Id = "okane-user-id",
             Name = "Okane",
-            Email = "test@okane.com",
+            Email = "test@okane.com"
         };
 
         var actual = apiUser.ToUserResponse();
@@ -22,7 +22,7 @@ public class UserMappersTests
         {
             Id = apiUser.Id,
             Email = apiUser.Email,
-            Name = apiUser.Name,
+            Name = apiUser.Name
         };
 
         actual.Should().Be(expected);

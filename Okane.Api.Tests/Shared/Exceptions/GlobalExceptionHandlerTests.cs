@@ -22,11 +22,11 @@ public class GlobalExceptionHandlerTests
 {
     private const string Endpoint = "/testing-endpoint";
     private const string ErrorMessage = "Prod blew up.";
-    
+
     private static WebApplicationFactory<IApiMarker> SetUpApiFactory(
         ITestService testService,
         string environment = "")
-    { 
+    {
         return new InMemoryApiFactory().WithWebHostBuilder(builder =>
         {
             var builderEnvironment = Environments.Development;
@@ -34,15 +34,16 @@ public class GlobalExceptionHandlerTests
             {
                 builderEnvironment = environment;
             }
+
             builder.UseEnvironment(builderEnvironment);
-            
+
             builder.ConfigureTestServices(services =>
             {
                 services.AddProblemDetails();
                 services.AddExceptionHandler<GlobalExceptionHandler>();
                 services.AddSingleton(testService);
             });
-            
+
             builder.Configure(app =>
             {
                 app.UseRouting();
@@ -50,11 +51,11 @@ public class GlobalExceptionHandlerTests
                 app.UseEndpoints(endpoints =>
                 {
                     endpoints.MapGet(Endpoint, async (
-                        HttpContext context, 
+                        HttpContext context,
                         ITestService testServ) =>
                     {
                         await testServ.DoSomethingAsync();
-                        await context.Response.WriteAsJsonAsync(new { Message = "Test" } );
+                        await context.Response.WriteAsJsonAsync(new { Message = "Test" });
                     });
                 });
             });
@@ -67,11 +68,11 @@ public class GlobalExceptionHandlerTests
         var testService = Substitute.For<ITestService>();
         var exception = new ApiException(ErrorMessage);
         testService.DoSomethingAsync().Throws(exception);
-        
-        var apiFactory = SetUpApiFactory(testService);
-        var client = apiFactory.CreateClient();
-        
-        var response = await client.GetAsync(Endpoint);
+
+        WebApplicationFactory<IApiMarker> apiFactory = SetUpApiFactory(testService);
+        HttpClient client = apiFactory.CreateClient();
+
+        HttpResponseMessage response = await client.GetAsync(Endpoint);
         response.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
         var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
@@ -80,25 +81,25 @@ public class GlobalExceptionHandlerTests
             Detail = ErrorMessage,
             Status = StatusCodes.Status400BadRequest,
             Title = "Bad Request",
-            Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+            Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1"
         }, options => options.Excluding(pd => pd.Extensions));
 
         problemDetails?.Extensions.Should()
             .NotBeNull()
             .And.ContainKey("stackTrace");
     }
-    
+
     [Fact]
     public async Task HandlesANonApiException()
     {
         var testService = Substitute.For<ITestService>();
         var exception = new InvalidOperationException(ErrorMessage);
         testService.DoSomethingAsync().Throws(exception);
-        
-        var apiFactory = SetUpApiFactory(testService);
-        var client = apiFactory.CreateClient();
-        
-        var response = await client.GetAsync(Endpoint);
+
+        WebApplicationFactory<IApiMarker> apiFactory = SetUpApiFactory(testService);
+        HttpClient client = apiFactory.CreateClient();
+
+        HttpResponseMessage response = await client.GetAsync(Endpoint);
         response.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
 
         var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
@@ -107,7 +108,7 @@ public class GlobalExceptionHandlerTests
             Detail = ErrorMessage,
             Status = StatusCodes.Status500InternalServerError,
             Title = nameof(InvalidOperationException),
-            Type = "https://tools.ietf.org/html/rfc9110#section-15.6.1",
+            Type = "https://tools.ietf.org/html/rfc9110#section-15.6.1"
         }, options => options.Excluding(pd => pd.Extensions));
 
         problemDetails?.Extensions.Should()
@@ -121,11 +122,11 @@ public class GlobalExceptionHandlerTests
         var testService = Substitute.For<ITestService>();
         var exception = new InvalidOperationException(ErrorMessage);
         testService.DoSomethingAsync().Throws(exception);
-        
-        var apiFactory = SetUpApiFactory(testService, Environments.Production);
-        var client = apiFactory.CreateClient();
-        
-        var response = await client.GetAsync(Endpoint);
+
+        WebApplicationFactory<IApiMarker> apiFactory = SetUpApiFactory(testService, Environments.Production);
+        HttpClient client = apiFactory.CreateClient();
+
+        HttpResponseMessage response = await client.GetAsync(Endpoint);
         response.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
 
         var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
@@ -135,7 +136,7 @@ public class GlobalExceptionHandlerTests
             Extensions = new Dictionary<string, object?>(),
             Status = StatusCodes.Status500InternalServerError,
             Title = nameof(InvalidOperationException),
-            Type = "https://tools.ietf.org/html/rfc9110#section-15.6.1",
+            Type = "https://tools.ietf.org/html/rfc9110#section-15.6.1"
         });
     }
 }

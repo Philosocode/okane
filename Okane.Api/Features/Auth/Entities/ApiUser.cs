@@ -8,7 +8,7 @@ public class ApiUser : IdentityUser
 {
     [MaxLength(256)]
     public required string Name { get; set; }
-    
+
     [JsonIgnore]
-    public ICollection<RefreshToken> RefreshTokens { get; set; }  = default!;
+    public ICollection<RefreshToken> RefreshTokens { get; set; } = default!;
 }

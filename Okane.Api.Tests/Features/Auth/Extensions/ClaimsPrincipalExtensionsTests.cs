@@ -7,7 +7,7 @@ namespace Okane.Api.Tests.Features.Auth.Extensions;
 
 public class ClaimsPrincipalExtensionsTests
 {
-    public class GetUserId()
+    public class GetUserId
     {
         private readonly string _authenticationType = JwtBearerDefaults.AuthenticationScheme;
         private readonly string _userId = "cool-user-id";
@@ -19,14 +19,14 @@ public class ClaimsPrincipalExtensionsTests
             {
                 new(ClaimTypes.NameIdentifier, _userId)
             };
-            
+
             var claimsIdentity = new ClaimsIdentity(claims, _authenticationType);
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-            
-            string actualId = claimsPrincipal.GetUserId();
+
+            var actualId = claimsPrincipal.GetUserId();
             actualId.Should().Be(_userId);
         }
-        
+
         [Fact]
         public void Throws_WhenNotAuthenticated()
         {
@@ -34,10 +34,10 @@ public class ClaimsPrincipalExtensionsTests
             {
                 new(ClaimTypes.NameIdentifier, _userId)
             };
-            
+
             var claimsIdentity = new ClaimsIdentity(claims, null);
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-            
+
             Action result = () => claimsPrincipal.GetUserId();
             result.Should().Throw<InvalidOperationException>();
         }
@@ -47,7 +47,7 @@ public class ClaimsPrincipalExtensionsTests
         {
             var claimsIdentity = new ClaimsIdentity([], _authenticationType);
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-            
+
             Action result = () => claimsPrincipal.GetUserId();
             result.Should().Throw<InvalidOperationException>();
         }

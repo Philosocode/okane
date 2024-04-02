@@ -14,6 +14,7 @@ using Okane.Api.Features.Auth.Config;
 using Okane.Api.Features.Auth.Constants;
 using Okane.Api.Features.Auth.Dtos.Responses;
 using Okane.Api.Features.Auth.Endpoints;
+using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Features.Auth.Mappers;
 using Okane.Api.Features.Auth.Services;
 using Okane.Api.Shared.Dtos.ApiResponses;
@@ -26,10 +27,10 @@ namespace Okane.Api.Tests.Features.Auth.Endpoints;
 
 public class LoginTests : DatabaseTest, IAsyncLifetime
 {
-    private readonly Guid _guid = new Guid();
-    private readonly HttpClient _client;
     private readonly WebApplicationFactory<IApiMarker> _apiFactory;
-    
+    private readonly HttpClient _client;
+    private readonly Guid _guid = new();
+
     // The current time needs to be in the future for JWT token generation to work.
     private readonly DateTime _now = DateTime.UtcNow.AddHours(1);
 
@@ -49,48 +50,48 @@ public class LoginTests : DatabaseTest, IAsyncLifetime
 
         _client = _apiFactory.CreateClient();
     }
-    
+
     public new async Task InitializeAsync()
     {
         await _client.RegisterTestUserAsync();
     }
-    
+
     [Fact]
     public async Task LogsInAnExistingUser()
     {
-        using var scope = _apiFactory.Services.CreateScope();
-        
-        var testUser = await Db.FindTestUserAsync();
+        using IServiceScope scope = _apiFactory.Services.CreateScope();
+
+        ApiUser testUser = await Db.FindTestUserAsync();
         var request = new Login.Request(testUser.Email!, TestUser.Password);
-        var response = await _client.PostAsJsonAsync("/auth/login", request);
+        HttpResponseMessage response = await _client.PostAsJsonAsync("/auth/login", request);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        
+
         // User.
         var body = await response.Content.ReadFromJsonAsync<ApiResponse<AuthenticateResponse>>();
-        var authResponse = body!.Items[0];
+        AuthenticateResponse authResponse = body!.Items[0];
         authResponse.User.Should().BeEquivalentTo(testUser.ToUserResponse());
-        
+
         // JWT token.
         JwtSecurityToken jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(authResponse.JwtToken);
         var jwtOptions = scope.ServiceProvider.GetRequiredService<IOptions<JwtSettings>>();
         DateTime expectedExpiryTime = _now.AddMinutes(jwtOptions.Value.MinutesToExpiration);
-        long expectedExpiryClaim = new DateTimeOffset(expectedExpiryTime).ToUnixTimeSeconds();
-            
+        var expectedExpiryClaim = new DateTimeOffset(expectedExpiryTime).ToUnixTimeSeconds();
+
         jwtToken.Claims.Should()
             .ContainSingle(c => c.Type == JwtRegisteredClaimNames.Sub && c.Value == testUser.Id)
             .And
             .ContainSingle(c => c.Type == JwtRegisteredClaimNames.Jti && c.Value == _guid.ToString())
             .And
             .ContainSingle(c => c.Type == JwtRegisteredClaimNames.Exp && c.Value == expectedExpiryClaim.ToString());
-        
+
         // Refresh token in cookie.
         var tokenService = scope.ServiceProvider.GetRequiredService<ITokenService>();
-        var expectedRefreshToken = await tokenService.GenerateRefreshTokenAsync(generateUniqueToken: false);
-        var createdRefreshToken = await Db.RefreshTokens.SingleOrDefaultAsync(
+        RefreshToken expectedRefreshToken = await tokenService.GenerateRefreshTokenAsync(false);
+        RefreshToken? createdRefreshToken = await Db.RefreshTokens.SingleOrDefaultAsync(
             t => t.Token == expectedRefreshToken.Token && t.UserId == testUser.Id
         );
         createdRefreshToken.Should().NotBeNull();
-        
+
         var expectedCookie = CookieUtils.CreateCookieHeader(
             CookieNames.RefreshToken,
             expectedRefreshToken.Token,
@@ -110,15 +111,15 @@ public class LoginTests : DatabaseTest, IAsyncLifetime
     public async Task ReturnsAnError_WhenUserDoesNotExist()
     {
         var request = new Login.Request("non-existent-user@gmail.com", TestUser.Password);
-        var response = await _client.PostAsJsonAsync("/auth/login", request);
+        HttpResponseMessage response = await _client.PostAsJsonAsync("/auth/login", request);
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
-    
+
     [Fact]
     public async Task ReturnsAnError_WhenPasswordIsInvalid()
     {
         var request = new Login.Request(TestUser.Email!, "invalidPassword");
-        var response = await _client.PostAsJsonAsync("/auth/login", request);
+        HttpResponseMessage response = await _client.PostAsJsonAsync("/auth/login", request);
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }

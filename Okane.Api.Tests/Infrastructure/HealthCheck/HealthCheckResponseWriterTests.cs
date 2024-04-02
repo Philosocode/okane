@@ -9,13 +9,13 @@ namespace Okane.Api.Tests.Infrastructure.HealthCheck;
 public class HealthCheckResponseWriterTests(
     PostgresApiFactory apiFactory) : IClassFixture<PostgresApiFactory>
 {
-    private readonly HttpClient _httpClient = apiFactory.CreateClient();
     private const string HealthyText = "Healthy";
+    private readonly HttpClient _httpClient = apiFactory.CreateClient();
 
     [Fact]
     public async Task ReturnsAHealthCheckResponse()
     {
-        var response = await _httpClient.GetAsync("/health");
+        HttpResponseMessage response = await _httpClient.GetAsync("/health");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var report = await response.Content.ReadFromJsonAsync<HealthCheckResponse>();

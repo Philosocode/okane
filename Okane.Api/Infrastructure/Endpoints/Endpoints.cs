@@ -11,7 +11,7 @@ public static class Endpoints
 {
     public static void MapApiEndpoints(this IEndpointRouteBuilder builder)
     {
-        var endpoints = builder.MapGroup("")
+        RouteGroupBuilder endpoints = builder.MapGroup("")
             .RequireAuthorization()
             .WithOpenApi();
 

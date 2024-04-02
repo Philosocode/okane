@@ -1,4 +1,5 @@
 using FluentValidation;
+using FluentValidation.Results;
 
 namespace Okane.Api.Infrastructure.Endpoints.Filters;
 
@@ -8,8 +9,8 @@ public class RequestValidationFilter<TRequest>(
 {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
-        string? requestName = typeof(TRequest).FullName;
-        
+        var requestName = typeof(TRequest).FullName;
+
         if (validator is null)
         {
             logger.LogInformation("{Request}: No validator configured", requestName);
@@ -17,9 +18,9 @@ public class RequestValidationFilter<TRequest>(
         }
 
         logger.LogInformation("{Request}: Validating...", requestName);
-        var request = context.Arguments.OfType<TRequest>().First();
-        var validationResult = await validator.ValidateAsync(request, context.HttpContext.RequestAborted);
-        
+        TRequest request = context.Arguments.OfType<TRequest>().First();
+        ValidationResult? validationResult = await validator.ValidateAsync(request, context.HttpContext.RequestAborted);
+
         if (!validationResult.IsValid)
         {
             logger.LogWarning("{Request}: Validation failed", requestName);

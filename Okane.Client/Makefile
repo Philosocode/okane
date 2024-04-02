@@ -11,6 +11,10 @@ install:
 build:
 	npm run build
 
+.PHONY: lint
+lint:
+	npm run lint
+
 .PHONY: test
 test:
 	npm run test

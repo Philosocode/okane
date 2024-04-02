@@ -31,8 +31,7 @@ public class LogoutTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFactor
                 Token = Guid.NewGuid()
                     .ToString(),
                 UserId = loginResponse.User.Id,
-                ExpiresAt = default,
-                CreatedAt = default
+                ExpiresAt = default
             });
         }
 

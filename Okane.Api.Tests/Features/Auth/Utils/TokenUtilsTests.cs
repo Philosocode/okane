@@ -52,7 +52,6 @@ public class TokenUtilsTests
         {
             Token = "cool-refresh-token",
             ExpiresAt = default,
-            CreatedAt = default
         };
 
         TokenUtils.SetRefreshTokenCookie(dateTimeWrapper, jwtSettings, httpContext.Response, refreshToken);

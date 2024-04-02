@@ -28,7 +28,6 @@ public class RefreshTokenCleanupServiceTests
         {
             Token = Guid.NewGuid().ToString(),
             UserId = user.Id,
-            CreatedAt = default,
             ExpiresAt = _dateTimeWrapper.UtcNow.AddSeconds(-1),
         };
         
@@ -36,7 +35,6 @@ public class RefreshTokenCleanupServiceTests
         {
             Token = Guid.NewGuid().ToString(),
             UserId = user.Id,
-            CreatedAt = default,
             ExpiresAt = _dateTimeWrapper.UtcNow.AddDays(1),
             RevokedAt = _dateTimeWrapper.UtcNow.AddSeconds(-1)
         };
@@ -45,7 +43,6 @@ public class RefreshTokenCleanupServiceTests
         {
             Token = Guid.NewGuid().ToString(),
             UserId = user.Id,
-            CreatedAt = default,
             ExpiresAt = expiredToken.ExpiresAt,
             RevokedAt = revokedToken.RevokedAt
         };
@@ -54,7 +51,6 @@ public class RefreshTokenCleanupServiceTests
         {
             Token = Guid.NewGuid().ToString(),
             UserId = user.Id,
-            CreatedAt = default,
             ExpiresAt = _dateTimeWrapper.UtcNow.AddDays(1)
         };
 

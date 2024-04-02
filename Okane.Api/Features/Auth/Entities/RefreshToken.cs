@@ -10,7 +10,6 @@ public class RefreshToken : IOwnedEntity
     public int Id { get; set; }
     public required string Token { get; set; }
     public required DateTime ExpiresAt { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? RevokedAt { get; set; }
     
     // Navigation.
@@ -27,8 +26,7 @@ public class RefreshTokenEntityConfiguration : IEntityTypeConfiguration<RefreshT
 {
     public void Configure(EntityTypeBuilder<RefreshToken> builder)
     {
-        builder
-            .Property("CreatedAt").HasDefaultValueSql("NOW()");
-        
+        builder.Property<DateTime>("CreatedAt")
+            .HasDefaultValueSql("NOW()");
     }
 }

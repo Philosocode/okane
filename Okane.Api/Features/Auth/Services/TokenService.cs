@@ -90,7 +90,6 @@ public class TokenService(
         return new RefreshToken
         {
             Token = token,
-            CreatedAt = dateTime.UtcNow,
             ExpiresAt = dateTime.UtcNow.AddDays(jwtOptions.Value.RefreshTokenTtlDays),
         };
     }

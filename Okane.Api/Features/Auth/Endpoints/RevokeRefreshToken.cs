@@ -14,7 +14,7 @@ public class RevokeRefreshToken : IEndpoint
     public static void Map(IEndpointRouteBuilder builder)
     {
         builder
-            .MapPost("/revoke-token", Handle)
+            .MapPost("/revoke-token", HandleAsync)
             .WithName(AuthEndpointNames.RevokeToken)
             .WithSummary("Revoke a refresh token in a cookie or the response body.");
     }
@@ -22,7 +22,7 @@ public class RevokeRefreshToken : IEndpoint
     public record Request(string? RefreshToken);
 
     private static async Task<Results<NoContent, ValidationErrorResult>> 
-        Handle(
+        HandleAsync(
             ClaimsPrincipal claimsPrincipal,
             HttpContext context,
             Request? request,
@@ -41,7 +41,7 @@ public class RevokeRefreshToken : IEndpoint
         }
 
         string userId = claimsPrincipal.GetUserId();
-        await tokenService.RevokeRefreshToken(refreshTokenToRevoke, userId, cancellationToken);
+        await tokenService.RevokeRefreshTokenAsync(refreshTokenToRevoke, userId, cancellationToken);
         
         return TypedResults.NoContent();
     }

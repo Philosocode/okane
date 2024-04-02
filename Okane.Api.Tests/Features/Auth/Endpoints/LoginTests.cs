@@ -85,7 +85,7 @@ public class LoginTests : DatabaseTest, IAsyncLifetime
         
         // Refresh token in cookie.
         var tokenService = scope.ServiceProvider.GetRequiredService<ITokenService>();
-        var expectedRefreshToken = await tokenService.GenerateRefreshToken(generateUniqueToken: false);
+        var expectedRefreshToken = await tokenService.GenerateRefreshTokenAsync(generateUniqueToken: false);
         var createdRefreshToken = await Db.RefreshTokens.SingleOrDefaultAsync(
             t => t.Token == expectedRefreshToken.Token && t.UserId == testUser.Id
         );

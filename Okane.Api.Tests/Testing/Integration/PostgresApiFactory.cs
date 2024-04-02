@@ -34,7 +34,7 @@ public class PostgresApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifet
     private Respawner _respawner = null!;
     private DbConnection _connection = null!;
     
-    public async Task ResetDatabase()
+    public async Task ResetDatabaseAsync()
     {
         await _respawner.ResetAsync(_connection);
     }

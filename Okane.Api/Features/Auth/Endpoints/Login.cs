@@ -23,7 +23,7 @@ public class Login : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder builder)
         => builder
-            .MapPost("/login", Handle)
+            .MapPost("/login", HandleAsync)
             .AllowAnonymous()
             .WithName(AuthEndpointNames.Login)
             .WithSummary("Log in a new user.")
@@ -41,7 +41,7 @@ public class Login : IEndpoint
     }
     
     private static async Task<Results<Ok<ApiResponse<AuthenticateResponse>>, BadRequest<ProblemDetails>>> 
-        Handle(
+        HandleAsync(
             IClock clock,
             HttpContext context,
             Request request,
@@ -77,7 +77,7 @@ public class Login : IEndpoint
         }
         
         string jwtToken = tokenService.GenerateJwtToken(user.Id);
-        RefreshToken refreshToken = await tokenService.GenerateRefreshToken(generateUniqueToken: true);
+        RefreshToken refreshToken = await tokenService.GenerateRefreshTokenAsync(generateUniqueToken: true);
         
         user.RefreshTokens.Add(refreshToken);
         await db.SaveChangesAsync(cancellationToken);

@@ -22,14 +22,14 @@ public class RotateRefreshToken : IEndpoint
     public static void Map(IEndpointRouteBuilder builder)
     {
         builder
-            .MapPost("/refresh-token", Handle)
+            .MapPost("/refresh-token", HandleAsync)
             .AllowAnonymous()
             .WithName(AuthEndpointNames.RefreshToken)
             .WithSummary("Revoke a refresh token and generate a new refresh and JWT token.");
     }
 
     private static async Task<Results<Ok<ApiResponse<AuthenticateResponse>>, BadRequest<ProblemDetails>>>
-        Handle(
+        HandleAsync(
             IClock clock,
             HttpContext context,
             ApiDbContext db,
@@ -77,7 +77,7 @@ public class RotateRefreshToken : IEndpoint
 
         refreshTokenToRotate.RevokedAt = clock.UtcNow;
         
-        RefreshToken newRefreshToken = await tokenService.GenerateRefreshToken(generateUniqueToken: true);
+        RefreshToken newRefreshToken = await tokenService.GenerateRefreshTokenAsync(generateUniqueToken: true);
         newRefreshToken.UserId = refreshTokenToRotate.UserId;
 
         db.Add(newRefreshToken);

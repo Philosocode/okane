@@ -11,7 +11,7 @@ try
     builder.AddServices();
     
     var app = builder.Build();
-    await app.Configure();
+    await app.ConfigureAsync();
     
     app.Run();
 }

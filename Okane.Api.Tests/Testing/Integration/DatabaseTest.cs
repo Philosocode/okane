@@ -9,12 +9,5 @@ public abstract class DatabaseTest(PostgresApiFactory apiFactory) : IAsyncLifeti
 
     public Task InitializeAsync() => Task.CompletedTask;
 
-    public Task DisposeAsync() => apiFactory.ResetDatabase();
-
-    // Helpers.
-    protected async Task InsertEntity<T>(T entity) where T : class
-    {
-        await Db.AddAsync(entity);
-        await Db.SaveChangesAsync();
-    }
+    public Task DisposeAsync() => apiFactory.ResetDatabaseAsync();
 }

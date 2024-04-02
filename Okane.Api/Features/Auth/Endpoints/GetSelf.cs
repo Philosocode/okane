@@ -17,11 +17,11 @@ public class GetSelf : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder builder)
         => builder
-            .MapGet("/self", Handle)
+            .MapGet("/self", HandleAsync)
             .WithName(AuthEndpointNames.GetSelf)
             .WithSummary("Get user details for the currently-authenticated user.");
 
-    private static async Task<Results<Ok<ApiResponse<UserResponse>>, UnauthorizedResult>> Handle(
+    private static async Task<Results<Ok<ApiResponse<UserResponse>>, UnauthorizedResult>> HandleAsync(
         ClaimsPrincipal claimsPrincipal,
         ApiDbContext db,
         CancellationToken cancellationToken)

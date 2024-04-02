@@ -7,7 +7,7 @@ namespace Okane.Api.Tests.Testing.Utils;
 
 public static class UserUtils
 {
-    public static async Task<UserResponse> RegisterUser(HttpClient client, Register.Request request)
+    public static async Task<UserResponse> RegisterUserAsync(HttpClient client, Register.Request request)
     {
         var response = await client.PostAsJsonAsync("/auth/register", request);
         var userResponse = await response.Content.ReadFromJsonAsync<ApiResponse<UserResponse>>();

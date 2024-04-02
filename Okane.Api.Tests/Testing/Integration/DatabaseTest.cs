@@ -7,7 +7,13 @@ public abstract class DatabaseTest(PostgresApiFactory apiFactory) : IAsyncLifeti
 {
     protected readonly ApiDbContext Db = apiFactory.Db;
 
-    public Task InitializeAsync() => Task.CompletedTask;
+    public Task InitializeAsync()
+    {
+        return Task.CompletedTask;
+    }
 
-    public Task DisposeAsync() => apiFactory.ResetDatabaseAsync();
+    public Task DisposeAsync()
+    {
+        return apiFactory.ResetDatabaseAsync();
+    }
 }

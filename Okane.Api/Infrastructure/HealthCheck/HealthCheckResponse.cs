@@ -7,7 +7,7 @@ public record HealthCheckReportEntry
     public string Key { get; init; } = string.Empty;
     public TimeSpan Duration { get; init; }
     public IReadOnlyDictionary<string, object> Data { get; init; } = default!;
-    
+
     public string? Description { get; init; }
     public string? Status { get; init; }
     public string? Error { get; init; }
@@ -23,7 +23,8 @@ public record HealthCheckResponse
 public static class HealthCheckResponseMappers
 {
     public static HealthCheckResponse ToHealthCheckResponse(this HealthReport report)
-        => new HealthCheckResponse
+    {
+        return new HealthCheckResponse()
         {
             Status = report.Status.ToString(),
             TotalDuration = report.TotalDuration,
@@ -40,4 +41,5 @@ public static class HealthCheckResponseMappers
                     })
                 .ToList()
         };
+    }
 }

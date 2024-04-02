@@ -3,6 +3,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using NSubstitute;
+using Okane.Api.Features.Auth.Config;
 using Okane.Api.Features.Auth.Constants;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Features.Auth.Utils;
@@ -18,9 +19,9 @@ public class TokenUtilsTests
     public void GetIssuerSigningKey_ReturnsAnEncodedSigningKey()
     {
         var key = "random-signing-key";
-        var actual = TokenUtils.GetIssuerSigningKey(key);
+        SymmetricSecurityKey actual = TokenUtils.GetIssuerSigningKey(key);
         var expected = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
-        
+
         actual.Should().BeEquivalentTo(expected);
     }
 
@@ -46,12 +47,12 @@ public class TokenUtilsTests
     public void SetRefreshTokenCookie_AddsARefreshTokenCookie()
     {
         var dateTimeWrapper = new TestingDateTimeWrapper();
-        var jwtSettings = JwtSettingsStubFactory.Create();
+        JwtSettings jwtSettings = JwtSettingsStubFactory.Create();
         var httpContext = new DefaultHttpContext();
         var refreshToken = new RefreshToken
         {
             Token = "cool-refresh-token",
-            ExpiresAt = default,
+            ExpiresAt = default
         };
 
         TokenUtils.SetRefreshTokenCookie(dateTimeWrapper, jwtSettings, httpContext.Response, refreshToken);

@@ -7,7 +7,7 @@ public record AuthenticateResponse
 {
     public required UserResponse User { get; init; }
     public required string JwtToken { get; init; }
-    
+
     // The refresh token should be set on an HTTP-only cookie. It shouldn't be returned to clients.
     [JsonIgnore]
     public RefreshToken RefreshToken { get; init; } = default!;

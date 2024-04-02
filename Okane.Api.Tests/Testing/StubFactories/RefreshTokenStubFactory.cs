@@ -13,6 +13,8 @@ public class RefreshTokenStubFactory
             .RuleFor(t => t.ExpiresAt, DateTime.UtcNow.AddMinutes(540));
     }
 
-    public static RefreshToken Create(string userId) => GetFactory(userId).Generate();
-
+    public static RefreshToken Create(string userId)
+    {
+        return GetFactory(userId).Generate();
+    }
 }

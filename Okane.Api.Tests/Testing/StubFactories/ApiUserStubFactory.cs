@@ -17,5 +17,8 @@ public class ApiUserStubFactory : IStubFactory<ApiUser>
             .RuleFor(u => u.AccessFailedCount, 0);
     }
 
-    public static ApiUser Create() => GetFactory().Generate();
+    public static ApiUser Create()
+    {
+        return GetFactory().Generate();
+    }
 }

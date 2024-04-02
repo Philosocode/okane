@@ -15,29 +15,19 @@ namespace Okane.Api.Features.Auth.Endpoints;
 public class Register : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder builder)
-        => builder
+    {
+        builder
             .MapPost("/register", HandleAsync)
             .AllowAnonymous()
             .WithName(AuthEndpointNames.Register)
             .WithSummary("Register a new user.")
             .WithRequestValidation<Request>();
-
-    public record Request(string Name, string Email, string Password);
-    
-    public class RequestValidator : AbstractValidator<Request>
-    {
-        public RequestValidator()
-        {
-            RuleFor(r => r.Email).NotEmpty().EmailAddress();
-            RuleFor(r => r.Name).NotEmpty();
-            RuleFor(r => r.Password).NotEmpty();
-        }
     }
-    
+
     // See: https://github.com/dotnet/aspnetcore/blob/e737c6fe54fa596289268140864c127957c0b1a1/src/Identity/Core/src/IdentityApiEndpointRouteBuilderExtensions.cs#L57
     private static async Task<Results<Created<ApiResponse<UserResponse>>, BadRequest<ProblemDetails>, ValidationProblem>>
         HandleAsync(
-            Request request, 
+            Request request,
             LinkGenerator linkGenerator,
             ILogger<Register> logger,
             ITokenService tokenService,
@@ -48,12 +38,12 @@ public class Register : IEndpoint
         var userToCreate = new ApiUser
         {
             Name = request.Name,
-            Email = request.Email,
+            Email = request.Email
         };
 
         await userStore.SetUserNameAsync(userToCreate, userToCreate.Email, cancellationToken);
 
-        var registerResult = await userManager.CreateAsync(userToCreate, request.Password);
+        IdentityResult registerResult = await userManager.CreateAsync(userToCreate, request.Password);
         if (!registerResult.Succeeded)
         {
             logger.LogInformation("Error registering user: {User}", userToCreate);
@@ -66,5 +56,17 @@ public class Register : IEndpoint
         var location = linkGenerator.GetPathByName(AuthEndpointNames.GetSelf);
         var response = new ApiResponse<UserResponse>(userToCreate.ToUserResponse());
         return TypedResults.Created(location, response);
+    }
+
+    public record Request(string Name, string Email, string Password);
+
+    public class RequestValidator : AbstractValidator<Request>
+    {
+        public RequestValidator()
+        {
+            RuleFor(r => r.Email).NotEmpty().EmailAddress();
+            RuleFor(r => r.Name).NotEmpty();
+            RuleFor(r => r.Password).NotEmpty();
+        }
     }
 }

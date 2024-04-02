@@ -5,10 +5,14 @@ namespace Okane.Api.Shared.Guards;
 public static class BooleanGuards
 {
     public static void False(this IGuardClause guardClause, bool value)
-        => AssertBoolean(value, true);
+    {
+        AssertBoolean(value, true);
+    }
 
     public static void True(this IGuardClause guardClause, bool value)
-        => AssertBoolean(value, false);
+    {
+        AssertBoolean(value, false);
+    }
 
     private static void AssertBoolean(bool actual, bool expected)
     {

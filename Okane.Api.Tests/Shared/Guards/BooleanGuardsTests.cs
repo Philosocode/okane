@@ -12,21 +12,21 @@ public class BooleanGuardsTests
         Action result = () => Guard.Against.False(false);
         result.Should().Throw<ArgumentException>();
     }
-    
+
     [Fact]
     public void False_DoesNotThrow_WhenTrueIsPassed()
     {
         Action result = () => Guard.Against.False(true);
         result.Should().NotThrow();
     }
-    
+
     [Fact]
     public void True_Throws_WhenTrueIsPassed()
     {
         Action result = () => Guard.Against.True(true);
         result.Should().Throw<ArgumentException>();
     }
-    
+
     [Fact]
     public void True_DoesNotThrow_WhenFalseIsPassed()
     {

@@ -16,31 +16,23 @@ using Okane.Api.Infrastructure.Endpoints;
 using Okane.Api.Shared.Dtos.ApiResponses;
 using Okane.Api.Shared.Exceptions;
 using Okane.Api.Shared.Wrappers;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace Okane.Api.Features.Auth.Endpoints;
 
 public class Login : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder builder)
-        => builder
+    {
+        builder
             .MapPost("/login", HandleAsync)
             .AllowAnonymous()
             .WithName(AuthEndpointNames.Login)
             .WithSummary("Log in a new user.")
             .WithRequestValidation<Request>();
-
-    public record Request(string Email, string Password);
-    
-    public class RequestValidator : AbstractValidator<Request>
-    {
-        public RequestValidator()
-        {
-            RuleFor(r => r.Email).NotEmpty().EmailAddress();
-            RuleFor(r => r.Password).NotEmpty();
-        }
     }
-    
-    private static async Task<Results<Ok<ApiResponse<AuthenticateResponse>>, BadRequest<ProblemDetails>>> 
+
+    private static async Task<Results<Ok<ApiResponse<AuthenticateResponse>>, BadRequest<ProblemDetails>>>
         HandleAsync(
             IDateTimeWrapper dateTime,
             HttpContext context,
@@ -53,11 +45,11 @@ public class Login : IEndpoint
             CancellationToken cancellationToken)
     {
         signInManager.AuthenticationScheme = IdentityConstants.ApplicationScheme;
-        
-        var signInResult = await signInManager.PasswordSignInAsync(
+
+        SignInResult signInResult = await signInManager.PasswordSignInAsync(
             request.Email, request.Password, true, true
         );
-        
+
         if (!signInResult.Succeeded)
         {
             logger.LogWarning("Login failure: {Email}", request.Email);
@@ -65,8 +57,8 @@ public class Login : IEndpoint
             var exception = new ApiException("Error authenticating.");
             return TypedResults.BadRequest(exception.ToProblemDetails());
         }
- 
-        var user = await db.Users
+
+        ApiUser? user = await db.Users
             .Include(u => u.RefreshTokens)
             .SingleOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
 
@@ -75,10 +67,10 @@ public class Login : IEndpoint
             logger.LogError("Login succeeded but user not found");
             throw new InvalidOperationException();
         }
-        
-        string jwtToken = tokenService.GenerateJwtToken(user.Id);
-        RefreshToken refreshToken = await tokenService.GenerateRefreshTokenAsync(generateUniqueToken: true);
-        
+
+        var jwtToken = tokenService.GenerateJwtToken(user.Id);
+        RefreshToken refreshToken = await tokenService.GenerateRefreshTokenAsync(true);
+
         user.RefreshTokens.Add(refreshToken);
         await db.SaveChangesAsync(cancellationToken);
 
@@ -88,9 +80,20 @@ public class Login : IEndpoint
         {
             User = user.ToUserResponse(),
             JwtToken = jwtToken,
-            RefreshToken = refreshToken,
+            RefreshToken = refreshToken
         };
-        
+
         return TypedResults.Ok(new ApiResponse<AuthenticateResponse>(response));
+    }
+
+    public record Request(string Email, string Password);
+
+    public class RequestValidator : AbstractValidator<Request>
+    {
+        public RequestValidator()
+        {
+            RuleFor(r => r.Email).NotEmpty().EmailAddress();
+            RuleFor(r => r.Password).NotEmpty();
+        }
     }
 }

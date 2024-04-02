@@ -37,12 +37,12 @@ public class RotateRefreshToken : IEndpoint
             ILogger<RevokeRefreshToken> logger,
             ITokenService tokenService)
     {
-        string? oldRefreshToken = TokenUtils.GetRefreshTokenFromCookie(context.Request);
+        var oldRefreshToken = TokenUtils.GetRefreshTokenFromCookie(context.Request);
         RefreshToken? refreshTokenToRotate = await db.RefreshTokens
             .Include(t => t.User)
             .SingleOrDefaultAsync(t => t.Token == oldRefreshToken);
 
-        var invalidRefreshTokenResponse = TypedResults.BadRequest(
+        BadRequest<ProblemDetails> invalidRefreshTokenResponse = TypedResults.BadRequest(
             new ApiException("Invalid refresh token.").ToProblemDetails()
         );
 
@@ -65,23 +65,23 @@ public class RotateRefreshToken : IEndpoint
                 .ExecuteUpdateAsync(
                     s => s.SetProperty(
                         t => t.RevokedAt, dateTime.UtcNow
-                ));
+                    ));
 
             return invalidRefreshTokenResponse;
         }
-        
+
         if (refreshTokenToRotate.IsExpired)
         {
             return invalidRefreshTokenResponse;
         }
 
         refreshTokenToRotate.RevokedAt = dateTime.UtcNow;
-        
-        RefreshToken newRefreshToken = await tokenService.GenerateRefreshTokenAsync(generateUniqueToken: true);
+
+        RefreshToken newRefreshToken = await tokenService.GenerateRefreshTokenAsync(true);
         newRefreshToken.UserId = refreshTokenToRotate.UserId;
 
         db.Add(newRefreshToken);
-        
+
         await db.SaveChangesAsync();
 
         logger.LogInformation(
@@ -90,18 +90,18 @@ public class RotateRefreshToken : IEndpoint
             refreshTokenToRotate.UserId,
             refreshTokenToRotate.Token
         );
-        
+
         TokenUtils.SetRefreshTokenCookie(dateTime, jwtSettings.Value, context.Response, newRefreshToken);
 
-        string newJwtToken = tokenService.GenerateJwtToken(refreshTokenToRotate.UserId);
-        
+        var newJwtToken = tokenService.GenerateJwtToken(refreshTokenToRotate.UserId);
+
         var response = new AuthenticateResponse
         {
             User = refreshTokenToRotate.User.ToUserResponse(),
             JwtToken = newJwtToken,
             RefreshToken = newRefreshToken
         };
-        
+
         return TypedResults.Ok(new ApiResponse<AuthenticateResponse>(response));
     }
 }

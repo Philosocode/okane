@@ -7,11 +7,12 @@ using Serilog;
 
 namespace Okane.Api.Infrastructure.Extensions;
 
-public static class ConfigureApp {
+public static class ConfigureApp
+{
     public static async Task ConfigureAsync(this WebApplication app)
     {
         app.UseSerilogRequestLogging();
-        
+
         if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
@@ -41,10 +42,10 @@ public static class ConfigureApp {
             await app.EnsureDatabaseCreatedAsync();
         }
     }
-    
+
     private static async Task EnsureDatabaseCreatedAsync(this WebApplication app)
     {
-        using var scope = app.Services.CreateScope();
+        using IServiceScope scope = app.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<ApiDbContext>();
         await db.Database.MigrateAsync();
     }

@@ -6,12 +6,12 @@ namespace Okane.Api.Tests.Features.Auth.Mappers;
 
 public class IdentityResultMappersTests
 {
-    public class ToErrorDictionary()
+    public class ToErrorDictionary
     {
         [Fact]
         public void ReturnsAnErrorDictionary_WhenThereAreErrors()
         {
-            var identityResult = IdentityResult.Failed(
+            IdentityResult identityResult = IdentityResult.Failed(
                 [
                     new IdentityError
                     {
@@ -27,11 +27,11 @@ public class IdentityResultMappersTests
                     {
                         Code = "2",
                         Description = "2"
-                    },
+                    }
                 ]
             );
 
-            var actual = identityResult.ToErrorDictionary();
+            Dictionary<string, string[]> actual = identityResult.ToErrorDictionary();
             var expected = new Dictionary<string, string[]>
             {
                 { "1", ["1A", "1B"] },
@@ -39,11 +39,11 @@ public class IdentityResultMappersTests
             };
             actual.Should().BeEquivalentTo(expected);
         }
-        
+
         [Fact]
         public void Throws_WhenThereAreNoErrors()
         {
-            var identityResult = IdentityResult.Success;
+            IdentityResult identityResult = IdentityResult.Success;
             identityResult
                 .Invoking(r => r.ToErrorDictionary())
                 .Should().Throw<ArgumentException>();

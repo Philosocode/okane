@@ -25,17 +25,17 @@ public class Logout : IEndpoint
         ITokenService tokenService,
         CancellationToken cancellationToken)
     {
-        string userId = claimsPrincipal.GetUserId();
-        string? refreshToken = TokenUtils.GetRefreshTokenFromCookie(context.Request);
+        var userId = claimsPrincipal.GetUserId();
+        var refreshToken = TokenUtils.GetRefreshTokenFromCookie(context.Request);
         if (refreshToken is not null)
         {
             await tokenService.RevokeRefreshTokenAsync(refreshToken, userId, cancellationToken);
         }
-        
+
         await context.SignOutAsync();
 
         context.Response.Cookies.Delete(CookieNames.RefreshToken);
-        
+
         return TypedResults.NoContent();
     }
 }

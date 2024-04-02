@@ -7,7 +7,7 @@ namespace Okane.Api.Infrastructure.HealthCheck;
 public class HealthCheckDocumentFilter : IDocumentFilter
 {
     private const string HealthCheckEndpoint = "/api/health";
-        
+
     public void Apply(OpenApiDocument openApiDocument, DocumentFilterContext context)
     {
         var pathItem = new OpenApiPathItem();
@@ -27,7 +27,7 @@ public class HealthCheckDocumentFilter : IDocumentFilter
             {
                 Type = "object",
                 AdditionalPropertiesAllowed = true,
-                Properties = properties,
+                Properties = properties
             }
         });
 

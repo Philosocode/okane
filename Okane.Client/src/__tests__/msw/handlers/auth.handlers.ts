@@ -1,5 +1,9 @@
 // External
-import { http, HttpResponse, RequestHandler, type HttpHandler } from 'msw'
+import { http, HttpResponse, RequestHandler } from 'msw'
+
+// This is needed to prevent an ESLint warning for AUTH_HANDLER_MAP.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { HttpHandler } from 'msw'
 
 // Internal
 import { testServer } from '@tests/msw/testServer'

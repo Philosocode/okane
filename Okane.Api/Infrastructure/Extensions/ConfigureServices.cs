@@ -45,7 +45,8 @@ public static class ConfigureServices
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
         
         builder.Services.AddHealthChecks().AddDbContextCheck<ApiDbContext>();
- 
+
+        builder.Services.AddScoped<RefreshTokenCleaner>();
         builder.Services.AddHostedService<RefreshTokenCleanupService>();
     }
     

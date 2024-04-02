@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Okane.Api.Infrastructure.Database
+namespace Okane.Api.Infrastructure.Database.Migrations
 {
     /// <inheritdoc />
     public partial class AddIdentitySchema : Migration
@@ -31,7 +31,7 @@ namespace Okane.Api.Infrastructure.Database
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),

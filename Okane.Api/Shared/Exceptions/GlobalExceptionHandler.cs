@@ -18,14 +18,14 @@ public class GlobalExceptionHandler(
         CancellationToken cancellationToken)
     {
         logger.LogError("Exception occurred: {Message}", exception.Message);
-        
-        httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+        httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
         
         var problemDetails = new ProblemDetails
         {
-            Status = (int) HttpStatusCode.InternalServerError,
+            Status = StatusCodes.Status500InternalServerError,
             Detail = exception.Message,
-            Title = exception.GetType().Name,
+            Title = exception.GetType().Name
         };
 
         if (exception is ApiException apiException)

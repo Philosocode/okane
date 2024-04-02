@@ -6,7 +6,7 @@ namespace Okane.Api.Infrastructure.HealthCheck;
 // Referenced: https://stackoverflow.com/a/60265789
 public class HealthCheckDocumentFilter : IDocumentFilter
 {
-    private const string HealthCheckEndpoint = @"/api/health";
+    private const string HealthCheckEndpoint = "/api/health";
         
     public void Apply(OpenApiDocument openApiDocument, DocumentFilterContext context)
     {

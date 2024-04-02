@@ -32,7 +32,6 @@ public class InMemoryContextFactory : IDisposable
             .Options;
     }
 
-
     public void Dispose()
     {
         _connection.Dispose();

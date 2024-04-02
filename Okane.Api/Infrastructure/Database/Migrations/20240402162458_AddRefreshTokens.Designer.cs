@@ -9,11 +9,11 @@ using Okane.Api.Infrastructure.Database;
 
 #nullable disable
 
-namespace Okane.Api.Infrastructure.Database
+namespace Okane.Api.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20240225043053_AddIdentitySchema")]
-    partial class AddIdentitySchema
+    [Migration("20240402162458_AddRefreshTokens")]
+    partial class AddRefreshTokens
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -157,7 +157,7 @@ namespace Okane.Api.Infrastructure.Database
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Okane.Api.Features.Auth.Models.ApiUser", b =>
+            modelBuilder.Entity("Okane.Api.Features.Auth.Entities.ApiUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -184,7 +184,8 @@ namespace Okane.Api.Infrastructure.Database
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -225,6 +226,43 @@ namespace Okane.Api.Infrastructure.Database
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Okane.Api.Features.Auth.Entities.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("RevokedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -236,7 +274,7 @@ namespace Okane.Api.Infrastructure.Database
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Okane.Api.Features.Auth.Models.ApiUser", null)
+                    b.HasOne("Okane.Api.Features.Auth.Entities.ApiUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -245,7 +283,7 @@ namespace Okane.Api.Infrastructure.Database
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Okane.Api.Features.Auth.Models.ApiUser", null)
+                    b.HasOne("Okane.Api.Features.Auth.Entities.ApiUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -260,7 +298,7 @@ namespace Okane.Api.Infrastructure.Database
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Okane.Api.Features.Auth.Models.ApiUser", null)
+                    b.HasOne("Okane.Api.Features.Auth.Entities.ApiUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -269,11 +307,27 @@ namespace Okane.Api.Infrastructure.Database
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Okane.Api.Features.Auth.Models.ApiUser", null)
+                    b.HasOne("Okane.Api.Features.Auth.Entities.ApiUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Okane.Api.Features.Auth.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("Okane.Api.Features.Auth.Entities.ApiUser", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Okane.Api.Features.Auth.Entities.ApiUser", b =>
+                {
+                    b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
         }

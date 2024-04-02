@@ -10,7 +10,6 @@ public class RefreshTokenStubFactory
         return new Faker<RefreshToken>()
             .RuleFor(t => t.Token, faker => faker.Random.Guid().ToString())
             .RuleFor(t => t.UserId, userId)
-            .RuleFor(t => t.CreatedAt, DateTime.UtcNow)
             .RuleFor(t => t.ExpiresAt, DateTime.UtcNow.AddMinutes(540));
     }
 

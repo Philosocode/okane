@@ -163,7 +163,6 @@ public class TokenServiceTests : IDisposable
         var alreadyRevokedRefreshToken = new RefreshToken
         {
             Token = _guids[0].ToString(),
-            CreatedAt = default,
             ExpiresAt = default,
             RevokedAt = revokedAt,
             UserId = apiUser.Id,

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Okane.Api.Infrastructure.Database;
 
-namespace Okane.Api.Infrastructure.Database.HostedServices;
+namespace Okane.Api.Infrastructure.HostedServices;
 
 /// <summary>
 /// Background service to remove inactive refresh tokens on a daily interval.

@@ -30,14 +30,14 @@ public class RefreshTokenCleanupService(IServiceScopeFactory scopeFactory)
 /// <param name="db"></param>
 /// <param name="logger"></param>
 internal class RefreshTokenCleaner(
-    IClock clock,
+    IDateTimeWrapper dateTime,
     ApiDbContext db,
     ILogger<RefreshTokenCleaner> logger) : IHostedServiceHelper
 {
     public async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         int deletedCount = await db.RefreshTokens
-            .Where(t => clock.UtcNow >= t.ExpiresAt || t.RevokedAt != null)
+            .Where(t => dateTime.UtcNow >= t.ExpiresAt || t.RevokedAt != null)
             .ExecuteDeleteAsync(stoppingToken);
 
         logger.LogInformation("RefreshTokenCleaner: Deleted {Count} refresh tokens", deletedCount);

@@ -3,7 +3,7 @@ using Okane.Api.Shared.Wrappers;
 
 namespace Okane.Api.Tests.Testing.Mocks.Wrappers;
 
-public class TestingGuidGenerator(IList<Guid> guids) : IGuidGenerator
+public class TestingGuidWrapper(IList<Guid> guids) : IGuidWrapper
 {
     private int _index;
 

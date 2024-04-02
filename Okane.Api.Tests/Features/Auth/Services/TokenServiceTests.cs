@@ -19,7 +19,7 @@ namespace Okane.Api.Tests.Features.Auth.Services;
 
 public class TokenServiceTests : IDisposable
 {
-    private readonly IClock _clock = new TestingClock { UtcNow = DateTime.UtcNow };
+    private readonly IDateTimeWrapper _dateTimeWrapper = new TestingDateTimeWrapper { UtcNow = DateTime.UtcNow };
     private readonly IList<Guid> _guids = [Guid.NewGuid(), Guid.NewGuid()];
     private readonly JwtSettings _jwtSettings = JwtSettingsStubFactory.Create();
 
@@ -31,9 +31,9 @@ public class TokenServiceTests : IDisposable
     {
         _db = _contextFactory.CreateContext();
         _tokenService = new TokenService(
-            _clock,
+            _dateTimeWrapper,
             _db,
-            new TestingGuidGenerator(_guids),
+            new TestingGuidWrapper(_guids),
             new OptionsWrapper<JwtSettings>(_jwtSettings)
         );
     }
@@ -74,7 +74,7 @@ public class TokenServiceTests : IDisposable
         {
             Audience = _jwtSettings.Audience,
             Issuer = _jwtSettings.Issuer,
-            Expires = _clock.UtcNow.AddMinutes(_jwtSettings.MinutesToExpiration),
+            Expires = _dateTimeWrapper.UtcNow.AddMinutes(_jwtSettings.MinutesToExpiration),
             SigningCredentials = signingCredentials,
             Subject = claimsIdentity,
         };
@@ -126,7 +126,7 @@ public class TokenServiceTests : IDisposable
             t => t.Token == refreshTokenToRevoke.Token
         );
         revokedToken?.RevokedAt.Should().NotBeNull();
-        revokedToken?.RevokedAt.Should().Be(_clock.UtcNow);
+        revokedToken?.RevokedAt.Should().Be(_dateTimeWrapper.UtcNow);
     }
     
     [Fact]

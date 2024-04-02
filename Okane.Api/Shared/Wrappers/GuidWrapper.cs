@@ -1,11 +1,11 @@
 namespace Okane.Api.Shared.Wrappers;
 
-public interface IGuidGenerator
+public interface IGuidWrapper
 {
     Guid NewGuid();
 }
 
-public class GuidGenerator : IGuidGenerator
+public class GuidWrapper : IGuidWrapper
 {
     public Guid NewGuid()
     {

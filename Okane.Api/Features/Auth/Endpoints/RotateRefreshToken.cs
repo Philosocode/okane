@@ -30,7 +30,7 @@ public class RotateRefreshToken : IEndpoint
 
     private static async Task<Results<Ok<ApiResponse<AuthenticateResponse>>, BadRequest<ProblemDetails>>>
         HandleAsync(
-            IClock clock,
+            IDateTimeWrapper dateTime,
             HttpContext context,
             ApiDbContext db,
             IOptions<JwtSettings> jwtSettings,
@@ -64,7 +64,7 @@ public class RotateRefreshToken : IEndpoint
                 .Where(t => t.UserId == refreshTokenToRotate.UserId)
                 .ExecuteUpdateAsync(
                     s => s.SetProperty(
-                        t => t.RevokedAt, clock.UtcNow
+                        t => t.RevokedAt, dateTime.UtcNow
                 ));
 
             return invalidRefreshTokenResponse;
@@ -75,7 +75,7 @@ public class RotateRefreshToken : IEndpoint
             return invalidRefreshTokenResponse;
         }
 
-        refreshTokenToRotate.RevokedAt = clock.UtcNow;
+        refreshTokenToRotate.RevokedAt = dateTime.UtcNow;
         
         RefreshToken newRefreshToken = await tokenService.GenerateRefreshTokenAsync(generateUniqueToken: true);
         newRefreshToken.UserId = refreshTokenToRotate.UserId;
@@ -91,7 +91,7 @@ public class RotateRefreshToken : IEndpoint
             refreshTokenToRotate.Token
         );
         
-        TokenUtils.SetRefreshTokenCookie(clock, jwtSettings.Value, context.Response, newRefreshToken);
+        TokenUtils.SetRefreshTokenCookie(dateTime, jwtSettings.Value, context.Response, newRefreshToken);
 
         string newJwtToken = tokenService.GenerateJwtToken(refreshTokenToRotate.UserId);
         

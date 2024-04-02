@@ -45,7 +45,7 @@ public class TokenUtilsTests
     [Fact]
     public void SetRefreshTokenCookie_AddsARefreshTokenCookie()
     {
-        var clock = new TestingClock();
+        var dateTimeWrapper = new TestingDateTimeWrapper();
         var jwtSettings = JwtSettingsStubFactory.Create();
         var httpContext = new DefaultHttpContext();
         var refreshToken = new RefreshToken
@@ -55,7 +55,7 @@ public class TokenUtilsTests
             CreatedAt = default
         };
 
-        TokenUtils.SetRefreshTokenCookie(clock, jwtSettings, httpContext.Response, refreshToken);
+        TokenUtils.SetRefreshTokenCookie(dateTimeWrapper, jwtSettings, httpContext.Response, refreshToken);
 
         IDictionary<string, string> cookieData = CookieUtils.GetCookieHeaderDictionary(
             httpContext.Response.Headers,
@@ -68,7 +68,7 @@ public class TokenUtilsTests
             .And.ContainKey("expires");
 
         DateTime expiresAt = DateTime.Parse(cookieData["expires"]);
-        DateTime expectedExpiresAt = clock.UtcNow.AddDays(jwtSettings.RefreshTokenTtlDays);
+        DateTime expectedExpiresAt = dateTimeWrapper.UtcNow.AddDays(jwtSettings.RefreshTokenTtlDays);
         expiresAt.Should().Be(expectedExpiresAt);
     }
 }

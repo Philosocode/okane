@@ -31,12 +31,12 @@ public static class TokenUtils
     /// <summary>
     /// Set refresh token on response cookie.
     /// </summary>
-    /// <param name="clock"></param>
+    /// <param name="dateTime"></param>
     /// <param name="jwtSettings"></param>
     /// <param name="response"></param>
     /// <param name="refreshToken"></param>
     public static void SetRefreshTokenCookie(
-        IClock clock,
+        IDateTimeWrapper dateTime,
         JwtSettings jwtSettings,
         HttpResponse response,
         RefreshToken refreshToken)
@@ -44,7 +44,7 @@ public static class TokenUtils
         var cookieOptions = new CookieOptions
         {
             HttpOnly = true,
-            Expires = clock.UtcNow.AddDays(jwtSettings.RefreshTokenTtlDays)
+            Expires = dateTime.UtcNow.AddDays(jwtSettings.RefreshTokenTtlDays)
         };
         
         response.Cookies.Append(

@@ -10,6 +10,7 @@ import type { Timeout } from '@shared/types/shared.type'
 import { apiClient } from '@shared/services/apiClient/apiClient.service'
 import { ROUTE_NAME, getRouter } from '@shared/services/router/router.service'
 
+import { getQueryClient } from '@shared/services/queryClient/queryClient'
 import { getJWTTokenPayload } from '@features/auth/auth.utils'
 
 export type AuthStore = ReturnType<typeof useAuthStore>
@@ -89,6 +90,9 @@ export const useAuthStore = defineStore('AuthStore', () => {
 
     authUser.value = undefined
     jwtToken.value = undefined
+
+    const queryClient = getQueryClient()
+    queryClient.clear()
 
     await getRouter().push({ name: ROUTE_NAME.LOGIN })
   }

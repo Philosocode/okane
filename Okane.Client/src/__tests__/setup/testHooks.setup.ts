@@ -1,4 +1,5 @@
 // Internal
+import { testQueryClient } from '@tests/queryClient/testQueryClient'
 import { testServer } from '@tests/msw/testServer'
 
 beforeAll(() => {
@@ -6,6 +7,7 @@ beforeAll(() => {
 })
 
 afterEach(() => {
+  testQueryClient.clear()
   testServer.resetHandlers()
 })
 

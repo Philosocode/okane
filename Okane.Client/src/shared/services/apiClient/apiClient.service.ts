@@ -5,6 +5,7 @@ import type { APIResponse } from '@shared/services/apiClient/apiClient.types'
 
 import { useAuthStore } from '@features/auth/useAuthStore'
 
+import { getQueryClient } from '@shared/services/queryClient/queryClient'
 import { removePrefixCharacters } from '@shared/utils/string.utils'
 
 /**
@@ -27,6 +28,7 @@ async function makeRequest<TResponse extends APIResponse = never>(
   const requestOptions = getRequestOptions(method, body, optionOverrides)
   const formattedURL = formatURL(url)
   const authStore = useAuthStore()
+  const queryClient = getQueryClient()
 
   try {
     const response = await window.fetch(formattedURL, requestOptions)
@@ -39,6 +41,7 @@ async function makeRequest<TResponse extends APIResponse = never>(
 
     const authErrorStatusCodes = [HTTP_STATUS_CODE.UNAUTHORIZED_401, HTTP_STATUS_CODE.FORBIDDEN_403]
     if (authErrorStatusCodes.includes(response.status) && authStore.isLoggedIn) {
+      queryClient.clear()
       await authStore.logout()
       return Promise.reject('Authentication error. Logging out...')
     }

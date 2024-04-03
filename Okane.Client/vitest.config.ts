@@ -20,7 +20,7 @@ export default defineConfig((configEnv) =>
         setupFiles: [
           './src/__tests__/setup/matchers.setup.ts',
           './src/__tests__/setup/vueTestUtilExtensions.setup.ts',
-          './src/__tests__/setup/msw.setup.ts',
+          './src/__tests__/setup/testHooks.setup.ts',
           './src/__tests__/setup/getMountComponent.setup.ts',
         ],
       },

@@ -8,6 +8,8 @@ import RegisterPage from '@shared/pages/RegisterPage.vue'
 
 import { useAuthStore } from '@features/auth/useAuthStore'
 
+import { getQueryClient } from '@shared/services/queryClient/queryClient'
+
 export enum ROUTE_NAME {
   DASHBOARD = 'DASHBOARD',
   LOGIN = 'LOGIN',
@@ -53,8 +55,11 @@ export const getRouter = () => router
 
 router.beforeEach((to) => {
   const authStore = useAuthStore()
+  const queryClient = getQueryClient()
 
   if (!to.meta.isPublic && !authStore.isLoggedIn) {
+    queryClient.clear()
+
     return {
       name: ROUTE_NAME.LOGIN,
       query: { redirect_url: to.path },

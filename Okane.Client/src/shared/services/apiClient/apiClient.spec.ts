@@ -12,9 +12,11 @@ import { useAuthStore } from '@features/auth/useAuthStore'
 import { apiClient } from '@shared/services/apiClient/apiClient.service'
 import { testServer } from '@tests/msw/testServer'
 
+import * as appQueryClient from '@shared/services/queryClient/queryClient'
 import { createStubJWTToken } from '@tests/factories/jwtToken.factory'
 import { createStubProblemDetails } from '@tests/factories/problemDetails.factory'
 import { createStubUser } from '@tests/factories/user.factory'
+import { testQueryClient } from '@tests/queryClient/testQueryClient'
 
 import { wrapInAPIResponse } from '@tests/factories/apiResponse.factory'
 
@@ -127,10 +129,16 @@ describe('when logged in', () => {
     })
 
   test.each([[HTTP_STATUS_CODE.UNAUTHORIZED_401], [HTTP_STATUS_CODE.FORBIDDEN_403]])(
-    `logs the user out when the status code is %d`,
+    `logs the user out and clears the query cache when the status code is %d`,
     async (statusCode) => {
       const errorHandler = getErrorHandler(statusCode)
       testServer.use(errorHandler, logoutHandler)
+
+      const queryKey = ['key']
+      testQueryClient.setQueryData(queryKey, 'value')
+      const queryClientSpy = vi
+        .spyOn(appQueryClient, 'getQueryClient')
+        .mockReturnValue(testQueryClient)
 
       try {
         await apiClient.get('/ping')
@@ -139,6 +147,9 @@ describe('when logged in', () => {
         expect(authStore.authUser).toBeUndefined()
         expect(authStore.jwtToken).toBeUndefined()
         expect(location.pathname).toBe(ROUTE_MAP.LOGIN.buildPath())
+        expect(testQueryClient.getQueryData(queryKey)).toBeUndefined()
+      } finally {
+        queryClientSpy.mockRestore()
       }
     },
   )

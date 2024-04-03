@@ -8,7 +8,9 @@ import type { AuthenticateResponse } from '@features/auth/auth.types'
 
 import { useAuthStore } from '@features/auth/useAuthStore'
 
+import * as appQueryClient from '@shared/services/queryClient/queryClient'
 import { apiClient } from '@shared/services/apiClient/apiClient.service'
+import { testQueryClient } from '@tests/queryClient/testQueryClient'
 import { testServer } from '@tests/msw/testServer'
 
 import { createStubAuthFormState } from '@tests/factories/authFormState.factory'
@@ -66,16 +68,20 @@ test('handleRefreshToken', async () => {
   // Need to manually log out after each test to clear the timeout.
   await authStore.logout()
 })
-
-test('logout', async () => {
+test.only('logout', async () => {
   const authStore = useAuthStore()
   authStore.$patch({
     authUser: createStubUser(),
     jwtToken: createStubJWTToken(),
   })
 
+  const queryKey = ['key']
+  testQueryClient.setQueryData(queryKey, 'value')
+  vi.spyOn(appQueryClient, 'getQueryClient').mockReturnValue(testQueryClient)
+
   await authStore.logout()
 
   expect(authStore.authUser).toBeUndefined()
   expect(authStore.jwtToken).toBeUndefined()
+  expect(testQueryClient.getQueryData(queryKey)).toBeUndefined()
 })

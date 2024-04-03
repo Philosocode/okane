@@ -1,0 +1,13 @@
+{
+  "name": "okane",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "prepare": "lefthook install"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "lefthook": "^1.6.8"
+  }
+}

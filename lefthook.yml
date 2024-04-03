@@ -1,0 +1,14 @@
+pre-push:
+  parallel: true
+  commands:
+    lint-frontend:
+      root: "Okane.Client"
+      glob: "*.{vue,js,ts}"
+      run: make lint
+    test-frontend:
+      root: "OKane.Client"
+      glob: "*.{vue,js,ts}"
+      run: make test
+    test-backend:
+      glob: "*.cs"
+      run: dotnet test --verbosity normal

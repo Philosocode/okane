@@ -1,6 +1,10 @@
 API_DIR='./Okane.Api'
 CLIENT_DIR='./Okane.Client'
 
+.PHONY: deps
+deps:
+	npm i
+
 # Run commands in the Makefiles located in the sub-directories.
 # e.g. "make run-api" is equivalent to "make run" in the Api project.
 .PHONY: %-api

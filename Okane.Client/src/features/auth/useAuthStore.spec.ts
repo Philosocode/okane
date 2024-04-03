@@ -68,7 +68,8 @@ test('handleRefreshToken', async () => {
   // Need to manually log out after each test to clear the timeout.
   await authStore.logout()
 })
-test.only('logout', async () => {
+
+test('logout', async () => {
   const authStore = useAuthStore()
   authStore.$patch({
     authUser: createStubUser(),

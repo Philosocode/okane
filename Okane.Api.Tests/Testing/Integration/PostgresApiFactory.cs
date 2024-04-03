@@ -7,10 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging.Abstractions;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Tests.Testing.Extensions;
 using Respawn;
 using Testcontainers.PostgreSql;
+using ILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
 
 namespace Okane.Api.Tests.Testing.Integration;
 
@@ -72,6 +74,7 @@ public class PostgresApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifet
             });
             services.EnsureDbCreated();
 
+            services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
             services.RemoveAll<IHostedService>();
         });
     }

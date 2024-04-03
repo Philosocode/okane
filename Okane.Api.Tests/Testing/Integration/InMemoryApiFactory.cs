@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Tests.Testing.Extensions;
 
@@ -35,6 +37,8 @@ public class InMemoryApiFactory : WebApplicationFactory<IApiMarker>
             });
 
             services.EnsureDbCreated();
+
+            services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
 
             services.RemoveAll<IHostedService>();
         });

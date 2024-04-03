@@ -23,6 +23,7 @@ export default defineConfig((configEnv) =>
           './src/__tests__/setup/testHooks.setup.ts',
           './src/__tests__/setup/getMountComponent.setup.ts',
         ],
+        watch: false
       },
     }),
   ),

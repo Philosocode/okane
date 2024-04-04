@@ -35,5 +35,3 @@ async function handleSubmit(formState: AuthFormState) {
     <AuthForm form-type="register" @submit="handleSubmit" />
   </PageLayout>
 </template>
-
-<style scoped></style>

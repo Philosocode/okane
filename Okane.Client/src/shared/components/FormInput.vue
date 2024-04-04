@@ -21,8 +21,15 @@ const props = defineProps<FormInputProps>()
 <template>
   <div>
     <label :for="controlId">{{ label }}</label>
-    <input v-bind="$attrs" v-model="model" :aria-describedby="props.error ? `${controlId}-error` : undefined"
-      :aria-invalid="props.error ? true : undefined" :id="controlId" :name="props.name" :type="props.type" />
+    <input
+      v-bind="$attrs"
+      v-model="model"
+      :aria-describedby="props.error ? `${controlId}-error` : undefined"
+      :aria-invalid="props.error ? true : undefined"
+      :id="controlId"
+      :name="props.name"
+      :type="props.type"
+    />
     <p aria-live="assertive" class="error" :id="`${controlId}-error`" v-if="error">
       {{ error }}
     </p>
@@ -32,11 +39,12 @@ const props = defineProps<FormInputProps>()
 <style scoped>
 input {
   display: block;
+  margin-top: var(--space-2xs);
   width: 100%;
 }
 
 .error {
-  color: red;
+  color: var(--color-error);
   margin-top: 0.5rem;
 }
 </style>

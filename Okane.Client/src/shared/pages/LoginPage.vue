@@ -32,9 +32,3 @@ async function handleSubmit(formState: AuthFormState) {
     <AuthForm form-type="login" @submit="handleSubmit" />
   </PageLayout>
 </template>
-
-<style scoped>
-.page-heading {
-  margin-bottom: var(--spacing-xs);
-}
-</style>

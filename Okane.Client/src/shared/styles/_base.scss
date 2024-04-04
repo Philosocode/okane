@@ -1,0 +1,23 @@
+:root {
+  background: var(--color-global-bg);
+  color: var(--color-global-text);
+  font-family: var(--font-primary);
+  font-size: var(--font-size-md);
+  line-height: var(--leading-base);
+}
+
+h1 {
+  font-size: var(--font-size-3xl);
+}
+
+h2 {
+  font-size: var(--font-size-2xl);
+}
+
+h3 {
+  font-size: var(--font-size-xl);
+}
+
+h4 {
+  font-size: var(--font-size-lg);
+}

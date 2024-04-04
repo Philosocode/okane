@@ -49,13 +49,24 @@ const formIsValid = computed<boolean>(() => {
 <template>
   <form @submit.prevent="emit('submit', formState)">
     <fieldset>
-      <FormInput v-if="isRegisterForm" v-model="formState.name" label="Name" name="name" type="text" />
+      <FormInput
+        v-if="isRegisterForm"
+        v-model="formState.name"
+        label="Name"
+        name="name"
+        type="text"
+      />
 
       <FormInput label="Email" name="email" type="email" v-model="formState.email" />
       <FormInput label="Password" name="password" type="password" v-model="formState.password" />
 
-      <FormInput v-if="isRegisterForm" v-model="formState.passwordConfirm" label="Confirm password"
-        name="passwordConfirm" type="password" />
+      <FormInput
+        v-if="isRegisterForm"
+        v-model="formState.passwordConfirm"
+        label="Confirm password"
+        name="passwordConfirm"
+        type="password"
+      />
 
       <button class="submit-button" :disabled="!formIsValid" type="submit">
         {{ submitButtonText }}
@@ -72,12 +83,12 @@ form {
 fieldset {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
-  padding: var(--spacing-lg);
+  gap: var(--space-md);
+  padding: var(--space-lg);
 }
 
 .submit-button {
-  margin-top: var(--spacing-sm);
+  margin-top: var(--space-sm);
 
   &:disabled {
     color: var(--color-gray-300);

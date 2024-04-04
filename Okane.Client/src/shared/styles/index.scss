@@ -1,4 +1,9 @@
-@import "reset";
-@import "global";
-@import "mixins";
-@import "variables";
+@import 'variables/colors';
+@import 'variables/spacing';
+@import 'variables/typography';
+@import 'themes/default';
+
+@import 'mixins/respond';
+
+@import 'reset';
+@import 'base';

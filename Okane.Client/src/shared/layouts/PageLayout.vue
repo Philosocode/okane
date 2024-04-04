@@ -6,8 +6,8 @@
 
 <style scoped lang="scss">
 .root {
-  margin-left: var(--spacing-md);
-  margin-right: var(--spacing-md);
+  margin-left: var(--space-md);
+  margin-right: var(--space-md);
   max-width: 50em;
 }
 

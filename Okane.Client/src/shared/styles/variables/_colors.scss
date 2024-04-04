@@ -1,0 +1,38 @@
+// Colours. See: https://tailwindcss.com/docs/customizing-colors#default-color-palette
+:root {
+  --color-black: #030712;
+  --color-white: #ffffff;
+
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  --color-green-50: #ebfef5;
+  --color-green-100: #d0fbe6;
+  --color-green-200: #a4f6d1;
+  --color-green-300: #6aebba;
+  --color-green-400: #2fd89c;
+  --color-green-500: #0abf85;
+  --color-green-600: #00b27d;
+  --color-green-700: #007c5b;
+  --color-green-800: #036248;
+  --color-green-900: #04503d;
+
+  --color-red-50: #fef2f2;
+  --color-red-100: #fee2e2;
+  --color-red-200: #fecaca;
+  --color-red-300: #fca5a5;
+  --color-red-400: #f87171;
+  --color-red-500: #ef4444;
+  --color-red-600: #dc2626;
+  --color-red-700: #b91c1c;
+  --color-red-800: #991b1b;
+  --color-red-900: #7f1d1d;
+}

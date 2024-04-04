@@ -1,0 +1,7 @@
+GET {{BASE_URL}}/auth/self
+Authorization: {{AUTH_HEADER}}
+
+HTTP 200
+[Asserts]
+jsonpath "$.items" count == 1
+jsonpath "$.items[0].email" == {{OKANE_USER_EMAIL}}

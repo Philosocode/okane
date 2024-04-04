@@ -1,0 +1,17 @@
+POST {{BASE_URL}}/auth/login
+{
+  "email": "{{OKANE_USER_EMAIL}}",
+  "password": "{{OKANE_USER_PASSWORD}}"
+}
+
+HTTP 200
+[Asserts]
+cookie "okane_refreshToken" exists
+jsonpath "$.status" == 200
+jsonpath "$.items" count == 1
+jsonpath "$.items[0].jwtToken" exists
+jsonpath "$.items[0].user" exists
+
+[Captures]
+JWT: jsonpath "$.items[0].jwtToken"
+REFRESH_TOKEN: cookie "okane_refreshToken"

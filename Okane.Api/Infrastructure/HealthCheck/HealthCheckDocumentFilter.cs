@@ -6,8 +6,6 @@ namespace Okane.Api.Infrastructure.HealthCheck;
 // Referenced: https://stackoverflow.com/a/60265789
 public class HealthCheckDocumentFilter : IDocumentFilter
 {
-    private const string HealthCheckEndpoint = "/api/health";
-
     public void Apply(OpenApiDocument openApiDocument, DocumentFilterContext context)
     {
         var pathItem = new OpenApiPathItem();
@@ -33,6 +31,6 @@ public class HealthCheckDocumentFilter : IDocumentFilter
 
         operation.Responses.Add("200", response);
         pathItem.AddOperation(OperationType.Get, operation);
-        openApiDocument?.Paths.Add(HealthCheckEndpoint, pathItem);
+        openApiDocument?.Paths.Add("/health", pathItem);
     }
 }

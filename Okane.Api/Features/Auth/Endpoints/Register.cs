@@ -24,6 +24,18 @@ public class Register : IEndpoint
             .WithRequestValidation<Request>();
     }
 
+    public record Request(string Name, string Email, string Password);
+
+    public class RequestValidator : AbstractValidator<Request>
+    {
+        public RequestValidator()
+        {
+            RuleFor(r => r.Email).NotEmpty().EmailAddress();
+            RuleFor(r => r.Name).NotEmpty();
+            RuleFor(r => r.Password).NotEmpty();
+        }
+    }
+
     // See: https://github.com/dotnet/aspnetcore/blob/e737c6fe54fa596289268140864c127957c0b1a1/src/Identity/Core/src/IdentityApiEndpointRouteBuilderExtensions.cs#L57
     private static async Task<Results<Created<ApiResponse<UserResponse>>, BadRequest<ProblemDetails>, ValidationProblem>>
         HandleAsync(
@@ -56,17 +68,5 @@ public class Register : IEndpoint
         var location = linkGenerator.GetPathByName(AuthEndpointNames.GetSelf);
         var response = new ApiResponse<UserResponse>(userToCreate.ToUserResponse());
         return TypedResults.Created(location, response);
-    }
-
-    public record Request(string Name, string Email, string Password);
-
-    public class RequestValidator : AbstractValidator<Request>
-    {
-        public RequestValidator()
-        {
-            RuleFor(r => r.Email).NotEmpty().EmailAddress();
-            RuleFor(r => r.Name).NotEmpty();
-            RuleFor(r => r.Password).NotEmpty();
-        }
     }
 }

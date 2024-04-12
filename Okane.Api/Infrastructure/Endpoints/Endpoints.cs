@@ -1,4 +1,5 @@
 using Okane.Api.Features.Auth.Endpoints;
+using Okane.Api.Features.Finances.Endpoints;
 
 namespace Okane.Api.Infrastructure.Endpoints;
 
@@ -24,6 +25,12 @@ public static class Endpoints
             .MapEndpoint<RotateRefreshToken>()
             .MapEndpoint<RevokeRefreshToken>()
             .MapEndpoint<GetSelf>();
+
+        endpoints
+            .MapGroup("/finance-records")
+            .WithTags("Finance Records")
+            .MapEndpoint<CreateFinanceRecord>();
+
     }
 
     private static IEndpointRouteBuilder MapEndpoint<TEndpoint>(this IEndpointRouteBuilder builder)

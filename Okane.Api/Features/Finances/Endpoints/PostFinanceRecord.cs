@@ -14,7 +14,7 @@ using Okane.Api.Shared.Dtos.ApiResponses;
 
 namespace Okane.Api.Features.Finances.Endpoints;
 
-public class CreateFinanceRecord : IEndpoint
+public class PostFinanceRecord : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder builder)
     {

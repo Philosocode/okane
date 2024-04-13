@@ -31,6 +31,7 @@ public static class Endpoints
             .WithTags("Finance Records")
             .MapEndpoint<PostFinanceRecord>()
             .MapEndpoint<GetFinanceRecord>()
+            .MapEndpoint<PatchFinanceRecord>()
             .MapEndpoint<DeleteFinanceRecord>();
     }
 

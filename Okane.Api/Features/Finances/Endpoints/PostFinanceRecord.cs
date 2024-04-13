@@ -8,7 +8,6 @@ using Okane.Api.Features.Finances.Dtos;
 using Okane.Api.Features.Finances.Entities;
 using Okane.Api.Features.Finances.Mappers;
 using Okane.Api.Infrastructure.Database;
-using Okane.Api.Infrastructure.Database.Constants;
 using Okane.Api.Infrastructure.Endpoints;
 using Okane.Api.Shared.Dtos.ApiResponses;
 
@@ -21,21 +20,10 @@ public class PostFinanceRecord : IEndpoint
         builder
             .MapPost("", HandleAsync)
             .WithName(FinanceRecordEndpointNames.PostFinanceRecord)
-            .WithSummary("Create a finance record.")
-            .WithRequestValidation<Request>();
+            .WithSummary("Create a finance record.");
     }
 
-    public record Request(decimal Amount, string Description, DateTime HappenedAt);
-
-    public class RequestValidator : AbstractValidator<Request>
-    {
-        public RequestValidator()
-        {
-            RuleFor(r => r.Amount).GreaterThan(0);
-            RuleFor(r => r.Description).NotEmpty().MaximumLength(DbConstants.MaxStringLength);
-            RuleFor(r => r.HappenedAt).NotEmpty();
-        }
-    }
+    private record Request(decimal Amount, string Description, DateTime HappenedAt);
 
     private static async Task<CreatedAtRoute<ApiResponse<FinanceRecordResponse>>>
         HandleAsync(
@@ -43,6 +31,7 @@ public class PostFinanceRecord : IEndpoint
             HttpContext context,
             ApiDbContext db,
             Request request,
+            IValidator<FinanceRecord> validator,
             CancellationToken cancellationToken)
     {
         var userId = claimsPrincipal.GetUserId();
@@ -53,6 +42,8 @@ public class PostFinanceRecord : IEndpoint
             HappenedAt = request.HappenedAt,
             UserId = userId
         };
+
+        await validator.ValidateAndThrowAsync(financeRecord, cancellationToken);
 
         EntityEntry<FinanceRecord> createdRecord = await db.FinanceRecords.AddAsync(financeRecord, cancellationToken);
         var response = new ApiResponse<FinanceRecordResponse>(createdRecord.Entity.ToFinanceRecordResponse());

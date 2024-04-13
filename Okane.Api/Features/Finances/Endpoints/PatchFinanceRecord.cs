@@ -8,7 +8,6 @@ using Okane.Api.Features.Finances.Dtos;
 using Okane.Api.Features.Finances.Entities;
 using Okane.Api.Features.Finances.Mappers;
 using Okane.Api.Infrastructure.Database;
-using Okane.Api.Infrastructure.Database.Constants;
 using Okane.Api.Infrastructure.Endpoints;
 using Okane.Api.Shared.Dtos.ApiResponses;
 
@@ -25,26 +24,7 @@ public class PatchFinanceRecord : IEndpoint
             .WithRequestValidation<Request>();
     }
 
-    public record Request(decimal? Amount, string? Description, DateTime? HappenedAt);
-
-    public class RequestValidator : AbstractValidator<Request>
-    {
-        public RequestValidator()
-        {
-            RuleFor(r => r.Amount)
-                .GreaterThan(0)
-                .When(r => r.Amount != null);
-
-            RuleFor(r => r.Description)
-                .NotEmpty()
-                .MaximumLength(DbConstants.MaxStringLength)
-                .When(r => r.Description != null);
-
-            RuleFor(r => r.HappenedAt)
-                .NotEmpty()
-                .When(r => r.HappenedAt != null);
-        }
-    }
+    private record Request(decimal? Amount, string? Description, DateTime? HappenedAt);
 
     private static async Task<Results<Ok<ApiResponse<FinanceRecordResponse>>, NotFound>>
         HandleAsync(
@@ -53,6 +33,7 @@ public class PatchFinanceRecord : IEndpoint
             ApiDbContext db,
             int financeRecordId,
             Request request,
+            IValidator<FinanceRecord> validator,
             CancellationToken cancellationToken)
     {
         var userId = claimsPrincipal.GetUserId();
@@ -81,6 +62,8 @@ public class PatchFinanceRecord : IEndpoint
         {
             financeRecord.HappenedAt = request.HappenedAt.Value;
         }
+
+        await validator.ValidateAndThrowAsync(financeRecord, cancellationToken);
 
         await db.SaveChangesAsync(cancellationToken);
 

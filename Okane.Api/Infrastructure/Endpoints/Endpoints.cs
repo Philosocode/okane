@@ -29,7 +29,8 @@ public static class Endpoints
         endpoints
             .MapGroup("/finance-records")
             .WithTags("Finance Records")
-            .MapEndpoint<CreateFinanceRecord>();
+            .MapEndpoint<CreateFinanceRecord>()
+            .MapEndpoint<GetFinanceRecord>();
 
     }
 

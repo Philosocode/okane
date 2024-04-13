@@ -29,9 +29,9 @@ public static class Endpoints
         endpoints
             .MapGroup("/finance-records")
             .WithTags("Finance Records")
-            .MapEndpoint<CreateFinanceRecord>()
-            .MapEndpoint<GetFinanceRecord>();
-
+            .MapEndpoint<PostFinanceRecord>()
+            .MapEndpoint<GetFinanceRecord>()
+            .MapEndpoint<DeleteFinanceRecord>();
     }
 
     private static IEndpointRouteBuilder MapEndpoint<TEndpoint>(this IEndpointRouteBuilder builder)

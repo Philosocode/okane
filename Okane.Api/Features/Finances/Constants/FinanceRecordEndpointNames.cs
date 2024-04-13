@@ -4,4 +4,5 @@ public static class FinanceRecordEndpointNames
 {
     public const string GetFinanceRecord = "GetFinanceRecord";
     public const string PostFinanceRecord = "PostFinanceRecord";
+    public const string DeleteFinanceRecord = "DeleteFinanceRecord";
 }

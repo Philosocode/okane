@@ -1,0 +1,15 @@
+POST {{BASE_URL}}/finance-records/
+Authorization: {{AUTH_HEADER}}
+{
+  "amount": 100,
+  "description": "Cool finance record",
+  "happenedAt": "2024-01-01T12:00:00Z"
+}
+
+HTTP 201
+[Asserts]
+jsonpath "$.status" == 201
+jsonpath "$.items" count == 1
+jsonpath "$.items[0].amount" == 100
+jsonpath "$.items[0].description" == "Cool finance record"
+jsonpath "$.items[0].happenedAt" == "2024-01-01T12:00:00Z"

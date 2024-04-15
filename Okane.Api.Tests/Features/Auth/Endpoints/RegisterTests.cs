@@ -2,15 +2,19 @@ using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Okane.Api.Features.Auth.Constants;
 using Okane.Api.Features.Auth.Dtos.Responses;
 using Okane.Api.Features.Auth.Endpoints;
 using Okane.Api.Shared.Dtos.ApiResponses;
+using Okane.Api.Tests.Testing.Constants;
 using Okane.Api.Tests.Testing.Integration;
+using Okane.Api.Tests.Testing.Utils;
 
 namespace Okane.Api.Tests.Features.Auth.Endpoints;
 
 public class RegisterTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFactory), IAsyncLifetime
 {
+    private readonly PostgresApiFactory _apiFactory = apiFactory;
     private readonly HttpClient _client = apiFactory.CreateClient();
 
     private readonly Register.Request _validRequest = new(
@@ -24,7 +28,12 @@ public class RegisterTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFact
     {
         HttpResponseMessage response = await _client.PostAsJsonAsync("/auth/register", _validRequest);
         response.StatusCode.Should().Be(HttpStatusCode.Created);
-        response.Headers.Location.Should().Be("/auth/self");
+
+        var expectedLocation = UrlUtils.GetUriByRouteName(
+            _apiFactory,
+            AuthEndpointNames.GetSelf
+        );
+        response.Headers.Location.Should().Be(expectedLocation);
 
         var responseBody = await response.Content.ReadFromJsonAsync<ApiResponse<UserResponse>>();
         responseBody?.Items.Should().HaveCount(1);
@@ -43,7 +52,7 @@ public class RegisterTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFact
 
         var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
         problemDetails.Should().NotBeNull();
-        problemDetails?.Title.Should().Be("One or more validation errors occurred.");
+        problemDetails?.Title.Should().Be(ValidationConstants.ValidationErrorTitle);
     }
 
     [Fact]

@@ -1,7 +1,7 @@
+using System.Net;
 using System.Security.Claims;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Okane.Api.Features.Auth.Extensions;
 using Okane.Api.Features.Finances.Constants;
 using Okane.Api.Features.Finances.Dtos;
@@ -23,9 +23,9 @@ public class PostFinanceRecord : IEndpoint
             .WithSummary("Create a finance record.");
     }
 
-    private record Request(decimal Amount, string Description, DateTime HappenedAt);
+    public record Request(decimal Amount, string Description, DateTime HappenedAt);
 
-    private static async Task<CreatedAtRoute<ApiResponse<FinanceRecordResponse>>>
+    private static async Task<Results<CreatedAtRoute<ApiResponse<FinanceRecordResponse>>, ValidationProblem>>
         HandleAsync(
             ClaimsPrincipal claimsPrincipal,
             HttpContext context,
@@ -43,10 +43,19 @@ public class PostFinanceRecord : IEndpoint
             UserId = userId
         };
 
-        await validator.ValidateAndThrowAsync(financeRecord, cancellationToken);
+        var validationResult = await validator.ValidateAsync(financeRecord, cancellationToken);
+        if (!validationResult.IsValid)
+        {
+            return TypedResults.ValidationProblem(validationResult.ToDictionary());
+        }
 
-        EntityEntry<FinanceRecord> createdRecord = await db.FinanceRecords.AddAsync(financeRecord, cancellationToken);
-        var response = new ApiResponse<FinanceRecordResponse>(createdRecord.Entity.ToFinanceRecordResponse());
+        var createdRecord = await db.FinanceRecords.AddAsync(financeRecord, cancellationToken);
+        await db.SaveChangesAsync(cancellationToken);
+
+        var response = new ApiResponse<FinanceRecordResponse>(createdRecord.Entity.ToFinanceRecordResponse())
+        {
+            Status = HttpStatusCode.Created
+        };
 
         return TypedResults.CreatedAtRoute(
             response,

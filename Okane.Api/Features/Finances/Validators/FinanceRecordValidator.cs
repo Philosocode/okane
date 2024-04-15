@@ -2,7 +2,7 @@ using FluentValidation;
 using Okane.Api.Features.Finances.Entities;
 using Okane.Api.Infrastructure.Database.Constants;
 
-namespace Okane.Api.Features.Finances;
+namespace Okane.Api.Features.Finances.Validators;
 
 public class FinanceRecordValidator : AbstractValidator<FinanceRecord>
 {

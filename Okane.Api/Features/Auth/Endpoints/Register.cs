@@ -37,7 +37,7 @@ public class Register : IEndpoint
     }
 
     // See: https://github.com/dotnet/aspnetcore/blob/e737c6fe54fa596289268140864c127957c0b1a1/src/Identity/Core/src/IdentityApiEndpointRouteBuilderExtensions.cs#L57
-    private static async Task<Results<Created<ApiResponse<UserResponse>>, BadRequest<ProblemDetails>, ValidationProblem>>
+    private static async Task<Results<CreatedAtRoute<ApiResponse<UserResponse>>, BadRequest<ProblemDetails>, ValidationProblem>>
         HandleAsync(
             Request request,
             LinkGenerator linkGenerator,
@@ -65,8 +65,7 @@ public class Register : IEndpoint
 
         logger.LogInformation("New user registered: {User}", userToCreate);
 
-        var location = linkGenerator.GetPathByName(AuthEndpointNames.GetSelf);
         var response = new ApiResponse<UserResponse>(userToCreate.ToUserResponse());
-        return TypedResults.Created(location, response);
+        return TypedResults.CreatedAtRoute(response, AuthEndpointNames.GetSelf);
     }
 }

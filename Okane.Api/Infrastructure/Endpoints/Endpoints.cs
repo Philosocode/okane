@@ -29,9 +29,9 @@ public static class Endpoints
         endpoints
             .MapGroup("/finance-records")
             .WithTags("Finance Records")
-            .MapEndpoint<PostFinanceRecord>()
             .MapEndpoint<GetFinanceRecord>()
             .MapEndpoint<GetPaginatedFinanceRecords>()
+            .MapEndpoint<PostFinanceRecord>()
             .MapEndpoint<PatchFinanceRecord>()
             .MapEndpoint<DeleteFinanceRecord>();
     }

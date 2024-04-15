@@ -8,7 +8,7 @@ public class ApiUserStubFactory
     public static ApiUser Create()
     {
         return new Faker<ApiUser>()
-            .RuleFor(u => u.Name, "Okane User")
+            .RuleFor(u => u.Name, faker => faker.Name.FullName())
             .RuleFor(u => u.Email, faker => faker.Internet.Email("Okane", "User"))
             .RuleFor(u => u.EmailConfirmed, true)
             .RuleFor(u => u.PhoneNumberConfirmed, true)

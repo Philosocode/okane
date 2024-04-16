@@ -18,13 +18,13 @@ public class PatchFinanceRecord : IEndpoint
     public static void Map(IEndpointRouteBuilder builder)
     {
         builder
-            .MapPost("/{financeRecordId:int}", HandleAsync)
+            .MapPatch("/{financeRecordId:int}", HandleAsync)
             .WithName(FinanceRecordEndpointNames.PatchFinanceRecord)
             .WithSummary("Update a finance record.")
             .WithRequestValidation<Request>();
     }
 
-    private record Request(decimal? Amount, string? Description, DateTime? HappenedAt);
+    public record Request(decimal? Amount, string? Description, DateTime? HappenedAt);
 
     private static async Task<Results<Ok<ApiResponse<FinanceRecordResponse>>, NotFound>>
         HandleAsync(

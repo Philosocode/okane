@@ -23,7 +23,7 @@ public class DeleteFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseT
         await Db.AddAsync(financeRecord2);
         await Db.SaveChangesAsync();
 
-        var deleteResponse = await _client.DeleteAsync($"/finance-records/{financeRecord1.Id}");
+        var deleteResponse = await _client.DeleteAsync($"finance-records/{financeRecord1.Id}");
         deleteResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
         var remainingFinanceRecords = await Db.FinanceRecords.ToListAsync();

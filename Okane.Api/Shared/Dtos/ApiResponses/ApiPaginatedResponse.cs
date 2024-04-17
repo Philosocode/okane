@@ -1,5 +1,6 @@
 using System.Net;
 using Microsoft.EntityFrameworkCore;
+using Okane.Api.Shared.Dtos.QueryParameters;
 
 namespace Okane.Api.Shared.Dtos.ApiResponses;
 
@@ -10,13 +11,17 @@ public record ApiPaginatedResponse<TItem> : ApiResponse<TItem>
 
     public required int TotalItems { get; init; }
     public bool HasNextPage => TotalItems > CurrentPage * PageSize;
-    public bool HasPreviousPage => CurrentPage > FilterSortPageOptions.InitialPage;
+    public bool HasPreviousPage => CurrentPage > PageQueryParameters.InitialPage;
 
     public static async Task<ApiPaginatedResponse<TItem>> CreateAsync(
         IQueryable<TItem> query,
-        FilterSortPageOptions queryOptions)
+        PageQueryParameters queryParameters)
     {
-        return await CreateAsync(query, queryOptions.Page, queryOptions.PageSize);
+        return await CreateAsync(
+            query,
+            queryParameters.Page ?? PageQueryParameters.InitialPage,
+            queryParameters.PageSize ?? PageQueryParameters.DefaultPageSize
+        );
     }
 
     public static async Task<ApiPaginatedResponse<TItem>> CreateAsync(

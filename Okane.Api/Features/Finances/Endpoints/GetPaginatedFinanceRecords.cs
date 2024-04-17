@@ -6,8 +6,8 @@ using Okane.Api.Features.Finances.Dtos;
 using Okane.Api.Features.Finances.Mappers;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Endpoints;
-using Okane.Api.Shared.Dtos;
 using Okane.Api.Shared.Dtos.ApiResponses;
+using Okane.Api.Shared.Dtos.QueryParameters;
 
 namespace Okane.Api.Features.Finances.Endpoints;
 
@@ -18,7 +18,7 @@ public class GetPaginatedFinanceRecords : IEndpoint
     // TODO: Filter by type
     // TODO: Sort by date
     // TODO: Sort by amount
-    // TODO: Pagination
+    // TODO: Sort by happened at
 
     public static void Map(IEndpointRouteBuilder builder)
     {
@@ -28,16 +28,13 @@ public class GetPaginatedFinanceRecords : IEndpoint
             .WithSummary("Get a paginated list of finance records.");
     }
 
-    private record QueryParameters : FilterSortPageOptions
-    {
-    }
-
     private static async Task<Ok<ApiPaginatedResponse<FinanceRecordResponse>>>
         HandleAsync(
             ClaimsPrincipal claimsPrincipal,
             HttpContext context,
             ApiDbContext db,
-            [AsParameters] QueryParameters queryParameters,
+            [AsParameters] PageQueryParameters pageQueryParameters,
+            [AsParameters] SortQueryParameters sortQueryParameters,
             CancellationToken cancellationToken)
     {
         var userId = claimsPrincipal.GetUserId();
@@ -47,7 +44,7 @@ public class GetPaginatedFinanceRecords : IEndpoint
 
         var response = await ApiPaginatedResponse<FinanceRecordResponse>.CreateAsync(
             query,
-            queryParameters
+            pageQueryParameters
         );
 
         return TypedResults.Ok(response);

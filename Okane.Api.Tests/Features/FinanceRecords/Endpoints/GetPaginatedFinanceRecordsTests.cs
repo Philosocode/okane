@@ -39,7 +39,7 @@ public class GetPaginatedFinanceRecordsTests(PostgresApiFactory apiFactory) : Da
 
         page1?.Items.Should().BeEquivalentTo(new List<FinanceRecordResponse>
         {
-            financeRecords[0].ToFinanceRecordResponse(),
+            financeRecords[2].ToFinanceRecordResponse(),
             financeRecords[1].ToFinanceRecordResponse()
         });
 
@@ -53,7 +53,7 @@ public class GetPaginatedFinanceRecordsTests(PostgresApiFactory apiFactory) : Da
         page2?.HasNextPage.Should().BeFalse();
         page2?.Items.Should().BeEquivalentTo(new List<FinanceRecordResponse>
         {
-            financeRecords[2].ToFinanceRecordResponse()
+            financeRecords[0].ToFinanceRecordResponse()
         });
 
         var page3Response = await _client.GetAsync($"/finance-records?page=3&pageSize={pageSize}");

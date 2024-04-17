@@ -11,5 +11,6 @@ public class FinanceRecordValidator : AbstractValidator<FinanceRecord>
         RuleFor(r => r.Amount).GreaterThan(0);
         RuleFor(r => r.Description).NotEmpty().MaximumLength(DbConstants.MaxStringLength);
         RuleFor(r => r.HappenedAt).NotEmpty();
+        RuleFor(r => r.Type).IsInEnum();
     }
 }

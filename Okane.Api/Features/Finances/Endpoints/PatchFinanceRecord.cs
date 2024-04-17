@@ -24,9 +24,9 @@ public class PatchFinanceRecord : IEndpoint
             .WithRequestValidation<Request>();
     }
 
-    public record Request(decimal? Amount, string? Description, DateTime? HappenedAt);
+    public record Request(decimal? Amount, string? Description, DateTime? HappenedAt, FinanceRecordType? Type);
 
-    private static async Task<Results<Ok<ApiResponse<FinanceRecordResponse>>, NotFound>>
+    private static async Task<Results<Ok<ApiResponse<FinanceRecordResponse>>, NotFound, ValidationProblem>>
         HandleAsync(
             ClaimsPrincipal claimsPrincipal,
             HttpContext context,
@@ -63,7 +63,17 @@ public class PatchFinanceRecord : IEndpoint
             financeRecord.HappenedAt = request.HappenedAt.Value;
         }
 
-        await validator.ValidateAndThrowAsync(financeRecord, cancellationToken);
+        if (request.Type.HasValue)
+        {
+            financeRecord.Type = request.Type.Value;
+        }
+
+        var validationResult = await validator.ValidateAsync(financeRecord, cancellationToken);
+        if (!validationResult.IsValid)
+        {
+            return TypedResults.ValidationProblem(validationResult.ToDictionary());
+        }
+
 
         await db.SaveChangesAsync(cancellationToken);
 

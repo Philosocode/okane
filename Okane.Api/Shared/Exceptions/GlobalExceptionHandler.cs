@@ -32,6 +32,11 @@ public class GlobalExceptionHandler(
             httpContext.Response.StatusCode = (int)apiException.Status;
             problemDetails = apiException.ToProblemDetails();
         }
+        else if (exception is BadHttpRequestException)
+        {
+            problemDetails.Status = httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+            problemDetails.Status = StatusCodes.Status400BadRequest;
+        }
 
         if (environment.IsDevelopment())
         {

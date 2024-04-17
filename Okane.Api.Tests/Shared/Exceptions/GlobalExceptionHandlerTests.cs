@@ -90,7 +90,34 @@ public class GlobalExceptionHandlerTests
     }
 
     [Fact]
-    public async Task HandlesANonApiException()
+    public async Task HandlesABadHttpRequestException()
+    {
+        var testService = Substitute.For<ITestService>();
+        var exception = new BadHttpRequestException(ErrorMessage);
+        testService.DoSomethingAsync().Throws(exception);
+
+        var apiFactory = SetUpApiFactory(testService);
+        var client = apiFactory.CreateClient();
+
+        var response = await client.GetAsync(Endpoint);
+        response.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+        var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+        problemDetails.Should().BeEquivalentTo(new ProblemDetails
+        {
+            Detail = ErrorMessage,
+            Status = StatusCodes.Status400BadRequest,
+            Title = "BadHttpRequestException",
+            Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1"
+        }, options => options.Excluding(pd => pd.Extensions));
+
+        problemDetails?.Extensions.Should()
+            .NotBeNull()
+            .And.ContainKey("stackTrace");
+    }
+
+    [Fact]
+    public async Task HandlesADifferentException()
     {
         var testService = Substitute.For<ITestService>();
         var exception = new InvalidOperationException(ErrorMessage);

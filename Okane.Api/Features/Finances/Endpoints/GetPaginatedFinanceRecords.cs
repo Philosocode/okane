@@ -40,6 +40,8 @@ public class GetPaginatedFinanceRecords : IEndpoint
         var userId = claimsPrincipal.GetUserId();
         var query = db.FinanceRecords
             .Where(r => r.UserId == userId)
+            // TODO: Sort by query parameters.
+            .OrderByDescending(r => r.HappenedAt)
             .Select(r => r.ToFinanceRecordResponse());
 
         var response = await ApiPaginatedResponse<FinanceRecordResponse>.CreateAsync(

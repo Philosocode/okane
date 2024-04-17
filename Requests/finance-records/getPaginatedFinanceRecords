@@ -1,0 +1,4 @@
+GET {{BASE_URL}}/finance-records?pageSize=5
+Authorization: {{AUTH_HEADER}}
+
+HTTP 200

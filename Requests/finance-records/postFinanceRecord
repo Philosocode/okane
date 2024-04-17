@@ -3,7 +3,8 @@ Authorization: {{AUTH_HEADER}}
 {
   "amount": 100,
   "description": "Cool finance record",
-  "happenedAt": "2024-01-01T12:00:00Z"
+  "happenedAt": "2024-01-01T12:00:00Z",
+  "type": "Expense"
 }
 
 HTTP 201
@@ -13,3 +14,4 @@ jsonpath "$.items" count == 1
 jsonpath "$.items[0].amount" == 100
 jsonpath "$.items[0].description" == "Cool finance record"
 jsonpath "$.items[0].happenedAt" == "2024-01-01T12:00:00Z"
+jsonpath "$.items[0].type" == "Expense"

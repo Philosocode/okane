@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Npgsql;
 using Okane.Api.Features.Auth.Config;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Features.Auth.Services;
 using Okane.Api.Features.Auth.Utils;
+using Okane.Api.Features.Finances.Entities;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.HealthCheck;
 using Okane.Api.Infrastructure.HostedServices;
@@ -99,9 +101,15 @@ public static class ConfigureServices
         var dbSettings = dbSettingsSection.Get<DbSettings>();
 
         builder.Services.Configure<DbSettings>(dbSettingsSection);
+
+        var dataSourceBuilder = new NpgsqlDataSourceBuilder(dbSettings?.ConnectionString);
+        dataSourceBuilder.MapEnum<FinanceRecordType>();
+
+        var dataSource = dataSourceBuilder.Build();
+
         builder.Services.AddDbContext<ApiDbContext>(options =>
         {
-            options.UseNpgsql(dbSettings?.ConnectionString);
+            options.UseNpgsql(dataSource);
         });
     }
 

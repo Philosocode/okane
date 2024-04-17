@@ -1,10 +1,15 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Okane.Api.Features.Finances.Dtos;
 using Okane.Api.Features.Finances.Endpoints;
+using Okane.Api.Features.Finances.Entities;
+using Okane.Api.Infrastructure.Database.Constants;
 using Okane.Api.Shared.Dtos.ApiResponses;
+using Okane.Api.Tests.Testing.Constants;
 using Okane.Api.Tests.Testing.Integration;
 using Okane.Api.Tests.Testing.StubFactories;
 using Okane.Api.Tests.Testing.Utils;
@@ -18,14 +23,16 @@ public class PatchFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTe
     private static readonly PatchFinanceRecord.Request s_validRequest = new(
         100,
         "Groceries",
-        DateTime.UtcNow
+        DateTime.UtcNow,
+        FinanceRecordType.Expense
     );
 
     public static TheoryData<PatchFinanceRecord.Request> ValidUpdateRequests => new()
     {
         s_validRequest with { Amount = 200 },
         s_validRequest with { Description = "Updated Groceries" },
-        s_validRequest with { HappenedAt = DateTime.UtcNow.AddDays(1) }
+        s_validRequest with { HappenedAt = DateTime.UtcNow.AddDays(1) },
+        s_validRequest with { Type = FinanceRecordType.Revenue }
     };
 
     [Theory]
@@ -72,6 +79,47 @@ public class PatchFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTe
 
         var financeRecord2FromDb = await Db.FinanceRecords.SingleAsync(r => r.Id == financeRecord2.Id);
         financeRecord2FromDb.Should().BeEquivalentTo(financeRecord2);
+    }
+
+    public static TheoryData<PatchFinanceRecord.Request> InvalidRequests => new()
+    {
+        s_validRequest with { Amount = -1 },
+        s_validRequest with { Description = "" },
+        s_validRequest with { Description = new string('a', DbConstants.MaxStringLength + 1) }
+    };
+
+    [Theory]
+    [MemberData(nameof(InvalidRequests))]
+    public async Task ReturnsAnError_WithAnInvalidRequest(PatchFinanceRecord.Request request)
+    {
+        var loginResponse = await _client.RegisterAndLogInTestUserAsync();
+        var financeRecord = FinanceRecordStubFactory.Create(loginResponse.User.Id);
+        await Db.AddAsync(financeRecord);
+        await Db.SaveChangesAsync();
+
+        var response = await _client.PatchAsJsonAsync(
+            $"/finance-records/{financeRecord.Id}",
+            request
+        );
+        response.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+        var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+        problemDetails?.Status.Should().Be(StatusCodes.Status400BadRequest);
+        problemDetails?.Title.Should().Be(ValidationConstants.ValidationErrorTitle);
+    }
+
+    [Fact]
+    public async Task ReturnsAnError_WithAnInvalidType()
+    {
+        var loginResponse = await _client.RegisterAndLogInTestUserAsync();
+        var financeRecord = FinanceRecordStubFactory.Create(loginResponse.User.Id);
+        await Db.AddAsync(financeRecord);
+        await Db.SaveChangesAsync();
+
+        var response = await _client.PatchAsJsonAsync(
+            $"/finance-records/{financeRecord.Id}",
+            new { Type = "invalidType" });
+        response.Should().HaveStatusCode(HttpStatusCode.BadRequest);
     }
 
     [Fact]

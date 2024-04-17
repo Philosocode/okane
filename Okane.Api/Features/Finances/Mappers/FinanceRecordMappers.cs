@@ -12,7 +12,8 @@ public static class FinanceRecordMappers
             Id = financeRecord.Id,
             Amount = financeRecord.Amount,
             Description = financeRecord.Description,
-            HappenedAt = financeRecord.HappenedAt
+            HappenedAt = financeRecord.HappenedAt,
+            Type = financeRecord.Type
         };
     }
 }

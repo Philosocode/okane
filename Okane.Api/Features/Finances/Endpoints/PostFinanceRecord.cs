@@ -23,7 +23,7 @@ public class PostFinanceRecord : IEndpoint
             .WithSummary("Create a finance record.");
     }
 
-    public record Request(decimal Amount, string Description, DateTime HappenedAt);
+    public record Request(decimal Amount, string Description, DateTime HappenedAt, FinanceRecordType Type);
 
     private static async Task<Results<CreatedAtRoute<ApiResponse<FinanceRecordResponse>>, ValidationProblem>>
         HandleAsync(
@@ -40,6 +40,7 @@ public class PostFinanceRecord : IEndpoint
             Amount = request.Amount,
             Description = request.Description,
             HappenedAt = request.HappenedAt,
+            Type = request.Type,
             UserId = userId
         };
 

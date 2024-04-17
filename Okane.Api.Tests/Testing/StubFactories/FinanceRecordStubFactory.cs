@@ -14,6 +14,7 @@ public class FinanceRecordStubFactory
             )
             .RuleFor(r => r.Description, "Groceries")
             .RuleFor(r => r.HappenedAt, DateTime.UtcNow)
+            .RuleFor(r => r.Type, faker => faker.PickRandom<FinanceRecordType>())
             .RuleFor(r => r.UserId, userId);
     }
 }

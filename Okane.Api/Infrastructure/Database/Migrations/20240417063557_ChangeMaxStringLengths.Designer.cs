@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using Okane.Api.Features.Finances.Entities;
 using Okane.Api.Infrastructure.Database;
 
 #nullable disable
@@ -12,8 +13,8 @@ using Okane.Api.Infrastructure.Database;
 namespace Okane.Api.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20240412040544_AddFinanceRecords")]
-    partial class AddFinanceRecords
+    [Migration("20240417063557_ChangeMaxStringLengths")]
+    partial class ChangeMaxStringLengths
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +24,7 @@ namespace Okane.Api.Infrastructure.Database.Migrations
                 .HasAnnotation("ProductVersion", "8.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "finance_record_type", new[] { "expense", "revenue" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -184,8 +186,8 @@ namespace Okane.Api.Infrastructure.Database.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -274,13 +276,21 @@ namespace Okane.Api.Infrastructure.Database.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTime>("HappenedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<FinanceRecordType>("Type")
+                        .HasColumnType("finance_record_type");
 
                     b.Property<string>("UserId")
                         .IsRequired()

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using Okane.Api.Features.Finances.Entities;
 using Okane.Api.Infrastructure.Database;
 
 #nullable disable
@@ -20,6 +21,7 @@ namespace Okane.Api.Infrastructure.Database.Migrations
                 .HasAnnotation("ProductVersion", "8.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "finance_record_type", new[] { "expense", "revenue" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -271,6 +273,11 @@ namespace Okane.Api.Infrastructure.Database.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -278,6 +285,9 @@ namespace Okane.Api.Infrastructure.Database.Migrations
 
                     b.Property<DateTime>("HappenedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<FinanceRecordType>("Type")
+                        .HasColumnType("finance_record_type");
 
                     b.Property<string>("UserId")
                         .IsRequired()

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Okane.Api.Features.Finances.Constants;
 using Okane.Api.Features.Finances.Dtos;
 using Okane.Api.Features.Finances.Endpoints;
+using Okane.Api.Features.Finances.Entities;
 using Okane.Api.Infrastructure.Database.Constants;
 using Okane.Api.Shared.Dtos.ApiResponses;
 using Okane.Api.Tests.Testing.Constants;
@@ -22,7 +23,8 @@ public class PostFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTes
     private static readonly PostFinanceRecord.Request s_validRequest = new(
         100,
         "Groceries",
-        DateTime.UtcNow
+        DateTime.UtcNow,
+        FinanceRecordType.Expense
     );
 
     [Fact]
@@ -42,6 +44,7 @@ public class PostFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTes
             Amount = s_validRequest.Amount,
             Description = s_validRequest.Description,
             HappenedAt = s_validRequest.HappenedAt,
+            Type = s_validRequest.Type,
             Id = createdRecord.Id
         });
 
@@ -73,5 +76,22 @@ public class PostFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTes
         var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
         problemDetails?.Status.Should().Be(StatusCodes.Status400BadRequest);
         problemDetails?.Title.Should().Be(ValidationConstants.ValidationErrorTitle);
+    }
+
+    [Fact]
+    public async Task ReturnsAnError_WithAnInvalidType()
+    {
+        await _client.RegisterAndLogInTestUserAsync();
+
+        object request = new
+        {
+            Amount = 1,
+            Description = "Test",
+            HappendAt = s_validRequest.HappenedAt,
+            Type = "InvalidType"
+        };
+
+        var response = await _client.PostAsJsonAsync("/finance-records", request);
+        response.Should().HaveStatusCode(HttpStatusCode.BadRequest);
     }
 }

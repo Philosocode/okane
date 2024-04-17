@@ -13,6 +13,7 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options) : IdentityDbCo
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+        builder.HasPostgresEnum<FinanceRecordType>();
         builder.ApplyConfigurationsFromAssembly(typeof(ApiDbContext).Assembly);
     }
 

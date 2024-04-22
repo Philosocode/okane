@@ -28,7 +28,10 @@ export default defineConfig(({ mode }) => {
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: '@use "@shared/styles/mixins/_respond.scss" as *;',
+          additionalData: `
+            @use "@shared/styles/mixins/_index.scss" as *;
+            @use "@shared/styles/functions/_index.scss" as *;
+          `,
         },
       },
     },

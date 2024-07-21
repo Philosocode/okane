@@ -8,7 +8,10 @@ public class FinanceRecordValidator : AbstractValidator<FinanceRecord>
 {
     public FinanceRecordValidator()
     {
-        RuleFor(r => r.Amount).GreaterThan(0);
+        RuleFor(r => r.Amount)
+            .GreaterThan(0)
+            .PrecisionScale(9, 2, false);
+
         RuleFor(r => r.Description).NotEmpty().MaximumLength(DbConstants.MaxStringLength);
         RuleFor(r => r.HappenedAt).NotEmpty();
         RuleFor(r => r.Type).IsInEnum();

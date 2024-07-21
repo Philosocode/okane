@@ -1,13 +1,16 @@
 // Internal
 import FormInput, { type FormInputProps } from '@shared/components/FormInput.vue'
 
+import { ARIA_LIVE } from '@shared/constants/aria.constants'
+import { INPUT_TYPE } from '@shared/constants/form.constants'
+
 import * as formUtils from '@shared/utils/form.utils'
 
 // Data.
 const props: FormInputProps = {
   label: 'Cool Label',
   name: 'Cool Name',
-  type: 'password',
+  type: INPUT_TYPE.PASSWORD,
 }
 
 const formControlId = '1'
@@ -83,7 +86,7 @@ describe('with an error', () => {
 
     const error = wrapper.get('.error')
     expect(error.text()).toBe(propsWithError.error)
-    expect(error.attributes('aria-live')).toBe('assertive')
+    expect(error.attributes('aria-live')).toBe(ARIA_LIVE.ASSERTIVE)
     expect(error.attributes('id')).toBe(`${formControlId}-error`)
   })
 })

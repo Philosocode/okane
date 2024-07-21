@@ -1,21 +1,25 @@
 <script setup lang="ts">
 // External
-import { type InputTypeHTMLAttribute } from 'vue'
+import type { InputHTMLAttributes } from 'vue'
 
 // Internal
+import { ARIA_LIVE } from '@shared/constants/aria.constants'
+
 import { getUniqueFormControlId } from '@shared/utils/form.utils'
 
-export type FormInputProps = {
+export interface FormInputProps extends /* @vue-ignore */ InputHTMLAttributes {
   label: string
   name: string
-  type: InputTypeHTMLAttribute
 
+  type?: InputHTMLAttributes['type']
   error?: string
 }
 
 const controlId = getUniqueFormControlId()
 const model = defineModel<number | string>()
 const props = defineProps<FormInputProps>()
+
+const errorLabelId = `${controlId}-error`
 </script>
 
 <template>
@@ -24,13 +28,13 @@ const props = defineProps<FormInputProps>()
     <input
       v-bind="$attrs"
       v-model="model"
-      :aria-describedby="props.error ? `${controlId}-error` : undefined"
+      :aria-describedby="props.error ? errorLabelId : undefined"
       :aria-invalid="props.error ? true : undefined"
       :id="controlId"
       :name="props.name"
       :type="props.type"
     />
-    <p aria-live="assertive" class="error" :id="`${controlId}-error`" v-if="error">
+    <p :aria-live="ARIA_LIVE.ASSERTIVE" class="error" :id="errorLabelId" v-if="error">
       {{ error }}
     </p>
   </div>

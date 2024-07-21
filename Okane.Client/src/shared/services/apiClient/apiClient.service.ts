@@ -6,6 +6,7 @@ import type { APIResponse } from '@shared/services/apiClient/apiClient.types'
 import { useAuthStore } from '@features/auth/useAuthStore'
 
 import { getQueryClient } from '@shared/services/queryClient/queryClient'
+import { objectHasKey } from '@shared/utils/object.utils'
 import { removePrefixCharacters } from '@shared/utils/string.utils'
 
 /**
@@ -46,7 +47,11 @@ async function makeRequest<TResponse extends APIResponse = never>(
       return Promise.reject('Authentication error. Logging out...')
     }
 
-    return Promise.reject(parsedResponse?.errors)
+    if (objectHasKey(parsedResponse, 'errors')) {
+      return Promise.reject(parsedResponse.errors)
+    }
+
+    return Promise.reject(parsedResponse?.detail)
   } catch (err) {
     return Promise.reject(err)
   }

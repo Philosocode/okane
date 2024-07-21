@@ -15,6 +15,16 @@ export function capitalize(s: string): string {
 }
 
 /**
+ * Make the first letter of a string lowercase.
+ *
+ * @param s
+ */
+export function uncapitalize(s: string): string {
+  if (s.length <= 1) return s.toLowerCase()
+  return s[0].toLowerCase() + s.slice(1)
+}
+
+/**
  * Check if each character in s is in the A-Z alphabet.
  *
  * @param s

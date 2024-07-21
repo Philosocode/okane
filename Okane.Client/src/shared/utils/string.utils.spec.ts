@@ -109,3 +109,11 @@ describe('removePrefixCharacters', () => {
     expect(stringUtils.removePrefixCharacters(s, prefix)).toBe(expected)
   })
 })
+
+describe('uncapitalize', () => {
+  test('it uncapitalizes the first letter', () => {
+    expect(stringUtils.uncapitalize('')).toBe('')
+    expect(stringUtils.uncapitalize('A')).toBe('a')
+    expect(stringUtils.uncapitalize('AB')).toBe('aB')
+  })
+})

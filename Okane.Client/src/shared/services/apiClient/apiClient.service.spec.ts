@@ -38,24 +38,45 @@ test('prepends a forward slash to the request URL', async () => {
   expect(response.items[0]).toBe('pong')
 })
 
-test('returns a rejected promise on failed request', async () => {
-  const errorResponse = createStubProblemDetails({
-    errors: {
-      email: ['Invalid email'],
-    },
+describe('with a failed request', async () => {
+  test('returns a rejected promise containing the "errors" key if present', async () => {
+    const errorResponse = createStubProblemDetails({
+      detail: 'Something went wrong...',
+      errors: {
+        email: ['Invalid email'],
+      },
+    })
+
+    const handler = http.get('/api/ping', () => {
+      return HttpResponse.json(errorResponse, { status: HTTP_STATUS_CODE.BAD_REQUEST_400 })
+    })
+
+    testServer.use(handler)
+
+    try {
+      await apiClient.get('/ping')
+    } catch (err) {
+      expect(err).toEqual(errorResponse.errors)
+    }
   })
 
-  const handler = http.get('/api/ping', () => {
-    return HttpResponse.json(errorResponse, { status: HTTP_STATUS_CODE.BAD_REQUEST_400 })
+  test('returns a rejected promise containing the "detail" key if no "errors" key is present', async () => {
+    const errorResponse = createStubProblemDetails({
+      detail: 'Something went wrong...',
+    })
+
+    const handler = http.get('/api/ping', () => {
+      return HttpResponse.json(errorResponse, { status: HTTP_STATUS_CODE.BAD_REQUEST_400 })
+    })
+
+    testServer.use(handler)
+
+    try {
+      await apiClient.get('/ping')
+    } catch (err) {
+      expect(err).toEqual(errorResponse.detail)
+    }
   })
-
-  testServer.use(handler)
-
-  try {
-    await apiClient.get('/ping')
-  } catch (err) {
-    expect(err).toEqual(errorResponse.errors)
-  }
 })
 
 describe('when not logged in', () => {

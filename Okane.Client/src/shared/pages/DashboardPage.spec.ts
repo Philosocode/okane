@@ -14,3 +14,20 @@ test('renders the logged in text', () => {
   const loggedInText = wrapper.get('p')
   expect(loggedInText.text()).toBe('You are logged in!')
 })
+
+test('renders a form to save a finance record', () => {
+  const mockedTestId = 'SaveFinanceRecordFormMocked'
+
+  const wrapper = mountComponent({
+    global: {
+      stubs: {
+        SaveFinanceRecordForm: {
+          template: `<div data-testid="${mockedTestId}"></div>`,
+        },
+      },
+    },
+  })
+
+  const mockedForm = wrapper.get('[data-testid="SaveFinanceRecordFormMocked"]')
+  expect(mockedForm.isVisible()).toBe(true)
+})

@@ -60,6 +60,9 @@ public class PostFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTes
     public static TheoryData<PostFinanceRecord.Request> InvalidRequests => new()
     {
         s_validRequest with { Amount = -1 },
+        s_validRequest with { Amount = 0 },
+        s_validRequest with { Amount = (decimal)0.001 },
+        s_validRequest with { Amount = 10_000_000 },
         s_validRequest with { Description = "" },
         s_validRequest with { Description = new string('a', DbConstants.MaxStringLength + 1) }
     };

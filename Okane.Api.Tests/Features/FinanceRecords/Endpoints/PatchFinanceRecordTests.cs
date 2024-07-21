@@ -84,6 +84,9 @@ public class PatchFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTe
     public static TheoryData<PatchFinanceRecord.Request> InvalidRequests => new()
     {
         s_validRequest with { Amount = -1 },
+        s_validRequest with { Amount = 0 },
+        s_validRequest with { Amount = (decimal)0.001 },
+        s_validRequest with { Amount = 10_000_000 },
         s_validRequest with { Description = "" },
         s_validRequest with { Description = new string('a', DbConstants.MaxStringLength + 1) }
     };

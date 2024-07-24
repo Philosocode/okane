@@ -11,6 +11,7 @@ public class FinanceRecord : IOwnedEntity
 {
     public int Id { get; set; }
 
+    [Precision(9, 2)]
     public required decimal Amount { get; set; }
 
     [MaxLength(DbConstants.MaxStringLength)]

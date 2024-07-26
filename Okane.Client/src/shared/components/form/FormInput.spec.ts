@@ -1,5 +1,5 @@
 // Internal
-import FormInput, { type FormInputProps } from '@shared/components/FormInput.vue'
+import FormInput, { type FormInputProps } from '@shared/components/form/FormInput.vue'
 
 import { ARIA_LIVE } from '@shared/constants/aria.constants'
 import { INPUT_TYPE } from '@shared/constants/form.constants'

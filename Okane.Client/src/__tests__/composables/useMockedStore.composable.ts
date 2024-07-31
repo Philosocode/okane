@@ -16,7 +16,7 @@ export function useMockedStore<TStoreDef extends () => unknown>(
       {
         [K in keyof Actions]: Actions[K] extends (...args: infer Args) => infer ReturnT
           ? // 👇 depends on your testing framework
-            Mock<Args, ReturnT>
+            Mock<(args: Args) => ReturnT>
           : Actions[K]
       }
     >

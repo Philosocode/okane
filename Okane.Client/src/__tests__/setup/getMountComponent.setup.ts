@@ -1,8 +1,9 @@
 // External
-import type { Plugin } from 'vue'
+import type { Component, Plugin } from 'vue'
 import type { Router } from 'vue-router'
 import { createPinia, setActivePinia, type Pinia } from 'pinia'
 import { mount, type ComponentMountingOptions } from '@vue/test-utils'
+import merge from 'lodash.merge'
 
 // Internal
 import { createAppRouter } from '@shared/services/router/router.service'
@@ -27,56 +28,52 @@ type CustomMountingOptions = {
   withRouter?: boolean | Router
 }
 
-type MountingOptionsWithPlugins<TComponent> = ComponentMountingOptions<TComponent> & {
-  // For convenience, plugins can be passed directly rather than through global.plugins.
-  plugins?: Plugin[]
-}
+type BaseMountingOptions = CustomMountingOptions & ComponentMountingOptions<Component>
 
 /**
- * Returns `mount` with the first argument set to a component.
+ * Returns `mount` with the first argument set to a component. Allows you to specify options that
+ * are applied to each mount that can be overridden on a per-mount basis.
  *
  * @param component
- * @param customOptions
+ * @param baseOptions Options applied to all mounts. Can be overridden via perMountOptions
+ * @return Function that accepts per-mount options and returns the mounted component wrapper.
  */
-function customMount<TComponent>(component: TComponent, customOptions?: CustomMountingOptions) {
-  return function (options?: MountingOptionsWithPlugins<TComponent>) {
-    const mergedGlobal: ComponentMountingOptions<TComponent>['global'] = {
-      ...options?.global,
-    }
+function customMount(component: Component, baseOptions?: BaseMountingOptions) {
+  return function (perMountOptions?: ComponentMountingOptions<Component>) {
+    const mergedOptions = merge(
+      { global: { plugins: [] as Plugin[] } },
+      baseOptions,
+      perMountOptions,
+    )
 
-    if (!Array.isArray(mergedGlobal.plugins)) {
-      mergedGlobal.plugins = []
-    }
+    mergedOptions.global?.plugins?.push(...populatePlugins(baseOptions))
 
-    if (Array.isArray(options?.plugins)) {
-      mergedGlobal.plugins.push(...options.plugins)
-    }
-
-    if (customOptions?.withRouter) {
-      let routerToUse: Router
-
-      if (typeof customOptions.withRouter === 'boolean') {
-        routerToUse = createAppRouter()
-      } else {
-        routerToUse = customOptions.withRouter
-      }
-
-      mergedGlobal.plugins.push(routerToUse)
-    }
-
-    if (customOptions?.withPinia) {
-      let piniaToUse = pinia
-
-      if (typeof customOptions?.withPinia !== 'boolean') {
-        piniaToUse = customOptions.withPinia
-      }
-
-      mergedGlobal.plugins.push(piniaToUse)
-    }
-
-    return mount(component, {
-      ...options,
-      global: mergedGlobal,
-    })
+    return mount(component, mergedOptions)
   }
+}
+
+function populatePlugins(customOptions?: CustomMountingOptions): Plugin[] {
+  const plugins: Plugin[] = []
+
+  if (customOptions?.withRouter) {
+    let routerToUse = createAppRouter()
+
+    if (typeof customOptions.withRouter !== 'boolean') {
+      routerToUse = customOptions.withRouter
+    }
+
+    plugins.push(routerToUse)
+  }
+
+  if (customOptions?.withPinia) {
+    let piniaToUse = pinia
+
+    if (typeof customOptions?.withPinia !== 'boolean') {
+      piniaToUse = customOptions.withPinia
+    }
+
+    plugins.push(piniaToUse)
+  }
+
+  return plugins
 }

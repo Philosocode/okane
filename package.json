@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "prepare": "lefthook install"
   },
   "author": "",

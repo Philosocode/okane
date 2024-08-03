@@ -1,23 +1,15 @@
-// External
-import { type ComponentMountingOptions } from '@vue/test-utils'
-
 // Internal
 import Modal from '@shared/components/modal/Modal.vue'
 
 const isShowingProps = { isShowing: true }
 
-function mountComponent(options: ComponentMountingOptions<typeof Modal>) {
-  const doMount = getMountComponent(Modal)
-
-  return doMount({
-    ...options,
-    global: {
-      stubs: {
-        teleport: true,
-      },
+const mountComponent = getMountComponent(Modal, {
+  global: {
+    stubs: {
+      teleport: true,
     },
-  })
-}
+  },
+})
 
 // TODO: Expand on these tests.
 // These tests are a bit bare-bones because, at the moment, jsdom doesn't properly support

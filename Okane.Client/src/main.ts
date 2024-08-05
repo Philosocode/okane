@@ -1,6 +1,7 @@
 // External
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { VueQueryPlugin } from '@tanstack/vue-query'
 
 // Internal
@@ -13,11 +14,14 @@ import { useAuthStore } from '@features/auth/useAuthStore'
 import { getQueryClient } from '@shared/services/queryClient/queryClient'
 
 import '@shared/styles/index.scss'
+import '@shared/services/fontAwesome/fontAwesome.service'
 
 startApp()
 
 async function startApp() {
   const app = createApp(App)
+
+  app.component('font-awesome-icon', FontAwesomeIcon)
 
   app.use(createPinia())
 

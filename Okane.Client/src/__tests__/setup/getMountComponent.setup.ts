@@ -1,12 +1,16 @@
 // External
+import merge from 'lodash.merge'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { mount, type ComponentMountingOptions } from '@vue/test-utils'
+import { createPinia, setActivePinia, type Pinia } from 'pinia'
+
 import type { Component, Plugin } from 'vue'
 import type { Router } from 'vue-router'
-import { createPinia, setActivePinia, type Pinia } from 'pinia'
-import { mount, type ComponentMountingOptions } from '@vue/test-utils'
-import merge from 'lodash.merge'
 
 // Internal
 import { createAppRouter } from '@shared/services/router/router.service'
+
+import '@shared/services/fontAwesome/fontAwesome.service'
 
 global.getMountComponent = customMount
 
@@ -41,7 +45,12 @@ type BaseMountingOptions = CustomMountingOptions & ComponentMountingOptions<Comp
 function customMount(component: Component, baseOptions?: BaseMountingOptions) {
   return function (perMountOptions?: ComponentMountingOptions<Component>) {
     const mergedOptions = merge(
-      { global: { plugins: [] as Plugin[] } },
+      {
+        global: {
+          plugins: [] as Plugin[],
+          stubs: { FontAwesomeIcon },
+        },
+      },
       baseOptions,
       perMountOptions,
     )

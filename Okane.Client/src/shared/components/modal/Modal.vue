@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // External
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { ref, watch } from 'vue'
 
 // Internal
@@ -42,7 +43,9 @@ watch(
   <Teleport to="body">
     <dialog @cancel="emitModalClose" @mousedown="handleOutsideClick" class="modal" ref="dialogRef">
       <div class="modal-content">
-        <button class="close-button" @click="emitModalClose">X</button>
+        <button class="close-button" @click="emitModalClose">
+          <FontAwesomeIcon icon="fa-solid fa-xmark" title="Close Modal" />
+        </button>
         <slot />
       </div>
     </dialog>

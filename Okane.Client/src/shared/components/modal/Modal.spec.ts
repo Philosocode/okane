@@ -28,7 +28,8 @@ test('renders a close button that closes the modal', async () => {
   })
 
   const closeButton = wrapper.get('button')
-  expect(closeButton.text()).toBe('')
+  const title = closeButton.get('title')
+  expect(title.text()).toBe('Close Modal')
 
   await closeButton.trigger('click')
   expect(wrapper.emitted()).toHaveProperty('close')

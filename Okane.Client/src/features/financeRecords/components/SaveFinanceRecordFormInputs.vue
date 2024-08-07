@@ -21,6 +21,9 @@ type Props = {
 }
 
 const props = defineProps<Props>()
+const emit = defineEmits<{
+  (e: 'inputUpdated', formState: Partial<SaveFinanceRecordFormState>): void
+}>()
 </script>
 
 <template>
@@ -30,15 +33,17 @@ const props = defineProps<Props>()
       label="Amount"
       :max="FINANCE_RECORD_MAX_AMOUNT"
       :min="FINANCE_RECORD_MIN_AMOUNT"
+      :model-value="formState.amount"
+      @update:model-value="emit('inputUpdated', { amount: $event })"
       name="amount"
       required
       :step="FINANCE_RECORD_MIN_AMOUNT"
       :type="INPUT_TYPE.NUMBER"
-      v-model="props.formState.amount"
     />
     <FormSelect
       label="Type"
-      v-model="formState.type"
+      :model-value="formState.type"
+      @update:model-value="emit('inputUpdated', { type: $event })"
       :options="FINANCE_RECORD_TYPE_OPTIONS"
       required
     />
@@ -49,7 +54,8 @@ const props = defineProps<Props>()
     name="description"
     required
     :type="INPUT_TYPE.TEXT"
-    v-model="props.formState.description"
+    :model-value="formState.description"
+    @update:model-value="emit('inputUpdated', { description: $event })"
   />
   <FormInput
     :error="props.formErrors.happenedAt"
@@ -57,7 +63,8 @@ const props = defineProps<Props>()
     name="happenedAt"
     required
     :type="INPUT_TYPE.DATETIME_LOCAL"
-    v-model="props.formState.happenedAt"
+    :model-value="formState.happenedAt"
+    @update:model-value="emit('inputUpdated', { happenedAt: $event })"
   />
 </template>
 

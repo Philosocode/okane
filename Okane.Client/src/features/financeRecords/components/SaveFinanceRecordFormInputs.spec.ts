@@ -6,8 +6,12 @@ import { INPUT_TYPE } from '@shared/constants/form.constants'
 import {
   FINANCE_RECORD_MAX_AMOUNT,
   FINANCE_RECORD_MIN_AMOUNT,
+  FINANCE_RECORD_TYPE,
   FINANCE_RECORD_TYPE_OPTIONS,
 } from '@features/financeRecords/constants/financeRecord.constants'
+
+import type { SaveFinanceRecordFormState } from '@features/financeRecords/types/financeRecord.types'
+import type { FormErrors } from '@shared/types/form.types'
 
 import { createStubSaveFinanceRecordFormState } from '@tests/factories/financeRecord.factory'
 import { getInitialFormErrors } from '@shared/utils/form.utils'
@@ -18,6 +22,56 @@ const formState = createStubSaveFinanceRecordFormState()
 const formErrors = getInitialFormErrors(formState)
 const props = { formState, formErrors }
 
+const sharedTests = {
+  emitsAnInputUpdatedEvent: (args: {
+    selector: string
+    value: unknown
+    emittedData: Partial<SaveFinanceRecordFormState>
+  }) =>
+    test('emits an inputUpdated event', async () => {
+      const wrapper = mountComponent({ props })
+      const input = wrapper.get(args.selector)
+
+      await input.setValue(args.value)
+
+      const emitted = wrapper.emitted<Partial<SaveFinanceRecordFormState[]>>()
+      const emittedData = emitted.inputUpdated[0][0]
+
+      expect(emittedData).toEqual(args.emittedData)
+    }),
+  rendersAnErrorLabel: (args: {
+    errors: Partial<FormErrors<SaveFinanceRecordFormState>>
+    selector: string
+  }) =>
+    test('renders an error label', () => {
+      const wrapper = mountComponent({
+        props: {
+          ...props,
+          formErrors: args.errors,
+        },
+      })
+
+      const element = wrapper.get(args.selector)
+
+      const firstError = Object.values(args.errors)[0]
+      const errorLabel = wrapper.findByText('p', firstError)
+
+      expect(errorLabel.attributes()).toEqual(
+        expect.objectContaining({
+          'aria-live': ARIA_LIVE.ASSERTIVE,
+          id: `${element.element.id}-error`,
+        }),
+      )
+    }),
+}
+
+const elementSelectors = {
+  amountInput: 'input[name="amount"]',
+  descriptionInput: 'input[name="description"]',
+  happenedAtInput: 'input[name="happenedAt"]',
+  typeSelect: 'select',
+}
+
 test('does not render any error labels by default', () => {
   const wrapper = mountComponent({ props })
   expect(wrapper.find('.error').exists()).toBe(false)
@@ -27,13 +81,12 @@ describe('Amount input', () => {
   test('renders the expected label', () => {
     const wrapper = mountComponent({ props })
     const amountLabel = wrapper.findByText('label', 'Amount')
-
     expect(amountLabel.exists()).toBe(true)
   })
 
   test('renders an input with the expected attributes', () => {
     const wrapper = mountComponent({ props })
-    const input = wrapper.get('input[name="amount"]')
+    const input = wrapper.get(elementSelectors.amountInput)
 
     expect(input.attributes()).toEqual(
       expect.objectContaining({
@@ -51,26 +104,37 @@ describe('Amount input', () => {
     expect(inputElement.value).toBe(formState.amount.toString())
   })
 
-  describe('with an amount error', () => {
-    const propsWithError = {
-      formState,
-      formErrors: { ...formErrors, amount: 'Bad amount' },
-    }
+  describe('validity tests', () => {
+    test.each([
+      { amount: FINANCE_RECORD_MIN_AMOUNT, isValid: true },
+      { amount: FINANCE_RECORD_MIN_AMOUNT + 1, isValid: true },
+      { amount: FINANCE_RECORD_MAX_AMOUNT, isValid: true },
 
-    test('renders an error label', () => {
-      const wrapper = mountComponent({
-        props: propsWithError,
-      })
-      const input = wrapper.get('input[name="amount"]')
-      const errorLabel = wrapper.findByText('p', formErrors.amount)
+      { amount: '', isValid: false },
+      { amount: '0.0001', isValid: false },
+      { amount: '1234ABCD', isValid: false },
+      { amount: FINANCE_RECORD_MIN_AMOUNT - FINANCE_RECORD_MIN_AMOUNT, isValid: false },
+      { amount: FINANCE_RECORD_MAX_AMOUNT + FINANCE_RECORD_MIN_AMOUNT, isValid: false },
+    ])('when value is $amount, checkValidity() returns $isValid', async ({ amount, isValid }) => {
+      const wrapper = mountComponent({ props })
+      const input = wrapper.get(elementSelectors.amountInput)
 
-      expect(errorLabel.attributes()).toEqual(
-        expect.objectContaining({
-          'aria-live': ARIA_LIVE.ASSERTIVE,
-          id: `${input.element.id}-error`,
-        }),
-      )
+      await input.setValue(amount)
+
+      const inputElement = input.element as HTMLInputElement
+      expect(inputElement.checkValidity()).toBe(isValid)
     })
+  })
+
+  sharedTests.emitsAnInputUpdatedEvent({
+    selector: elementSelectors.amountInput,
+    value: '1234',
+    emittedData: { amount: 1234 },
+  })
+
+  sharedTests.rendersAnErrorLabel({
+    selector: elementSelectors.amountInput,
+    errors: { amount: 'Bad amount' },
   })
 })
 
@@ -78,14 +142,12 @@ describe('Type select', () => {
   test('renders the expected label', () => {
     const wrapper = mountComponent({ props })
     const label = wrapper.findByText('label', 'Type')
-
     expect(label.exists()).toBe(true)
   })
 
   test('renders a select element with the expected attributes', () => {
     const wrapper = mountComponent({ props })
     const select = wrapper.get('select')
-
     expect(select.attributes()).toEqual(
       expect.objectContaining({
         id: expect.any(String),
@@ -94,14 +156,12 @@ describe('Type select', () => {
     )
 
     const selectElement = select.element as HTMLSelectElement
-
     expect(selectElement.value).toBe(formState.type.toString())
   })
 
   test('renders the expected options', () => {
     const wrapper = mountComponent({ props })
     const allOptions = wrapper.findAll('option')
-
     expect(allOptions).toHaveLength(FINANCE_RECORD_TYPE_OPTIONS.length)
 
     // For each FINANCE_RECORD_TYPE_OPTION, there should be a matching <option>.
@@ -120,19 +180,24 @@ describe('Type select', () => {
       expect(matchingOption?.attributes('selected')).toBe(expectedSelectedValue)
     })
   })
+
+  sharedTests.emitsAnInputUpdatedEvent({
+    selector: 'select',
+    value: FINANCE_RECORD_TYPE.REVENUE,
+    emittedData: { type: FINANCE_RECORD_TYPE.REVENUE },
+  })
 })
 
 describe('Description input', () => {
   test('renders the expected label', () => {
     const wrapper = mountComponent({ props })
     const label = wrapper.findByText('label', 'Description')
-
     expect(label.exists()).toBe(true)
   })
 
   test('renders an input with the expected attributes', () => {
     const wrapper = mountComponent({ props })
-    const input = wrapper.get('input[name="description"]')
+    const input = wrapper.get(elementSelectors.descriptionInput)
 
     expect(input.attributes()).toEqual(
       expect.objectContaining({
@@ -147,26 +212,15 @@ describe('Description input', () => {
     expect(inputElement.value).toBe(formState.description)
   })
 
-  describe('with a description error', () => {
-    const propsWithError = {
-      formState,
-      formErrors: { ...formErrors, description: 'Bad description' },
-    }
+  sharedTests.emitsAnInputUpdatedEvent({
+    selector: elementSelectors.descriptionInput,
+    value: 'Cool description',
+    emittedData: { description: 'Cool description' },
+  })
 
-    test('renders an error label', () => {
-      const wrapper = mountComponent({
-        props: propsWithError,
-      })
-      const input = wrapper.get('input[name="description"]')
-      const errorLabel = wrapper.findByText('p', formErrors.description)
-
-      expect(errorLabel.attributes()).toEqual(
-        expect.objectContaining({
-          'aria-live': ARIA_LIVE.ASSERTIVE,
-          id: `${input.element.id}-error`,
-        }),
-      )
-    })
+  sharedTests.rendersAnErrorLabel({
+    selector: elementSelectors.descriptionInput,
+    errors: { description: 'Bad description' },
   })
 })
 
@@ -174,13 +228,12 @@ describe('Happened at input', () => {
   test('renders the expected label', () => {
     const wrapper = mountComponent({ props })
     const label = wrapper.findByText('label', 'Happened At')
-
     expect(label.exists()).toBe(true)
   })
 
   test('renders an input with the expected attributes', () => {
     const wrapper = mountComponent({ props })
-    const input = wrapper.get('input[name="happenedAt"]')
+    const input = wrapper.get(elementSelectors.happenedAtInput)
 
     expect(input.attributes()).toEqual(
       expect.objectContaining({
@@ -195,25 +248,16 @@ describe('Happened at input', () => {
     expect(inputElement.value).toBe(formState.happenedAt)
   })
 
-  describe('with a happenedAt error', () => {
-    const propsWithError = {
-      formState,
-      formErrors: { ...formErrors, happenedAt: 'Bad happenedAt' },
-    }
+  const happenedAt = '2024-08-06T19:41'
 
-    test('renders an error label', () => {
-      const wrapper = mountComponent({
-        props: propsWithError,
-      })
-      const amountInput = wrapper.get('input[name="happenedAt"]')
-      const errorLabel = wrapper.findByText('p', formErrors.happenedAt)
+  sharedTests.emitsAnInputUpdatedEvent({
+    selector: elementSelectors.happenedAtInput,
+    value: happenedAt,
+    emittedData: { happenedAt: happenedAt },
+  })
 
-      expect(errorLabel.attributes()).toEqual(
-        expect.objectContaining({
-          'aria-live': ARIA_LIVE.ASSERTIVE,
-          id: `${amountInput.element.id}-error`,
-        }),
-      )
-    })
+  sharedTests.rendersAnErrorLabel({
+    selector: elementSelectors.happenedAtInput,
+    errors: { happenedAt: 'Bad happenedAt' },
   })
 })

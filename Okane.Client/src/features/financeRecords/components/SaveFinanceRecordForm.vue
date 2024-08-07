@@ -46,6 +46,13 @@ function resetForm() {
   formErrors.value = { ...initialFormErrors }
 }
 
+function handleInputUpdated(data: Partial<SaveFinanceRecordFormState>) {
+  formState.value = {
+    ...formState.value,
+    ...data,
+  }
+}
+
 async function handleSave() {
   if (!formRef.value?.checkValidity()) return
 
@@ -72,7 +79,11 @@ async function handleSave() {
     <ModalHeading>Create Finance Record</ModalHeading>
 
     <form ref="formRef" @submit.prevent class="form">
-      <SaveFinanceRecordFormInputs :form-state="formState" :form-errors="formErrors" />
+      <SaveFinanceRecordFormInputs
+        :form-state="formState"
+        :form-errors="formErrors"
+        @input-updated="handleInputUpdated"
+      />
 
       <ModalActions>
         <button @click="handleSave" type="submit">Save</button>

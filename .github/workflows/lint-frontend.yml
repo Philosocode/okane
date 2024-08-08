@@ -11,10 +11,10 @@ on:
       - 'Okane.Client/**.ts'
       - 'Okane.Client/**.vue'
       - 'Okane.Client/package.json'
-      - 'Okane.Client/package-lock.json'
+      - 'Okane.Client/pnpm-lock.yaml'
 
 jobs:
-  test-frontend:
+  lint-frontend:
     defaults:
       run:
         working-directory: Okane.Client
@@ -28,25 +28,28 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-          cache-dependency-path: Okane.Client/package-lock.json
+          cache: 'pnpm'
+          cache-dependency-path: Okane.Client/pnpm-lock.yaml
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - run: npm ci
+      - run: pnpm install
 
-      - run: npm run build --if-present
-
-      - run: npm run lint
+      - run: pnpm run lint
 

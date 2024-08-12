@@ -17,14 +17,20 @@ public record ApiPaginatedResponse<TItem> : ApiResponse<TItem>
         IQueryable<TItem> query,
         PageQueryParameters queryParameters)
     {
-        return await CreateAsync(
-            query,
-            queryParameters.Page ?? PageQueryParameters.InitialPage,
-            queryParameters.PageSize ?? PageQueryParameters.DefaultPageSize
-        );
+        var page = queryParameters.Page ?? PageQueryParameters.InitialPage;
+
+        // Prevent a user from passing an invalid page number.
+        page = int.Max(page, PageQueryParameters.InitialPage);
+
+        var pageSize = queryParameters.PageSize ?? PageQueryParameters.DefaultPageSize;
+
+        // Prevent a user from passing an invalid page size.
+        pageSize = int.Max(PageQueryParameters.MinPageSize, pageSize);
+
+        return await CreateAsync(query, page, pageSize);
     }
 
-    public static async Task<ApiPaginatedResponse<TItem>> CreateAsync(
+    private static async Task<ApiPaginatedResponse<TItem>> CreateAsync(
         IQueryable<TItem> query,
         int page,
         int pageSize)

@@ -1,5 +1,5 @@
 // External
-import { http, HttpResponse, RequestHandler } from 'msw'
+import { http, HttpResponse } from 'msw'
 
 // Internal
 import { testServer } from '@tests/msw/testServer'
@@ -10,8 +10,6 @@ export const AUTH_HANDLER_MAP = {
   }),
 } as const
 
-const authHandlers: RequestHandler[] = Object.values(AUTH_HANDLER_MAP)
-
 export function setUpAuthHandlers() {
-  testServer.use(...authHandlers)
+  testServer.use(...Object.values(AUTH_HANDLER_MAP))
 }

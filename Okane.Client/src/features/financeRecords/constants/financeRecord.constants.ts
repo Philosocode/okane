@@ -16,3 +16,11 @@ export const FINANCE_RECORD_TYPE_OPTIONS: SelectOption[] = Object.values(FINANCE
 export const FINANCE_RECORD_DESCRIPTION_MAX_LENGTH = 100
 export const FINANCE_RECORD_MIN_AMOUNT = 0.01
 export const FINANCE_RECORD_MAX_AMOUNT = 9_999_999.99
+
+const queryKeys = {
+  ALL: () => ['all'],
+  LISTS: () => [...queryKeys.ALL(), 'lists'],
+  LIST_BY_FILTERS: (filters = {}) => [...queryKeys.LISTS(), 'list', filters],
+}
+
+export const FINANCE_RECORD_QUERY_KEYS = queryKeys

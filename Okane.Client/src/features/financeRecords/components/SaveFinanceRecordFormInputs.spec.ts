@@ -4,6 +4,7 @@ import SaveFinanceRecordFormInputs from '@features/financeRecords/components/Sav
 import { ARIA_LIVE } from '@shared/constants/aria.constants'
 import { INPUT_TYPE } from '@shared/constants/form.constants'
 import {
+  FINANCE_RECORD_DESCRIPTION_MAX_LENGTH,
   FINANCE_RECORD_MAX_AMOUNT,
   FINANCE_RECORD_MIN_AMOUNT,
   FINANCE_RECORD_TYPE,
@@ -202,6 +203,7 @@ describe('Description input', () => {
     expect(input.attributes()).toEqual(
       expect.objectContaining({
         id: expect.any(String),
+        maxlength: FINANCE_RECORD_DESCRIPTION_MAX_LENGTH.toString(),
         name: 'description',
         required: '',
         type: INPUT_TYPE.TEXT,

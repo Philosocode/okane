@@ -17,5 +17,6 @@ export const FINANCE_RECORD_TYPE_OPTIONS: SelectOption[] = [
   },
 ]
 
+export const FINANCE_RECORD_DESCRIPTION_MAX_LENGTH = 100
 export const FINANCE_RECORD_MIN_AMOUNT = 0.01
 export const FINANCE_RECORD_MAX_AMOUNT = 9_999_999.99

@@ -5,6 +5,7 @@ import FormSelect from '@shared/components/form/FormSelect.vue'
 
 import { INPUT_TYPE } from '@shared/constants/form.constants'
 import {
+  FINANCE_RECORD_DESCRIPTION_MAX_LENGTH,
   FINANCE_RECORD_MAX_AMOUNT,
   FINANCE_RECORD_MIN_AMOUNT,
   FINANCE_RECORD_TYPE_OPTIONS,
@@ -51,11 +52,12 @@ const emit = defineEmits<{
   <FormInput
     :error="props.formErrors.description"
     label="Description"
+    :maxlength="FINANCE_RECORD_DESCRIPTION_MAX_LENGTH"
     name="description"
-    required
-    :type="INPUT_TYPE.TEXT"
     :model-value="formState.description"
     @update:model-value="emit('inputUpdated', { description: $event })"
+    required
+    :type="INPUT_TYPE.TEXT"
   />
   <FormInput
     :error="props.formErrors.happenedAt"

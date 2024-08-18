@@ -1,11 +1,11 @@
 // Internal
 import type {
-  FinanceRecord,
+  PreCreationFinanceRecord,
   SaveFinanceRecordFormState,
 } from '@features/financeRecords/types/financeRecord.types'
 
 export function mapSaveFinanceRecordFormStateToFinanceRecord(
   formState: SaveFinanceRecordFormState,
-): FinanceRecord {
+): PreCreationFinanceRecord {
   return { ...formState, happenedAt: new Date(formState.happenedAt) }
 }

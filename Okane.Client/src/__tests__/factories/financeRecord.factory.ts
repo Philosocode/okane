@@ -12,6 +12,7 @@ import { baseStubFactory } from '@tests/factories/base.factory'
 import { dateToDateTimeLocalFormat } from '@shared/utils/dateTime.utils'
 
 const defaultFinanceRecord: FinanceRecord = {
+  id: 1,
   amount: 540.72,
   description: 'Expensive expense',
   type: FINANCE_RECORD_TYPE.EXPENSE,
@@ -26,7 +27,9 @@ export const createStubFinanceRecord: StubFactoryFunction<FinanceRecord> = (
 }
 
 const defaultSaveFinanceRecordFormState: SaveFinanceRecordFormState = {
-  ...defaultFinanceRecord,
+  amount: defaultFinanceRecord.amount,
+  description: defaultFinanceRecord.description,
+  type: defaultFinanceRecord.type,
   happenedAt: dateToDateTimeLocalFormat(defaultFinanceRecord.happenedAt),
 }
 

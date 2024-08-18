@@ -3,6 +3,7 @@ import merge from 'lodash.merge'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { mount, type ComponentMountingOptions } from '@vue/test-utils'
 import { createPinia, setActivePinia, type Pinia } from 'pinia'
+import { VUE_QUERY_CLIENT, type QueryClient } from '@tanstack/vue-query'
 
 import type { Component, Plugin } from 'vue'
 import type { Router } from 'vue-router'
@@ -11,6 +12,7 @@ import type { Router } from 'vue-router'
 import { createAppRouter } from '@shared/services/router/router.service'
 
 import '@shared/services/fontAwesome/fontAwesome.service'
+import { testQueryClient } from '@tests/queryClient/testQueryClient'
 
 global.getMountComponent = customMount
 
@@ -30,6 +32,7 @@ beforeEach(() => {
 type CustomMountingOptions = {
   withPinia?: boolean | Pinia
   withRouter?: boolean | Router
+  withQueryClient?: boolean | QueryClient
 }
 
 type BaseMountingOptions = CustomMountingOptions & ComponentMountingOptions<Component>
@@ -82,6 +85,20 @@ function populatePlugins(customOptions?: CustomMountingOptions): Plugin[] {
     }
 
     plugins.push(piniaToUse)
+  }
+
+  if (customOptions?.withQueryClient) {
+    let queryClientToUse = testQueryClient
+
+    if (typeof customOptions.withQueryClient !== 'boolean') {
+      queryClientToUse = customOptions.withQueryClient
+    }
+
+    plugins.push({
+      install(app) {
+        app.provide(VUE_QUERY_CLIENT, queryClientToUse)
+      },
+    })
   }
 
   return plugins

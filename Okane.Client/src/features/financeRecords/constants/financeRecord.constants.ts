@@ -2,20 +2,16 @@
 import type { SelectOption } from '@shared/components/form/FormSelect.vue'
 
 export enum FINANCE_RECORD_TYPE {
-  EXPENSE = 'expense',
-  REVENUE = 'revenue',
+  EXPENSE = 'Expense',
+  REVENUE = 'Revenue',
 }
 
-export const FINANCE_RECORD_TYPE_OPTIONS: SelectOption[] = [
-  {
-    label: 'Expense',
-    value: FINANCE_RECORD_TYPE.EXPENSE,
-  },
-  {
-    label: 'Revenue',
-    value: FINANCE_RECORD_TYPE.REVENUE,
-  },
-]
+export const FINANCE_RECORD_TYPE_OPTIONS: SelectOption[] = Object.values(FINANCE_RECORD_TYPE).map(
+  (type) => ({
+    value: type,
+    label: type,
+  }),
+)
 
 export const FINANCE_RECORD_DESCRIPTION_MAX_LENGTH = 100
 export const FINANCE_RECORD_MIN_AMOUNT = 0.01

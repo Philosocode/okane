@@ -17,17 +17,23 @@ import {
 } from '@features/financeRecords/constants/financeRecord.constants'
 
 import * as useModal from '@shared/composables/useModal'
-import * as useSaveFinanceRecord from '@features/financeRecords/composables/useSaveFinanceRecord.composable'
 
-import { spyOnDate } from '@tests/spies/date.spies'
-import { testServer } from '@tests/msw/testServer'
+import { apiClient } from '@shared/services/apiClient/apiClient.service'
+
+import { mapSaveFinanceRecordFormStateToFinanceRecord } from '@features/financeRecords/utils/financeRecord.utils'
 
 import { createStubAPIFormErrors } from '@tests/factories/formErrors.factory'
 import { createStubProblemDetails } from '@tests/factories/problemDetails.factory'
-import { createStubSaveFinanceRecordFormState } from '@tests/factories/financeRecord.factory'
-import { mapSaveFinanceRecordFormStateToFinanceRecord } from '@features/financeRecords/utils/financeRecord.utils'
+import {
+  createStubFinanceRecord,
+  createStubSaveFinanceRecordFormState,
+} from '@tests/factories/financeRecord.factory'
+import { spyOnDate } from '@tests/spies/date.spies'
+import { testServer } from '@tests/msw/testServer'
+import { wrapInAPIResponse } from '@tests/factories/apiResponse.factory'
 
 const mountComponent = getMountComponent(SaveFinanceRecordForm, {
+  withQueryClient: true,
   global: {
     stubs: {
       teleport: true,
@@ -36,6 +42,13 @@ const mountComponent = getMountComponent(SaveFinanceRecordForm, {
 })
 
 const spyOn = {
+  postFinanceRecord() {
+    const spy = vi
+      .spyOn(apiClient, 'post')
+      .mockResolvedValue(wrapInAPIResponse(createStubFinanceRecord()))
+
+    return { spy }
+  },
   useModal() {
     const mockedFunctions = { showModal: vi.fn(), closeModal: vi.fn() }
     const spy = vi.spyOn(useModal, 'useModal').mockReturnValue({
@@ -47,14 +60,6 @@ const spyOn = {
       spy,
       ...mockedFunctions,
     }
-  },
-  useSaveFinanceRecord() {
-    const mockSave = vi.fn()
-    const spy = vi.spyOn(useSaveFinanceRecord, 'useSaveFinanceRecord').mockReturnValue({
-      saveFinanceRecord: mockSave,
-    })
-
-    return { spy, saveFinanceRecord: mockSave }
   },
 }
 
@@ -158,14 +163,14 @@ describe('with some form inputs filled', () => {
   async function assertDoesNotCreateAFinanceRecordWithInvalidInput(
     afterInputPopulationHook: (wrapper: VueWrapper) => Promise<void>,
   ) {
-    const { saveFinanceRecord } = spyOn.useSaveFinanceRecord()
+    const { spy: postRequestSpy } = spyOn.postFinanceRecord()
     const wrapper = mountComponent()
 
     await populateAllInputs(wrapper)
     await afterInputPopulationHook(wrapper)
     await clickOnSaveButton(wrapper)
 
-    expect(saveFinanceRecord).not.toHaveBeenCalled()
+    expect(postRequestSpy).not.toHaveBeenCalled()
   }
 
   describe('amount input', () => {
@@ -209,7 +214,8 @@ describe('with a valid form state', () => {
   async function setUp() {
     spyOnDate.now()
 
-    const { saveFinanceRecord } = spyOn.useSaveFinanceRecord()
+    const { spy: postRequestSpy } = spyOn.postFinanceRecord()
+
     const wrapper = mountComponent()
 
     await populateAllInputs(wrapper)
@@ -217,13 +223,16 @@ describe('with a valid form state', () => {
     const saveButton = elements.saveButton(wrapper)
     await saveButton.trigger('click')
 
-    return { saveFinanceRecord, wrapper }
+    await flushPromises()
+
+    return { postRequestSpy, wrapper }
   }
 
   test('creates a finance record', async () => {
-    const { saveFinanceRecord } = await setUp()
+    const { postRequestSpy } = await setUp()
 
-    expect(saveFinanceRecord).toHaveBeenCalledWith(
+    expect(postRequestSpy).toHaveBeenCalledWith(
+      '/finance-records',
       mapSaveFinanceRecordFormStateToFinanceRecord(formState),
     )
   })

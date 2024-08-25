@@ -2,6 +2,7 @@
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/financeRecord.constants'
 
 import type { FormErrors } from '@shared/types/form.types'
+import type { PreCreationEntity } from '@shared/types/entity.types'
 
 export type FinanceRecord = {
   id: number
@@ -11,7 +12,9 @@ export type FinanceRecord = {
   type: FINANCE_RECORD_TYPE
 }
 
-export type SaveFinanceRecordFormState = Omit<FinanceRecord, 'id' | 'happenedAt'> & {
+export type PreCreationFinanceRecord = PreCreationEntity<FinanceRecord>
+
+export type SaveFinanceRecordFormState = Omit<PreCreationFinanceRecord, 'happenedAt'> & {
   happenedAt: string
 }
 

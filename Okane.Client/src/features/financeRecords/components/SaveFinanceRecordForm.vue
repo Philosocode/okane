@@ -12,6 +12,7 @@ import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/financeR
 
 import type { SaveFinanceRecordFormState } from '@features/financeRecords/types/financeRecord.types'
 
+import { useCreateFinanceRecordMutation } from '@features/financeRecords/composables/useCreateFinanceRecordMutation.composable'
 import { useModal } from '@shared/composables/useModal'
 
 import { dateToDateTimeLocalFormat } from '@shared/utils/dateTime.utils'
@@ -19,11 +20,10 @@ import { getFormErrorsFromAPIResponse } from '@shared/services/apiClient/apiClie
 import { getInitialFormErrors } from '@shared/utils/form.utils'
 import { isObjectType } from '@shared/utils/object.utils'
 import { mapSaveFinanceRecordFormStateToFinanceRecord } from '@features/financeRecords/utils/financeRecord.utils'
-import { useSaveFinanceRecord } from '@features/financeRecords/composables/useSaveFinanceRecord.composable'
 
 const { showModal, closeModal, modalIsShowing } = useModal()
 
-const { saveFinanceRecord } = useSaveFinanceRecord()
+const { mutate: createFinanceRecord } = useCreateFinanceRecordMutation()
 
 const initialFormState: SaveFinanceRecordFormState = {
   amount: 0,
@@ -53,23 +53,25 @@ function handleInputUpdated(data: Partial<SaveFinanceRecordFormState>) {
   }
 }
 
-async function handleSave() {
+function handleSave() {
   if (!formRef.value?.checkValidity()) return
 
   formErrors.value = { ...initialFormErrors }
 
-  try {
-    const financeRecord = mapSaveFinanceRecordFormStateToFinanceRecord(formState.value)
+  const financeRecord = mapSaveFinanceRecordFormStateToFinanceRecord(formState.value)
 
-    await saveFinanceRecord(financeRecord)
-    resetForm()
-  } catch (err: any) {
-    if (isObjectType(err)) {
-      formErrors.value = getFormErrorsFromAPIResponse(err, initialFormState)
-    }
+  createFinanceRecord(financeRecord, {
+    onSuccess() {
+      resetForm()
+    },
+    onError(err) {
+      if (isObjectType(err)) {
+        formErrors.value = getFormErrorsFromAPIResponse(err, initialFormState)
+      }
 
-    // TODO #41: Display toast for other errors.
-  }
+      // TODO #41: Display toast for other errors.
+    },
+  })
 }
 </script>
 

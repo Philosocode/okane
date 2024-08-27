@@ -1,12 +1,13 @@
 // External
 import { flushPromises } from '@vue/test-utils'
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, toRef } from 'vue'
 import { http, HttpResponse } from 'msw'
 
 // Internal
 import FinanceRecordListItem from '@features/financeRecords/components/FinanceRecordListItem.vue'
 import InfiniteScroller from '@shared/components/InfiniteScroller.vue'
 
+import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/financeRecord.constants'
 import { DEFAULT_PAGE_SIZE } from '@shared/constants/request.constants'
 
 import { FINANCE_RECORD_HANDLER_FACTORY } from '@tests/msw/handlers/financeRecord.handlers'
@@ -34,7 +35,9 @@ function getTestComponent(errorTemplate?: string) {
   return defineComponent({
     components: { FinanceRecordListItem, InfiniteScroller },
     setup() {
-      const queryResult = useInfiniteQueryFinanceRecords()
+      const queryResult = useInfiniteQueryFinanceRecords(
+        toRef(DEFAULT_FINANCE_RECORD_SEARCH_FILTERS),
+      )
       const items = computed(() => flattenPages(queryResult?.data?.value?.pages ?? []))
 
       return { queryResult, items }
@@ -75,7 +78,7 @@ function mountComponent(errorTemplate?: string) {
   })()
 }
 
-const financeRecords = getRange({ end: DEFAULT_PAGE_SIZE * 2 + 1 }).map((n) =>
+const financeRecords = getRange({ end: DEFAULT_PAGE_SIZE * 2 + 1 }).map((_) =>
   createStubFinanceRecord({}),
 )
 

@@ -1,16 +1,19 @@
 <script setup lang="ts">
 // External
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 
 // Internal
 import FinanceRecordListItem from '@features/financeRecords/components/FinanceRecordListItem.vue'
 import InfiniteScroller from '@shared/components/InfiniteScroller.vue'
 
+import { FINANCE_RECORD_SEARCH_FILTERS_KEY } from '@features/financeRecords/constants/financeRecord.constants'
+
 import { useInfiniteQueryFinanceRecords } from '@features/financeRecords/composables/useInfiniteQueryFinanceRecords'
 
 import { flattenPages } from '@shared/utils/response.utils'
 
-const queryResult = useInfiniteQueryFinanceRecords()
+const searchFilters = inject(FINANCE_RECORD_SEARCH_FILTERS_KEY)
+const queryResult = useInfiniteQueryFinanceRecords(searchFilters)
 const financeRecords = computed(() => flattenPages(queryResult.data.value?.pages))
 </script>
 

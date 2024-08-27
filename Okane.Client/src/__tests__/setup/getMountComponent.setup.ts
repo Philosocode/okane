@@ -47,10 +47,18 @@ type BaseMountingOptions = CustomMountingOptions & ComponentMountingOptions<Comp
  */
 function customMount(component: Component, baseOptions?: BaseMountingOptions) {
   return function (perMountOptions?: ComponentMountingOptions<Component>) {
+    // lodash.merge doesn't support symbols, so we need to manually merge the provide objects.
+    const mergedProvide: Record<string | symbol, unknown> = baseOptions?.global?.provide ?? {}
+
+    Object.getOwnPropertySymbols(perMountOptions?.global?.provide ?? {}).forEach((key) => {
+      mergedProvide[key] = perMountOptions?.global?.provide
+    })
+
     const mergedOptions = merge(
       {
         global: {
           plugins: [] as Plugin[],
+          provide: mergedProvide,
           stubs: { FontAwesomeIcon },
         },
       },

@@ -11,8 +11,10 @@ import SaveFinanceRecordFormInputs from '@features/financeRecords/components/Sav
 
 import { BUTTON_TYPE } from '@shared/constants/form.constants'
 import {
+  DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
   FINANCE_RECORD_MAX_AMOUNT,
   FINANCE_RECORD_MIN_AMOUNT,
+  FINANCE_RECORD_SEARCH_FILTERS_KEY,
   FINANCE_RECORD_TYPE,
 } from '@features/financeRecords/constants/financeRecord.constants'
 
@@ -35,6 +37,9 @@ import { wrapInAPIResponse } from '@tests/factories/apiResponse.factory'
 const mountComponent = getMountComponent(SaveFinanceRecordForm, {
   withQueryClient: true,
   global: {
+    provide: {
+      [FINANCE_RECORD_SEARCH_FILTERS_KEY as symbol]: toRef(DEFAULT_FINANCE_RECORD_SEARCH_FILTERS),
+    },
     stubs: {
       teleport: true,
     },

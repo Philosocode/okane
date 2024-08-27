@@ -1,8 +1,17 @@
+// External
+import { computed, defineComponent, inject } from 'vue'
+
 // Internal
 import DashboardPage from '@shared/pages/DashboardPage.vue'
 
+import {
+  DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+  FINANCE_RECORD_SEARCH_FILTERS_KEY,
+} from '@features/financeRecords/constants/financeRecord.constants'
+
 const testIds = {
   FinanceRecordList: 'FinanceRecordListStub',
+  Heading: 'HeadingStub',
   SaveFinanceRecordForm: 'SaveFinanceRecordFormStub',
 }
 
@@ -42,4 +51,28 @@ test('renders a list of finance records', () => {
   const mockedList = wrapper.get(`[data-testid="${testIds.FinanceRecordList}"]`)
 
   expect(mockedList.isVisible()).toBe(true)
+})
+
+test('provides the search filters', () => {
+  // Since DashboardPage doesn't render a slot, we'll use this instead to check that the
+  // expected value is provided.
+  const HeadingStub = defineComponent({
+    setup() {
+      const queryKey = inject(FINANCE_RECORD_SEARCH_FILTERS_KEY)
+      const hashedKey = computed(() => JSON.stringify(queryKey?.value))
+      return { hashedKey }
+    },
+    template: `<div data-testid="${testIds.Heading}">{{ hashedKey }}</div>`,
+  })
+
+  const wrapper = mountComponent({
+    global: {
+      stubs: {
+        Heading: HeadingStub,
+      },
+    },
+  })
+
+  const heading = wrapper.get(`[data-testid="${testIds.Heading}"]`)
+  expect(heading.text()).toBe(JSON.stringify(DEFAULT_FINANCE_RECORD_SEARCH_FILTERS))
 })

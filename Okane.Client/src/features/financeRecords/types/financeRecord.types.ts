@@ -19,3 +19,5 @@ export type SaveFinanceRecordFormState = Omit<PreCreationFinanceRecord, 'happene
 }
 
 export type SaveFinanceRecordFormErrors = FormErrors<SaveFinanceRecordFormState>
+
+export type FinanceRecordSearchFilters = {}

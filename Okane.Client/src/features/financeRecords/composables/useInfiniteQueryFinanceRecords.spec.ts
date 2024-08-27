@@ -1,9 +1,14 @@
 // External
-import { defineComponent } from 'vue'
+import { defineComponent, toRef, type Ref } from 'vue'
 
 // Internal
-import { FINANCE_RECORD_QUERY_KEYS } from '@features/financeRecords/constants/financeRecord.constants'
 import { DEFAULT_PAGE_SIZE, INITIAL_PAGE } from '@shared/constants/request.constants'
+import {
+  DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+  FINANCE_RECORD_QUERY_KEYS,
+} from '@features/financeRecords/constants/financeRecord.constants'
+
+import type { FinanceRecordSearchFilters } from '@features/financeRecords/types/financeRecord.types'
 
 import * as useCleanUpInfiniteQuery from '@shared/composables/useCleanUpInfiniteQuery'
 import { useInfiniteQueryFinanceRecords } from '@features/financeRecords/composables/useInfiniteQueryFinanceRecords'
@@ -12,29 +17,44 @@ import { apiClient } from '@shared/services/apiClient/apiClient.service'
 
 import { wrapInAPIResponse } from '@tests/factories/apiResponse.factory'
 
-const TestComponent = defineComponent({
-  setup() {
-    useInfiniteQueryFinanceRecords()
-  },
-  template: '<div />',
-})
+function getTestComponent(filters?: Ref<FinanceRecordSearchFilters>) {
+  return defineComponent({
+    setup() {
+      useInfiniteQueryFinanceRecords(filters)
+    },
+    template: '<div />',
+  })
+}
 
-const mountComponent = getMountComponent(TestComponent, { withQueryClient: true })
+const searchFilters = toRef(DEFAULT_FINANCE_RECORD_SEARCH_FILTERS)
+
+const mountComponent = getMountComponent(getTestComponent(searchFilters), { withQueryClient: true })
 
 test('makes a request to fetch paginated finance records', () => {
-  const cleanUpSpy = vi.spyOn(useCleanUpInfiniteQuery, 'useCleanUpInfiniteQuery').mockReturnValue()
   const getSpy = vi.spyOn(apiClient, 'get').mockResolvedValue(wrapInAPIResponse({}))
 
   mountComponent()
-
-  expect(cleanUpSpy).toHaveBeenCalledWith(
-    expect.objectContaining({
-      _value: FINANCE_RECORD_QUERY_KEYS.LIST_BY_FILTERS(),
-    }),
-  )
 
   expect(getSpy).toHaveBeenCalledWith(
     `/finance-records?page=${INITIAL_PAGE}&pageSize=${DEFAULT_PAGE_SIZE}`,
     { signal: new AbortController().signal },
   )
+})
+
+test('cleans up the infinite query', () => {
+  const cleanUpSpy = vi.spyOn(useCleanUpInfiniteQuery, 'useCleanUpInfiniteQuery').mockReturnValue()
+
+  mountComponent()
+
+  expect(cleanUpSpy.mock.calls[0][0]?.value).toEqual(
+    FINANCE_RECORD_QUERY_KEYS.LIST_BY_FILTERS(searchFilters),
+  )
+})
+
+test('does nothing if searchFilters are undefined', () => {
+  const getSpy = vi.spyOn(apiClient, 'get').mockResolvedValue(wrapInAPIResponse({}))
+
+  getMountComponent(getTestComponent(), { withQueryClient: true })()
+
+  expect(getSpy).not.toHaveBeenCalled()
 })

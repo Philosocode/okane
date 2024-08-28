@@ -30,7 +30,6 @@ import {
   createStubFinanceRecord,
   createStubSaveFinanceRecordFormState,
 } from '@tests/factories/financeRecord.factory'
-import { spyOnDate } from '@tests/spies/date.spies'
 import { testServer } from '@tests/msw/testServer'
 import { wrapInAPIResponse } from '@tests/factories/apiResponse.factory'
 
@@ -217,8 +216,6 @@ describe('with some form inputs filled', () => {
 
 describe('with a valid form state', () => {
   async function setUp() {
-    spyOnDate.now()
-
     const { spy: postRequestSpy } = spyOn.postFinanceRecord()
 
     const wrapper = mountComponent()

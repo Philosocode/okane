@@ -2,6 +2,7 @@
 import { http, HttpResponse } from 'msw'
 
 // Internal
+import { AUTH_API_ROUTES } from '@features/auth/constants/apiRoutes'
 import { HTTP_STATUS_CODE } from '@shared/constants/http.constants'
 
 import type { AuthenticateResponse } from '@features/auth/auth.types'
@@ -27,9 +28,13 @@ const authResponse: AuthenticateResponse = {
 
 beforeEach(() => {
   testServer.use(
-    http.post('/api/auth/login', () => HttpResponse.json(authResponse)),
-    http.post('/api/auth/refresh-token', () => HttpResponse.json(authResponse)),
-    http.post('/api/auth/logout', () => HttpResponse.json(wrapInAPIResponse(null))),
+    http.post(`/api${AUTH_API_ROUTES.LOGIN.basePath}`, () => HttpResponse.json(authResponse)),
+    http.post(`/api${AUTH_API_ROUTES.REFRESH_TOKEN.basePath}`, () =>
+      HttpResponse.json(authResponse),
+    ),
+    http.post(`/api${AUTH_API_ROUTES.LOGOUT.basePath}`, () =>
+      HttpResponse.json(wrapInAPIResponse(null)),
+    ),
   )
 })
 
@@ -44,7 +49,10 @@ test('register', async () => {
   await authStore.register(formData.email, formData.name, formData.password)
 
   expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith('/auth/register', omitObjectKeys(formData, ['passwordConfirm']))
+  expect(spy).toHaveBeenCalledWith(
+    AUTH_API_ROUTES.REGISTER.basePath,
+    omitObjectKeys(formData, ['passwordConfirm']),
+  )
 })
 
 test('login', async () => {

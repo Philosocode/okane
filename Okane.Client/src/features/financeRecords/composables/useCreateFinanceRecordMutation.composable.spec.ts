@@ -3,6 +3,7 @@ import { defineComponent, toRef } from 'vue'
 import { flushPromises } from '@vue/test-utils'
 
 // Internal
+import { FINANCE_RECORD_API_ROUTES } from '@features/financeRecords/constants/apiRoutes'
 import {
   DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
   FINANCE_RECORD_QUERY_KEYS,
@@ -57,7 +58,10 @@ test('makes a POST request to the expected endpoint', async () => {
 
   await flushPromises()
 
-  expect(postSpy).toHaveBeenCalledWith('/finance-records', financeRecord)
+  expect(postSpy).toHaveBeenCalledWith(
+    FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.basePath,
+    financeRecord,
+  )
 })
 
 test('does not invalidate the query key when no search filters are passed', async () => {

@@ -10,6 +10,7 @@ import SaveFinanceRecordForm from '@features/financeRecords/components/SaveFinan
 import SaveFinanceRecordFormInputs from '@features/financeRecords/components/SaveFinanceRecordFormInputs.vue'
 
 import { BUTTON_TYPE } from '@shared/constants/form.constants'
+import { FINANCE_RECORD_API_ROUTES } from '@features/financeRecords/constants/apiRoutes'
 import {
   DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
   FINANCE_RECORD_MAX_AMOUNT,
@@ -234,7 +235,7 @@ describe('with a valid form state', () => {
     const { postRequestSpy } = await setUp()
 
     expect(postRequestSpy).toHaveBeenCalledWith(
-      '/finance-records',
+      FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.basePath,
       mapSaveFinanceRecordFormStateToFinanceRecord(formState),
     )
   })
@@ -275,7 +276,7 @@ describe('with an error creating the finance record', () => {
 
   beforeEach(() => {
     testServer.use(
-      http.post('/api/finance-records', () => {
+      http.post(`/api${FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.basePath}`, () => {
         const problemDetails = createStubProblemDetails({ errors: formErrors })
         return HttpResponse.json(problemDetails, { status: problemDetails.status })
       }),

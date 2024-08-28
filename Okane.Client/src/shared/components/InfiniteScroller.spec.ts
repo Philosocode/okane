@@ -9,7 +9,7 @@ import InfiniteScroller from '@shared/components/InfiniteScroller.vue'
 
 import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/financeRecord.constants'
 import { DEFAULT_PAGE_SIZE } from '@shared/constants/request.constants'
-
+import { FINANCE_RECORD_API_ROUTES } from '@features/financeRecords/constants/apiRoutes'
 import { FINANCE_RECORD_HANDLER_FACTORY } from '@tests/msw/handlers/financeRecord.handlers'
 
 import { useInfiniteQueryFinanceRecords } from '@features/financeRecords/composables/useInfiniteQueryFinanceRecords'
@@ -172,9 +172,11 @@ describe(`when there are more pages to fetch page`, () => {
   const page3FinanceRecord = createStubFinanceRecord({ description: 'page3FinanceRecord' })
 
   beforeEach(() => {
+    const apiRoute = `/api${FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.basePath}`
+
     testServer.use(
       http.get(
-        '/api/finance-records',
+        apiRoute,
         withSearchParams(
           (searchParams) => searchParams.get('page') === '1',
           () => {
@@ -183,7 +185,7 @@ describe(`when there are more pages to fetch page`, () => {
         ),
       ),
       http.get(
-        '/api/finance-records',
+        apiRoute,
         withSearchParams(
           (searchParams) => {
             return searchParams.get('page') === '2'
@@ -196,7 +198,7 @@ describe(`when there are more pages to fetch page`, () => {
         ),
       ),
       http.get(
-        '/api/finance-records',
+        apiRoute,
         withSearchParams(
           (searchParams) => searchParams.get('page') === '3',
           () => {

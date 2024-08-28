@@ -4,11 +4,12 @@ import { computed, type Ref } from 'vue'
 import { type QueryFunctionContext, useInfiniteQuery } from '@tanstack/vue-query'
 
 // Internal
+import { FINANCE_RECORD_API_ROUTES } from '@features/financeRecords/constants/apiRoutes'
+import { INITIAL_PAGE } from '@shared/constants/request.constants'
 import {
   DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
   FINANCE_RECORD_QUERY_KEYS,
 } from '@features/financeRecords/constants/financeRecord.constants'
-import { DEFAULT_PAGE_SIZE, INITIAL_PAGE } from '@shared/constants/request.constants'
 
 import type {
   FinanceRecord,
@@ -24,9 +25,12 @@ export function fetchPaginatedFinanceRecords({
   pageParam,
   signal,
 }: QueryFunctionContext): Promise<APIPaginatedResponse<FinanceRecord>> {
-  return apiClient.get(`/finance-records?page=${pageParam}&pageSize=${DEFAULT_PAGE_SIZE}`, {
-    signal,
-  })
+  return apiClient.get(
+    FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.buildPath({ page: pageParam }),
+    {
+      signal,
+    },
+  )
 }
 
 export function useInfiniteQueryFinanceRecords(searchFilters?: Ref<FinanceRecordSearchFilters>) {

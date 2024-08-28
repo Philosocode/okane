@@ -3,6 +3,7 @@ import { http, HttpResponse, RequestHandler } from 'msw'
 
 // Internal
 import { DEFAULT_PAGE_SIZE } from '@shared/constants/request.constants'
+import { FINANCE_RECORD_API_ROUTES } from '@features/financeRecords/constants/apiRoutes'
 import { HTTP_STATUS_CODE } from '@shared/constants/http.constants'
 
 import type { FinanceRecord } from '@features/financeRecords/types/financeRecord.types'
@@ -25,12 +26,12 @@ function getStubbedFinanceRecords(numRecords: number): FinanceRecord[] {
 
 export const FINANCE_RECORD_HANDLER_FACTORY = {
   GET_PAGINATED_FINANCE_RECORDS_SUCCESS(financeRecords: FinanceRecord[]) {
-    return http.get('/api/finance-records', () => {
+    return http.get(`/api${FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.basePath}`, () => {
       return HttpResponse.json(wrapInAPIPaginatedResponse(wrapInAPIResponse(financeRecords)))
     })
   },
   GET_PAGINATED_FINANCE_RECORDS_ERROR(detail?: string) {
-    return http.get('/api/finance-records', () => {
+    return http.get(`/api${FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.basePath}`, () => {
       return HttpResponse.json(createStubProblemDetails({ detail }), {
         status: HTTP_STATUS_CODE.BAD_REQUEST_400,
       })

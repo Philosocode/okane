@@ -2,10 +2,11 @@
 import { http, HttpResponse } from 'msw'
 
 // Internal
-import { type APIResponse } from '@shared/services/apiClient/apiClient.types'
-
+import { AUTH_API_ROUTES } from '@features/auth/constants/apiRoutes'
 import { ROUTE_MAP } from '@shared/services/router/router.service'
 import { HTTP_STATUS_CODE, MIME_TYPE } from '@shared/constants/http.constants'
+
+import { type APIResponse } from '@shared/services/apiClient/apiClient.types'
 
 import { useAuthStore } from '@features/auth/useAuthStore'
 
@@ -142,7 +143,9 @@ describe('when logged in', () => {
     expect(response.items[0]).toEqual('pong')
   })
 
-  const logoutHandler = http.post('/api/auth/logout', () => HttpResponse.json())
+  const logoutHandler = http.post(`/api${AUTH_API_ROUTES.LOGOUT.basePath}`, () =>
+    HttpResponse.json(),
+  )
   const getErrorHandler = (statusCode: HTTP_STATUS_CODE) =>
     http.get('/api/ping', () => {
       const errorResponse = JSON.stringify(createStubProblemDetails())

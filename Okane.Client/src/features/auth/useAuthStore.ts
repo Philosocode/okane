@@ -3,6 +3,8 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 // Internal
+import { AUTH_API_ROUTES } from '@features/auth/constants/apiRoutes'
+
 import type { AuthenticateResponse } from '@features/auth/auth.types'
 import type { User } from '@features/users/user.types'
 import type { Timeout } from '@shared/types/shared.type'
@@ -29,7 +31,7 @@ export const useAuthStore = defineStore('AuthStore', () => {
    * @param password
    */
   async function register(email: string, name: string, password: string): Promise<void> {
-    await apiClient.post('/auth/register', { email, name, password })
+    await apiClient.post(AUTH_API_ROUTES.REGISTER.basePath, { email, name, password })
   }
 
   /**
@@ -47,7 +49,9 @@ export const useAuthStore = defineStore('AuthStore', () => {
    * Get a new JWT token and update the auth store.
    */
   async function handleRefreshToken() {
-    const response = await apiClient.post<AuthenticateResponse>('/auth/refresh-token')
+    const response = await apiClient.post<AuthenticateResponse>(
+      AUTH_API_ROUTES.REFRESH_TOKEN.basePath,
+    )
     initState(response)
   }
 
@@ -85,7 +89,7 @@ export const useAuthStore = defineStore('AuthStore', () => {
    * Log out the user by clearing the store state.
    */
   async function logout() {
-    await apiClient.post('/auth/logout')
+    await apiClient.post(AUTH_API_ROUTES.LOGOUT.basePath)
     clearTimeout(refreshTokenInterval.value)
 
     authUser.value = undefined

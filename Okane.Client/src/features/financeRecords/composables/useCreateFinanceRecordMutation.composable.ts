@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import type { Ref } from 'vue'
 
 // Internal
+import { FINANCE_RECORD_API_ROUTES } from '@features/financeRecords/constants/apiRoutes'
 import { FINANCE_RECORD_QUERY_KEYS } from '@features/financeRecords/constants/financeRecord.constants'
 
 import type {
@@ -14,7 +15,7 @@ import type {
 import { apiClient } from '@shared/services/apiClient/apiClient.service'
 
 function postFinanceRecord(financeRecord: PreCreationFinanceRecord) {
-  return apiClient.post('/finance-records', financeRecord)
+  return apiClient.post(FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.basePath, financeRecord)
 }
 
 export function useCreateFinanceRecordMutation(searchFilters?: Ref<FinanceRecordSearchFilters>) {

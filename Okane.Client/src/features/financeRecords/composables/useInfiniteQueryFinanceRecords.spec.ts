@@ -2,7 +2,8 @@
 import { defineComponent, toRef, type Ref } from 'vue'
 
 // Internal
-import { DEFAULT_PAGE_SIZE, INITIAL_PAGE } from '@shared/constants/request.constants'
+import { INITIAL_PAGE } from '@shared/constants/request.constants'
+import { FINANCE_RECORD_API_ROUTES } from '@features/financeRecords/constants/apiRoutes'
 import {
   DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
   FINANCE_RECORD_QUERY_KEYS,
@@ -36,8 +37,10 @@ test('makes a request to fetch paginated finance records', () => {
   mountComponent()
 
   expect(getSpy).toHaveBeenCalledWith(
-    `/finance-records?page=${INITIAL_PAGE}&pageSize=${DEFAULT_PAGE_SIZE}`,
-    { signal: new AbortController().signal },
+    FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.buildPath({ page: INITIAL_PAGE }),
+    {
+      signal: new AbortController().signal,
+    },
   )
 })
 

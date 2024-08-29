@@ -4,9 +4,9 @@ import { formatDate } from 'date-fns'
 // Internal
 import FinanceRecordListItem from '@features/financeRecords/components/FinanceRecordListItem.vue'
 
-import { createStubFinanceRecord } from '@tests/factories/financeRecord.factory'
+import { createTestFinanceRecord } from '@tests/factories/financeRecord'
 
-const financeRecord = createStubFinanceRecord()
+const financeRecord = createTestFinanceRecord()
 const mountComponent = getMountComponent(FinanceRecordListItem, {
   props: { financeRecord },
 })

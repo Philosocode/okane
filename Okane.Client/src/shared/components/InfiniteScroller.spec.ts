@@ -7,19 +7,19 @@ import { http, HttpResponse } from 'msw'
 import FinanceRecordListItem from '@features/financeRecords/components/FinanceRecordListItem.vue'
 import InfiniteScroller from '@shared/components/InfiniteScroller.vue'
 
-import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/financeRecord.constants'
-import { DEFAULT_PAGE_SIZE } from '@shared/constants/request.constants'
+import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
+import { DEFAULT_PAGE_SIZE } from '@shared/constants/request'
 import { FINANCE_RECORD_API_ROUTES } from '@features/financeRecords/constants/apiRoutes'
-import { FINANCE_RECORD_HANDLER_FACTORY } from '@tests/msw/handlers/financeRecord.handlers'
+import { FINANCE_RECORD_HANDLER_FACTORY } from '@tests/msw/handlers/financeRecord'
 
 import { useInfiniteQueryFinanceRecords } from '@features/financeRecords/composables/useInfiniteQueryFinanceRecords'
 
-import { flattenPages } from '@shared/utils/response.utils'
-import { getRange } from '@shared/utils/array.utils'
-import { wrapInAPIPaginatedResponse, wrapInAPIResponse } from '@tests/factories/apiResponse.factory'
+import { flattenPages } from '@shared/utils/response'
+import { getRange } from '@shared/utils/array'
+import { wrapInAPIPaginatedResponse, wrapInAPIResponse } from '@tests/utils/apiResponse'
 
-import { createStubFinanceRecord } from '@tests/factories/financeRecord.factory'
-import { setUpIntersectionObserverMock } from '@tests/mocks/intersectionObserver.mock'
+import { createTestFinanceRecord } from '@tests/factories/financeRecord'
+import { setUpIntersectionObserverMock } from '@tests/mocks/intersectionObserver'
 import { testServer } from '@tests/msw/testServer'
 import { withSearchParams } from '@tests/msw/resolvers/withSearchParams'
 
@@ -79,7 +79,7 @@ function mountComponent(errorTemplate?: string) {
 }
 
 const financeRecords = getRange({ end: DEFAULT_PAGE_SIZE * 2 + 1 }).map((_) =>
-  createStubFinanceRecord({}),
+  createTestFinanceRecord({}),
 )
 
 beforeAll(() => {
@@ -168,8 +168,8 @@ describe('when the response contains an error', () => {
 })
 
 describe(`when there are more pages to fetch page`, () => {
-  const page2FinanceRecord = createStubFinanceRecord({ description: 'page2FinanceRecord' })
-  const page3FinanceRecord = createStubFinanceRecord({ description: 'page3FinanceRecord' })
+  const page2FinanceRecord = createTestFinanceRecord({ description: 'page2FinanceRecord' })
+  const page3FinanceRecord = createTestFinanceRecord({ description: 'page3FinanceRecord' })
 
   beforeEach(() => {
     const apiRoute = `/api${FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.basePath}`

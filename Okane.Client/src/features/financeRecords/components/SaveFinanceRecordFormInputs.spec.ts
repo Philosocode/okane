@@ -1,25 +1,25 @@
 // Internal
 import SaveFinanceRecordFormInputs from '@features/financeRecords/components/SaveFinanceRecordFormInputs.vue'
 
-import { ARIA_LIVE } from '@shared/constants/aria.constants'
-import { INPUT_TYPE } from '@shared/constants/form.constants'
+import { ARIA_LIVE } from '@shared/constants/aria'
+import { INPUT_TYPE } from '@shared/constants/form'
 import {
   FINANCE_RECORD_DESCRIPTION_MAX_LENGTH,
   FINANCE_RECORD_MAX_AMOUNT,
   FINANCE_RECORD_MIN_AMOUNT,
   FINANCE_RECORD_TYPE,
   FINANCE_RECORD_TYPE_OPTIONS,
-} from '@features/financeRecords/constants/financeRecord.constants'
+} from '@features/financeRecords/constants/saveFinanceRecord'
 
-import type { SaveFinanceRecordFormState } from '@features/financeRecords/types/financeRecord.types'
-import type { FormErrors } from '@shared/types/form.types'
+import type { FormErrors } from '@shared/types/form'
 
-import { createStubSaveFinanceRecordFormState } from '@tests/factories/financeRecord.factory'
-import { getInitialFormErrors } from '@shared/utils/form.utils'
+import { createTestSaveFinanceRecordFormState } from '@tests/factories/financeRecord'
+import { getInitialFormErrors } from '@shared/utils/form'
+import { SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
 const mountComponent = getMountComponent(SaveFinanceRecordFormInputs)
 
-const formState = createStubSaveFinanceRecordFormState()
+const formState = createTestSaveFinanceRecordFormState()
 const formErrors = getInitialFormErrors(formState)
 const props = { formState, formErrors }
 

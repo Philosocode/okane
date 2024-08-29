@@ -8,12 +8,11 @@ import Heading from '@shared/components/Heading.vue'
 import PageLayout from '@shared/layouts/PageLayout.vue'
 import SaveFinanceRecordForm from '@features/financeRecords/components/SaveFinanceRecordForm.vue'
 
+import type { FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 import {
-  FINANCE_RECORD_SEARCH_FILTERS_KEY,
   DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
-} from '@features/financeRecords/constants/financeRecord.constants'
-
-import type { FinanceRecordSearchFilters } from '@features/financeRecords/types/financeRecord.types'
+  FINANCE_RECORD_SEARCH_FILTERS_KEY,
+} from '@features/financeRecords/constants/searchFilters'
 
 const financeRecordSearchFilters = ref<FinanceRecordSearchFilters>(
   DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,

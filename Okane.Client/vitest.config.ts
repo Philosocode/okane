@@ -18,12 +18,12 @@ export default defineConfig((configEnv) =>
         globals: true,
         root: fileURLToPath(new URL('./', import.meta.url)),
         setupFiles: [
-          './src/__tests__/setup/matchers.setup.ts',
-          './src/__tests__/setup/vueTestUtilExtensions.setup.ts',
-          './src/__tests__/setup/testHooks.setup.ts',
-          './src/__tests__/setup/getMountComponent.setup.ts',
+          './src/__tests__/setup/customMatchers.ts',
+          './src/__tests__/setup/vueTestUtilExtensions.ts',
+          './src/__tests__/setup/testHooks.ts',
+          './src/__tests__/setup/getMountComponent.ts',
         ],
-        watch: false
+        watch: false,
       },
     }),
   ),

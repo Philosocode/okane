@@ -4,7 +4,7 @@ import { expect } from 'vitest'
 // Internal
 import FormSelect, { type FormSelectProps } from '@shared/components/form/FormSelect.vue'
 
-import * as formUtils from '@shared/utils/form.utils'
+import * as formUtils from '@shared/utils/form'
 
 const props: FormSelectProps = {
   label: '',

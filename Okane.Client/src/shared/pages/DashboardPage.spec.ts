@@ -7,7 +7,7 @@ import DashboardPage from '@shared/pages/DashboardPage.vue'
 import {
   DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
   FINANCE_RECORD_SEARCH_FILTERS_KEY,
-} from '@features/financeRecords/constants/financeRecord.constants'
+} from '@features/financeRecords/constants/searchFilters'
 
 const testIds = {
   FinanceRecordList: 'FinanceRecordListStub',

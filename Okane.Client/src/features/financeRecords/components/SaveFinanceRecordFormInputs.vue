@@ -3,18 +3,18 @@
 import FormInput from '@shared/components/form/FormInput.vue'
 import FormSelect from '@shared/components/form/FormSelect.vue'
 
-import { INPUT_TYPE } from '@shared/constants/form.constants'
+import { INPUT_TYPE } from '@shared/constants/form'
 import {
   FINANCE_RECORD_DESCRIPTION_MAX_LENGTH,
   FINANCE_RECORD_MAX_AMOUNT,
   FINANCE_RECORD_MIN_AMOUNT,
   FINANCE_RECORD_TYPE_OPTIONS,
-} from '@features/financeRecords/constants/financeRecord.constants'
+} from '@features/financeRecords/constants/saveFinanceRecord'
 
 import type {
-  SaveFinanceRecordFormState,
   SaveFinanceRecordFormErrors,
-} from '@features/financeRecords/types/financeRecord.types'
+  SaveFinanceRecordFormState,
+} from '@features/financeRecords/types/saveFinanceRecord'
 
 type Props = {
   formState: SaveFinanceRecordFormState

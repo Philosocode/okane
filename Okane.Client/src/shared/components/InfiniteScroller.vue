@@ -7,7 +7,7 @@ import type { InfiniteData, UseInfiniteQueryReturnType } from '@tanstack/vue-que
 import Loader from '@shared/components/loader/Loader.vue'
 import Observer from '@shared/components/Observer.vue'
 
-import type { APIPaginatedResponse } from '@shared/services/apiClient/apiClient.types'
+import type { APIPaginatedResponse } from '@shared/services/apiClient/types'
 
 type Props = {
   items: unknown[]

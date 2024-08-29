@@ -1,5 +1,5 @@
 // External
-import type { HeadingTag } from '@shared/types/html.types'
+import type { HeadingTag } from '@shared/types/html'
 
 // Internal
 import Heading from '@shared/components/Heading.vue'

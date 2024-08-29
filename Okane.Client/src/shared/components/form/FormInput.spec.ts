@@ -1,10 +1,10 @@
 // Internal
 import FormInput, { type FormInputProps } from '@shared/components/form/FormInput.vue'
 
-import { ARIA_LIVE } from '@shared/constants/aria.constants'
-import { INPUT_TYPE } from '@shared/constants/form.constants'
+import { ARIA_LIVE } from '@shared/constants/aria'
+import { INPUT_TYPE } from '@shared/constants/form'
 
-import * as formUtils from '@shared/utils/form.utils'
+import * as formUtils from '@shared/utils/form'
 
 // Data.
 const props: FormInputProps = {

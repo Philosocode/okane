@@ -5,21 +5,17 @@ import { type QueryFunctionContext, useInfiniteQuery } from '@tanstack/vue-query
 
 // Internal
 import { FINANCE_RECORD_API_ROUTES } from '@features/financeRecords/constants/apiRoutes'
-import { INITIAL_PAGE } from '@shared/constants/request.constants'
-import {
-  DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
-  FINANCE_RECORD_QUERY_KEYS,
-} from '@features/financeRecords/constants/financeRecord.constants'
+import { INITIAL_PAGE } from '@shared/constants/request'
 
-import type {
-  FinanceRecord,
-  FinanceRecordSearchFilters,
-} from '@features/financeRecords/types/financeRecord.types'
-import type { APIPaginatedResponse } from '@shared/services/apiClient/apiClient.types'
+import type { FinanceRecord } from '@features/financeRecords/types/financeRecord'
+import type { APIPaginatedResponse } from '@shared/services/apiClient/types'
 
-import { apiClient } from '@shared/services/apiClient/apiClient.service'
+import { apiClient } from '@shared/services/apiClient/apiClient'
 
 import { useCleanUpInfiniteQuery } from '@shared/composables/useCleanUpInfiniteQuery'
+import { FINANCE_RECORD_QUERY_KEYS } from '@features/financeRecords/constants/queryKeys'
+import type { FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
+import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
 
 export function fetchPaginatedFinanceRecords({
   pageParam,

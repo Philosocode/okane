@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Internal
-import { getUniqueFormControlId } from '@shared/utils/form.utils'
+import { getUniqueFormControlId } from '@shared/utils/form'
 
 const model = defineModel<number | string>()
 

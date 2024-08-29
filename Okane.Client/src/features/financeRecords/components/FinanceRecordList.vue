@@ -6,11 +6,11 @@ import { computed, inject } from 'vue'
 import FinanceRecordListItem from '@features/financeRecords/components/FinanceRecordListItem.vue'
 import InfiniteScroller from '@shared/components/InfiniteScroller.vue'
 
-import { FINANCE_RECORD_SEARCH_FILTERS_KEY } from '@features/financeRecords/constants/financeRecord.constants'
-
 import { useInfiniteQueryFinanceRecords } from '@features/financeRecords/composables/useInfiniteQueryFinanceRecords'
 
-import { flattenPages } from '@shared/utils/response.utils'
+import { flattenPages } from '@shared/utils/response'
+
+import { FINANCE_RECORD_SEARCH_FILTERS_KEY } from '@features/financeRecords/constants/searchFilters'
 
 const searchFilters = inject(FINANCE_RECORD_SEARCH_FILTERS_KEY)
 const queryResult = useInfiniteQueryFinanceRecords(searchFilters)

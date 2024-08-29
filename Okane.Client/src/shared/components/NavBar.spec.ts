@@ -4,15 +4,15 @@ import { flushPromises } from '@vue/test-utils'
 // Internal
 import NavBar from '@shared/components/NavBar.vue'
 
-import { AUTH_HANDLER_MAP } from '@tests/msw/handlers/auth.handlers'
-import { ROUTE_MAP } from '@shared/services/router/router.service'
+import { AUTH_HANDLER_MAP } from '@tests/msw/handlers/auth'
+import { ROUTE_MAP } from '@shared/services/router/router'
 
-import { useAuthStore } from '@features/auth/useAuthStore'
+import { useAuthStore } from '@features/auth/composables/useAuthStore'
 
 import { testServer } from '@tests/msw/testServer'
 
-import { createStubJWTToken } from '@tests/factories/jwtToken.factory'
-import { createStubUser } from '@tests/factories/user.factory'
+import { createTestJWTToken } from '@tests/factories/jwtToken'
+import { createTestUser } from '@tests/factories/user'
 
 const mountComponent = getMountComponent(NavBar, {
   withPinia: true,
@@ -36,8 +36,8 @@ describe('when authenticated', () => {
   beforeEach(() => {
     const authStore = useAuthStore()
 
-    authStore.authUser = createStubUser()
-    authStore.jwtToken = createStubJWTToken()
+    authStore.authUser = createTestUser()
+    authStore.jwtToken = createTestJWTToken()
   })
 
   test('renders links for authenticated users', () => {

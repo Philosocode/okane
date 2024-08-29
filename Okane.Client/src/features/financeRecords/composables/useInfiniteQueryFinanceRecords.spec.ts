@@ -2,21 +2,19 @@
 import { defineComponent, toRef, type Ref } from 'vue'
 
 // Internal
-import { INITIAL_PAGE } from '@shared/constants/request.constants'
+import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
+import { FINANCE_RECORD_QUERY_KEYS } from '@features/financeRecords/constants/queryKeys'
+import { INITIAL_PAGE } from '@shared/constants/request'
 import { FINANCE_RECORD_API_ROUTES } from '@features/financeRecords/constants/apiRoutes'
-import {
-  DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
-  FINANCE_RECORD_QUERY_KEYS,
-} from '@features/financeRecords/constants/financeRecord.constants'
 
-import type { FinanceRecordSearchFilters } from '@features/financeRecords/types/financeRecord.types'
+import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 
 import * as useCleanUpInfiniteQuery from '@shared/composables/useCleanUpInfiniteQuery'
 import { useInfiniteQueryFinanceRecords } from '@features/financeRecords/composables/useInfiniteQueryFinanceRecords'
 
-import { apiClient } from '@shared/services/apiClient/apiClient.service'
+import { apiClient } from '@shared/services/apiClient/apiClient'
 
-import { wrapInAPIResponse } from '@tests/factories/apiResponse.factory'
+import { wrapInAPIResponse } from '@tests/utils/apiResponse'
 
 function getTestComponent(filters?: Ref<FinanceRecordSearchFilters>) {
   return defineComponent({

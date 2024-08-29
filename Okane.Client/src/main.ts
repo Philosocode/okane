@@ -7,14 +7,14 @@ import { VueQueryPlugin } from '@tanstack/vue-query'
 // Internal
 import App from './App.vue'
 
-import { getRouter } from '@shared/services/router/router.service'
+import { getRouter } from '@shared/services/router/router'
 
-import { useAuthStore } from '@features/auth/useAuthStore'
+import { useAuthStore } from '@features/auth/composables/useAuthStore'
 
 import { getQueryClient } from '@shared/services/queryClient/queryClient'
 
 import '@shared/styles/index.scss'
-import '@shared/services/fontAwesome/fontAwesome.service'
+import '@shared/services/fontAwesome/fontAwesome'
 
 startApp()
 

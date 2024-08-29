@@ -3,7 +3,7 @@
 import { formatDate } from 'date-fns'
 
 // Internal
-import type { FinanceRecord } from '@features/financeRecords/types/financeRecord.types'
+import type { FinanceRecord } from '@features/financeRecords/types/financeRecord'
 
 type Props = {
   financeRecord: FinanceRecord

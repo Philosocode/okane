@@ -4,9 +4,9 @@ import { toRef } from 'vue'
 // Internal
 import Observer from '@shared/components/Observer.vue'
 
-import { DEFAULT_DEBOUNCE_DELAY } from '@shared/constants/request.constants'
+import { DEFAULT_DEBOUNCE_DELAY } from '@shared/constants/request'
 
-import { setUpIntersectionObserverMock } from '@tests/mocks/intersectionObserver.mock'
+import { setUpIntersectionObserverMock } from '@tests/mocks/intersectionObserver'
 
 const mountComponent = getMountComponent(Observer)
 

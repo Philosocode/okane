@@ -9,30 +9,32 @@ import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 import SaveFinanceRecordForm from '@features/financeRecords/components/SaveFinanceRecordForm.vue'
 import SaveFinanceRecordFormInputs from '@features/financeRecords/components/SaveFinanceRecordFormInputs.vue'
 
-import { BUTTON_TYPE } from '@shared/constants/form.constants'
+import { BUTTON_TYPE } from '@shared/constants/form'
 import { FINANCE_RECORD_API_ROUTES } from '@features/financeRecords/constants/apiRoutes'
 import {
   DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+  FINANCE_RECORD_SEARCH_FILTERS_KEY,
+} from '@features/financeRecords/constants/searchFilters'
+import {
   FINANCE_RECORD_MAX_AMOUNT,
   FINANCE_RECORD_MIN_AMOUNT,
-  FINANCE_RECORD_SEARCH_FILTERS_KEY,
   FINANCE_RECORD_TYPE,
-} from '@features/financeRecords/constants/financeRecord.constants'
+} from '@features/financeRecords/constants/saveFinanceRecord'
 
 import * as useModal from '@shared/composables/useModal'
 
-import { apiClient } from '@shared/services/apiClient/apiClient.service'
+import { apiClient } from '@shared/services/apiClient/apiClient'
 
-import { mapSaveFinanceRecordFormStateToFinanceRecord } from '@features/financeRecords/utils/financeRecord.utils'
+import { mapSaveFinanceRecordFormStateToFinanceRecord } from '@features/financeRecords/utils/mappers'
 
-import { createStubAPIFormErrors } from '@tests/factories/formErrors.factory'
-import { createStubProblemDetails } from '@tests/factories/problemDetails.factory'
+import { createTestAPIFormErrors } from '@tests/factories/formErrors'
+import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import {
-  createStubFinanceRecord,
-  createStubSaveFinanceRecordFormState,
-} from '@tests/factories/financeRecord.factory'
+  createTestFinanceRecord,
+  createTestSaveFinanceRecordFormState,
+} from '@tests/factories/financeRecord'
 import { testServer } from '@tests/msw/testServer'
-import { wrapInAPIResponse } from '@tests/factories/apiResponse.factory'
+import { wrapInAPIResponse } from '@tests/utils/apiResponse'
 
 const mountComponent = getMountComponent(SaveFinanceRecordForm, {
   withQueryClient: true,
@@ -50,7 +52,7 @@ const spyOn = {
   postFinanceRecord() {
     const spy = vi
       .spyOn(apiClient, 'post')
-      .mockResolvedValue(wrapInAPIResponse(createStubFinanceRecord()))
+      .mockResolvedValue(wrapInAPIResponse(createTestFinanceRecord()))
 
     return { spy }
   },
@@ -131,7 +133,7 @@ test('renders a cancel button to close the modal', async () => {
   expect(closeModal).toHaveBeenCalledOnce()
 })
 
-const formState = createStubSaveFinanceRecordFormState({
+const formState = createTestSaveFinanceRecordFormState({
   type: FINANCE_RECORD_TYPE.REVENUE,
   description: 'Cool Revenue',
 })
@@ -272,12 +274,12 @@ describe('with a valid form state', () => {
 })
 
 describe('with an error creating the finance record', () => {
-  const formErrors = createStubAPIFormErrors(formState)
+  const formErrors = createTestAPIFormErrors(formState)
 
   beforeEach(() => {
     testServer.use(
       http.post(`/api${FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.basePath}`, () => {
-        const problemDetails = createStubProblemDetails({ errors: formErrors })
+        const problemDetails = createTestProblemDetails({ errors: formErrors })
         return HttpResponse.json(problemDetails, { status: problemDetails.status })
       }),
     )

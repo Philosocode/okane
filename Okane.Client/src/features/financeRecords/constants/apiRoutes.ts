@@ -1,5 +1,5 @@
 // Internal
-import { DEFAULT_PAGE_SIZE } from '@shared/constants/request.constants'
+import { DEFAULT_PAGE_SIZE } from '@shared/constants/request'
 
 const apiRoutes = {
   GET_PAGINATED_LIST: {

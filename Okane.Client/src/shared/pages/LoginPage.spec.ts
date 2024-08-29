@@ -2,19 +2,19 @@
 import { flushPromises } from '@vue/test-utils'
 
 // Internal
-import AuthForm from '@features/auth/AuthForm.vue'
+import AuthForm from '@features/auth/components/AuthForm.vue'
 import LoginPage from '@shared/pages/LoginPage.vue'
 
-import { useAuthStore } from '@features/auth/useAuthStore'
-import { useMockedStore } from '@tests/composables/useMockedStore.composable'
+import { useAuthStore } from '@features/auth/composables/useAuthStore'
+import { useMockedStore } from '@tests/composables/useMockedStore'
 
-import { createAppRouter, ROUTE_MAP, ROUTE_NAME } from '@shared/services/router/router.service'
-import { createStubAuthFormState } from '@tests/factories/authFormState.factory'
+import { createAppRouter, ROUTE_MAP, ROUTE_NAME } from '@shared/services/router/router'
+import { createTestAuthFormState } from '@tests/factories/authForm'
 
 const router = createAppRouter()
 const mountComponent = getMountComponent(LoginPage, { withPinia: true, withRouter: router })
 
-const formData = createStubAuthFormState()
+const formData = createTestAuthFormState()
 
 beforeEach(async () => {
   await router.push({ name: ROUTE_NAME.LOGIN })

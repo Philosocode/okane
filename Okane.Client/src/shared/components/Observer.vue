@@ -4,7 +4,7 @@ import { watchDebounced } from '@vueuse/core'
 import { onMounted, onUnmounted, ref, type Ref } from 'vue'
 
 // Internal
-import { DEFAULT_DEBOUNCE_DELAY } from '@shared/constants/request.constants'
+import { DEFAULT_DEBOUNCE_DELAY } from '@shared/constants/request'
 
 type Props = {
   options?: IntersectionObserverInit

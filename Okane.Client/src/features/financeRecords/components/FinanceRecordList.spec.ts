@@ -5,20 +5,20 @@ import { toRef } from 'vue'
 // Internal
 import FinanceRecordList from '@features/financeRecords/components/FinanceRecordList.vue'
 
-import { testServer } from '@tests/msw/testServer'
-
 import {
   DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
   FINANCE_RECORD_SEARCH_FILTERS_KEY,
-} from '@features/financeRecords/constants/financeRecord.constants'
-import { FINANCE_RECORD_HANDLER_FACTORY } from '@tests/msw/handlers/financeRecord.handlers'
+} from '@features/financeRecords/constants/searchFilters'
 
-import { getRange } from '@shared/utils/array.utils'
+import { FINANCE_RECORD_HANDLER_FACTORY } from '@tests/msw/handlers/financeRecord'
+import { testServer } from '@tests/msw/testServer'
 
-import { createStubFinanceRecord } from '@tests/factories/financeRecord.factory'
+import { getRange } from '@shared/utils/array'
+
+import { createTestFinanceRecord } from '@tests/factories/financeRecord'
 
 const financeRecords = getRange({ end: 5 }).map((n) =>
-  createStubFinanceRecord({
+  createTestFinanceRecord({
     id: n,
     description: `Description ${n}`,
   }),

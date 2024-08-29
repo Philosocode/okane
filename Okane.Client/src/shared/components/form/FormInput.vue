@@ -3,9 +3,9 @@
 import type { InputHTMLAttributes } from 'vue'
 
 // Internal
-import { ARIA_LIVE } from '@shared/constants/aria.constants'
+import { ARIA_LIVE } from '@shared/constants/aria'
 
-import { getUniqueFormControlId } from '@shared/utils/form.utils'
+import { getUniqueFormControlId } from '@shared/utils/form'
 
 export interface FormInputProps extends /* @vue-ignore */ InputHTMLAttributes {
   label: string

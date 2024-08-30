@@ -18,7 +18,7 @@ const router = useRouter()
 async function handleSubmit(formState: AuthFormState) {
   try {
     await authStore.login(formState.email, formState.password)
-    await router.push({ name: ROUTE_NAME.DASHBOARD })
+    await router.push({ name: ROUTE_NAME.FINANCES })
   } catch (err) {
     console.error('Error logging in:', err)
   }

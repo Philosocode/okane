@@ -2,7 +2,7 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 // Internal
-import DashboardPage from '@shared/pages/DashboardPage.vue'
+import FinancesPage from '@shared/pages/FinancesPage.vue'
 import LoginPage from '@shared/pages/LoginPage.vue'
 import RegisterPage from '@shared/pages/RegisterPage.vue'
 
@@ -11,7 +11,7 @@ import { useAuthStore } from '@features/auth/composables/useAuthStore'
 import { getQueryClient } from '@shared/services/queryClient/queryClient'
 
 export enum ROUTE_NAME {
-  DASHBOARD = 'DASHBOARD',
+  FINANCES = 'FINANCES',
   LOGIN = 'LOGIN',
   REGISTER = 'REGISTER',
 }
@@ -20,11 +20,11 @@ export type Route = RouteRecordRaw & {
   buildPath: (params?: Record<string, unknown>) => string
 }
 export const ROUTE_MAP: Record<ROUTE_NAME, Route> = {
-  [ROUTE_NAME.DASHBOARD]: {
+  [ROUTE_NAME.FINANCES]: {
     path: '/',
     buildPath: () => '/',
-    name: ROUTE_NAME.DASHBOARD,
-    component: DashboardPage,
+    name: ROUTE_NAME.FINANCES,
+    component: FinancesPage,
   },
   [ROUTE_NAME.LOGIN]: {
     path: '/login',
@@ -67,6 +67,6 @@ router.beforeEach((to) => {
   }
 
   if (to.meta.isPublic && to.meta.isPublicOnly && authStore.isLoggedIn) {
-    return { name: ROUTE_NAME.DASHBOARD }
+    return { name: ROUTE_NAME.FINANCES }
   }
 })

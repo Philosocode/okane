@@ -24,7 +24,7 @@ describe('as an unauthenticated user trying to access a protected route', () => 
     queryClientSpy = vi.spyOn(appQueryClient, 'getQueryClient').mockReturnValue(testQueryClient)
 
     const router = getRouter()
-    await router.push(ROUTE_MAP.DASHBOARD.buildPath())
+    await router.push(ROUTE_MAP.FINANCES.buildPath())
   })
 
   afterEach(() => {
@@ -47,13 +47,13 @@ describe('as an authenticated user', () => {
 
   test('allows access to protected routes', async () => {
     const router = getRouter()
-    await router.push(ROUTE_MAP.DASHBOARD.buildPath())
-    expect(location.pathname).toBe(ROUTE_MAP.DASHBOARD.buildPath())
+    await router.push(ROUTE_MAP.FINANCES.buildPath())
+    expect(location.pathname).toBe(ROUTE_MAP.FINANCES.buildPath())
   })
 
   test('does not allow access to public-only routes', async () => {
     const router = getRouter()
     await router.push(ROUTE_MAP.REGISTER.buildPath())
-    expect(location.pathname).toBe(ROUTE_MAP.DASHBOARD.buildPath())
+    expect(location.pathname).toBe(ROUTE_MAP.FINANCES.buildPath())
   })
 })

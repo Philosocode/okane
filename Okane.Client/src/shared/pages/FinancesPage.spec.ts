@@ -2,7 +2,7 @@
 import { computed, defineComponent, inject } from 'vue'
 
 // Internal
-import DashboardPage from '@shared/pages/DashboardPage.vue'
+import FinancesPage from '@shared/pages/FinancesPage.vue'
 
 import {
   DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
@@ -15,7 +15,7 @@ const testIds = {
   SaveFinanceRecordForm: 'SaveFinanceRecordFormStub',
 }
 
-const mountComponent = getMountComponent(DashboardPage, {
+const mountComponent = getMountComponent(FinancesPage, {
   withQueryClient: true,
   global: {
     stubs: {
@@ -25,11 +25,11 @@ const mountComponent = getMountComponent(DashboardPage, {
   },
 })
 
-test('renders a Dashboard heading', () => {
+test('renders a Finances heading', () => {
   const wrapper = mountComponent()
   const mainHeading = wrapper.get('h1')
 
-  expect(mainHeading.text()).toBe('Dashboard')
+  expect(mainHeading.text()).toBe('Finances')
 })
 
 test('renders the logged in text', () => {
@@ -54,7 +54,7 @@ test('renders a list of finance records', () => {
 })
 
 test('provides the search filters', () => {
-  // Since DashboardPage doesn't render a slot, we'll use this instead to check that the
+  // Since FinancesPage doesn't render a slot, we'll use this instead to check that the
   // expected value is provided.
   const HeadingStub = defineComponent({
     setup() {

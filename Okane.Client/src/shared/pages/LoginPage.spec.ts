@@ -26,7 +26,7 @@ test('renders a login heading', () => {
   expect(heading.text()).toBe('Login')
 })
 
-test('redirects to the dashboard page on successful login', async () => {
+test('redirects to the finances page on successful login', async () => {
   const authStore = useMockedStore(useAuthStore)
   vi.spyOn(authStore, 'login').mockResolvedValue()
 
@@ -35,7 +35,7 @@ test('redirects to the dashboard page on successful login', async () => {
   wrapper.findComponent(AuthForm).vm.$emit('submit', formData)
   await flushPromises()
 
-  expect(location.pathname).toBe(ROUTE_MAP.DASHBOARD.buildPath())
+  expect(location.pathname).toBe(ROUTE_MAP.FINANCES.buildPath())
 })
 
 test('logs a console error on unsuccessful login', async () => {

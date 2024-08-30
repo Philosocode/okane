@@ -46,9 +46,9 @@ describe('when authenticated', () => {
     const allLinks = wrapper.findAll('a')
     expect(allLinks).toHaveLength(2)
 
-    const dashboardURL = ROUTE_MAP.DASHBOARD.buildPath()
-    const dashboardLink = wrapper.get(`a[href="${dashboardURL}"]`)
-    expect(dashboardLink.text()).toBe('Dashboard')
+    const financesURL = ROUTE_MAP.FINANCES.buildPath()
+    const financesLink = wrapper.get(`a[href="${financesURL}"]`)
+    expect(financesLink.text()).toBe('Finances')
 
     const logoutLink = wrapper.get(`a[href="/#"]`)
     expect(logoutLink.text()).toBe('Logout')

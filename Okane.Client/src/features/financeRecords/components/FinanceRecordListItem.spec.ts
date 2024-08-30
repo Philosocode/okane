@@ -4,6 +4,8 @@ import { formatDate } from 'date-fns'
 // Internal
 import FinanceRecordListItem from '@features/financeRecords/components/FinanceRecordListItem.vue'
 
+import { FINANCE_RECORD_TIMESTAMP_FORMAT } from '@features/financeRecords/constants/financeRecordList'
+
 import { createTestFinanceRecord } from '@tests/factories/financeRecord'
 
 const financeRecord = createTestFinanceRecord()
@@ -26,7 +28,7 @@ test('renders the amount', () => {
 })
 
 test('renders the type and timestamp', () => {
-  const expectedTimestamp = formatDate(financeRecord.happenedAt, 'MM/dd/yyyy @ k:mm a')
+  const expectedTimestamp = formatDate(financeRecord.happenedAt, FINANCE_RECORD_TIMESTAMP_FORMAT)
   const wrapper = mountComponent()
   const topRow = wrapper.get('.top-row')
 

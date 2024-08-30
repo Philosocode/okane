@@ -5,6 +5,8 @@ import { computed, ref } from 'vue'
 // Internal
 import FormInput from '@shared/components/form/FormInput.vue'
 
+import { AUTH_COPY } from '@features/auth/constants/copy'
+
 import type { AuthFormState, AuthFormType } from '@features/auth/types/authForm'
 
 import { isValidPassword } from '@features/auth/utils/authForm'
@@ -24,8 +26,8 @@ const formState = ref({
 
 const isRegisterForm = computed<boolean>(() => props.formType == 'register')
 const submitButtonText = computed<string>(() => {
-  if (isRegisterForm.value) return 'Register'
-  return 'Login'
+  if (isRegisterForm.value) return AUTH_COPY.REGISTER
+  return AUTH_COPY.LOGIN
 })
 
 const formIsValid = computed<boolean>(() => {
@@ -49,13 +51,34 @@ const formIsValid = computed<boolean>(() => {
 <template>
   <form @submit.prevent="emit('submit', formState)">
     <fieldset>
-      <FormInput v-if="isRegisterForm" v-model="formState.name" label="Name" name="name" type="text" />
+      <FormInput
+        v-if="isRegisterForm"
+        v-model="formState.name"
+        :label="AUTH_COPY.AUTH_FORM.NAME"
+        name="name"
+        type="text"
+      />
 
-      <FormInput label="Email" name="email" type="email" v-model="formState.email" />
-      <FormInput label="Password" name="password" type="password" v-model="formState.password" />
+      <FormInput
+        :label="AUTH_COPY.AUTH_FORM.EMAIL"
+        name="email"
+        type="email"
+        v-model="formState.email"
+      />
+      <FormInput
+        :label="AUTH_COPY.AUTH_FORM.PASSWORD"
+        name="password"
+        type="password"
+        v-model="formState.password"
+      />
 
-      <FormInput v-if="isRegisterForm" v-model="formState.passwordConfirm" label="Confirm password"
-        name="passwordConfirm" type="password" />
+      <FormInput
+        v-if="isRegisterForm"
+        v-model="formState.passwordConfirm"
+        :label="AUTH_COPY.AUTH_FORM.CONFIRM_PASSWORD"
+        name="passwordConfirm"
+        type="password"
+      />
 
       <button class="submit-button" :disabled="!formIsValid" type="submit">
         {{ submitButtonText }}

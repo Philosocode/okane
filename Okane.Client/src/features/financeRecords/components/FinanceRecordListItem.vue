@@ -3,6 +3,8 @@
 import { formatDate } from 'date-fns'
 
 // Internal
+import { FINANCE_RECORD_TIMESTAMP_FORMAT } from '@features/financeRecords/constants/financeRecordList'
+
 import type { FinanceRecord } from '@features/financeRecords/types/financeRecord'
 
 type Props = {
@@ -11,7 +13,7 @@ type Props = {
 
 const props = defineProps<Props>()
 
-const dateTime = formatDate(props.financeRecord.happenedAt, 'MM/dd/yyyy @ k:mm a')
+const dateTime = formatDate(props.financeRecord.happenedAt, FINANCE_RECORD_TIMESTAMP_FORMAT)
 </script>
 
 <template>

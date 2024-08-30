@@ -5,6 +5,8 @@ import { flushPromises } from '@vue/test-utils'
 import AuthForm from '@features/auth/components/AuthForm.vue'
 import RegisterPage from '@shared/pages/RegisterPage.vue'
 
+import { AUTH_COPY } from '@features/auth/constants/copy'
+
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
 import { useMockedStore } from '@tests/composables/useMockedStore'
 
@@ -23,7 +25,7 @@ beforeEach(async () => {
 test('renders a register heading', () => {
   const wrapper = mountComponent()
   const heading = wrapper.get('h1')
-  expect(heading.text()).toBe('Register')
+  expect(heading.text()).toBe(AUTH_COPY.REGISTER)
 })
 
 test('redirects to the login page on successful login', async () => {

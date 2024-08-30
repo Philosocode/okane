@@ -8,7 +8,12 @@ import ModalActions from '@shared/components/modal/ModalActions.vue'
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 import SaveFinanceRecordFormInputs from '@features/financeRecords/components/SaveFinanceRecordFormInputs.vue'
 
+import { FINANCE_RECORD_SEARCH_FILTERS_KEY } from '@features/financeRecords/constants/searchFilters'
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
+import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
+import { SHARED_COPY } from '@shared/constants/copy'
+
+import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
 import { useCreateFinanceRecordMutation } from '@features/financeRecords/composables/useCreateFinanceRecordMutation'
 import { useModal } from '@shared/composables/useModal'
@@ -18,8 +23,6 @@ import { getFormErrorsFromAPIResponse } from '@shared/services/apiClient/utils'
 import { getInitialFormErrors } from '@shared/utils/form'
 import { isObjectType } from '@shared/utils/object'
 import { mapSaveFinanceRecordFormStateToFinanceRecord } from '@features/financeRecords/utils/mappers'
-import type { SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
-import { FINANCE_RECORD_SEARCH_FILTERS_KEY } from '@features/financeRecords/constants/searchFilters'
 
 const { showModal, closeModal, modalIsShowing } = useModal()
 
@@ -77,9 +80,9 @@ function handleSave() {
 </script>
 
 <template>
-  <button @click="showModal">Show Modal</button>
+  <button @click="showModal">{{ FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.SHOW_MODAL }}</button>
   <Modal :is-showing="modalIsShowing" @close="closeModal">
-    <ModalHeading>Create Finance Record</ModalHeading>
+    <ModalHeading>{{ FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.CREATE_FINANCE_RECORD }}</ModalHeading>
 
     <form ref="formRef" @submit.prevent class="form">
       <SaveFinanceRecordFormInputs
@@ -89,8 +92,8 @@ function handleSave() {
       />
 
       <ModalActions>
-        <button @click="handleSave" type="submit">Save</button>
-        <button @click="closeModal" type="button">Cancel</button>
+        <button @click="handleSave" type="submit">{{ SHARED_COPY.ACTIONS.SAVE }}</button>
+        <button @click="closeModal" type="button">{{ SHARED_COPY.ACTIONS.CANCEL }}</button>
       </ModalActions>
     </form>
   </Modal>

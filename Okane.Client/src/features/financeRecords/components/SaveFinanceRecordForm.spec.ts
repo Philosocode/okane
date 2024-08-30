@@ -11,6 +11,8 @@ import SaveFinanceRecordFormInputs from '@features/financeRecords/components/Sav
 
 import { BUTTON_TYPE } from '@shared/constants/form'
 import { FINANCE_RECORD_API_ROUTES } from '@features/financeRecords/constants/apiRoutes'
+import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
+import { SHARED_COPY } from '@shared/constants/copy'
 import {
   DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
   FINANCE_RECORD_SEARCH_FILTERS_KEY,
@@ -78,7 +80,7 @@ test('renders a button to show the modal', async () => {
   const { showModal } = spyOn.useModal()
 
   const wrapper = mountComponent()
-  const button = wrapper.findByText('button', 'Show Modal')
+  const button = wrapper.findByText('button', FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.SHOW_MODAL)
 
   expect(button.exists()).toBe(true)
   expect(showModal).not.toHaveBeenCalled()
@@ -99,7 +101,7 @@ test('renders a modal heading', () => {
   const wrapper = mountComponent()
   const heading = wrapper.getComponent(ModalHeading)
 
-  expect(heading.text()).toBe('Create Finance Record')
+  expect(heading.text()).toBe(FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.CREATE_FINANCE_RECORD)
 })
 
 test("renders the form's inputs", () => {
@@ -111,7 +113,7 @@ test("renders the form's inputs", () => {
 
 test('renders a save button', async () => {
   const wrapper = mountComponent()
-  const button = wrapper.findByText('button', 'Save')
+  const button = wrapper.findByText('button', SHARED_COPY.ACTIONS.SAVE)
 
   expect(button.exists()).toBe(true)
   expect(button.attributes('type')).toBe(BUTTON_TYPE.SUBMIT)
@@ -121,7 +123,7 @@ test('renders a cancel button to close the modal', async () => {
   const { closeModal } = spyOn.useModal()
 
   const wrapper = mountComponent()
-  const button = wrapper.findByText('button', 'Cancel')
+  const button = wrapper.findByText('button', SHARED_COPY.ACTIONS.CANCEL)
 
   expect(button.exists()).toBe(true)
   expect(button.attributes('type')).toBe(BUTTON_TYPE.BUTTON)
@@ -144,7 +146,7 @@ const elements = {
   happenedAtInput: (wrapper: VueWrapper) => wrapper.get('input[name="happenedAt"]'),
   typeSelect: (wrapper: VueWrapper) => wrapper.get('select'),
 
-  saveButton: (wrapper: VueWrapper) => wrapper.findByText('button', 'Save'),
+  saveButton: (wrapper: VueWrapper) => wrapper.findByText('button', SHARED_COPY.ACTIONS.SAVE),
 }
 
 async function populateAllInputs(wrapper: VueWrapper) {

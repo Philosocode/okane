@@ -4,6 +4,8 @@ import { computed, defineComponent, inject } from 'vue'
 // Internal
 import FinancesPage from '@shared/pages/FinancesPage.vue'
 
+import { AUTH_COPY } from '@features/auth/constants/copy'
+import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import {
   DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
   FINANCE_RECORD_SEARCH_FILTERS_KEY,
@@ -25,18 +27,18 @@ const mountComponent = getMountComponent(FinancesPage, {
   },
 })
 
-test('renders a Finances heading', () => {
+test('renders a page title', () => {
   const wrapper = mountComponent()
   const mainHeading = wrapper.get('h1')
 
-  expect(mainHeading.text()).toBe('Finances')
+  expect(mainHeading.text()).toBe(FINANCES_COPY.FINANCES)
 })
 
 test('renders the logged in text', () => {
   const wrapper = mountComponent()
   const loggedInText = wrapper.get('p')
 
-  expect(loggedInText.text()).toBe('You are logged in!')
+  expect(loggedInText.text()).toBe(AUTH_COPY.YOU_ARE_LOGGED_IN)
 })
 
 test('renders a form to save a finance record', () => {

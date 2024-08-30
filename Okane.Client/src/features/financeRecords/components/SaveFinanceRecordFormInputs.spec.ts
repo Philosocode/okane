@@ -3,6 +3,8 @@ import SaveFinanceRecordFormInputs from '@features/financeRecords/components/Sav
 
 import { ARIA_LIVE } from '@shared/constants/aria'
 import { INPUT_TYPE } from '@shared/constants/form'
+import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
+import { SHARED_COPY } from '@shared/constants/copy'
 import {
   FINANCE_RECORD_DESCRIPTION_MAX_LENGTH,
   FINANCE_RECORD_MAX_AMOUNT,
@@ -11,11 +13,11 @@ import {
   FINANCE_RECORD_TYPE_OPTIONS,
 } from '@features/financeRecords/constants/saveFinanceRecord'
 
-import type { FormErrors } from '@shared/types/form'
+import { type FormErrors } from '@shared/types/form'
+import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
 import { createTestSaveFinanceRecordFormState } from '@tests/factories/financeRecord'
 import { getInitialFormErrors } from '@shared/utils/form'
-import { SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
 const mountComponent = getMountComponent(SaveFinanceRecordFormInputs)
 
@@ -81,7 +83,7 @@ test('does not render any error labels by default', () => {
 describe('Amount input', () => {
   test('renders the expected label', () => {
     const wrapper = mountComponent({ props })
-    const amountLabel = wrapper.findByText('label', 'Amount')
+    const amountLabel = wrapper.findByText('label', FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.AMOUNT)
     expect(amountLabel.exists()).toBe(true)
   })
 
@@ -142,7 +144,7 @@ describe('Amount input', () => {
 describe('Type select', () => {
   test('renders the expected label', () => {
     const wrapper = mountComponent({ props })
-    const label = wrapper.findByText('label', 'Type')
+    const label = wrapper.findByText('label', FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.TYPE)
     expect(label.exists()).toBe(true)
   })
 
@@ -192,7 +194,7 @@ describe('Type select', () => {
 describe('Description input', () => {
   test('renders the expected label', () => {
     const wrapper = mountComponent({ props })
-    const label = wrapper.findByText('label', 'Description')
+    const label = wrapper.findByText('label', FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.DESCRIPTION)
     expect(label.exists()).toBe(true)
   })
 
@@ -229,7 +231,7 @@ describe('Description input', () => {
 describe('Happened at input', () => {
   test('renders the expected label', () => {
     const wrapper = mountComponent({ props })
-    const label = wrapper.findByText('label', 'Happened At')
+    const label = wrapper.findByText('label', FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.HAPPENED_AT)
     expect(label.exists()).toBe(true)
   })
 

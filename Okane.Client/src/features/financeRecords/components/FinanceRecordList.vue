@@ -10,6 +10,7 @@ import { useInfiniteQueryFinanceRecords } from '@features/financeRecords/composa
 
 import { flattenPages } from '@shared/utils/response'
 
+import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { FINANCE_RECORD_SEARCH_FILTERS_KEY } from '@features/financeRecords/constants/searchFilters'
 
 const searchFilters = inject(FINANCE_RECORD_SEARCH_FILTERS_KEY)
@@ -27,7 +28,7 @@ const financeRecords = computed(() => flattenPages(queryResult.data.value?.pages
       </ul>
 
       <template #noItems>
-        <p>No finance records. Why don't you create one?</p>
+        <p>{{ FINANCES_COPY.INFINITE_LIST.NO_FINANCE_RECORDS }}</p>
       </template>
     </InfiniteScroller>
   </div>

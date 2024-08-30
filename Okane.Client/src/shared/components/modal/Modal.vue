@@ -41,7 +41,7 @@ watch(
 
 <template>
   <Teleport to="body">
-    <dialog @cancel="emitModalClose" @mousedown="handleOutsideClick" class="modal" ref="dialogRef">
+    <dialog @close="emitModalClose" @mousedown="handleOutsideClick" class="modal" ref="dialogRef">
       <div class="modal-content">
         <button class="close-button" @click="emitModalClose">
           <FontAwesomeIcon icon="fa-solid fa-xmark" title="Close Modal" />

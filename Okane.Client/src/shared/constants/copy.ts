@@ -3,4 +3,7 @@ export const SHARED_COPY = {
     CANCEL: 'Cancel',
     SAVE: 'Save',
   },
+  MENU: {
+    TOGGLE_TITLE: 'Toggle Menu',
+  },
 } as const

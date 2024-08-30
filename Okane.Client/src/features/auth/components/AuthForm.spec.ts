@@ -1,8 +1,11 @@
 // Internal
 import AuthForm from '@features/auth/components/AuthForm.vue'
 
+import { AUTH_COPY } from '@features/auth/constants/copy'
+
+import { type AuthFormType } from '@features/auth/types/authForm'
+
 import { capitalize } from '@shared/utils/string'
-import { AuthFormType } from '@features/auth/types/authForm'
 
 const mountComponent = getMountComponent(AuthForm)
 
@@ -17,11 +20,11 @@ function makeFormAssertions(formType: AuthFormType) {
       const wrapper = mountComponent(props)
       const emailInput = wrapper.get('input[name="email"]')
       expect(emailInput.attributes('type')).toBe('email')
-      expect(wrapper.findByText('label', 'Email')).toBeTruthy()
+      expect(wrapper.findByText('label', AUTH_COPY.AUTH_FORM.EMAIL)).toBeTruthy()
 
       const passwordInput = wrapper.get('input[name="password"]')
       expect(passwordInput.attributes('type')).toBe('password')
-      expect(wrapper.findByText('label', 'Password')).toBeTruthy()
+      expect(wrapper.findByText('label', AUTH_COPY.AUTH_FORM.PASSWORD)).toBeTruthy()
 
       if (formType === 'login') {
         expect(wrapper.find('input[name="name"]').exists()).toBe(false)
@@ -31,11 +34,11 @@ function makeFormAssertions(formType: AuthFormType) {
 
       const nameInput = wrapper.get('input[name="name')
       expect(nameInput.attributes('type')).toBe('text')
-      expect(wrapper.findByText('label', 'Name')).toBeTruthy()
+      expect(wrapper.findByText('label', AUTH_COPY.AUTH_FORM.NAME)).toBeTruthy()
 
       const passwordConfirmInput = wrapper.get('input[name="passwordConfirm"]')
       expect(passwordConfirmInput.attributes('type')).toBe('password')
-      expect(wrapper.findByText('label', 'Confirm password')).toBeTruthy()
+      expect(wrapper.findByText('label', AUTH_COPY.AUTH_FORM.CONFIRM_PASSWORD)).toBeTruthy()
     })
 
     test(`renders a disabled ${formType} button`, () => {

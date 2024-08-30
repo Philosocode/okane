@@ -3,8 +3,10 @@
 import { RouterLink } from 'vue-router'
 
 // Internal
-
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
+
+import { AUTH_COPY } from '@features/auth/constants/copy'
+import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { ROUTE_NAME } from '@shared/services/router/router'
 
 const authStore = useAuthStore()
@@ -13,12 +15,12 @@ const authStore = useAuthStore()
 <template>
   <nav>
     <template v-if="authStore.isLoggedIn">
-      <RouterLink :to="{ name: ROUTE_NAME.FINANCES }">Finances</RouterLink>
-      <RouterLink to="#" @click="authStore.logout">Logout</RouterLink>
+      <RouterLink :to="{ name: ROUTE_NAME.FINANCES }">{{ FINANCES_COPY.FINANCES }}</RouterLink>
+      <RouterLink to="#" @click="authStore.logout">{{ AUTH_COPY.LOGOUT }}</RouterLink>
     </template>
     <template v-else>
-      <RouterLink :to="{ name: ROUTE_NAME.LOGIN }">Login</RouterLink>
-      <RouterLink :to="{ name: ROUTE_NAME.REGISTER }">Register</RouterLink>
+      <RouterLink :to="{ name: ROUTE_NAME.LOGIN }">{{ AUTH_COPY.LOGIN }}</RouterLink>
+      <RouterLink :to="{ name: ROUTE_NAME.REGISTER }">{{ AUTH_COPY.REGISTER }}</RouterLink>
     </template>
   </nav>
 </template>

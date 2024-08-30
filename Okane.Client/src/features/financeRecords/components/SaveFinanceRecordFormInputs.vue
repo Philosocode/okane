@@ -15,6 +15,7 @@ import type {
   SaveFinanceRecordFormErrors,
   SaveFinanceRecordFormState,
 } from '@features/financeRecords/types/saveFinanceRecord'
+import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
 type Props = {
   formState: SaveFinanceRecordFormState
@@ -31,7 +32,7 @@ const emit = defineEmits<{
   <div class="first-row">
     <FormInput
       :error="props.formErrors.amount"
-      label="Amount"
+      :label="FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.AMOUNT"
       :max="FINANCE_RECORD_MAX_AMOUNT"
       :min="FINANCE_RECORD_MIN_AMOUNT"
       :model-value="formState.amount"
@@ -42,7 +43,7 @@ const emit = defineEmits<{
       :type="INPUT_TYPE.NUMBER"
     />
     <FormSelect
-      label="Type"
+      :label="FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.TYPE"
       :model-value="formState.type"
       @update:model-value="emit('inputUpdated', { type: $event })"
       :options="FINANCE_RECORD_TYPE_OPTIONS"
@@ -51,7 +52,7 @@ const emit = defineEmits<{
   </div>
   <FormInput
     :error="props.formErrors.description"
-    label="Description"
+    :label="FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.DESCRIPTION"
     :maxlength="FINANCE_RECORD_DESCRIPTION_MAX_LENGTH"
     name="description"
     :model-value="formState.description"
@@ -61,7 +62,7 @@ const emit = defineEmits<{
   />
   <FormInput
     :error="props.formErrors.happenedAt"
-    label="Happened At"
+    :label="FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.HAPPENED_AT"
     name="happenedAt"
     required
     :type="INPUT_TYPE.DATETIME_LOCAL"

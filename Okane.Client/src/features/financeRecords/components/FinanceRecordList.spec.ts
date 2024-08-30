@@ -10,6 +10,7 @@ import {
   FINANCE_RECORD_SEARCH_FILTERS_KEY,
 } from '@features/financeRecords/constants/searchFilters'
 
+import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { FINANCE_RECORD_HANDLER_FACTORY } from '@tests/msw/handlers/financeRecord'
 import { testServer } from '@tests/msw/testServer'
 
@@ -34,8 +35,6 @@ const mountComponent = getMountComponent(FinanceRecordList, {
   withQueryClient: true,
 })
 
-const noFinanceRecordsText = "No finance records. Why don't you create one?"
-
 test('renders a list of finance records', async () => {
   testServer.use(
     FINANCE_RECORD_HANDLER_FACTORY.GET_PAGINATED_FINANCE_RECORDS_SUCCESS(financeRecords),
@@ -50,7 +49,7 @@ test('renders a list of finance records', async () => {
     expect(description.exists()).toBe(true)
   })
 
-  const noFinanceRecords = wrapper.findByText('p', noFinanceRecordsText)
+  const noFinanceRecords = wrapper.findByText('p', FINANCES_COPY.INFINITE_LIST.NO_FINANCE_RECORDS)
   expect(noFinanceRecords).toBeUndefined()
 })
 
@@ -74,6 +73,6 @@ test('renders the expected message if no records exist', async () => {
   const listItem = wrapper.find(`[data-testid="${testId}"]`)
   expect(listItem.exists()).toBe(false)
 
-  const noFinanceRecords = wrapper.findByText('p', noFinanceRecordsText)
+  const noFinanceRecords = wrapper.findByText('p', FINANCES_COPY.INFINITE_LIST.NO_FINANCE_RECORDS)
   expect(noFinanceRecords).toBeDefined()
 })

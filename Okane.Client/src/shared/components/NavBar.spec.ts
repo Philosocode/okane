@@ -5,6 +5,8 @@ import { flushPromises } from '@vue/test-utils'
 import NavBar from '@shared/components/NavBar.vue'
 
 import { AUTH_HANDLER_MAP } from '@tests/msw/handlers/auth'
+import { AUTH_COPY } from '@features/auth/constants/copy'
+import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { ROUTE_MAP } from '@shared/services/router/router'
 
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
@@ -25,10 +27,10 @@ test('renders links for unauthenticated users', () => {
   const allLinks = wrapper.findAll('a')
   expect(allLinks).toHaveLength(2)
 
-  const loginLink = wrapper.findByText('a', 'Login')
+  const loginLink = wrapper.findByText('a', AUTH_COPY.LOGIN)
   expect(loginLink.attributes('href')).toBe(ROUTE_MAP.LOGIN.buildPath())
 
-  const registerLink = wrapper.findByText('a', 'Register')
+  const registerLink = wrapper.findByText('a', AUTH_COPY.REGISTER)
   expect(registerLink.attributes('href')).toBe(ROUTE_MAP.REGISTER.buildPath())
 })
 
@@ -48,17 +50,17 @@ describe('when authenticated', () => {
 
     const financesURL = ROUTE_MAP.FINANCES.buildPath()
     const financesLink = wrapper.get(`a[href="${financesURL}"]`)
-    expect(financesLink.text()).toBe('Finances')
+    expect(financesLink.text()).toBe(FINANCES_COPY.FINANCES)
 
     const logoutLink = wrapper.get(`a[href="/#"]`)
-    expect(logoutLink.text()).toBe('Logout')
+    expect(logoutLink.text()).toBe(AUTH_COPY.LOGOUT)
   })
 
   test('logs the user out', async () => {
     testServer.use(AUTH_HANDLER_MAP.LOGOUT_SUCCESS)
 
     const wrapper = mountComponent()
-    const logoutLink = wrapper.findByText('a', 'Logout')
+    const logoutLink = wrapper.findByText('a', AUTH_COPY.LOGOUT)
     logoutLink.trigger('click')
 
     await flushPromises()

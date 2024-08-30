@@ -23,7 +23,7 @@ provide(FINANCE_RECORD_SEARCH_FILTERS_KEY, financeRecordSearchFilters)
 
 <template>
   <PageLayout>
-    <Heading tag="h1">Dashboard</Heading>
+    <Heading tag="h1">Finances</Heading>
     <p>You are logged in!</p>
     <SaveFinanceRecordForm />
     <FinanceRecordList />

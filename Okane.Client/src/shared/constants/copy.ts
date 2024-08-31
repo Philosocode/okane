@@ -1,6 +1,8 @@
 export const SHARED_COPY = {
   ACTIONS: {
     CANCEL: 'Cancel',
+    DELETE: 'Delete',
+    EDIT: 'Edit',
     SAVE: 'Save',
   },
   MENU: {

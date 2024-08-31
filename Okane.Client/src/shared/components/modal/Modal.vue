@@ -84,5 +84,9 @@ watch(
 
 .modal-content {
   padding: 1rem;
+
+  & > * + * {
+    margin-top: var(--space-sm);
+  }
 }
 </style>

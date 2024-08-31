@@ -1,5 +1,5 @@
 // Internal
-import * as utils from '@shared/utils/response'
+import * as utils from '@shared/utils/pagination'
 import { wrapInAPIPaginatedResponse, wrapInAPIResponse } from '@tests/utils/apiResponse'
 
 describe('flattenPages', () => {

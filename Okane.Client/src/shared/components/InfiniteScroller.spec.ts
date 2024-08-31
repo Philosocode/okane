@@ -14,7 +14,7 @@ import { FINANCE_RECORD_HANDLER_FACTORY } from '@tests/msw/handlers/financeRecor
 
 import { useInfiniteQueryFinanceRecords } from '@features/financeRecords/composables/useInfiniteQueryFinanceRecords'
 
-import { flattenPages } from '@shared/utils/response'
+import { flattenPages } from '@shared/utils/pagination'
 import { getRange } from '@shared/utils/array'
 import { wrapInAPIPaginatedResponse, wrapInAPIResponse } from '@tests/utils/apiResponse'
 

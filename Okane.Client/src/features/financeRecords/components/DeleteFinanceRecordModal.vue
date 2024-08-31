@@ -43,7 +43,6 @@ function closeModal() {
 function handleDelete() {
   deleteFinanceRecord(undefined, {
     onSuccess() {
-      console.log('made it')
       closeModal()
     },
   })

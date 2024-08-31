@@ -25,6 +25,18 @@ function getStubbedFinanceRecords(numRecords: number): FinanceRecord[] {
 }
 
 export const FINANCE_RECORD_HANDLER_FACTORY = {
+  DELETE_FINANCE_RECORD_SUCCESS(id: number) {
+    return http.delete(`/api${FINANCE_RECORD_API_ROUTES.DELETE.buildPath({ id })}`, () => {
+      return new HttpResponse(null, { status: HTTP_STATUS_CODE.NO_CONTENT_204 })
+    })
+  },
+  DELETE_FINANCE_RECORD_ERROR(id: number) {
+    const status = HTTP_STATUS_CODE.BAD_REQUEST_400
+
+    return http.delete(`/api${FINANCE_RECORD_API_ROUTES.DELETE.buildPath({ id })}`, () => {
+      return HttpResponse.json(createTestProblemDetails({ status }), { status })
+    })
+  },
   GET_PAGINATED_FINANCE_RECORDS_SUCCESS(financeRecords: FinanceRecord[]) {
     return http.get(`/api${FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.basePath}`, () => {
       return HttpResponse.json(wrapInAPIPaginatedResponse(wrapInAPIResponse(financeRecords)))
@@ -43,6 +55,8 @@ export const FINANCE_RECORD_HANDLER_MAP: Record<
   keyof typeof FINANCE_RECORD_HANDLER_FACTORY,
   RequestHandler
 > = {
+  DELETE_FINANCE_RECORD_SUCCESS: FINANCE_RECORD_HANDLER_FACTORY.DELETE_FINANCE_RECORD_SUCCESS(1),
+  DELETE_FINANCE_RECORD_ERROR: FINANCE_RECORD_HANDLER_FACTORY.DELETE_FINANCE_RECORD_SUCCESS(1),
   GET_PAGINATED_FINANCE_RECORDS_SUCCESS:
     FINANCE_RECORD_HANDLER_FACTORY.GET_PAGINATED_FINANCE_RECORDS_SUCCESS(
       getStubbedFinanceRecords(DEFAULT_PAGE_SIZE * 2),

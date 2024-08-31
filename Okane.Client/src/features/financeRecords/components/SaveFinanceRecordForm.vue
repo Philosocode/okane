@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // External
-import { inject, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 
 // Internal
 import Modal from '@shared/components/modal/Modal.vue'
@@ -8,10 +8,14 @@ import ModalActions from '@shared/components/modal/ModalActions.vue'
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 import SaveFinanceRecordFormInputs from '@features/financeRecords/components/SaveFinanceRecordFormInputs.vue'
 
-import { FINANCE_RECORD_SEARCH_FILTERS_KEY } from '@features/financeRecords/constants/searchFilters'
-import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
+import { FINANCE_RECORD_QUERY_KEYS } from '@features/financeRecords/constants/queryKeys'
+import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 import { SHARED_COPY } from '@shared/constants/copy'
+import {
+  DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+  FINANCE_RECORD_SEARCH_FILTERS_KEY,
+} from '@features/financeRecords/constants/searchFilters'
 
 import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
@@ -27,7 +31,13 @@ import { mapSaveFinanceRecordFormStateToFinanceRecord } from '@features/financeR
 const { showModal, closeModal, modalIsShowing } = useModal()
 
 const searchFilters = inject(FINANCE_RECORD_SEARCH_FILTERS_KEY)
-const { mutate: createFinanceRecord } = useCreateFinanceRecordMutation(searchFilters)
+
+const queryKey = computed(() =>
+  FINANCE_RECORD_QUERY_KEYS.LIST_BY_FILTERS(
+    searchFilters?.value ?? DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+  ),
+)
+const { mutate: createFinanceRecord } = useCreateFinanceRecordMutation(queryKey)
 
 const initialFormState: SaveFinanceRecordFormState = {
   amount: 0,

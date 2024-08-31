@@ -6,6 +6,7 @@ import { formatDate } from 'date-fns'
 import ToggleMenu from '@shared/components/ToggleMenu.vue'
 
 import { FINANCE_RECORD_TIMESTAMP_FORMAT } from '@features/financeRecords/constants/financeRecordList'
+import { SHARED_COPY } from '@shared/constants/copy'
 
 import type { FinanceRecord } from '@features/financeRecords/types/financeRecord'
 
@@ -15,15 +16,20 @@ type Props = {
 
 const props = defineProps<Props>()
 
+const emit = defineEmits<{
+  (e: 'delete', id: number): void
+}>()
+
 const dateTime = formatDate(props.financeRecord.happenedAt, FINANCE_RECORD_TIMESTAMP_FORMAT)
+
 const menuActions = [
   {
     onClick: () => console.log('Edit'),
-    text: 'Edit',
+    text: SHARED_COPY.ACTIONS.EDIT,
   },
   {
-    onClick: () => console.log('Delete'),
-    text: 'Delete',
+    onClick: () => emit('delete', props.financeRecord.id),
+    text: SHARED_COPY.ACTIONS.DELETE,
   },
 ]
 </script>

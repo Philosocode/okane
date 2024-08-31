@@ -1,8 +1,9 @@
 <script setup lang="ts">
 // External
-import { computed, inject } from 'vue'
+import { computed, inject, ref } from 'vue'
 
 // Internal
+import DeleteFinanceRecordModal from '@features/financeRecords/components/DeleteFinanceRecordModal.vue'
 import FinanceRecordListItem from '@features/financeRecords/components/FinanceRecordListItem.vue'
 import InfiniteScroller from '@shared/components/InfiniteScroller.vue'
 
@@ -16,6 +17,12 @@ import { FINANCE_RECORD_SEARCH_FILTERS_KEY } from '@features/financeRecords/cons
 const searchFilters = inject(FINANCE_RECORD_SEARCH_FILTERS_KEY)
 const queryResult = useInfiniteQueryFinanceRecords(searchFilters)
 const financeRecords = computed(() => flattenPages(queryResult.data.value?.pages))
+
+const deleteFinanceRecordId = ref<number>()
+
+function handleStartDelete(id: number) {
+  deleteFinanceRecordId.value = id
+}
 </script>
 
 <template>
@@ -23,7 +30,7 @@ const financeRecords = computed(() => flattenPages(queryResult.data.value?.pages
     <InfiniteScroller :items="financeRecords" :query-result="queryResult">
       <ul class="finance-record-list">
         <li v-for="financeRecord in financeRecords" :key="financeRecord.id">
-          <FinanceRecordListItem :finance-record="financeRecord" />
+          <FinanceRecordListItem @delete="handleStartDelete" :finance-record="financeRecord" />
         </li>
       </ul>
 
@@ -32,6 +39,11 @@ const financeRecords = computed(() => flattenPages(queryResult.data.value?.pages
       </template>
     </InfiniteScroller>
   </div>
+
+  <DeleteFinanceRecordModal
+    :finance-record-id="deleteFinanceRecordId"
+    @close="deleteFinanceRecordId = undefined"
+  />
 </template>
 
 <style scoped>

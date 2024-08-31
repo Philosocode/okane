@@ -8,6 +8,6 @@ import Heading from '@shared/components/Heading.vue'
 
 <style scoped>
 .heading {
-  margin-top: 0;
+  margin-block: 0;
 }
 </style>

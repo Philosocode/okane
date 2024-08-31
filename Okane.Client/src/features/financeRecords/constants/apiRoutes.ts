@@ -8,6 +8,11 @@ const apiRoutes = {
       return `${apiRoutes.GET_PAGINATED_LIST.basePath}?page=${page}&pageSize=${DEFAULT_PAGE_SIZE}`
     },
   },
+  DELETE: {
+    buildPath({ id }: { id: number }) {
+      return `/finance-records/${id}`
+    },
+  },
 } as const
 
 export const FINANCE_RECORD_API_ROUTES = apiRoutes

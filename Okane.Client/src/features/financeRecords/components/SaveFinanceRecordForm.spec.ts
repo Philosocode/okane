@@ -90,29 +90,37 @@ test('renders a button to show the modal', async () => {
   expect(showModal).toHaveBeenCalledOnce()
 })
 
-test('renders a modal', () => {
+test('renders a modal component', () => {
   const wrapper = mountComponent()
   const modal = wrapper.findComponent(Modal)
 
   expect(modal.exists()).toBe(true)
 })
 
-test('renders a modal heading', () => {
+async function setUpWithShownModal() {
   const wrapper = mountComponent()
+  const button = wrapper.findByText('button', FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.SHOW_MODAL)
+  await button.trigger('click')
+
+  return wrapper
+}
+
+test('renders a modal heading', async () => {
+  const wrapper = await setUpWithShownModal()
   const heading = wrapper.getComponent(ModalHeading)
 
   expect(heading.text()).toBe(FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.CREATE_FINANCE_RECORD)
 })
 
-test("renders the form's inputs", () => {
-  const wrapper = mountComponent()
+test("renders the form's inputs", async () => {
+  const wrapper = await setUpWithShownModal()
   const inputs = wrapper.findComponent(SaveFinanceRecordFormInputs)
 
   expect(inputs.exists()).toBe(true)
 })
 
 test('renders a save button', async () => {
-  const wrapper = mountComponent()
+  const wrapper = await setUpWithShownModal()
   const button = wrapper.findByText('button', SHARED_COPY.ACTIONS.SAVE)
 
   expect(button.exists()).toBe(true)
@@ -122,7 +130,7 @@ test('renders a save button', async () => {
 test('renders a cancel button to close the modal', async () => {
   const { closeModal } = spyOn.useModal()
 
-  const wrapper = mountComponent()
+  const wrapper = await setUpWithShownModal()
   const button = wrapper.findByText('button', SHARED_COPY.ACTIONS.CANCEL)
 
   expect(button.exists()).toBe(true)
@@ -173,7 +181,7 @@ describe('with some form inputs filled', () => {
     afterInputPopulationHook: (wrapper: VueWrapper) => Promise<void>,
   ) {
     const { spy: postRequestSpy } = spyOn.postFinanceRecord()
-    const wrapper = mountComponent()
+    const wrapper = await setUpWithShownModal()
 
     await populateAllInputs(wrapper)
     await afterInputPopulationHook(wrapper)
@@ -220,10 +228,10 @@ describe('with some form inputs filled', () => {
 })
 
 describe('with a valid form state', () => {
-  async function setUp() {
+  async function setUpWithValidFormState() {
     const { spy: postRequestSpy } = spyOn.postFinanceRecord()
 
-    const wrapper = mountComponent()
+    const wrapper = await setUpWithShownModal()
 
     await populateAllInputs(wrapper)
 
@@ -236,7 +244,7 @@ describe('with a valid form state', () => {
   }
 
   test('creates a finance record', async () => {
-    const { postRequestSpy } = await setUp()
+    const { postRequestSpy } = await setUpWithValidFormState()
 
     expect(postRequestSpy).toHaveBeenCalledWith(
       FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.basePath,
@@ -245,14 +253,14 @@ describe('with a valid form state', () => {
   })
 
   test('does not reset the type state', async () => {
-    const { wrapper } = await setUp()
+    const { wrapper } = await setUpWithValidFormState()
     const typeSelect = elements.typeSelect(wrapper).element as HTMLSelectElement
 
     expect(typeSelect.value).toBe(formState.type)
   })
 
   test('does not reset the happenedAt state', async () => {
-    const { wrapper } = await setUp()
+    const { wrapper } = await setUpWithValidFormState()
     const happenedAtInput = elements.happenedAtInput(wrapper).element as HTMLInputElement
 
     // If this input was reset, its value would become mockedNow.
@@ -261,14 +269,14 @@ describe('with a valid form state', () => {
   })
 
   test('resets the amount state', async () => {
-    const { wrapper } = await setUp()
+    const { wrapper } = await setUpWithValidFormState()
 
     const amountInput = elements.amountInput(wrapper).element as HTMLInputElement
     expect(amountInput.value).toBe('0')
   })
 
   test('resets the description state', async () => {
-    const { wrapper } = await setUp()
+    const { wrapper } = await setUpWithValidFormState()
     const descriptionInput = elements.descriptionInput(wrapper).element as HTMLInputElement
 
     expect(descriptionInput.value).toBe('')
@@ -288,7 +296,7 @@ describe('with an error creating the finance record', () => {
   })
 
   test('renders the API response errors', async () => {
-    const wrapper = mountComponent()
+    const wrapper = await setUpWithShownModal()
 
     await populateAllInputs(wrapper)
     await clickOnSaveButton(wrapper)

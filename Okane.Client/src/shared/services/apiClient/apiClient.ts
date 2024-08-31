@@ -20,7 +20,7 @@ import { removePrefixCharacters } from '@shared/utils/string'
  * @see https://jasonwatmore.com/vue-3-pinia-jwt-authentication-with-refresh-tokens-example-tutorial
  * @see https://stackoverflow.com/a/65690669
  */
-async function makeRequest<TResponse extends APIResponse = never>(
+async function makeRequest<TResponse>(
   method: HTTP_METHOD,
   url: string,
   body?: any,
@@ -70,12 +70,17 @@ function makeRequestWithoutBody(method: HTTP_METHOD) {
     makeRequest<TResponse>(method, url, undefined, optionOverrides)
 }
 
+function makeNoContentRequest(method: HTTP_METHOD) {
+  return (url: string, optionOverrides?: RequestInit) =>
+    makeRequest<void>(method, url, undefined, optionOverrides)
+}
+
 export const apiClient = {
   get: makeRequestWithoutBody(HTTP_METHOD.GET),
   post: makeRequestWithBody(HTTP_METHOD.POST),
   patch: makeRequestWithBody(HTTP_METHOD.PATCH),
   put: makeRequestWithBody(HTTP_METHOD.PUT),
-  delete: makeRequestWithoutBody(HTTP_METHOD.DELETE),
+  delete: makeNoContentRequest(HTTP_METHOD.DELETE),
 }
 
 /**

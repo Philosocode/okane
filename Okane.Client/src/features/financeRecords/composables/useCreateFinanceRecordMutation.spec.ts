@@ -3,8 +3,6 @@ import { defineComponent, toRef } from 'vue'
 import { flushPromises } from '@vue/test-utils'
 
 // Internal
-import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
-import { FINANCE_RECORD_QUERY_KEYS } from '@features/financeRecords/constants/queryKeys'
 import { FINANCE_RECORD_API_ROUTES } from '@features/financeRecords/constants/apiRoutes'
 
 import { useCreateFinanceRecordMutation } from '@features/financeRecords/composables/useCreateFinanceRecordMutation'
@@ -16,7 +14,6 @@ import { testQueryClient } from '@tests/queryClient/testQueryClient'
 import { wrapInAPIResponse } from '@tests/utils/apiResponse'
 
 const financeRecord = createTestFinanceRecord()
-const searchFilters = toRef(DEFAULT_FINANCE_RECORD_SEARCH_FILTERS)
 
 const spyOn = {
   post() {
@@ -27,26 +24,21 @@ const spyOn = {
   },
 }
 
+const queryKey = toRef(['a'])
+
 const TestComponent = defineComponent({
   props: {
     shouldPassSearchFilters: Boolean,
   },
-  setup(props) {
-    const mutation = useCreateFinanceRecordMutation(
-      props.shouldPassSearchFilters ? searchFilters : undefined,
-    )
+  setup() {
+    const mutation = useCreateFinanceRecordMutation(queryKey)
     mutation.mutate(financeRecord)
   },
   template: '<div />',
 })
 
-function mountComponent(shouldPassSearchFilters = false) {
-  return getMountComponent(TestComponent, {
-    withQueryClient: true,
-    props: {
-      shouldPassSearchFilters,
-    },
-  })()
+function mountComponent() {
+  return getMountComponent(TestComponent, { withQueryClient: true })()
 }
 
 test('makes a POST request to the expected endpoint', async () => {
@@ -62,7 +54,7 @@ test('makes a POST request to the expected endpoint', async () => {
   )
 })
 
-test('does not invalidate the query key when no search filters are passed', async () => {
+test('invalidates the query key when search filters are passed', async () => {
   spyOn.post()
 
   const invalidateSpy = spyOn.invalidateQueries()
@@ -71,19 +63,5 @@ test('does not invalidate the query key when no search filters are passed', asyn
 
   await flushPromises()
 
-  expect(invalidateSpy).not.toHaveBeenCalled()
-})
-
-test('invalidates the query key when search filters are passed', async () => {
-  spyOn.post()
-
-  const invalidateSpy = spyOn.invalidateQueries()
-
-  mountComponent(true)
-
-  await flushPromises()
-
-  const queryKey = FINANCE_RECORD_QUERY_KEYS.LIST_BY_FILTERS(searchFilters.value)
-
-  expect(invalidateSpy).toHaveBeenCalledWith({ queryKey })
+  expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: queryKey.value })
 })

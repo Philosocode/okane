@@ -22,6 +22,15 @@ test('renders a dialog', () => {
   expect(wrapper.find('dialog').exists()).toBe(true)
 })
 
+test('does not render the modal content when the modal is hidden', () => {
+  const wrapper = mountComponent({
+    props: { isShowing: false },
+  })
+
+  const button = wrapper.find('button')
+  expect(button.exists()).toBe(false)
+})
+
 test('renders a close button that closes the modal', async () => {
   const wrapper = mountComponent({
     props: isShowingProps,

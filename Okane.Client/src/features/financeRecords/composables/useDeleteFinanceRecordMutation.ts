@@ -10,7 +10,7 @@ import { apiClient } from '@shared/services/apiClient/apiClient'
 import type { APIPaginatedResponse } from '@shared/services/apiClient/types'
 import type { FinanceRecord } from '@features/financeRecords/types/financeRecord'
 
-import { removeItemFromPage } from '@shared/utils/pagination'
+import { removeItemFromPages } from '@shared/utils/pagination'
 
 function deleteFinanceRecord(id: number) {
   return apiClient.delete(FINANCE_RECORD_API_ROUTES.DELETE.buildPath({ id }))
@@ -26,7 +26,7 @@ export function useDeleteFinanceRecordMutation(id: Ref<number>, queryKey: Ref<Qu
         queryKey.value,
         (data) => {
           if (!data) return data
-          return removeItemFromPage(data, (item) => item.id !== id.value)
+          return removeItemFromPages(data, (item) => item.id !== id.value)
         },
       )
     },

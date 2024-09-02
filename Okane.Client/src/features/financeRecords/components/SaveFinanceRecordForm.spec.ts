@@ -76,13 +76,13 @@ beforeEach(() => {
   vitest.restoreAllMocks()
 })
 
-test('renders a button to show the modal', async () => {
+test('renders a button to show the create modal', async () => {
   const { showModal } = spyOn.useModal()
 
   const wrapper = mountComponent()
-  const button = wrapper.findByText('button', FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.SHOW_MODAL)
+  const button = wrapper.get('button.create-button')
+  expect(button.text()).toBe(FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.SHOW_MODAL)
 
-  expect(button.exists()).toBe(true)
   expect(showModal).not.toHaveBeenCalled()
 
   await button.trigger('click')
@@ -99,7 +99,7 @@ test('renders a modal component', () => {
 
 async function setUpWithShownModal() {
   const wrapper = mountComponent()
-  const button = wrapper.findByText('button', FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.SHOW_MODAL)
+  const button = wrapper.get('button.create-button')
   await button.trigger('click')
 
   return wrapper

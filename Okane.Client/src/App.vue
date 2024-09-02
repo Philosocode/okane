@@ -12,5 +12,5 @@ import NavBar from '@shared/components/NavBar.vue'
     <NavBar />
   </header>
   <RouterView />
-  <VueQueryDevtools />
+  <VueQueryDevtools buttonPosition="bottom-left" />
 </template>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // External
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { computed, inject, ref } from 'vue'
 
 // Internal
@@ -90,7 +91,12 @@ function handleSave() {
 </script>
 
 <template>
-  <button @click="showModal">{{ FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.SHOW_MODAL }}</button>
+  <button class="create-button" @click="showModal">
+    <FontAwesomeIcon
+      icon="fa-solid fa-plus"
+      :title="FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.SHOW_MODAL"
+    />
+  </button>
   <Modal :is-showing="modalIsShowing" @close="closeModal">
     <ModalHeading>{{ FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.CREATE_FINANCE_RECORD }}</ModalHeading>
 
@@ -110,6 +116,20 @@ function handleSave() {
 </template>
 
 <style scoped>
+.create-button {
+  --button-size: clamp(2rem, 2rem + 2.5vw, 3rem);
+  --offset: clamp(0.5rem, 0.5rem + 0.5vw, 1rem);
+
+  border: none;
+  border-radius: 50%;
+  font-size: 1.25rem;
+  position: fixed;
+  bottom: var(--offset);
+  right: var(--offset);
+  height: var(--button-size);
+  width: var(--button-size);
+}
+
 .form {
   display: flex;
   flex-direction: column;

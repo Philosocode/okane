@@ -15,7 +15,7 @@ export const FINANCES_COPY = {
     CREATE_FINANCE_RECORD: 'Create Finance Record',
     DESCRIPTION: 'Description',
     HAPPENED_AT: 'Happened At',
-    SHOW_MODAL: 'Show Modal',
+    SHOW_MODAL: 'Show create finance modal.',
     TYPE: 'Type',
   },
 } as const

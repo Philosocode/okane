@@ -38,6 +38,11 @@ function handleObserverChange(isIntersecting: boolean) {
       <Observer :watch-dep="props.queryResult.data" @change="handleObserverChange" />
     </div>
 
+    <slot
+      v-if="props.items.length > 0 && !props.queryResult.hasNextPage.value"
+      name="noMoreItems"
+    />
+
     <div v-if="showLoader" class="loader">
       <Loader />
     </div>

@@ -5,6 +5,9 @@ export const SHARED_COPY = {
     EDIT: 'Edit',
     SAVE: 'Save',
   },
+  INFINITE_SCROLLER: {
+    REACHED_THE_BOTTOM: "You've reached the bottom.",
+  },
   MENU: {
     TOGGLE_MENU: 'Toggle Menu',
   },

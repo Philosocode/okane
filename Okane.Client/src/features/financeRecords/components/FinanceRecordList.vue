@@ -9,6 +9,7 @@ import InfiniteScroller from '@shared/components/InfiniteScroller.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { FINANCE_RECORD_SEARCH_FILTERS_KEY } from '@features/financeRecords/constants/searchFilters'
+import { SHARED_COPY } from '@shared/constants/copy'
 
 import { useInfiniteQueryFinanceRecords } from '@features/financeRecords/composables/useInfiniteQueryFinanceRecords'
 
@@ -37,6 +38,10 @@ function handleStartDelete(id: number) {
       <template #noItems>
         <p>{{ FINANCES_COPY.INFINITE_LIST.NO_FINANCE_RECORDS }}</p>
       </template>
+
+      <template #noMoreItems>
+        <p class="no-more-items">{{ SHARED_COPY.INFINITE_SCROLLER.REACHED_THE_BOTTOM }}</p>
+      </template>
     </InfiniteScroller>
   </div>
 
@@ -55,5 +60,11 @@ function handleStartDelete(id: number) {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
+}
+
+.no-more-items {
+  color: var(--color-gray-300);
+  margin-block: var(--space-xl);
+  text-align: center;
 }
 </style>

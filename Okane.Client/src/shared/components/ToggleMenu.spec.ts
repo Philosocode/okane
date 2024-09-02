@@ -47,7 +47,7 @@ test('renders a menu toggle', () => {
 
   const menuToggle = wrapper.get('button')
   const title = menuToggle.get(`title`)
-  expect(title.text()).toBe(SHARED_COPY.MENU.TOGGLE_TITLE)
+  expect(title.text()).toBe(SHARED_COPY.MENU.TOGGLE_MENU)
 })
 
 test('initially hides the menu', () => {

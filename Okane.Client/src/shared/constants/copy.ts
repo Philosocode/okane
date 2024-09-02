@@ -6,6 +6,6 @@ export const SHARED_COPY = {
     SAVE: 'Save',
   },
   MENU: {
-    TOGGLE_TITLE: 'Toggle Menu',
+    TOGGLE_MENU: 'Toggle Menu',
   },
 } as const

@@ -4,6 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { ref, watch } from 'vue'
 
 // Internal
+import { SHARED_COPY } from '@shared/constants/copy'
+
+// Internal
 type Props = {
   isShowing: boolean
 }
@@ -46,7 +49,7 @@ watch(
     <dialog @close="emitModalClose" @mousedown="handleOutsideClick" class="modal" ref="dialogRef">
       <div class="modal-content" v-if="props.isShowing">
         <button class="close-button" @click="emitModalClose">
-          <FontAwesomeIcon icon="fa-solid fa-xmark" title="Close Modal" />
+          <FontAwesomeIcon icon="fa-solid fa-xmark" :title="SHARED_COPY.MODAL.CLOSE_MODAL" />
         </button>
         <slot />
       </div>

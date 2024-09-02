@@ -4,7 +4,6 @@ import SaveFinanceRecordFormInputs from '@features/financeRecords/components/Sav
 import { ARIA_LIVE } from '@shared/constants/aria'
 import { INPUT_TYPE } from '@shared/constants/form'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
-import { SHARED_COPY } from '@shared/constants/copy'
 import {
   FINANCE_RECORD_DESCRIPTION_MAX_LENGTH,
   FINANCE_RECORD_MAX_AMOUNT,

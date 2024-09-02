@@ -33,10 +33,7 @@ function handleClick(callback: MenuAction['onClick']) {
 <template>
   <div class="root" ref="rootRef">
     <button class="menu-toggle" @click="menuIsShowing = !menuIsShowing">
-      <FontAwesomeIcon
-        icon="fa-solid fa-ellipsis-vertical"
-        :title="SHARED_COPY.MENU.TOGGLE_TITLE"
-      />
+      <FontAwesomeIcon icon="fa-solid fa-ellipsis-vertical" :title="SHARED_COPY.MENU.TOGGLE_MENU" />
     </button>
 
     <ul v-show="menuIsShowing" class="menu">

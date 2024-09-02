@@ -37,9 +37,12 @@ export const FINANCE_RECORD_HANDLER_FACTORY = {
       return HttpResponse.json(createTestProblemDetails({ status }), { status })
     })
   },
-  GET_PAGINATED_FINANCE_RECORDS_SUCCESS(financeRecords: FinanceRecord[]) {
+  GET_PAGINATED_FINANCE_RECORDS_SUCCESS(financeRecords: FinanceRecord[], hasNextPage = true) {
     return http.get(`/api${FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.basePath}`, () => {
-      return HttpResponse.json(wrapInAPIPaginatedResponse(wrapInAPIResponse(financeRecords)))
+      return HttpResponse.json({
+        ...wrapInAPIPaginatedResponse(wrapInAPIResponse(financeRecords)),
+        hasNextPage,
+      })
     })
   },
   GET_PAGINATED_FINANCE_RECORDS_ERROR(detail?: string) {

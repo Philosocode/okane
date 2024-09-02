@@ -41,7 +41,7 @@ const mountComponent = getMountComponent(FinanceRecordList, {
 
 test('renders a list of finance records', async () => {
   testServer.use(
-    FINANCE_RECORD_HANDLER_FACTORY.GET_PAGINATED_FINANCE_RECORDS_SUCCESS(financeRecords),
+    FINANCE_RECORD_HANDLER_FACTORY.GET_PAGINATED_FINANCE_RECORDS_SUCCESS(financeRecords, false),
   )
 
   const wrapper = mountComponent()
@@ -55,6 +55,9 @@ test('renders a list of finance records', async () => {
 
   const noFinanceRecords = wrapper.findByText('p', FINANCES_COPY.INFINITE_LIST.NO_FINANCE_RECORDS)
   expect(noFinanceRecords).toBeUndefined()
+
+  const reachedTheBottom = wrapper.findByText('p', SHARED_COPY.INFINITE_SCROLLER.REACHED_THE_BOTTOM)
+  expect(reachedTheBottom).toBeDefined()
 })
 
 test('renders the expected message if no records exist', async () => {

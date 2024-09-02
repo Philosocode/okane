@@ -29,6 +29,7 @@ const testIds = {
   loader: 'loader',
   loadMoreButton: 'loadMoreButton',
   noItemsSlot: 'noItemsSlot',
+  noMoreItemsSlot: 'noMoreItemsSlot',
 }
 
 function getTestComponent(errorTemplate?: string) {
@@ -55,6 +56,10 @@ function getTestComponent(errorTemplate?: string) {
         </template>
         
         ${errorTemplate && `<template #error>${errorTemplate}</template>`}
+        
+        <template #noMoreItems>
+          <div data-testid="${testIds.noMoreItemsSlot}" />
+        </template>
       </InfiniteScroller>
     `,
   })
@@ -113,6 +118,32 @@ test('renders the default slot when the response contains items', async () => {
   expect(defaultSlot.exists()).toBe(true)
 })
 
+describe('when there is no next page', () => {
+  beforeEach(() => {
+    testServer.use(
+      FINANCE_RECORD_HANDLER_FACTORY.GET_PAGINATED_FINANCE_RECORDS_SUCCESS(financeRecords, false),
+    )
+  })
+
+  test('renders the noMoreItems slot', async () => {
+    const wrapper = mountComponent()
+
+    await flushPromises()
+
+    const noMoreItemsSlot = wrapper.find(`[data-testid="${testIds.noMoreItemsSlot}"]`)
+    expect(noMoreItemsSlot.exists()).toBe(true)
+  })
+
+  test('does not render the noItems slot', async () => {
+    const wrapper = mountComponent()
+
+    await flushPromises()
+
+    const noItemsSlot = wrapper.find(`[data-testid="${testIds.noItemsSlot}"]`)
+    expect(noItemsSlot.exists()).toBe(false)
+  })
+})
+
 describe('when the response contains no items', () => {
   beforeEach(() => {
     testServer.use(FINANCE_RECORD_HANDLER_FACTORY.GET_PAGINATED_FINANCE_RECORDS_SUCCESS([]))
@@ -134,6 +165,15 @@ describe('when the response contains no items', () => {
 
     const defaultSlot = wrapper.find(`[data-testid="${testIds.defaultSlot}"]`)
     expect(defaultSlot.exists()).toBe(false)
+  })
+
+  test('does not render noMoreItems slot', async () => {
+    const wrapper = mountComponent()
+
+    await flushPromises()
+
+    const noMoreItems = wrapper.find(`[data-testid="${testIds.noMoreItemsSlot}"]`)
+    expect(noMoreItems.exists()).toBe(false)
   })
 })
 

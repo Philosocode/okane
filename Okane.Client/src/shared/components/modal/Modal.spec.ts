@@ -1,6 +1,8 @@
 // Internal
 import Modal from '@shared/components/modal/Modal.vue'
 
+import { SHARED_COPY } from '@shared/constants/copy'
+
 const isShowingProps = { isShowing: true }
 
 const mountComponent = getMountComponent(Modal, {
@@ -38,7 +40,7 @@ test('renders a close button that closes the modal', async () => {
 
   const closeButton = wrapper.get('button')
   const title = closeButton.get('title')
-  expect(title.text()).toBe('Close Modal')
+  expect(title.text()).toBe(SHARED_COPY.MODAL.CLOSE_MODAL)
 
   await closeButton.trigger('click')
   expect(wrapper.emitted()).toHaveProperty('close')

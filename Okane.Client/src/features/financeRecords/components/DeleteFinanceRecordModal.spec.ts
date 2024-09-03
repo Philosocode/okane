@@ -19,7 +19,7 @@ import {
 import * as deleteMutation from '@features/financeRecords/composables/useDeleteFinanceRecordMutation'
 
 import { createTestFinanceRecord } from '@tests/factories/financeRecord'
-import { FINANCE_RECORD_HANDLER_FACTORY } from '@tests/msw/handlers/financeRecord'
+import { FINANCE_RECORD_HANDLERS } from '@tests/msw/handlers/financeRecord'
 import { testServer } from '@tests/msw/testServer'
 
 const financeRecord = createTestFinanceRecord()
@@ -75,9 +75,9 @@ test('renders a cancel button to close the modal', async () => {
 
 describe('when clicking the delete button', () => {
   async function setUp(
-    handler: HttpHandler = FINANCE_RECORD_HANDLER_FACTORY.DELETE_FINANCE_RECORD_SUCCESS(
-      financeRecord.id,
-    ),
+    handler: HttpHandler = FINANCE_RECORD_HANDLERS.DELETE_FINANCE_RECORD_SUCCESS({
+      id: financeRecord.id,
+    }),
   ) {
     testServer.use(handler)
 
@@ -112,7 +112,7 @@ describe('when clicking the delete button', () => {
 
   test("does not close the modal when there's an error deleting the finance record", async () => {
     const wrapper = await setUp(
-      FINANCE_RECORD_HANDLER_FACTORY.DELETE_FINANCE_RECORD_ERROR(financeRecord.id),
+      FINANCE_RECORD_HANDLERS.DELETE_FINANCE_RECORD_ERROR({ id: financeRecord.id }),
     )
     expect(wrapper.emitted('close')).toBeUndefined()
   })

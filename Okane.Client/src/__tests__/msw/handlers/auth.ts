@@ -3,15 +3,14 @@ import { http, HttpResponse } from 'msw'
 
 // Internal
 import { AUTH_API_ROUTES } from '@features/auth/constants/apiRoutes'
+import { HTTP_STATUS_CODE } from '@shared/constants/http'
 
-import { testServer } from '@tests/msw/testServer'
-
-export const AUTH_HANDLER_MAP = {
-  LOGOUT_SUCCESS: http.post(`/api${AUTH_API_ROUTES.LOGOUT()}`, () => {
-    return HttpResponse.json()
-  }),
+const handlers = {
+  LOGOUT_SUCCESS() {
+    return http.post(`/api${AUTH_API_ROUTES.LOGOUT()}`, () => {
+      return new HttpResponse(null, { status: HTTP_STATUS_CODE.NO_CONTENT_204 })
+    })
+  },
 } as const
 
-export function setUpAuthHandlers() {
-  testServer.use(...Object.values(AUTH_HANDLER_MAP))
-}
+export const AUTH_HANDLERS = handlers

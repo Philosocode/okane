@@ -10,7 +10,7 @@ import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 import SaveFinanceRecordFormInputs from '@features/financeRecords/components/SaveFinanceRecordFormInputs.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
-import { FINANCE_RECORD_QUERY_KEYS } from '@features/financeRecords/constants/queryKeys'
+import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 import { SHARED_COPY } from '@shared/constants/copy'
 import {
@@ -34,7 +34,7 @@ const { showModal, closeModal, modalIsShowing } = useModal()
 const searchFilters = inject(FINANCE_RECORD_SEARCH_FILTERS_KEY)
 
 const queryKey = computed(() =>
-  FINANCE_RECORD_QUERY_KEYS.LIST_BY_FILTERS(
+  financeRecordQueryKeys.listByFilters(
     searchFilters?.value ?? DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
   ),
 )

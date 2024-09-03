@@ -13,7 +13,7 @@ import type { APIPaginatedResponse } from '@shared/services/apiClient/types'
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
 import { useCleanUpInfiniteQuery } from '@shared/composables/useCleanUpInfiniteQuery'
-import { FINANCE_RECORD_QUERY_KEYS } from '@features/financeRecords/constants/queryKeys'
+import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 import type { FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
 
@@ -28,9 +28,7 @@ export function fetchPaginatedFinanceRecords({
 
 export function useInfiniteQueryFinanceRecords(searchFilters?: Ref<FinanceRecordSearchFilters>) {
   const queryKey = computed(() =>
-    FINANCE_RECORD_QUERY_KEYS.LIST_BY_FILTERS(
-      searchFilters ?? DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
-    ),
+    financeRecordQueryKeys.listByFilters(searchFilters ?? DEFAULT_FINANCE_RECORD_SEARCH_FILTERS),
   )
 
   useCleanUpInfiniteQuery(queryKey)

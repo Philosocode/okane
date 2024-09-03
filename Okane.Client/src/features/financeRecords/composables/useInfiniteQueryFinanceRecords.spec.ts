@@ -3,7 +3,7 @@ import { defineComponent, toRef, type Ref } from 'vue'
 
 // Internal
 import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
-import { FINANCE_RECORD_QUERY_KEYS } from '@features/financeRecords/constants/queryKeys'
+import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 import { INITIAL_PAGE } from '@shared/constants/request'
 import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
 
@@ -48,7 +48,7 @@ test('cleans up the infinite query', () => {
   mountComponent()
 
   expect(cleanUpSpy.mock.calls[0][0]?.value).toEqual(
-    FINANCE_RECORD_QUERY_KEYS.LIST_BY_FILTERS(searchFilters),
+    financeRecordQueryKeys.listByFilters(searchFilters),
   )
 })
 

@@ -247,7 +247,7 @@ describe('with a valid form state', () => {
     const { postRequestSpy } = await setUpWithValidFormState()
 
     expect(postRequestSpy).toHaveBeenCalledWith(
-      FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.basePath,
+      FINANCE_RECORD_API_ROUTES.POST_FINANCE_RECORD(),
       mapSaveFinanceRecordFormStateToFinanceRecord(formState),
     )
   })
@@ -288,7 +288,7 @@ describe('with an error creating the finance record', () => {
 
   beforeEach(() => {
     testServer.use(
-      http.post(`/api${FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.basePath}`, () => {
+      http.post(`/api${FINANCE_RECORD_API_ROUTES.POST_FINANCE_RECORD()}`, () => {
         const problemDetails = createTestProblemDetails({ errors: formErrors })
         return HttpResponse.json(problemDetails, { status: problemDetails.status })
       }),

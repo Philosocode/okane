@@ -1,17 +1,16 @@
 // Internal
-import { DEFAULT_PAGE_SIZE } from '@shared/constants/request'
+import { DEFAULT_PAGE_SIZE, INITIAL_PAGE } from '@shared/constants/request'
 
+const basePath = '/finance-records'
 const apiRoutes = {
-  GET_PAGINATED_LIST: {
-    basePath: '/finance-records',
-    buildPath({ page }: { page: unknown }) {
-      return `${apiRoutes.GET_PAGINATED_LIST.basePath}?page=${page}&pageSize=${DEFAULT_PAGE_SIZE}`
-    },
+  GET_PAGINATED_LIST({ page = INITIAL_PAGE }: { page: unknown }) {
+    return `${basePath}?page=${page}&pageSize=${DEFAULT_PAGE_SIZE}`
   },
-  DELETE: {
-    buildPath({ id }: { id: number }) {
-      return `/finance-records/${id}`
-    },
+  DELETE_FINANCE_RECORD({ id }: { id: number }) {
+    return `${basePath}/${id}`
+  },
+  POST_FINANCE_RECORD() {
+    return basePath
   },
 } as const
 

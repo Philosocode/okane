@@ -21,12 +21,9 @@ export function fetchPaginatedFinanceRecords({
   pageParam,
   signal,
 }: QueryFunctionContext): Promise<APIPaginatedResponse<FinanceRecord>> {
-  return apiClient.get(
-    FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.buildPath({ page: pageParam }),
-    {
-      signal,
-    },
-  )
+  return apiClient.get(FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST({ page: pageParam }), {
+    signal,
+  })
 }
 
 export function useInfiniteQueryFinanceRecords(searchFilters?: Ref<FinanceRecordSearchFilters>) {

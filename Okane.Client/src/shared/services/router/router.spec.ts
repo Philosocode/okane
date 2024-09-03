@@ -7,12 +7,12 @@ import { useAuthenticatedAuthStore } from '@tests/composables/useAuthenticatedAu
 import * as appQueryClient from '@shared/services/queryClient/queryClient'
 
 import { testQueryClient } from '@tests/queryClient/testQueryClient'
-import { getRouter, ROUTE_MAP } from '@shared/services/router/router'
+import { getRouter, appRoutes } from '@shared/services/router/router'
 
 test('allows access to public routes', async () => {
   const router = getRouter()
-  await router.push(ROUTE_MAP.REGISTER.buildPath())
-  expect(location.pathname).toBe(ROUTE_MAP.REGISTER.buildPath())
+  await router.push(appRoutes.register.buildPath())
+  expect(location.pathname).toBe(appRoutes.register.buildPath())
 })
 
 describe('as an unauthenticated user trying to access a protected route', () => {
@@ -24,7 +24,7 @@ describe('as an unauthenticated user trying to access a protected route', () => 
     queryClientSpy = vi.spyOn(appQueryClient, 'getQueryClient').mockReturnValue(testQueryClient)
 
     const router = getRouter()
-    await router.push(ROUTE_MAP.FINANCES.buildPath())
+    await router.push(appRoutes.finances.buildPath())
   })
 
   afterEach(() => {
@@ -32,7 +32,7 @@ describe('as an unauthenticated user trying to access a protected route', () => 
   })
 
   test('redirects unauthenticated users to the login page', async () => {
-    expect(location.pathname).toBe(ROUTE_MAP.LOGIN.buildPath())
+    expect(location.pathname).toBe(appRoutes.login.buildPath())
   })
 
   test('clears the query cache', () => {
@@ -47,13 +47,13 @@ describe('as an authenticated user', () => {
 
   test('allows access to protected routes', async () => {
     const router = getRouter()
-    await router.push(ROUTE_MAP.FINANCES.buildPath())
-    expect(location.pathname).toBe(ROUTE_MAP.FINANCES.buildPath())
+    await router.push(appRoutes.finances.buildPath())
+    expect(location.pathname).toBe(appRoutes.finances.buildPath())
   })
 
   test('does not allow access to public-only routes', async () => {
     const router = getRouter()
-    await router.push(ROUTE_MAP.REGISTER.buildPath())
-    expect(location.pathname).toBe(ROUTE_MAP.FINANCES.buildPath())
+    await router.push(appRoutes.register.buildPath())
+    expect(location.pathname).toBe(appRoutes.finances.buildPath())
   })
 })

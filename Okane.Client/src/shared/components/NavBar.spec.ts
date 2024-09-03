@@ -7,7 +7,7 @@ import NavBar from '@shared/components/NavBar.vue'
 import { authHandlers } from '@tests/msw/handlers/auth'
 import { AUTH_COPY } from '@features/auth/constants/copy'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
-import { ROUTE_MAP } from '@shared/services/router/router'
+import { appRoutes } from '@shared/services/router/router'
 
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
 
@@ -28,10 +28,10 @@ test('renders links for unauthenticated users', () => {
   expect(allLinks).toHaveLength(2)
 
   const loginLink = wrapper.findByText('a', AUTH_COPY.LOGIN)
-  expect(loginLink.attributes('href')).toBe(ROUTE_MAP.LOGIN.buildPath())
+  expect(loginLink.attributes('href')).toBe(appRoutes.login.buildPath())
 
   const registerLink = wrapper.findByText('a', AUTH_COPY.REGISTER)
-  expect(registerLink.attributes('href')).toBe(ROUTE_MAP.REGISTER.buildPath())
+  expect(registerLink.attributes('href')).toBe(appRoutes.register.buildPath())
 })
 
 describe('when authenticated', () => {
@@ -48,7 +48,7 @@ describe('when authenticated', () => {
     const allLinks = wrapper.findAll('a')
     expect(allLinks).toHaveLength(2)
 
-    const financesURL = ROUTE_MAP.FINANCES.buildPath()
+    const financesURL = appRoutes.finances.buildPath()
     const financesLink = wrapper.get(`a[href="${financesURL}"]`)
     expect(financesLink.text()).toBe(FINANCES_COPY.FINANCES)
 
@@ -68,6 +68,6 @@ describe('when authenticated', () => {
     const authStore = useAuthStore()
     expect(authStore.authUser).toBeUndefined()
     expect(authStore.jwtToken).toBeUndefined()
-    expect(globalThis.location.pathname).toBe(ROUTE_MAP.LOGIN.buildPath())
+    expect(globalThis.location.pathname).toBe(appRoutes.login.buildPath())
   })
 })

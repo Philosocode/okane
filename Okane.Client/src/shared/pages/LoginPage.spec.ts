@@ -10,7 +10,7 @@ import { AUTH_COPY } from '@features/auth/constants/copy'
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
 import { useMockedStore } from '@tests/composables/useMockedStore'
 
-import { createAppRouter, ROUTE_MAP, ROUTE_NAME } from '@shared/services/router/router'
+import { createAppRouter, appRoutes, ROUTE_NAME } from '@shared/services/router/router'
 import { createTestAuthFormState } from '@tests/factories/authForm'
 
 const router = createAppRouter()
@@ -37,7 +37,7 @@ test('redirects to the finances page on successful login', async () => {
   wrapper.findComponent(AuthForm).vm.$emit('submit', formData)
   await flushPromises()
 
-  expect(location.pathname).toBe(ROUTE_MAP.FINANCES.buildPath())
+  expect(location.pathname).toBe(appRoutes.finances.buildPath())
 })
 
 test('logs a console error on unsuccessful login', async () => {
@@ -54,5 +54,5 @@ test('logs a console error on unsuccessful login', async () => {
 
   expect(consoleSpy).toHaveBeenCalledWith('Error logging in:', loginError)
 
-  expect(location.pathname).toBe(ROUTE_MAP.LOGIN.buildPath())
+  expect(location.pathname).toBe(appRoutes.login.buildPath())
 })

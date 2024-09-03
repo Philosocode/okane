@@ -11,7 +11,7 @@ import type { PreCreationFinanceRecord } from '@features/financeRecords/types/sa
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
 function postFinanceRecord(financeRecord: PreCreationFinanceRecord) {
-  return apiClient.post(FINANCE_RECORD_API_ROUTES.POST_FINANCE_RECORD(), financeRecord)
+  return apiClient.post(FINANCE_RECORD_API_ROUTES.POST_FINANCE_RECORD.buildPath(), financeRecord)
 }
 
 export function useCreateFinanceRecordMutation(queryKey: Ref<QueryKey>) {

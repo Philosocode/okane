@@ -28,9 +28,13 @@ const authResponse: AuthenticateResponse = {
 
 beforeEach(() => {
   testServer.use(
-    http.post(`/api${AUTH_API_ROUTES.LOGIN()}`, () => HttpResponse.json(authResponse)),
-    http.post(`/api${AUTH_API_ROUTES.REFRESH_TOKEN()}`, () => HttpResponse.json(authResponse)),
-    http.post(`/api${AUTH_API_ROUTES.LOGOUT()}`, () => HttpResponse.json(wrapInAPIResponse(null))),
+    http.post(`/api${AUTH_API_ROUTES.LOGIN.buildPath()}`, () => HttpResponse.json(authResponse)),
+    http.post(`/api${AUTH_API_ROUTES.REFRESH_TOKEN.buildPath()}`, () =>
+      HttpResponse.json(authResponse),
+    ),
+    http.post(`/api${AUTH_API_ROUTES.LOGOUT.buildPath()}`, () =>
+      HttpResponse.json(wrapInAPIResponse(null)),
+    ),
   )
 })
 
@@ -46,7 +50,7 @@ test('register', async () => {
 
   expect(spy).toHaveBeenCalledTimes(1)
   expect(spy).toHaveBeenCalledWith(
-    AUTH_API_ROUTES.REGISTER(),
+    AUTH_API_ROUTES.REGISTER.buildPath(),
     omitObjectKeys(formData, ['passwordConfirm']),
   )
 })

@@ -10,7 +10,7 @@ import InfiniteScroller from '@shared/components/InfiniteScroller.vue'
 import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
 import { DEFAULT_PAGE_SIZE } from '@shared/constants/request'
 import { FINANCE_RECORD_API_ROUTES } from '@features/financeRecords/constants/apiRoutes'
-import { FINANCE_RECORD_HANDLERS } from '@tests/msw/handlers/financeRecord'
+import { financeRecordHandlers } from '@tests/msw/handlers/financeRecord'
 
 import { useInfiniteQueryFinanceRecords } from '@features/financeRecords/composables/useInfiniteQueryFinanceRecords'
 
@@ -96,7 +96,7 @@ afterAll(() => {
 })
 
 test('renders a loader while fetching items', async () => {
-  testServer.use(FINANCE_RECORD_HANDLERS.GET_PAGINATED_FINANCE_RECORDS_SUCCESS({ financeRecords }))
+  testServer.use(financeRecordHandlers.getPaginatedFinanceRecordsSuccess({ financeRecords }))
 
   const wrapper = mountComponent()
   const loader = wrapper.find(`div[data-testid="${testIds.loader}"]`)
@@ -104,7 +104,7 @@ test('renders a loader while fetching items', async () => {
 })
 
 test('renders the default slot when the response contains items', async () => {
-  testServer.use(FINANCE_RECORD_HANDLERS.GET_PAGINATED_FINANCE_RECORDS_SUCCESS({ financeRecords }))
+  testServer.use(financeRecordHandlers.getPaginatedFinanceRecordsSuccess({ financeRecords }))
 
   const wrapper = mountComponent()
 
@@ -117,7 +117,7 @@ test('renders the default slot when the response contains items', async () => {
 describe('when there is no next page', () => {
   beforeEach(() => {
     testServer.use(
-      FINANCE_RECORD_HANDLERS.GET_PAGINATED_FINANCE_RECORDS_SUCCESS({
+      financeRecordHandlers.getPaginatedFinanceRecordsSuccess({
         financeRecords,
         hasNextPage: false,
       }),
@@ -145,9 +145,7 @@ describe('when there is no next page', () => {
 
 describe('when the response contains no items', () => {
   beforeEach(() => {
-    testServer.use(
-      FINANCE_RECORD_HANDLERS.GET_PAGINATED_FINANCE_RECORDS_SUCCESS({ financeRecords: [] }),
-    )
+    testServer.use(financeRecordHandlers.getPaginatedFinanceRecordsSuccess({ financeRecords: [] }))
   })
 
   test('renders the noItems slot', async () => {
@@ -182,9 +180,7 @@ describe('when the response contains an error', () => {
   const errorMessage = 'An error occurred.'
 
   beforeEach(() => {
-    testServer.use(
-      FINANCE_RECORD_HANDLERS.GET_PAGINATED_FINANCE_RECORDS_ERROR({ detail: errorMessage }),
-    )
+    testServer.use(financeRecordHandlers.getPaginatedFinanceRecordsError({ detail: errorMessage }))
   })
 
   test('renders the queryResult error with the default error slot content', async () => {

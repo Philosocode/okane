@@ -4,7 +4,7 @@ import { flushPromises } from '@vue/test-utils'
 // Internal
 import NavBar from '@shared/components/NavBar.vue'
 
-import { AUTH_HANDLERS } from '@tests/msw/handlers/auth'
+import { authHandlers } from '@tests/msw/handlers/auth'
 import { AUTH_COPY } from '@features/auth/constants/copy'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { ROUTE_MAP } from '@shared/services/router/router'
@@ -57,7 +57,7 @@ describe('when authenticated', () => {
   })
 
   test('logs the user out', async () => {
-    testServer.use(AUTH_HANDLERS.LOGOUT_SUCCESS())
+    testServer.use(authHandlers.logoutSuccess())
 
     const wrapper = mountComponent()
     const logoutLink = wrapper.findByText('a', AUTH_COPY.LOGOUT)

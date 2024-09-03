@@ -9,7 +9,7 @@ import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 import ToggleMenu from '@shared/components/ToggleMenu.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
-import { FINANCE_RECORD_HANDLERS } from '@tests/msw/handlers/financeRecord'
+import { financeRecordHandlers } from '@tests/msw/handlers/financeRecord'
 import { SHARED_COPY } from '@shared/constants/copy'
 import {
   DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
@@ -41,7 +41,7 @@ const mountComponent = getMountComponent(FinanceRecordList, {
 
 test('renders a list of finance records', async () => {
   testServer.use(
-    FINANCE_RECORD_HANDLERS.GET_PAGINATED_FINANCE_RECORDS_SUCCESS({
+    financeRecordHandlers.getPaginatedFinanceRecordsSuccess({
       financeRecords,
       hasNextPage: false,
     }),
@@ -64,9 +64,7 @@ test('renders a list of finance records', async () => {
 })
 
 test('renders the expected message if no records exist', async () => {
-  testServer.use(
-    FINANCE_RECORD_HANDLERS.GET_PAGINATED_FINANCE_RECORDS_SUCCESS({ financeRecords: [] }),
-  )
+  testServer.use(financeRecordHandlers.getPaginatedFinanceRecordsSuccess({ financeRecords: [] }))
 
   const testId = 'FinanceRecordListItem'
 
@@ -92,7 +90,7 @@ test('renders the expected message if no records exist', async () => {
 test('opens the delete modal when choosing the delete option', async () => {
   const financeRecord = createTestFinanceRecord()
   testServer.use(
-    FINANCE_RECORD_HANDLERS.GET_PAGINATED_FINANCE_RECORDS_SUCCESS({
+    financeRecordHandlers.getPaginatedFinanceRecordsSuccess({
       financeRecords: [financeRecord],
     }),
   )

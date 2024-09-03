@@ -10,8 +10,8 @@ import type { FinanceRecord } from '@features/financeRecords/types/financeRecord
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { wrapInAPIPaginatedResponse, wrapInAPIResponse } from '@tests/utils/apiResponse'
 
-const handlers = {
-  DELETE_FINANCE_RECORD_SUCCESS({ id }: { id: number }) {
+export const financeRecordHandlers = {
+  deleteFinanceRecordSuccess({ id }: { id: number }) {
     return http.delete(
       `/api${FINANCE_RECORD_API_ROUTES.DELETE_FINANCE_RECORD.buildPath({ id })}`,
       () => {
@@ -19,7 +19,7 @@ const handlers = {
       },
     )
   },
-  DELETE_FINANCE_RECORD_ERROR({ id }: { id: number }) {
+  deleteFinanceRecordError({ id }: { id: number }) {
     const status = HTTP_STATUS_CODE.BAD_REQUEST_400
 
     return http.delete(
@@ -29,7 +29,7 @@ const handlers = {
       },
     )
   },
-  GET_PAGINATED_FINANCE_RECORDS_SUCCESS({
+  getPaginatedFinanceRecordsSuccess({
     financeRecords,
     hasNextPage = true,
   }: {
@@ -43,7 +43,7 @@ const handlers = {
       })
     })
   },
-  GET_PAGINATED_FINANCE_RECORDS_ERROR({ detail }: { detail?: string }) {
+  getPaginatedFinanceRecordsError({ detail }: { detail?: string }) {
     return http.get(`/api${FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.basePath}`, () => {
       return HttpResponse.json(createTestProblemDetails({ detail }), {
         status: HTTP_STATUS_CODE.BAD_REQUEST_400,
@@ -51,5 +51,3 @@ const handlers = {
     })
   },
 } as const
-
-export const FINANCE_RECORD_HANDLERS = handlers

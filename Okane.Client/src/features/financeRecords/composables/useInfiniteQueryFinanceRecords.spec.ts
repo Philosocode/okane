@@ -35,7 +35,7 @@ test('makes a request to fetch paginated finance records', () => {
   mountComponent()
 
   expect(getSpy).toHaveBeenCalledWith(
-    FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST({ page: INITIAL_PAGE }),
+    FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.buildPath({ page: INITIAL_PAGE }),
     {
       signal: new AbortController().signal,
     },

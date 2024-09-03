@@ -9,7 +9,7 @@ import InfiniteScroller from '@shared/components/InfiniteScroller.vue'
 
 import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
 import { DEFAULT_PAGE_SIZE } from '@shared/constants/request'
-import { FINANCE_RECORD_API_ROUTES } from '@features/financeRecords/constants/apiRoutes'
+import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { financeRecordHandlers } from '@tests/msw/handlers/financeRecord'
 
 import { useInfiniteQueryFinanceRecords } from '@features/financeRecords/composables/useInfiniteQueryFinanceRecords'
@@ -211,7 +211,7 @@ describe(`when there are more pages to fetch page`, () => {
   const page3FinanceRecord = createTestFinanceRecord({ description: 'page3FinanceRecord' })
 
   beforeEach(() => {
-    const apiRoute = `/api${FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.basePath}`
+    const apiRoute = `/api${financeRecordAPIRoutes.getPaginatedList.basePath}`
 
     testServer.use(
       http.get(

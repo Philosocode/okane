@@ -1,29 +1,28 @@
 const basePath = '/auth'
-const apiRoutes = {
-  LOGIN: {
+
+export const authAPIRoutes = {
+  login: {
     basePath,
     buildPath() {
       return `${basePath}/login`
     },
   },
-  LOGOUT: {
+  logout: {
     basePath,
     buildPath() {
       return `${basePath}/logout`
     },
   },
-  REFRESH_TOKEN: {
+  refreshToken: {
     basePath,
     buildPath() {
       return `${basePath}/refresh-token`
     },
   },
-  REGISTER: {
+  register: {
     basePath,
     buildPath() {
       return `${basePath}/register`
     },
   },
 } as const
-
-export const AUTH_API_ROUTES = apiRoutes

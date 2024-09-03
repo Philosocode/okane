@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 // Internal
-import { AUTH_API_ROUTES } from '@features/auth/constants/apiRoutes'
+import { authAPIRoutes } from '@features/auth/constants/apiRoutes'
 
 import type { User } from '@features/users/types'
 import type { Timeout } from '@shared/types/shared'
@@ -31,7 +31,7 @@ export const useAuthStore = defineStore('AuthStore', () => {
    * @param password
    */
   async function register(email: string, name: string, password: string): Promise<void> {
-    await apiClient.post(AUTH_API_ROUTES.REGISTER.buildPath(), { email, name, password })
+    await apiClient.post(authAPIRoutes.register.buildPath(), { email, name, password })
   }
 
   /**
@@ -50,7 +50,7 @@ export const useAuthStore = defineStore('AuthStore', () => {
    */
   async function handleRefreshToken() {
     const response = await apiClient.post<AuthenticateResponse>(
-      AUTH_API_ROUTES.REFRESH_TOKEN.buildPath(),
+      authAPIRoutes.refreshToken.buildPath(),
     )
     initState(response)
   }
@@ -89,7 +89,7 @@ export const useAuthStore = defineStore('AuthStore', () => {
    * Log out the user by clearing the store state.
    */
   async function logout() {
-    await apiClient.post(AUTH_API_ROUTES.LOGOUT.buildPath())
+    await apiClient.post(authAPIRoutes.logout.buildPath())
     clearTimeout(refreshTokenInterval.value)
 
     authUser.value = undefined

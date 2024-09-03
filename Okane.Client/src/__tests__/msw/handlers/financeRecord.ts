@@ -2,7 +2,7 @@
 import { http, HttpResponse } from 'msw'
 
 // Internal
-import { FINANCE_RECORD_API_ROUTES } from '@features/financeRecords/constants/apiRoutes'
+import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 
 import type { FinanceRecord } from '@features/financeRecords/types/financeRecord'
@@ -13,7 +13,7 @@ import { wrapInAPIPaginatedResponse, wrapInAPIResponse } from '@tests/utils/apiR
 export const financeRecordHandlers = {
   deleteFinanceRecordSuccess({ id }: { id: number }) {
     return http.delete(
-      `/api${FINANCE_RECORD_API_ROUTES.DELETE_FINANCE_RECORD.buildPath({ id })}`,
+      `/api${financeRecordAPIRoutes.deleteFinanceRecord.buildPath({ id })}`,
       () => {
         return new HttpResponse(null, { status: HTTP_STATUS_CODE.NO_CONTENT_204 })
       },
@@ -23,7 +23,7 @@ export const financeRecordHandlers = {
     const status = HTTP_STATUS_CODE.BAD_REQUEST_400
 
     return http.delete(
-      `/api${FINANCE_RECORD_API_ROUTES.DELETE_FINANCE_RECORD.buildPath({ id })}`,
+      `/api${financeRecordAPIRoutes.deleteFinanceRecord.buildPath({ id })}`,
       () => {
         return HttpResponse.json(createTestProblemDetails({ status }), { status })
       },
@@ -36,7 +36,7 @@ export const financeRecordHandlers = {
     financeRecords: FinanceRecord[]
     hasNextPage?: boolean
   }) {
-    return http.get(`/api${FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.basePath}`, () => {
+    return http.get(`/api${financeRecordAPIRoutes.getPaginatedList.basePath}`, () => {
       return HttpResponse.json({
         ...wrapInAPIPaginatedResponse(wrapInAPIResponse(financeRecords)),
         hasNextPage,
@@ -44,7 +44,7 @@ export const financeRecordHandlers = {
     })
   },
   getPaginatedFinanceRecordsError({ detail }: { detail?: string }) {
-    return http.get(`/api${FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.basePath}`, () => {
+    return http.get(`/api${financeRecordAPIRoutes.getPaginatedList.basePath}`, () => {
       return HttpResponse.json(createTestProblemDetails({ detail }), {
         status: HTTP_STATUS_CODE.BAD_REQUEST_400,
       })

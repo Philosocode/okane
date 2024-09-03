@@ -8,7 +8,7 @@ import { type HttpHandler } from 'msw'
 import DeleteFinanceRecordModal from '@features/financeRecords/components/DeleteFinanceRecordModal.vue'
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 
-import { FINANCE_RECORD_QUERY_KEYS } from '@features/financeRecords/constants/queryKeys'
+import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { SHARED_COPY } from '@shared/constants/copy'
 import {
@@ -100,7 +100,7 @@ describe('when clicking the delete button', () => {
     const calledWith = deleteSpy.mock.calls[0]
     const [financeRecordId, queryKey] = calledWith
     expect(financeRecordId.value).toEqual(financeRecord.id)
-    expect(queryKey.value).toEqual(FINANCE_RECORD_QUERY_KEYS.LIST_BY_FILTERS(searchFilters))
+    expect(queryKey.value).toEqual(financeRecordQueryKeys.listByFilters(searchFilters))
 
     deleteSpy.mockRestore()
   })

@@ -11,15 +11,15 @@ import { useAuthStore } from '@features/auth/composables/useAuthStore'
 import { getQueryClient } from '@shared/services/queryClient/queryClient'
 
 export enum ROUTE_NAME {
-  FINANCES = 'FINANCES',
-  LOGIN = 'LOGIN',
-  REGISTER = 'REGISTER',
+  FINANCES = 'finances',
+  LOGIN = 'login',
+  REGISTER = 'register',
 }
 
 export type Route = RouteRecordRaw & {
   buildPath: (params?: Record<string, unknown>) => string
 }
-export const ROUTE_MAP: Record<ROUTE_NAME, Route> = {
+export const appRoutes: Record<ROUTE_NAME, Route> = {
   [ROUTE_NAME.FINANCES]: {
     path: '/',
     buildPath: () => '/',
@@ -45,7 +45,7 @@ export const ROUTE_MAP: Record<ROUTE_NAME, Route> = {
 export function createAppRouter() {
   return createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
-    routes: Object.values(ROUTE_MAP),
+    routes: Object.values(appRoutes),
   })
 }
 

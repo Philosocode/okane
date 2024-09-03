@@ -11,7 +11,7 @@ import { useAuthStore } from '@features/auth/composables/useAuthStore'
 import { useMockedStore } from '@tests/composables/useMockedStore'
 
 import { createTestAuthFormState } from '@tests/factories/authForm'
-import { createAppRouter, ROUTE_MAP, ROUTE_NAME } from '@shared/services/router/router'
+import { createAppRouter, appRoutes, ROUTE_NAME } from '@shared/services/router/router'
 
 const router = createAppRouter()
 const mountComponent = getMountComponent(RegisterPage, { withPinia: true, withRouter: router })
@@ -37,7 +37,7 @@ test('redirects to the login page on successful login', async () => {
   wrapper.findComponent(AuthForm).vm.$emit('submit', formData)
   await flushPromises()
 
-  expect(location.pathname).toBe(ROUTE_MAP.LOGIN.buildPath())
+  expect(location.pathname).toBe(appRoutes.login.buildPath())
 })
 
 test('logs a console error on unsuccessful register', async () => {
@@ -54,5 +54,5 @@ test('logs a console error on unsuccessful register', async () => {
 
   expect(consoleSpy).toHaveBeenCalledWith('Error registering:', registerError)
 
-  expect(location.pathname).toBe(ROUTE_MAP.REGISTER.buildPath())
+  expect(location.pathname).toBe(appRoutes.register.buildPath())
 })

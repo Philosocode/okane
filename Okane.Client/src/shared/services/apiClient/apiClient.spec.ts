@@ -3,7 +3,7 @@ import { http, HttpResponse } from 'msw'
 
 // Internal
 import { authAPIRoutes } from '@features/auth/constants/apiRoutes'
-import { ROUTE_MAP } from '@shared/services/router/router'
+import { appRoutes } from '@shared/services/router/router'
 import { HTTP_STATUS_CODE, MIME_TYPE } from '@shared/constants/http'
 
 import { type APIResponse } from '@shared/services/apiClient/types'
@@ -170,7 +170,7 @@ describe('when logged in', () => {
         const authStore = useAuthStore()
         expect(authStore.authUser).toBeUndefined()
         expect(authStore.jwtToken).toBeUndefined()
-        expect(location.pathname).toBe(ROUTE_MAP.LOGIN.buildPath())
+        expect(location.pathname).toBe(appRoutes.login.buildPath())
         expect(testQueryClient.getQueryData(queryKey)).toBeUndefined()
       } finally {
         queryClientSpy.mockRestore()

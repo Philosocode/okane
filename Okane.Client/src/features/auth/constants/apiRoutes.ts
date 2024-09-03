@@ -1,27 +1,16 @@
+const basePath = '/auth'
 const apiRoutes = {
-  LOGIN: {
-    basePath: '/auth/login',
-    buildPath() {
-      return apiRoutes.LOGIN.basePath
-    },
+  LOGIN() {
+    return `${basePath}/login`
   },
-  LOGOUT: {
-    basePath: '/auth/logout',
-    buildPath() {
-      return apiRoutes.LOGOUT.basePath
-    },
+  LOGOUT() {
+    return `${basePath}/logout`
   },
-  REFRESH_TOKEN: {
-    basePath: '/auth/refresh-token',
-    buildPath() {
-      return apiRoutes.REFRESH_TOKEN.basePath
-    },
+  REFRESH_TOKEN() {
+    return `${basePath}/refresh-token`
   },
-  REGISTER: {
-    basePath: '/auth/register',
-    buildPath() {
-      return apiRoutes.REGISTER.basePath
-    },
+  REGISTER() {
+    return `${basePath}/register`
   },
 } as const
 

@@ -143,9 +143,7 @@ describe('when logged in', () => {
     expect(response.items[0]).toEqual('pong')
   })
 
-  const logoutHandler = http.post(`/api${AUTH_API_ROUTES.LOGOUT.basePath}`, () =>
-    HttpResponse.json(),
-  )
+  const logoutHandler = http.post(`/api${AUTH_API_ROUTES.LOGOUT()}`, () => HttpResponse.json())
   const getErrorHandler = (statusCode: HTTP_STATUS_CODE) =>
     http.get('/api/ping', () => {
       const errorResponse = JSON.stringify(createTestProblemDetails())

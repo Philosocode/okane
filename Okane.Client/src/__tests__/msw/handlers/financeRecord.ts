@@ -26,19 +26,19 @@ function getStubbedFinanceRecords(numRecords: number): FinanceRecord[] {
 
 export const FINANCE_RECORD_HANDLER_FACTORY = {
   DELETE_FINANCE_RECORD_SUCCESS(id: number) {
-    return http.delete(`/api${FINANCE_RECORD_API_ROUTES.DELETE.buildPath({ id })}`, () => {
+    return http.delete(`/api${FINANCE_RECORD_API_ROUTES.DELETE_FINANCE_RECORD({ id })}`, () => {
       return new HttpResponse(null, { status: HTTP_STATUS_CODE.NO_CONTENT_204 })
     })
   },
   DELETE_FINANCE_RECORD_ERROR(id: number) {
     const status = HTTP_STATUS_CODE.BAD_REQUEST_400
 
-    return http.delete(`/api${FINANCE_RECORD_API_ROUTES.DELETE.buildPath({ id })}`, () => {
+    return http.delete(`/api${FINANCE_RECORD_API_ROUTES.DELETE_FINANCE_RECORD({ id })}`, () => {
       return HttpResponse.json(createTestProblemDetails({ status }), { status })
     })
   },
   GET_PAGINATED_FINANCE_RECORDS_SUCCESS(financeRecords: FinanceRecord[], hasNextPage = true) {
-    return http.get(`/api${FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.basePath}`, () => {
+    return http.get(`/api${FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST({ page: 1 })}`, () => {
       return HttpResponse.json({
         ...wrapInAPIPaginatedResponse(wrapInAPIResponse(financeRecords)),
         hasNextPage,
@@ -46,7 +46,7 @@ export const FINANCE_RECORD_HANDLER_FACTORY = {
     })
   },
   GET_PAGINATED_FINANCE_RECORDS_ERROR(detail?: string) {
-    return http.get(`/api${FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.basePath}`, () => {
+    return http.get(`/api${FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST({ page: 1 })}`, () => {
       return HttpResponse.json(createTestProblemDetails({ detail }), {
         status: HTTP_STATUS_CODE.BAD_REQUEST_400,
       })

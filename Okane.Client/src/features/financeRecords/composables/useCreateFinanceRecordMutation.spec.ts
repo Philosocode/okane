@@ -49,7 +49,7 @@ test('makes a POST request to the expected endpoint', async () => {
   await flushPromises()
 
   expect(postSpy).toHaveBeenCalledWith(
-    FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.basePath,
+    FINANCE_RECORD_API_ROUTES.POST_FINANCE_RECORD(),
     financeRecord,
   )
 })

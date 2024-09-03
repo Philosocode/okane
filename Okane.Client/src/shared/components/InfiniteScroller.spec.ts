@@ -212,7 +212,7 @@ describe(`when there are more pages to fetch page`, () => {
   const page3FinanceRecord = createTestFinanceRecord({ description: 'page3FinanceRecord' })
 
   beforeEach(() => {
-    const apiRoute = `/api${FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.basePath}`
+    const apiRoute = `/api${FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST({ page: 1 })}`
 
     testServer.use(
       http.get(

@@ -7,7 +7,7 @@ import { AUTH_API_ROUTES } from '@features/auth/constants/apiRoutes'
 import { testServer } from '@tests/msw/testServer'
 
 export const AUTH_HANDLER_MAP = {
-  LOGOUT_SUCCESS: http.post(`/api${AUTH_API_ROUTES.LOGOUT.basePath}`, () => {
+  LOGOUT_SUCCESS: http.post(`/api${AUTH_API_ROUTES.LOGOUT()}`, () => {
     return HttpResponse.json()
   }),
 } as const

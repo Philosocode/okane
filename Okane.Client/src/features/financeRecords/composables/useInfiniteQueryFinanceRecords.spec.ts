@@ -5,7 +5,7 @@ import { defineComponent, toRef, type Ref } from 'vue'
 import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
 import { FINANCE_RECORD_QUERY_KEYS } from '@features/financeRecords/constants/queryKeys'
 import { INITIAL_PAGE } from '@shared/constants/request'
-import { FINANCE_RECORD_API_ROUTES } from '@features/financeRecords/constants/apiRoutes'
+import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
 
 import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 
@@ -35,7 +35,7 @@ test('makes a request to fetch paginated finance records', () => {
   mountComponent()
 
   expect(getSpy).toHaveBeenCalledWith(
-    FINANCE_RECORD_API_ROUTES.GET_PAGINATED_LIST.buildPath({ page: INITIAL_PAGE }),
+    financeRecordAPIRoutes.getPaginatedList.buildPath({ page: INITIAL_PAGE }),
     {
       signal: new AbortController().signal,
     },

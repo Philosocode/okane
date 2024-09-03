@@ -10,7 +10,7 @@ import SaveFinanceRecordForm from '@features/financeRecords/components/SaveFinan
 import SaveFinanceRecordFormInputs from '@features/financeRecords/components/SaveFinanceRecordFormInputs.vue'
 
 import { BUTTON_TYPE } from '@shared/constants/form'
-import { FINANCE_RECORD_API_ROUTES } from '@features/financeRecords/constants/apiRoutes'
+import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { SHARED_COPY } from '@shared/constants/copy'
 import {
@@ -247,7 +247,7 @@ describe('with a valid form state', () => {
     const { postRequestSpy } = await setUpWithValidFormState()
 
     expect(postRequestSpy).toHaveBeenCalledWith(
-      FINANCE_RECORD_API_ROUTES.POST_FINANCE_RECORD.buildPath(),
+      financeRecordAPIRoutes.postFinanceRecord.buildPath(),
       mapSaveFinanceRecordFormStateToFinanceRecord(formState),
     )
   })
@@ -288,7 +288,7 @@ describe('with an error creating the finance record', () => {
 
   beforeEach(() => {
     testServer.use(
-      http.post(`/api${FINANCE_RECORD_API_ROUTES.POST_FINANCE_RECORD.buildPath()}`, () => {
+      http.post(`/api${financeRecordAPIRoutes.postFinanceRecord.buildPath()}`, () => {
         const problemDetails = createTestProblemDetails({ errors: formErrors })
         return HttpResponse.json(problemDetails, { status: problemDetails.status })
       }),

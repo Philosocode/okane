@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // External
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { computed, inject, ref } from 'vue'
+import { computed, ref } from 'vue'
 
 // Internal
 import Modal from '@shared/components/modal/Modal.vue'
@@ -9,19 +8,15 @@ import ModalActions from '@shared/components/modal/ModalActions.vue'
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 import SaveFinanceRecordFormInputs from '@features/financeRecords/components/SaveFinanceRecordFormInputs.vue'
 
-import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
+import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 import { SHARED_COPY } from '@shared/constants/copy'
-import {
-  DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
-  FINANCE_RECORD_SEARCH_FILTERS_KEY,
-} from '@features/financeRecords/constants/searchFilters'
 
 import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
+import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 
 import { useCreateFinanceRecordMutation } from '@features/financeRecords/composables/useCreateFinanceRecordMutation'
-import { useModal } from '@shared/composables/useModal'
 
 import { dateToDateTimeLocalFormat } from '@shared/utils/dateTime'
 import { getFormErrorsFromAPIResponse } from '@shared/services/apiClient/utils'
@@ -29,15 +24,16 @@ import { getInitialFormErrors } from '@shared/utils/form'
 import { isObjectType } from '@shared/utils/object'
 import { mapSaveFinanceRecordFormStateToFinanceRecord } from '@features/financeRecords/utils/mappers'
 
-const { showModal, closeModal, modalIsShowing } = useModal()
+type Props = {
+  isShowing: boolean
+  searchFilters: FinanceRecordSearchFilters
+}
 
-const searchFilters = inject(FINANCE_RECORD_SEARCH_FILTERS_KEY)
+const props = defineProps<Props>()
 
-const queryKey = computed(() =>
-  financeRecordQueryKeys.listByFilters(
-    searchFilters?.value ?? DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
-  ),
-)
+defineEmits(['close'])
+
+const queryKey = computed(() => financeRecordQueryKeys.listByFilters(props.searchFilters))
 const { mutate: createFinanceRecord } = useCreateFinanceRecordMutation(queryKey)
 
 const initialFormState: SaveFinanceRecordFormState = {
@@ -91,13 +87,7 @@ function handleSave() {
 </script>
 
 <template>
-  <button class="create-button" @click="showModal">
-    <FontAwesomeIcon
-      icon="fa-solid fa-plus"
-      :title="FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.SHOW_MODAL"
-    />
-  </button>
-  <Modal :is-showing="modalIsShowing" @close="closeModal">
+  <Modal :is-showing="props.isShowing" @close="$emit('close')">
     <ModalHeading>{{ FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.CREATE_FINANCE_RECORD }}</ModalHeading>
 
     <form ref="formRef" @submit.prevent class="form">
@@ -109,27 +99,13 @@ function handleSave() {
 
       <ModalActions>
         <button @click="handleSave" type="submit">{{ SHARED_COPY.ACTIONS.SAVE }}</button>
-        <button @click="closeModal" type="button">{{ SHARED_COPY.ACTIONS.CANCEL }}</button>
+        <button @click="$emit('close')" type="button">{{ SHARED_COPY.ACTIONS.CANCEL }}</button>
       </ModalActions>
     </form>
   </Modal>
 </template>
 
 <style scoped>
-.create-button {
-  --button-size: clamp(2rem, 2rem + 2.5vw, 3rem);
-  --offset: clamp(0.5rem, 0.5rem + 0.5vw, 1rem);
-
-  border: none;
-  border-radius: 50%;
-  font-size: 1.25rem;
-  position: fixed;
-  bottom: var(--offset);
-  right: var(--offset);
-  height: var(--button-size);
-  width: var(--button-size);
-}
-
 .form {
   display: flex;
   flex-direction: column;

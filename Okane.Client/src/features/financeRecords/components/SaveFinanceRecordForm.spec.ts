@@ -6,7 +6,7 @@ import { flushPromises, type VueWrapper } from '@vue/test-utils'
 // Internal
 import Modal from '@shared/components/modal/Modal.vue'
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
-import SaveFinanceRecordForm from '@features/financeRecords/components/SaveFinanceRecordForm.vue'
+import SaveFinanceRecordForm from 'src/features/financeRecords/components/SaveFinanceRecordModalContent.vue'
 import SaveFinanceRecordFormInputs from '@features/financeRecords/components/SaveFinanceRecordFormInputs.vue'
 
 import { BUTTON_TYPE } from '@shared/constants/form'
@@ -27,7 +27,7 @@ import * as useModal from '@shared/composables/useModal'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
-import { mapSaveFinanceRecordFormStateToFinanceRecord } from '@features/financeRecords/utils/mappers'
+import { mapSaveFinanceRecordFormStateToPreCreationFinanceRecord } from '@features/financeRecords/utils/mappers'
 
 import { createTestAPIFormErrors } from '@tests/factories/formErrors'
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
@@ -248,7 +248,7 @@ describe('with a valid form state', () => {
 
     expect(postRequestSpy).toHaveBeenCalledWith(
       financeRecordAPIRoutes.postFinanceRecord.buildPath(),
-      mapSaveFinanceRecordFormStateToFinanceRecord(formState),
+      mapSaveFinanceRecordFormStateToPreCreationFinanceRecord(formState),
     )
   })
 

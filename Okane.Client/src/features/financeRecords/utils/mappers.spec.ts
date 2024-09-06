@@ -6,7 +6,7 @@ import { createTestSaveFinanceRecordFormState } from '@tests/factories/financeRe
 describe('mapSaveFinanceRecordFormStateToFinanceRecord', () => {
   test('maps the form state to a finance record', () => {
     const formState = createTestSaveFinanceRecordFormState()
-    const result = utils.mapSaveFinanceRecordFormStateToFinanceRecord(formState)
+    const result = utils.mapSaveFinanceRecordFormStateToPreCreationFinanceRecord(formState)
 
     expect(result).toEqual({
       ...result,

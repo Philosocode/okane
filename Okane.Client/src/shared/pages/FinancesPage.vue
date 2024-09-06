@@ -7,7 +7,7 @@ import AddFinanceRecordButton from '@features/financeRecords/components/AddFinan
 import FinanceRecordList from '@features/financeRecords/components/FinanceRecordList.vue'
 import Heading from '@shared/components/Heading.vue'
 import PageLayout from '@shared/layouts/PageLayout.vue'
-import SaveFinanceRecordForm from '@features/financeRecords/components/SaveFinanceRecordForm.vue'
+import SaveFinanceRecordModal from '@features/financeRecords/components/SaveFinanceRecordModal.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
@@ -37,7 +37,7 @@ provide(FINANCE_RECORD_SEARCH_FILTERS_KEY, financeRecordSearchFilters)
   <PageLayout>
     <Heading tag="h1">{{ FINANCES_COPY.FINANCES }}</Heading>
     <p>{{ AUTH_COPY.YOU_ARE_LOGGED_IN }}</p>
-    <SaveFinanceRecordForm
+    <SaveFinanceRecordModal
       :is-showing="saveModalIsShowing"
       :search-filters="financeRecordSearchFilters"
       @close="closeSaveModal"

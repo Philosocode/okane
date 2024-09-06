@@ -27,7 +27,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.merge": "^4.6.2",
     "pinia": "^2.1.7",
-    "vue": "^3.4.29",
+    "vue": "^3.5.4",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {

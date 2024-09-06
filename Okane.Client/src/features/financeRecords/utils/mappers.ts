@@ -4,7 +4,7 @@ import type {
   SaveFinanceRecordFormState,
 } from '@features/financeRecords/types/saveFinanceRecord'
 
-export function mapSaveFinanceRecordFormStateToFinanceRecord(
+export function mapSaveFinanceRecordFormStateToPreCreationFinanceRecord(
   formState: SaveFinanceRecordFormState,
 ): PreCreationFinanceRecord {
   return { ...formState, happenedAt: new Date(formState.happenedAt) }

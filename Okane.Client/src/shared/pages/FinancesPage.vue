@@ -56,7 +56,9 @@ watchEffect(() => {
 <template>
   <PageLayout>
     <Heading tag="h1">{{ FINANCES_COPY.FINANCES }}</Heading>
-    <p>{{ AUTH_COPY.YOU_ARE_LOGGED_IN }}</p>
+    <FinanceRecordList />
+    <AddFinanceRecordButton @click="showSaveModal" />
+
     <SaveFinanceRecordModal
       :editing-finance-record="editingFinanceRecord"
       :clear-editing-finance-record="clearEditingFinanceRecord"
@@ -64,7 +66,5 @@ watchEffect(() => {
       :search-filters="financeRecordSearchFilters"
       @close="closeSaveModal"
     />
-    <FinanceRecordList />
-    <AddFinanceRecordButton @click="showSaveModal" />
   </PageLayout>
 </template>

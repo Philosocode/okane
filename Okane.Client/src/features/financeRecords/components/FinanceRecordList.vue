@@ -1,29 +1,22 @@
 <script setup lang="ts">
 // External
-import { computed, inject, ref } from 'vue'
+import { computed } from 'vue'
 
 // Internal
-import DeleteFinanceRecordModal from '@features/financeRecords/components/DeleteFinanceRecordModal.vue'
 import FinanceRecordListItem from '@features/financeRecords/components/FinanceRecordListItem.vue'
 import InfiniteScroller from '@shared/components/InfiniteScroller.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
-import { FINANCE_RECORD_SEARCH_FILTERS_KEY } from '@features/financeRecords/constants/searchFilters'
 import { SHARED_COPY } from '@shared/constants/copy'
 
 import { useInfiniteQueryFinanceRecords } from '@features/financeRecords/composables/useInfiniteQueryFinanceRecords'
+import { useQueryFinanceRecordStore } from '@features/financeRecords/composables/useQueryFinanceRecordStore'
 
 import { flattenPages } from '@shared/utils/pagination'
 
-const searchFilters = inject(FINANCE_RECORD_SEARCH_FILTERS_KEY)
-const queryResult = useInfiniteQueryFinanceRecords(searchFilters)
+const queryStore = useQueryFinanceRecordStore()
+const queryResult = useInfiniteQueryFinanceRecords(() => queryStore.searchFilters)
 const financeRecords = computed(() => flattenPages(queryResult.data.value?.pages))
-
-const deleteFinanceRecordId = ref<number>()
-
-function handleStartDelete(id: number) {
-  deleteFinanceRecordId.value = id
-}
 </script>
 
 <template>
@@ -31,7 +24,7 @@ function handleStartDelete(id: number) {
     <InfiniteScroller :items="financeRecords" :query-result="queryResult">
       <ul class="finance-record-list">
         <li v-for="financeRecord in financeRecords" :key="financeRecord.id">
-          <FinanceRecordListItem @delete="handleStartDelete" :finance-record="financeRecord" />
+          <FinanceRecordListItem :finance-record="financeRecord" />
         </li>
       </ul>
 
@@ -44,11 +37,6 @@ function handleStartDelete(id: number) {
       </template>
     </InfiniteScroller>
   </div>
-
-  <DeleteFinanceRecordModal
-    :finance-record-id="deleteFinanceRecordId"
-    @close="deleteFinanceRecordId = undefined"
-  />
 </template>
 
 <style scoped>

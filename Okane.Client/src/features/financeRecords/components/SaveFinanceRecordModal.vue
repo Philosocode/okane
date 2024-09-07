@@ -1,95 +1,73 @@
 <script setup lang="ts">
 // External
-import { computed } from 'vue'
+import { useTemplateRef } from 'vue'
 
 // Internal
 import Modal from '@shared/components/modal/Modal.vue'
+import ModalActions from '@shared/components/modal/ModalActions.vue'
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
-import SaveFinanceRecordModalContent from '@features/financeRecords/components/SaveFinanceRecordModalContent.vue'
+import SaveFinanceRecordFormInputs from '@features/financeRecords/components/SaveFinanceRecordFormInputs.vue'
 
-import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
-import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
+import { SHARED_COPY } from '@shared/constants/copy'
 
-import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
-import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
+import { type FormErrors } from '@shared/types/form'
 import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
-import { useCreateFinanceRecordMutation } from '@features/financeRecords/composables/useCreateFinanceRecordMutation'
-import { useEditFinanceRecord } from '@features/financeRecords/composables/useEditFinanceRecord'
-
-import { getSaveFinanceRecordFormChanges } from '@features/financeRecords/utils/saveFinanceRecord'
-import { mapSaveFinanceRecordFormState } from '@features/financeRecords/utils/mappers'
-
 type Props = {
-  editingFinanceRecord?: FinanceRecord
-  clearEditingFinanceRecord: () => void
+  formState: SaveFinanceRecordFormState
+  formErrors: FormErrors<SaveFinanceRecordFormState>
   isShowing: boolean
-  searchFilters: FinanceRecordSearchFilters
+  title: string
 }
 
-const { clearEditingFinanceRecord, editingFinanceRecord, isShowing, searchFilters } =
-  defineProps<Props>()
+const { formState, isShowing, title } = defineProps<Props>()
 
-const emit = defineEmits(['close'])
+const emit = defineEmits<{
+  (event: 'change', updates: Partial<SaveFinanceRecordFormState>): void
+  (event: 'close'): void
+  (event: 'submit'): void
+}>()
 
-const isEditing = computed(() => !!editingFinanceRecord)
+const formRef = useTemplateRef<HTMLFormElement>('form')
 
-const queryKey = computed(() => financeRecordQueryKeys.listByFilters(searchFilters))
+function handleChange(updates: Partial<SaveFinanceRecordFormState>): void {
+  emit('change', updates)
+}
 
-const { createFormState, createFinanceRecord } = useCreateFinanceRecordMutation(queryKey)
-const { editFormState, editMutation } = useEditFinanceRecord(() => editingFinanceRecord, queryKey)
-
-const initialFormState = computed(() => {
-  return isEditing.value ? editFormState.value : createFormState.value
-})
-
-function handleClose(formState: SaveFinanceRecordFormState) {
-  if (isEditing.value) {
-    clearEditingFinanceRecord()
-  } else {
-    createFormState.value = {
-      ...createFormState.value,
-      ...formState,
-    }
-  }
-
+function handleClose() {
   emit('close')
 }
 
-function handleSubmit(formState: SaveFinanceRecordFormState) {
-  if (isEditing.value) {
-    handleEdit(formState)
-  } else {
-    createFinanceRecord(formState)
-  }
-}
+function handleSave() {
+  if (!formRef.value?.checkValidity()) return
 
-function handleEdit(formState: SaveFinanceRecordFormState) {
-  const { changes, hasChanges } = getSaveFinanceRecordFormChanges(initialFormState.value, formState)
-  const updatedRecord = mapSaveFinanceRecordFormState.to.partialFinanceRecord(changes)
-
-  if (hasChanges) {
-    editMutation.mutate(updatedRecord, {
-      onSuccess() {
-        emit('close')
-      },
-      onError(error) {
-        console.error('Error editing finance record:', error)
-      },
-    })
-  } else {
-    emit('close')
-  }
+  emit('submit')
 }
 </script>
 
 <template>
-  <Modal :is-showing="isShowing" @close="emit('close')">
-    <ModalHeading>{{ FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.CREATE_FINANCE_RECORD }}</ModalHeading>
-    <SaveFinanceRecordModalContent
-      :initial-state="initialFormState"
-      @close="handleClose"
-      @submit="handleSubmit"
-    />
+  <Modal :is-showing="isShowing" @close="handleClose">
+    <ModalHeading>{{ title }}</ModalHeading>
+
+    <form ref="form" @submit.prevent class="form">
+      <SaveFinanceRecordFormInputs
+        :form-state="formState"
+        :form-errors="formErrors"
+        @change="handleChange"
+      />
+
+      <ModalActions>
+        <button @click="handleSave" type="submit">{{ SHARED_COPY.ACTIONS.SAVE }}</button>
+        <button @click="handleClose" type="button">{{ SHARED_COPY.ACTIONS.CANCEL }}</button>
+      </ModalActions>
+    </form>
   </Modal>
 </template>
+
+<style scoped>
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+</style>

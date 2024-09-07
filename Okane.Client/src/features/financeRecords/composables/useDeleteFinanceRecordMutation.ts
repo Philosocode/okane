@@ -1,6 +1,6 @@
 // External
-import type { Ref } from 'vue'
-import { type InfiniteData, type QueryKey, useMutation, useQueryClient } from '@tanstack/vue-query'
+import { toValue, type MaybeRefOrGetter } from 'vue'
+import { useMutation, useQueryClient, type InfiniteData, type QueryKey } from '@tanstack/vue-query'
 
 // Internal
 import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
@@ -16,17 +16,17 @@ function deleteFinanceRecord(id: number) {
   return apiClient.delete(financeRecordAPIRoutes.deleteFinanceRecord.buildPath({ id }))
 }
 
-export function useDeleteFinanceRecordMutation(id: Ref<number>, queryKey: Ref<QueryKey>) {
+export function useDeleteFinanceRecordMutation(queryKey: MaybeRefOrGetter<QueryKey>) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: () => deleteFinanceRecord(id.value),
-    onSuccess() {
+    mutationFn: (id: number) => deleteFinanceRecord(id),
+    onSuccess(_, id) {
       queryClient.setQueryData<InfiniteData<APIPaginatedResponse<FinanceRecord>>>(
-        queryKey.value,
+        toValue(queryKey),
         (data) => {
           if (!data) return data
-          return removeItemFromPages(data, (item) => item.id !== id.value)
+          return removeItemFromPages(data, (item) => item.id !== id)
         },
       )
     },

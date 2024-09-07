@@ -1,21 +1,20 @@
 // External
-import { computed, type Ref } from 'vue'
+import { computed, type MaybeRefOrGetter, toValue } from 'vue'
 
 import { type QueryFunctionContext, useInfiniteQuery } from '@tanstack/vue-query'
 
 // Internal
 import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
+import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 import { INITIAL_PAGE } from '@shared/constants/request'
 
-import type { FinanceRecord } from '@features/financeRecords/types/financeRecord'
 import type { APIPaginatedResponse } from '@shared/services/apiClient/types'
-
-import { apiClient } from '@shared/services/apiClient/apiClient'
+import type { FinanceRecord } from '@features/financeRecords/types/financeRecord'
+import type { FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 
 import { useCleanUpInfiniteQuery } from '@shared/composables/useCleanUpInfiniteQuery'
-import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
-import type { FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
-import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
+
+import { apiClient } from '@shared/services/apiClient/apiClient'
 
 export function fetchPaginatedFinanceRecords({
   pageParam,
@@ -26,16 +25,16 @@ export function fetchPaginatedFinanceRecords({
   })
 }
 
-export function useInfiniteQueryFinanceRecords(searchFilters?: Ref<FinanceRecordSearchFilters>) {
-  const queryKey = computed(() =>
-    financeRecordQueryKeys.listByFilters(searchFilters ?? DEFAULT_FINANCE_RECORD_SEARCH_FILTERS),
-  )
+export function useInfiniteQueryFinanceRecords(
+  searchFilters: MaybeRefOrGetter<FinanceRecordSearchFilters>,
+) {
+  const queryKey = computed(() => financeRecordQueryKeys.listByFilters(toValue(searchFilters)))
 
   useCleanUpInfiniteQuery(queryKey)
 
   return useInfiniteQuery({
-    enabled: Boolean(searchFilters),
-    queryKey,
+    enabled: Boolean(toValue(searchFilters)),
+    queryKey: queryKey.value,
     queryFn: fetchPaginatedFinanceRecords,
     initialPageParam: INITIAL_PAGE,
     getNextPageParam: (lastPage, _, lastPageParam) => {

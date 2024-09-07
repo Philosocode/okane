@@ -24,7 +24,7 @@ type Props = {
 
 const props = defineProps<Props>()
 const emit = defineEmits<{
-  (e: 'inputUpdated', formState: Partial<SaveFinanceRecordFormState>): void
+  (e: 'change', formState: Partial<SaveFinanceRecordFormState>): void
 }>()
 </script>
 
@@ -36,7 +36,7 @@ const emit = defineEmits<{
       :max="FINANCE_RECORD_MAX_AMOUNT"
       :min="FINANCE_RECORD_MIN_AMOUNT"
       :model-value="formState.amount"
-      @update:model-value="emit('inputUpdated', { amount: $event })"
+      @update:model-value="emit('change', { amount: $event })"
       name="amount"
       required
       :step="FINANCE_RECORD_MIN_AMOUNT"
@@ -45,7 +45,7 @@ const emit = defineEmits<{
     <FormSelect
       :label="FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.TYPE"
       :model-value="formState.type"
-      @update:model-value="emit('inputUpdated', { type: $event })"
+      @update:model-value="emit('change', { type: $event })"
       :options="FINANCE_RECORD_TYPE_OPTIONS"
       required
     />
@@ -56,7 +56,7 @@ const emit = defineEmits<{
     :maxlength="FINANCE_RECORD_DESCRIPTION_MAX_LENGTH"
     name="description"
     :model-value="formState.description"
-    @update:model-value="emit('inputUpdated', { description: $event })"
+    @update:model-value="emit('change', { description: $event })"
     required
     :type="INPUT_TYPE.TEXT"
   />
@@ -67,7 +67,7 @@ const emit = defineEmits<{
     required
     :type="INPUT_TYPE.DATETIME_LOCAL"
     :model-value="formState.happenedAt"
-    @update:model-value="emit('inputUpdated', { happenedAt: $event })"
+    @update:model-value="emit('change', { happenedAt: $event })"
   />
 </template>
 

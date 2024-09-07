@@ -5,11 +5,13 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 // Internal
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
-defineEmits(['click'])
+import { useSaveFinanceRecordStore } from '@features/financeRecords/composables/useSaveFinanceRecordStore'
+
+const saveStore = useSaveFinanceRecordStore()
 </script>
 
 <template>
-  <button class="button" @click="$emit('click')">
+  <button class="button" @click="saveStore.setIsCreating(true)">
     <FontAwesomeIcon
       icon="fa-solid fa-plus"
       :title="FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.SHOW_MODAL"

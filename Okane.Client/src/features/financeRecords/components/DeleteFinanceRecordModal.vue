@@ -1,56 +1,44 @@
 <script setup lang="ts">
 // External
-import { computed, inject } from 'vue'
+import { computed } from 'vue'
 
 // Internal
 import Modal from '@shared/components/modal/Modal.vue'
 import ModalActions from '@shared/components/modal/ModalActions.vue'
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 
-import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
+import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { SHARED_COPY } from '@shared/constants/copy'
-import {
-  DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
-  FINANCE_RECORD_SEARCH_FILTERS_KEY,
-} from '@features/financeRecords/constants/searchFilters'
 
+import { useDeleteFinanceRecordStore } from '@features/financeRecords/composables/useDeleteFinanceRecordStore'
 import { useDeleteFinanceRecordMutation } from '@features/financeRecords/composables/useDeleteFinanceRecordMutation'
+import { useQueryFinanceRecordStore } from '@features/financeRecords/composables/useQueryFinanceRecordStore'
 
-type Props = {
-  financeRecordId?: number
-}
+const deleteStore = useDeleteFinanceRecordStore()
+const queryStore = useQueryFinanceRecordStore()
 
-const props = defineProps<Props>()
-const emit = defineEmits<{
-  (event: 'close'): void
-}>()
+const queryKey = computed(() => financeRecordQueryKeys.listByFilters(queryStore.searchFilters))
+const deleteMutation = useDeleteFinanceRecordMutation(queryKey)
 
-const id = computed(() => props.financeRecordId ?? -1)
-const searchFilters = inject(FINANCE_RECORD_SEARCH_FILTERS_KEY)
-const queryKey = computed(() =>
-  financeRecordQueryKeys.listByFilters(
-    searchFilters?.value ?? DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
-  ),
-)
-
-const { mutate: deleteFinanceRecord } = useDeleteFinanceRecordMutation(id, queryKey)
-
-function closeModal() {
-  emit('close')
+function handleClose() {
+  deleteStore.clearDeletingFinanceRecordId()
 }
 
 function handleDelete() {
-  deleteFinanceRecord(undefined, {
-    onSuccess() {
-      closeModal()
-    },
-  })
+  const id = deleteStore.financeRecordId
+  if (id) {
+    deleteMutation.mutate(id, {
+      onSuccess() {
+        handleClose()
+      },
+    })
+  }
 }
 </script>
 
 <template>
-  <Modal :is-showing="Boolean(financeRecordId)" @close="closeModal">
+  <Modal :is-showing="!!deleteStore.financeRecordId" @close="handleClose">
     <ModalHeading>{{
       FINANCES_COPY.DELETE_FINANCE_RECORD_MODAL.DELETE_FINANCE_RECORD
     }}</ModalHeading>
@@ -59,7 +47,7 @@ function handleDelete() {
 
     <ModalActions>
       <button @click="handleDelete">{{ SHARED_COPY.ACTIONS.DELETE }}</button>
-      <button @click="closeModal">{{ SHARED_COPY.ACTIONS.CANCEL }}</button>
+      <button @click="handleClose">{{ SHARED_COPY.ACTIONS.CANCEL }}</button>
     </ModalActions>
   </Modal>
 </template>

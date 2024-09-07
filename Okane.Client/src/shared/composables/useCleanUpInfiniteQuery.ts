@@ -1,5 +1,5 @@
 // External
-import { onUnmounted, type Ref, watch } from 'vue'
+import { onUnmounted, toValue, watch, type MaybeRefOrGetter } from 'vue'
 import { useQueryClient, type InfiniteData, type QueryKey } from '@tanstack/vue-query'
 
 /**
@@ -9,7 +9,7 @@ import { useQueryClient, type InfiniteData, type QueryKey } from '@tanstack/vue-
  * @param queryKey
  * @param pagesToKeep
  */
-export function useCleanUpInfiniteQuery(queryKey: Ref<QueryKey>, pagesToKeep = 1) {
+export function useCleanUpInfiniteQuery(queryKey: MaybeRefOrGetter<QueryKey>, pagesToKeep = 1) {
   const queryClient = useQueryClient()
 
   // Cleanup excess pages when the query key changes or on unmount.
@@ -26,8 +26,8 @@ export function useCleanUpInfiniteQuery(queryKey: Ref<QueryKey>, pagesToKeep = 1
   }
 
   watch(queryKey, (_, oldKey) => {
-    cleanUpExcessPages(oldKey)
+    cleanUpExcessPages(toValue(oldKey))
   })
 
-  onUnmounted(() => cleanUpExcessPages(queryKey.value))
+  onUnmounted(() => cleanUpExcessPages(toValue(queryKey)))
 }

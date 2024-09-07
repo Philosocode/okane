@@ -1,16 +1,17 @@
 <script setup lang="ts">
 // External
 import { formatDate } from 'date-fns'
-import { inject } from 'vue'
 
 // Internal
 import ToggleMenu from '@shared/components/ToggleMenu.vue'
 
 import { FINANCE_RECORD_TIMESTAMP_FORMAT } from '@features/financeRecords/constants/financeRecordList'
-import { SET_EDITING_FINANCE_RECORD_KEY } from '@features/financeRecords/constants/saveFinanceRecord'
 import { SHARED_COPY } from '@shared/constants/copy'
 
 import type { FinanceRecord } from '@features/financeRecords/types/financeRecord'
+
+import { useDeleteFinanceRecordStore } from '@features/financeRecords/composables/useDeleteFinanceRecordStore'
+import { useSaveFinanceRecordStore } from '@features/financeRecords/composables/useSaveFinanceRecordStore'
 
 type Props = {
   financeRecord: FinanceRecord
@@ -18,20 +19,17 @@ type Props = {
 
 const { financeRecord } = defineProps<Props>()
 
-const emit = defineEmits<{
-  (e: 'delete', id: number): void
-}>()
-
-const setEditingFinanceRecord = inject(SET_EDITING_FINANCE_RECORD_KEY, () => {})
-
 const dateTime = formatDate(financeRecord.happenedAt, FINANCE_RECORD_TIMESTAMP_FORMAT)
 
+const saveStore = useSaveFinanceRecordStore()
+const deleteStore = useDeleteFinanceRecordStore()
+
 function handleEdit() {
-  setEditingFinanceRecord({ ...financeRecord })
+  saveStore.setEditingFinanceRecord({ ...financeRecord })
 }
 
 function handleDelete() {
-  emit('delete', financeRecord.id)
+  deleteStore.setDeletingFinanceRecordId(financeRecord.id)
 }
 
 const menuActions = [

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // External
-import { ref, watch } from 'vue'
+import { ref, useTemplateRef, watch } from 'vue'
 
 // Internal
 import ModalActions from '@shared/components/modal/ModalActions.vue'
@@ -11,6 +11,7 @@ import { SHARED_COPY } from '@shared/constants/copy'
 import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
 import { getInitialFormErrors } from '@shared/utils/form'
+import { getSaveFinanceRecordFormChanges } from '@features/financeRecords/utils/saveFinanceRecord'
 
 type Props = {
   initialState: SaveFinanceRecordFormState
@@ -37,7 +38,7 @@ watch(
   },
 )
 
-const formRef = ref<HTMLFormElement | null>(null)
+const formRef = useTemplateRef<HTMLFormElement>('form')
 
 function handleInputUpdated(data: Partial<SaveFinanceRecordFormState>) {
   formState.value = {
@@ -46,16 +47,21 @@ function handleInputUpdated(data: Partial<SaveFinanceRecordFormState>) {
   }
 }
 
+function handleClose() {
+  emit('close', formState.value)
+}
+
 function handleSave() {
   if (!formRef.value?.checkValidity()) return
 
   formErrors.value = { ...initialFormErrors }
+
   emit('submit', formState.value)
 }
 </script>
 
 <template>
-  <form ref="formRef" @submit.prevent class="form">
+  <form ref="form" @submit.prevent class="form">
     <SaveFinanceRecordFormInputs
       :form-state="formState"
       :form-errors="formErrors"
@@ -64,7 +70,7 @@ function handleSave() {
 
     <ModalActions>
       <button @click="handleSave" type="submit">{{ SHARED_COPY.ACTIONS.SAVE }}</button>
-      <button @click="emit('close', formState)" type="button">
+      <button @click="handleClose" type="button">
         {{ SHARED_COPY.ACTIONS.CANCEL }}
       </button>
     </ModalActions>

@@ -3,10 +3,10 @@ import * as utils from '@features/financeRecords/utils/mappers'
 
 import { createTestSaveFinanceRecordFormState } from '@tests/factories/financeRecord'
 
-describe('mapSaveFinanceRecordFormStateToFinanceRecord', () => {
-  test('maps the form state to a finance record', () => {
+describe('mapSaveFinanceRecordFormState', () => {
+  test('maps the form state to a pre-creation finance record', () => {
     const formState = createTestSaveFinanceRecordFormState()
-    const result = utils.mapSaveFinanceRecordFormStateToPreCreationFinanceRecord(formState)
+    const result = utils.mapSaveFinanceRecordFormState.to.preCreationFinanceRecord(formState)
 
     expect(result).toEqual({
       ...result,

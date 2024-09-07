@@ -1,11 +1,13 @@
 <script setup lang="ts">
 // External
 import { formatDate } from 'date-fns'
+import { inject } from 'vue'
 
 // Internal
 import ToggleMenu from '@shared/components/ToggleMenu.vue'
 
 import { FINANCE_RECORD_TIMESTAMP_FORMAT } from '@features/financeRecords/constants/financeRecordList'
+import { SET_EDITING_FINANCE_RECORD_KEY } from '@features/financeRecords/constants/saveFinanceRecord'
 import { SHARED_COPY } from '@shared/constants/copy'
 
 import type { FinanceRecord } from '@features/financeRecords/types/financeRecord'
@@ -14,21 +16,31 @@ type Props = {
   financeRecord: FinanceRecord
 }
 
-const props = defineProps<Props>()
+const { financeRecord } = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'delete', id: number): void
 }>()
 
-const dateTime = formatDate(props.financeRecord.happenedAt, FINANCE_RECORD_TIMESTAMP_FORMAT)
+const setEditingFinanceRecord = inject(SET_EDITING_FINANCE_RECORD_KEY, () => {})
+
+const dateTime = formatDate(financeRecord.happenedAt, FINANCE_RECORD_TIMESTAMP_FORMAT)
+
+function handleEdit() {
+  setEditingFinanceRecord({ ...financeRecord })
+}
+
+function handleDelete() {
+  emit('delete', financeRecord.id)
+}
 
 const menuActions = [
   {
-    onClick: () => console.log('Edit'),
+    onClick: handleEdit,
     text: SHARED_COPY.ACTIONS.EDIT,
   },
   {
-    onClick: () => emit('delete', props.financeRecord.id),
+    onClick: handleDelete,
     text: SHARED_COPY.ACTIONS.DELETE,
   },
 ]
@@ -38,12 +50,12 @@ const menuActions = [
   <div class="item">
     <div class="content">
       <div class="top-row">
-        <span class="type">{{ props.financeRecord.type }}</span>
+        <span class="type">{{ financeRecord.type }}</span>
         -
         <span>{{ dateTime }} </span>
       </div>
-      <div class="amount">${{ props.financeRecord.amount.toFixed(2) }}</div>
-      <div>{{ props.financeRecord.description }}</div>
+      <div class="amount">${{ financeRecord.amount.toFixed(2) }}</div>
+      <div>{{ financeRecord.description }}</div>
     </div>
 
     <div class="menu-container">

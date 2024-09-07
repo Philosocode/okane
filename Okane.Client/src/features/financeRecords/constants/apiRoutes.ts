@@ -3,6 +3,7 @@ import { DEFAULT_PAGE_SIZE, INITIAL_PAGE } from '@shared/constants/request'
 
 const basePath = '/finance-records'
 
+// TODO: Update basePath to also be a function...
 export const financeRecordAPIRoutes = {
   getPaginatedList: {
     basePath,
@@ -11,6 +12,12 @@ export const financeRecordAPIRoutes = {
     },
   },
   deleteFinanceRecord: {
+    basePath,
+    buildPath({ id }: { id: number }) {
+      return `${basePath}/${id}`
+    },
+  },
+  patchFinanceRecord: {
     basePath,
     buildPath({ id }: { id: number }) {
       return `${basePath}/${id}`

@@ -2,7 +2,7 @@
 import { format } from 'date-fns'
 
 /**
- * Convert a Date to datetime-local format.
+ * Convert a Date to datetime-local format (e.g. 2018-06-12T19:30)
  *
  * @param d {Date}
  */

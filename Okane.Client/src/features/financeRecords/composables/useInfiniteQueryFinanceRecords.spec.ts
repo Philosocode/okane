@@ -1,11 +1,11 @@
 // External
-import { defineComponent, toRef, type Ref } from 'vue'
+import { defineComponent, toValue, type MaybeRefOrGetter, toRef } from 'vue'
 
 // Internal
 import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
+import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 import { INITIAL_PAGE } from '@shared/constants/request'
-import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
 
 import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 
@@ -16,10 +16,10 @@ import { apiClient } from '@shared/services/apiClient/apiClient'
 
 import { wrapInAPIResponse } from '@tests/utils/apiResponse'
 
-function getTestComponent(filters?: Ref<FinanceRecordSearchFilters>) {
+function getTestComponent(filters?: MaybeRefOrGetter<FinanceRecordSearchFilters>) {
   return defineComponent({
     setup() {
-      useInfiniteQueryFinanceRecords(filters)
+      useInfiniteQueryFinanceRecords(() => filters)
     },
     template: '<div />',
   })
@@ -43,13 +43,16 @@ test('makes a request to fetch paginated finance records', () => {
 })
 
 test('cleans up the infinite query', () => {
+  const getSpy = vi.spyOn(apiClient, 'get').mockResolvedValue(wrapInAPIResponse({}))
   const cleanUpSpy = vi.spyOn(useCleanUpInfiniteQuery, 'useCleanUpInfiniteQuery').mockReturnValue()
 
   mountComponent()
 
-  expect(cleanUpSpy.mock.calls[0][0]?.value).toEqual(
+  expect(toValue(cleanUpSpy.mock.calls[0][0])).toEqual(
     financeRecordQueryKeys.listByFilters(searchFilters),
   )
+
+  getSpy.mockRestore()
 })
 
 test('does nothing if searchFilters are undefined', () => {

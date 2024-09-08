@@ -25,19 +25,19 @@ const formErrors = getInitialFormErrors(formState)
 const props = { formState, formErrors }
 
 const sharedTests = {
-  emitsAnInputUpdatedEvent: (args: {
+  emitsAChangeEvent: (args: {
     selector: string
     value: unknown
     emittedData: Partial<SaveFinanceRecordFormState>
   }) =>
-    test('emits an inputUpdated event', async () => {
+    test('emits a change event', async () => {
       const wrapper = mountComponent({ props })
       const input = wrapper.get(args.selector)
 
       await input.setValue(args.value)
 
       const emitted = wrapper.emitted<Partial<SaveFinanceRecordFormState[]>>()
-      const emittedData = emitted.inputUpdated[0][0]
+      const emittedData = emitted.change[0][0]
 
       expect(emittedData).toEqual(args.emittedData)
     }),
@@ -128,7 +128,7 @@ describe('Amount input', () => {
     })
   })
 
-  sharedTests.emitsAnInputUpdatedEvent({
+  sharedTests.emitsAChangeEvent({
     selector: elementSelectors.amountInput,
     value: '1234',
     emittedData: { amount: 1234 },
@@ -183,7 +183,7 @@ describe('Type select', () => {
     })
   })
 
-  sharedTests.emitsAnInputUpdatedEvent({
+  sharedTests.emitsAChangeEvent({
     selector: 'select',
     value: FINANCE_RECORD_TYPE.REVENUE,
     emittedData: { type: FINANCE_RECORD_TYPE.REVENUE },
@@ -215,7 +215,7 @@ describe('Description input', () => {
     expect(inputElement.value).toBe(formState.description)
   })
 
-  sharedTests.emitsAnInputUpdatedEvent({
+  sharedTests.emitsAChangeEvent({
     selector: elementSelectors.descriptionInput,
     value: 'Cool description',
     emittedData: { description: 'Cool description' },
@@ -253,7 +253,7 @@ describe('Happened at input', () => {
 
   const happenedAt = '2024-08-06T19:41'
 
-  sharedTests.emitsAnInputUpdatedEvent({
+  sharedTests.emitsAChangeEvent({
     selector: elementSelectors.happenedAtInput,
     value: happenedAt,
     emittedData: { happenedAt: happenedAt },

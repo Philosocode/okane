@@ -1,27 +1,36 @@
-// External
-import { computed, defineComponent, inject } from 'vue'
-
 // Internal
 import FinancesPage from '@shared/pages/FinancesPage.vue'
 
+import { commonTests } from '@tests/utils/commonTests'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
-import {
-  DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
-  FINANCE_RECORD_SEARCH_FILTERS_KEY,
-} from '@features/financeRecords/constants/searchFilters'
 
 const testIds = {
-  FinanceRecordList: 'FinanceRecordListStub',
-  Heading: 'HeadingStub',
-  SaveFinanceRecordForm: 'SaveFinanceRecordFormStub',
+  AddFinanceRecordButton: 'AddFinanceRecordButton',
+  CreateFinanceRecordModal: 'CreateFinanceRecordModal',
+  DeleteFinanceRecordModal: 'DeleteFinanceRecordModal',
+  EditFinanceRecordModal: 'EditFinanceRecordModal',
+  Heading: 'Heading',
+  FinanceRecordList: 'FinanceRecordList',
 }
 
 const mountComponent = getMountComponent(FinancesPage, {
-  withQueryClient: true,
   global: {
     stubs: {
-      FinanceRecordList: { template: `<div data-testid="${testIds.FinanceRecordList}" />` },
-      SaveFinanceRecordForm: { template: `<div data-testid="${testIds.SaveFinanceRecordForm}" />` },
+      AddFinanceRecordButton: {
+        template: `<div data-testid="${testIds.AddFinanceRecordButton}" />`,
+      },
+      CreateFinanceRecordModal: {
+        template: `<div data-testid="${testIds.CreateFinanceRecordModal}" />`,
+      },
+      DeleteFinanceRecordModal: {
+        template: `<div data-testid="${testIds.DeleteFinanceRecordModal}" />`,
+      },
+      EditFinanceRecordModal: {
+        template: `<div data-testid="${testIds.EditFinanceRecordModal}" />`,
+      },
+      FinanceRecordList: {
+        template: `<div data-testid="${testIds.FinanceRecordList}" />`,
+      },
     },
   },
 })
@@ -29,44 +38,35 @@ const mountComponent = getMountComponent(FinancesPage, {
 test('renders a page title', () => {
   const wrapper = mountComponent()
   const mainHeading = wrapper.get('h1')
-
   expect(mainHeading.text()).toBe(FINANCES_COPY.FINANCES)
 })
 
-test('renders a form to save a finance record', () => {
-  const wrapper = mountComponent()
-  const mockedForm = wrapper.get(`[data-testid="${testIds.SaveFinanceRecordForm}"`)
-
-  expect(mockedForm.isVisible()).toBe(true)
+commonTests.rendersElementWithTestId({
+  testName: 'renders a list of finance records',
+  getWrapper: mountComponent,
+  testId: testIds.FinanceRecordList,
 })
 
-test('renders a list of finance records', () => {
-  const wrapper = mountComponent()
-  const mockedList = wrapper.get(`[data-testid="${testIds.FinanceRecordList}"]`)
-
-  expect(mockedList.isVisible()).toBe(true)
+commonTests.rendersElementWithTestId({
+  testName: 'renders a button to create a finance record',
+  getWrapper: mountComponent,
+  testId: testIds.AddFinanceRecordButton,
 })
 
-test('provides the search filters', () => {
-  // Since FinancesPage doesn't render a slot, we'll use this instead to check that the
-  // expected value is provided.
-  const HeadingStub = defineComponent({
-    setup() {
-      const queryKey = inject(FINANCE_RECORD_SEARCH_FILTERS_KEY)
-      const hashedKey = computed(() => JSON.stringify(queryKey?.value))
-      return { hashedKey }
-    },
-    template: `<div data-testid="${testIds.Heading}">{{ hashedKey }}</div>`,
-  })
+commonTests.rendersElementWithTestId({
+  testName: 'renders a modal to create a finance record',
+  getWrapper: mountComponent,
+  testId: testIds.CreateFinanceRecordModal,
+})
 
-  const wrapper = mountComponent({
-    global: {
-      stubs: {
-        Heading: HeadingStub,
-      },
-    },
-  })
+commonTests.rendersElementWithTestId({
+  testName: 'renders a modal to edit a finance record',
+  getWrapper: mountComponent,
+  testId: testIds.EditFinanceRecordModal,
+})
 
-  const heading = wrapper.get(`[data-testid="${testIds.Heading}"]`)
-  expect(heading.text()).toBe(JSON.stringify(DEFAULT_FINANCE_RECORD_SEARCH_FILTERS))
+commonTests.rendersElementWithTestId({
+  testName: 'renders a modal to delete a finance record',
+  getWrapper: mountComponent,
+  testId: testIds.DeleteFinanceRecordModal,
 })

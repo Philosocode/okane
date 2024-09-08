@@ -21,7 +21,7 @@ const spyOn = {
   },
 }
 
-const financeRecordId = toRef(1)
+const financeRecordId = 540
 const queryKey = toRef(['a'])
 
 const TestComponent = defineComponent({
@@ -29,8 +29,8 @@ const TestComponent = defineComponent({
     shouldPassSearchFilters: Boolean,
   },
   setup() {
-    const mutation = useDeleteFinanceRecordMutation(financeRecordId, queryKey)
-    mutation.mutate()
+    const mutation = useDeleteFinanceRecordMutation(queryKey)
+    mutation.mutate(financeRecordId)
   },
   template: '<div />',
 })
@@ -47,7 +47,7 @@ test('makes a DELETE request to the expected endpoint', async () => {
   await flushPromises()
 
   expect(deleteSpy).toHaveBeenCalledWith(
-    financeRecordAPIRoutes.deleteFinanceRecord.buildPath({ id: financeRecordId.value }),
+    financeRecordAPIRoutes.deleteFinanceRecord.buildPath({ id: financeRecordId }),
   )
 })
 
@@ -56,7 +56,7 @@ test('removes the finance record from the query cache', async () => {
     pages: [
       wrapInAPIPaginatedResponse(
         wrapInAPIResponse([
-          createTestFinanceRecord({ id: financeRecordId.value }),
+          createTestFinanceRecord({ id: financeRecordId }),
           createTestFinanceRecord({ id: 2 }),
           createTestFinanceRecord({ id: 3 }),
         ]),
@@ -75,6 +75,6 @@ test('removes the finance record from the query cache', async () => {
 
   const cachedData = testQueryClient.getQueryData(queryKey.value)
   expect(cachedData).toEqual(
-    removeItemFromPages(initialCachedData, (item) => item.id !== financeRecordId.value),
+    removeItemFromPages(initialCachedData, (item) => item.id !== financeRecordId),
   )
 })

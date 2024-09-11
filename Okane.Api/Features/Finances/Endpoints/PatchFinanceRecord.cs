@@ -20,8 +20,7 @@ public class PatchFinanceRecord : IEndpoint
         builder
             .MapPatch("/{financeRecordId:int}", HandleAsync)
             .WithName(FinanceRecordEndpointNames.PatchFinanceRecord)
-            .WithSummary("Update a finance record.")
-            .WithRequestValidation<Request>();
+            .WithSummary("Update a finance record.");
     }
 
     public record Request(decimal? Amount, string? Description, DateTime? HappenedAt, FinanceRecordType? Type);
@@ -37,7 +36,7 @@ public class PatchFinanceRecord : IEndpoint
             CancellationToken cancellationToken)
     {
         var userId = claimsPrincipal.GetUserId();
-        FinanceRecord? financeRecord = await db.FinanceRecords
+        var financeRecord = await db.FinanceRecords
             .SingleOrDefaultAsync(
                 r => r.UserId == userId && r.Id == financeRecordId,
                 cancellationToken
@@ -73,7 +72,6 @@ public class PatchFinanceRecord : IEndpoint
         {
             return TypedResults.ValidationProblem(validationResult.ToDictionary());
         }
-
 
         await db.SaveChangesAsync(cancellationToken);
 

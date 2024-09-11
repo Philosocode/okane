@@ -20,8 +20,8 @@ const props = defineProps<FormSelectProps>()
 </script>
 
 <template>
-  <div>
-    <label :for="controlId" v-if="props.label">{{ props.label }}</label>
+  <div class="root">
+    <label class="label" :for="controlId" v-if="props.label">{{ props.label }}</label>
     <select :id="controlId" v-model="model" v-bind="$attrs">
       <option
         v-for="option in options"
@@ -36,7 +36,17 @@ const props = defineProps<FormSelectProps>()
 </template>
 
 <style scoped lang="scss">
-label {
+.root {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
   display: block;
+}
+
+select {
+  flex-grow: 1;
+  margin-top: var(--space-2xs);
 }
 </style>

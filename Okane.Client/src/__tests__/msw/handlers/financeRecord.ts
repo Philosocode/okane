@@ -8,26 +8,23 @@ import { HTTP_STATUS_CODE } from '@shared/constants/http'
 import type { FinanceRecord } from '@features/financeRecords/types/financeRecord'
 
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
+import { getMSWURL } from '@tests/utils/url'
 import { wrapInAPIPaginatedResponse, wrapInAPIResponse } from '@tests/utils/apiResponse'
 
 export const financeRecordHandlers = {
   deleteFinanceRecordSuccess({ id }: { id: number }) {
-    return http.delete(
-      `/api${financeRecordAPIRoutes.deleteFinanceRecord.buildPath({ id })}`,
-      () => {
-        return new HttpResponse(null, { status: HTTP_STATUS_CODE.NO_CONTENT_204 })
-      },
-    )
+    const url = getMSWURL(financeRecordAPIRoutes.deleteFinanceRecord({ id }))
+    return http.delete(url, () => {
+      return new HttpResponse(null, { status: HTTP_STATUS_CODE.NO_CONTENT_204 })
+    })
   },
   deleteFinanceRecordError({ id }: { id: number }) {
+    const url = getMSWURL(financeRecordAPIRoutes.deleteFinanceRecord({ id }))
     const status = HTTP_STATUS_CODE.BAD_REQUEST_400
 
-    return http.delete(
-      `/api${financeRecordAPIRoutes.deleteFinanceRecord.buildPath({ id })}`,
-      () => {
-        return HttpResponse.json(createTestProblemDetails({ status }), { status })
-      },
-    )
+    return http.delete(url, () => {
+      return HttpResponse.json(createTestProblemDetails({ status }), { status })
+    })
   },
   getPaginatedFinanceRecordsSuccess({
     financeRecords,
@@ -36,7 +33,8 @@ export const financeRecordHandlers = {
     financeRecords: FinanceRecord[]
     hasNextPage?: boolean
   }) {
-    return http.get(`/api${financeRecordAPIRoutes.getPaginatedList.basePath}`, () => {
+    const url = getMSWURL(financeRecordAPIRoutes.getPaginatedList({ page: 0 }))
+    return http.get(url, () => {
       return HttpResponse.json({
         ...wrapInAPIPaginatedResponse(wrapInAPIResponse(financeRecords)),
         hasNextPage,
@@ -44,7 +42,8 @@ export const financeRecordHandlers = {
     })
   },
   getPaginatedFinanceRecordsError({ detail }: { detail?: string }) {
-    return http.get(`/api${financeRecordAPIRoutes.getPaginatedList.basePath}`, () => {
+    const url = getMSWURL(financeRecordAPIRoutes.getPaginatedList({ page: 0 }))
+    return http.get(url, () => {
       return HttpResponse.json(createTestProblemDetails({ detail }), {
         status: HTTP_STATUS_CODE.BAD_REQUEST_400,
       })

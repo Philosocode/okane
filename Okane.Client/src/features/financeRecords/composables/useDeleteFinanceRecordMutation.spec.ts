@@ -47,7 +47,7 @@ test('makes a DELETE request to the expected endpoint', async () => {
   await flushPromises()
 
   expect(deleteSpy).toHaveBeenCalledWith(
-    financeRecordAPIRoutes.deleteFinanceRecord.buildPath({ id: financeRecordId }),
+    financeRecordAPIRoutes.deleteFinanceRecord({ id: financeRecordId }),
   )
 })
 

@@ -31,7 +31,7 @@ export const useAuthStore = defineStore('AuthStore', () => {
    * @param password
    */
   async function register(email: string, name: string, password: string): Promise<void> {
-    await apiClient.post(authAPIRoutes.register.buildPath(), { email, name, password })
+    await apiClient.post(authAPIRoutes.register(), { email, name, password })
   }
 
   /**
@@ -49,9 +49,7 @@ export const useAuthStore = defineStore('AuthStore', () => {
    * Get a new JWT token and update the auth store.
    */
   async function handleRefreshToken() {
-    const response = await apiClient.post<AuthenticateResponse>(
-      authAPIRoutes.refreshToken.buildPath(),
-    )
+    const response = await apiClient.post<AuthenticateResponse>(authAPIRoutes.refreshToken())
     initState(response)
   }
 
@@ -89,7 +87,7 @@ export const useAuthStore = defineStore('AuthStore', () => {
    * Log out the user by clearing the store state.
    */
   async function logout() {
-    await apiClient.post(authAPIRoutes.logout.buildPath())
+    await apiClient.post(authAPIRoutes.logout())
     clearTimeout(refreshTokenInterval.value)
 
     authUser.value = undefined

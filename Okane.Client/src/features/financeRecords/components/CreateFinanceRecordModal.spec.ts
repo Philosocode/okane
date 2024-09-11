@@ -86,10 +86,7 @@ describe('with a successful request to create a finance record', () => {
 
     const financeRecord = mapSaveFinanceRecordFormState.to.preCreationFinanceRecord(formState)
     expect(postSpy).toHaveBeenCalledOnce()
-    expect(postSpy).toHaveBeenCalledWith(
-      financeRecordAPIRoutes.postFinanceRecord.buildPath(),
-      financeRecord,
-    )
+    expect(postSpy).toHaveBeenCalledWith(financeRecordAPIRoutes.postFinanceRecord(), financeRecord)
 
     postSpy.mockRestore()
   })

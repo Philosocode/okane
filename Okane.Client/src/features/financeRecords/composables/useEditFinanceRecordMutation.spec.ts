@@ -48,10 +48,7 @@ test('makes a PATCH request to the expected endpoint', async () => {
 
   mountComponent()
   await flushPromises()
-  expect(patchSpy).toHaveBeenCalledWith(
-    financeRecordAPIRoutes.patchFinanceRecord.buildPath({ id }),
-    changes,
-  )
+  expect(patchSpy).toHaveBeenCalledWith(financeRecordAPIRoutes.patchFinanceRecord({ id }), changes)
 
   patchSpy.mockRestore()
 })

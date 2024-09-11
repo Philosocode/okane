@@ -19,6 +19,7 @@ import { getRange } from '@shared/utils/array'
 import { wrapInAPIPaginatedResponse, wrapInAPIResponse } from '@tests/utils/apiResponse'
 
 import { createTestFinanceRecord } from '@tests/factories/financeRecord'
+import { getMSWURL } from '@tests/utils/url'
 import { setUpIntersectionObserverMock } from '@tests/mocks/intersectionObserver'
 import { testServer } from '@tests/msw/testServer'
 import { withSearchParams } from '@tests/msw/resolvers/withSearchParams'
@@ -211,7 +212,7 @@ describe(`when there are more pages to fetch page`, () => {
   const page3FinanceRecord = createTestFinanceRecord({ description: 'page3FinanceRecord' })
 
   beforeEach(() => {
-    const apiRoute = `/api${financeRecordAPIRoutes.getPaginatedList.basePath}`
+    const apiRoute = getMSWURL(financeRecordAPIRoutes.getPaginatedList({ page: 0 }))
 
     testServer.use(
       http.get(

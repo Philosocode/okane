@@ -13,7 +13,7 @@ import type { FinanceRecord } from '@features/financeRecords/types/financeRecord
 import { removeItemFromPages } from '@shared/utils/pagination'
 
 function deleteFinanceRecord(id: number) {
-  return apiClient.delete(financeRecordAPIRoutes.deleteFinanceRecord.buildPath({ id }))
+  return apiClient.delete(financeRecordAPIRoutes.deleteFinanceRecord({ id }))
 }
 
 export function useDeleteFinanceRecordMutation(queryKey: MaybeRefOrGetter<QueryKey>) {

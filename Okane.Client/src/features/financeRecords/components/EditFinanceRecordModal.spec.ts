@@ -129,7 +129,7 @@ describe('with a successful request to edit a finance record', () => {
     const financeRecord = mapSaveFinanceRecordFormState.to.partialFinanceRecord(updates)
     expect(patchSpy).toHaveBeenCalledOnce()
     expect(patchSpy).toHaveBeenCalledWith(
-      financeRecordAPIRoutes.patchFinanceRecord.buildPath({ id: editingFinanceRecord.id }),
+      financeRecordAPIRoutes.patchFinanceRecord({ id: editingFinanceRecord.id }),
       financeRecord,
     )
 

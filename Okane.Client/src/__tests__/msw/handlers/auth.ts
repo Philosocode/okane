@@ -7,7 +7,7 @@ import { HTTP_STATUS_CODE } from '@shared/constants/http'
 
 export const authHandlers = {
   logoutSuccess() {
-    return http.post(`/api${authAPIRoutes.logout.buildPath()}`, () => {
+    return http.post(`/api${authAPIRoutes.logout()}`, () => {
       return new HttpResponse(null, { status: HTTP_STATUS_CODE.NO_CONTENT_204 })
     })
   },

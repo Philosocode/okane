@@ -10,7 +10,7 @@ import { type FinanceRecord } from '@features/financeRecords/types/financeRecord
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
 function patchFinanceRecord(id: number, changes: Partial<FinanceRecord>) {
-  return apiClient.patch(financeRecordAPIRoutes.patchFinanceRecord.buildPath({ id }), changes)
+  return apiClient.patch(financeRecordAPIRoutes.patchFinanceRecord({ id }), changes)
 }
 
 type MutationArgs = {

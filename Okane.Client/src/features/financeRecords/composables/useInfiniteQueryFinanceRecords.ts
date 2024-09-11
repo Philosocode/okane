@@ -20,7 +20,7 @@ export function fetchPaginatedFinanceRecords({
   pageParam,
   signal,
 }: QueryFunctionContext): Promise<APIPaginatedResponse<FinanceRecord>> {
-  return apiClient.get(financeRecordAPIRoutes.getPaginatedList.buildPath({ page: pageParam }), {
+  return apiClient.get(financeRecordAPIRoutes.getPaginatedList({ page: pageParam }), {
     signal,
   })
 }

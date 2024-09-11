@@ -48,10 +48,7 @@ test('makes a POST request to the expected endpoint', async () => {
 
   await flushPromises()
 
-  expect(postSpy).toHaveBeenCalledWith(
-    financeRecordAPIRoutes.postFinanceRecord.buildPath(),
-    financeRecord,
-  )
+  expect(postSpy).toHaveBeenCalledWith(financeRecordAPIRoutes.postFinanceRecord(), financeRecord)
 })
 
 test('invalidates the query key when search filters are passed', async () => {

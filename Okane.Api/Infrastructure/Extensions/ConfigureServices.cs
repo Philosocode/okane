@@ -10,6 +10,7 @@ using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Features.Auth.Services;
 using Okane.Api.Features.Auth.Utils;
 using Okane.Api.Features.Finances.Entities;
+using Okane.Api.Features.Finances.Services;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.HealthCheck;
 using Okane.Api.Infrastructure.HostedServices;
@@ -40,7 +41,7 @@ public static class ConfigureServices
         builder.Services.AddValidatorsFromAssembly(typeof(ConfigureServices).Assembly);
         builder.AddApiAuthentication();
 
-        builder.Services.AddScoped<ITokenService, TokenService>();
+        builder.AddAppServices();
 
         builder.Services.AddProblemDetails();
 
@@ -117,6 +118,12 @@ public static class ConfigureServices
     {
         builder.Services.AddSingleton<IDateTimeWrapper, DateTimeWrapper>();
         builder.Services.AddSingleton<IGuidWrapper, GuidWrapper>();
+    }
+
+    private static void AddAppServices(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddScoped<IFinanceRecordService, FinanceRecordService>();
+        builder.Services.AddScoped<ITokenService, TokenService>();
     }
 
     private static void AddApiAuthentication(this WebApplicationBuilder builder)

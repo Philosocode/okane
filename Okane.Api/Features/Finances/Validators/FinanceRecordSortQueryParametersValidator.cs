@@ -1,4 +1,5 @@
 using FluentValidation;
+using Microsoft.IdentityModel.Tokens;
 using Okane.Api.Features.Finances.Constants;
 using Okane.Api.Features.Finances.Dtos;
 using Okane.Api.Shared.Constants;
@@ -10,13 +11,15 @@ public class FinanceRecordSortQueryParametersValidator : AbstractValidator<Finan
     public FinanceRecordSortQueryParametersValidator()
     {
         RuleFor(p => p.SortField)
-            .Must(sf => FinanceRecordSortFields.AllFields.Contains(sf, StringComparer.OrdinalIgnoreCase))
-            .When(sf => sf is not null)
+            .Must(sf =>
+                sf.IsNullOrEmpty() || FinanceRecordSortFields.AllFields.Contains(sf, StringComparer.OrdinalIgnoreCase)
+            )
             .WithMessage(FinanceRecordSortFields.AllowedFieldsMessage);
 
         RuleFor(p => p.SortDirection)
-            .Must(sd => SortDirections.AllOptions.Contains(sd, StringComparer.OrdinalIgnoreCase))
-            .When(sd => sd is not null)
+            .Must(sd =>
+                sd.IsNullOrEmpty() || SortDirections.AllOptions.Contains(sd, StringComparer.OrdinalIgnoreCase)
+            )
             .WithMessage(SortDirections.AllowedOptionsValidationMessage);
     }
 }

@@ -12,7 +12,7 @@ public class FinanceRecordStubFactory
                 r => r.Amount,
                 faker => faker.Finance.Amount((decimal)0.01)
             )
-            .RuleFor(r => r.Description, "Groceries")
+            .RuleFor(r => r.Description, faker => faker.Lorem.Sentence(4))
             .RuleFor(r => r.HappenedAt, DateTime.UtcNow)
             .RuleFor(r => r.Type, faker => faker.PickRandom<FinanceRecordType>())
             .RuleFor(r => r.UserId, userId);

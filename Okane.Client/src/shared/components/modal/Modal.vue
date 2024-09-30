@@ -79,7 +79,7 @@ watch(
   max-width: pxToRem(400);
 
   left: 50%;
-  top: 40%;
+  top: 50%;
   transform: translate(-50%, -50%);
 }
 
@@ -90,7 +90,7 @@ watch(
 .modal-content {
   padding: 1rem;
 
-  & > * + * {
+  &>*+* {
     margin-top: var(--space-sm);
   }
 }

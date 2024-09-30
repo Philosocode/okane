@@ -13,12 +13,12 @@ import { SHARED_COPY } from '@shared/constants/copy'
 
 import { useDeleteFinanceRecordStore } from '@features/financeRecords/composables/useDeleteFinanceRecordStore'
 import { useDeleteFinanceRecordMutation } from '@features/financeRecords/composables/useDeleteFinanceRecordMutation'
-import { useQueryFinanceRecordStore } from '@features/financeRecords/composables/useQueryFinanceRecordStore'
+import { useSearchFinanceRecordsStore } from '@features/financeRecords/composables/useSearchFinanceRecordsStore'
 
 const deleteStore = useDeleteFinanceRecordStore()
-const queryStore = useQueryFinanceRecordStore()
+const searchStore = useSearchFinanceRecordsStore()
 
-const queryKey = computed(() => financeRecordQueryKeys.listByFilters(queryStore.searchFilters))
+const queryKey = computed(() => financeRecordQueryKeys.listByFilters(searchStore.searchFilters))
 const deleteMutation = useDeleteFinanceRecordMutation(queryKey)
 
 function handleClose() {

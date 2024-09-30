@@ -10,12 +10,12 @@ import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { SHARED_COPY } from '@shared/constants/copy'
 
 import { useInfiniteQueryFinanceRecords } from '@features/financeRecords/composables/useInfiniteQueryFinanceRecords'
-import { useQueryFinanceRecordStore } from '@features/financeRecords/composables/useQueryFinanceRecordStore'
+import { useSearchFinanceRecordsStore } from '@features/financeRecords/composables/useSearchFinanceRecordsStore'
 
 import { flattenPages } from '@shared/utils/pagination'
 
-const queryStore = useQueryFinanceRecordStore()
-const queryResult = useInfiniteQueryFinanceRecords(() => queryStore.searchFilters)
+const searchStore = useSearchFinanceRecordsStore()
+const queryResult = useInfiniteQueryFinanceRecords(() => searchStore.searchFilters)
 const financeRecords = computed(() => flattenPages(queryResult.data.value?.pages))
 </script>
 

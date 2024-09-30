@@ -11,8 +11,8 @@ import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import type { SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
 import { useEditFinanceRecordMutation } from '@features/financeRecords/composables/useEditFinanceRecordMutation'
-import { useQueryFinanceRecordStore } from '@features/financeRecords/composables/useQueryFinanceRecordStore'
 import { useSaveFinanceRecordStore } from '@features/financeRecords/composables/useSaveFinanceRecordStore'
+import { useSearchFinanceRecordsStore } from '@features/financeRecords/composables/useSearchFinanceRecordsStore'
 
 import { getFormErrorsFromAPIResponse } from '@shared/services/apiClient/utils'
 import { getInitialFormErrors } from '@shared/utils/form'
@@ -28,8 +28,8 @@ import {
 
 const saveStore = useSaveFinanceRecordStore()
 
-const queryStore = useQueryFinanceRecordStore()
-const queryKey = computed(() => financeRecordQueryKeys.listByFilters(queryStore.searchFilters))
+const searchStore = useSearchFinanceRecordsStore()
+const queryKey = computed(() => financeRecordQueryKeys.listByFilters(searchStore.searchFilters))
 
 const editMutation = useEditFinanceRecordMutation(queryKey)
 

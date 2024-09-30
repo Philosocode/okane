@@ -4,7 +4,7 @@ import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFina
 import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
 import * as utils from '@features/financeRecords/utils/mappers'
-import { dateToDateTimeLocalFormat } from '@shared/utils/dateTime'
+import { mapDate } from '@shared/utils/dateTime'
 import {
   createTestFinanceRecord,
   createTestSaveFinanceRecordFormState,
@@ -16,7 +16,7 @@ describe('mapFinanceRecord', () => {
     const result = utils.mapFinanceRecord.to.saveFinanceRecordFormState(financeRecord)
     expect(result).toEqual({
       ...financeRecord,
-      happenedAt: dateToDateTimeLocalFormat(financeRecord.happenedAt),
+      happenedAt: mapDate.to.dateTimeLocal(financeRecord.happenedAt),
     })
   })
 })

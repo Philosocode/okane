@@ -1,15 +1,15 @@
 // Internal
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 
-import type { SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
+import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
-import { dateToDateTimeLocalFormat } from '@shared/utils/dateTime'
+import { mapDate } from '@shared/utils/dateTime'
 
 export function getInitialSaveFinanceRecordFormState(): SaveFinanceRecordFormState {
   return {
     amount: 0,
     description: '',
-    happenedAt: dateToDateTimeLocalFormat(new Date(Date.now())),
+    happenedAt: mapDate.to.dateTimeLocal(new Date(Date.now())),
     type: FINANCE_RECORD_TYPE.EXPENSE,
   }
 }

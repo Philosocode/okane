@@ -4,13 +4,13 @@ import type { SaveFinanceRecordFormState } from '@features/financeRecords/types/
 import type { FinanceRecord } from '@features/financeRecords/types/financeRecord'
 
 import { createMappers } from '@shared/utils/mappers'
-import { dateToDateTimeLocalFormat } from '@shared/utils/dateTime'
+import { mapDate } from '@shared/utils/dateTime'
 
 export const mapFinanceRecord = createMappers({
   saveFinanceRecordFormState(financeRecord: FinanceRecord): SaveFinanceRecordFormState {
     return {
       ...financeRecord,
-      happenedAt: dateToDateTimeLocalFormat(financeRecord.happenedAt),
+      happenedAt: mapDate.to.dateTimeLocal(financeRecord.happenedAt),
     }
   },
 })

@@ -1,8 +1,8 @@
 // Internal
 import * as dateTimeUtils from '@shared/utils/dateTime'
 
-describe('dateToDateTimeLocalFormat', () => {
-  test('formats the date in datetime-local format', () => {
+describe('mapDate', () => {
+  test('dateTimeLocal', () => {
     const date = new Date(2020, 10, 10, 10, 10, 10)
 
     const year = date.getFullYear()
@@ -21,6 +21,6 @@ describe('dateToDateTimeLocalFormat', () => {
 
     const expected = `${year}-${paddedMonth}-${paddedDay}T${paddedHours}:${paddedMinutes}`
 
-    expect(dateTimeUtils.dateToDateTimeLocalFormat(date)).toBe(expected)
+    expect(dateTimeUtils.mapDate.to.dateTimeLocal(date)).toBe(expected)
   })
 })

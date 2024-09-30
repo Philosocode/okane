@@ -3,11 +3,11 @@ import type { FinanceRecord } from '@features/financeRecords/types/financeRecord
 
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 
-import type { TestObjectFactoryFunction } from '@tests/factories/base'
+import { type TestObjectFactoryFunction } from '@tests/factories/base'
+import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
 import { baseTestObjectFactory } from '@tests/factories/base'
-import { dateToDateTimeLocalFormat } from '@shared/utils/dateTime'
-import type { SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
+import { mapDate } from '@shared/utils/dateTime'
 
 const defaultFinanceRecord: FinanceRecord = {
   id: 1,
@@ -28,7 +28,7 @@ const defaultSaveFinanceRecordFormState: SaveFinanceRecordFormState = {
   amount: defaultFinanceRecord.amount,
   description: defaultFinanceRecord.description,
   type: defaultFinanceRecord.type,
-  happenedAt: dateToDateTimeLocalFormat(defaultFinanceRecord.happenedAt),
+  happenedAt: mapDate.to.dateTimeLocal(defaultFinanceRecord.happenedAt),
 }
 
 export const createTestSaveFinanceRecordFormState: TestObjectFactoryFunction<

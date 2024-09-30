@@ -2,7 +2,7 @@
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 
 import * as utils from '@features/financeRecords/utils/saveFinanceRecord'
-import { dateToDateTimeLocalFormat } from '@shared/utils/dateTime'
+import { mapDate } from '@shared/utils/dateTime'
 
 describe('getInitialSaveFinanceRecordFormState', () => {
   test('returns the initial form state', () => {
@@ -11,7 +11,7 @@ describe('getInitialSaveFinanceRecordFormState', () => {
     expect(utils.getInitialSaveFinanceRecordFormState()).toEqual({
       amount: 0,
       description: '',
-      happenedAt: dateToDateTimeLocalFormat(new Date(Date.now())),
+      happenedAt: mapDate.to.dateTimeLocal(new Date(Date.now())),
       type: FINANCE_RECORD_TYPE.EXPENSE,
     })
 
@@ -34,7 +34,7 @@ describe('getSaveFinanceRecordFormChanges', () => {
     { updatedField: 'description', changes: { description: initialForm.description + 'A' } },
     {
       updatedField: 'happenedAt',
-      changes: { happenedAt: dateToDateTimeLocalFormat(new Date('2024-01-01')) },
+      changes: { happenedAt: mapDate.to.dateTimeLocal(new Date('2024-01-01')) },
     },
     {
       updatedField: 'type',

@@ -12,6 +12,7 @@ export type SelectOption = {
 
 export type FormSelectProps = {
   options: SelectOption[]
+  
   label?: string
 }
 

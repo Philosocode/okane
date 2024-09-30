@@ -7,7 +7,7 @@ import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRo
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 import { INITIAL_PAGE } from '@shared/constants/request'
 
-import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
+import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFilters'
 
 import * as useCleanUpInfiniteQuery from '@shared/composables/useCleanUpInfiniteQuery'
 import { useInfiniteQueryFinanceRecords } from '@features/financeRecords/composables/useInfiniteQueryFinanceRecords'
@@ -16,7 +16,7 @@ import { apiClient } from '@shared/services/apiClient/apiClient'
 
 import { wrapInAPIResponse } from '@tests/utils/apiResponse'
 
-function getTestComponent(filters?: MaybeRefOrGetter<FinanceRecordSearchFilters>) {
+function getTestComponent(filters?: MaybeRefOrGetter<FinanceRecordsSearchFilters>) {
   return defineComponent({
     setup() {
       useInfiniteQueryFinanceRecords(() => filters)

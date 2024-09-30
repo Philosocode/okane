@@ -1,1 +1,1 @@
-export type FinanceRecordSearchFilters = {}
+export type FinanceRecordsSearchFilters = {}

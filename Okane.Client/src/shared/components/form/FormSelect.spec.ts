@@ -7,7 +7,7 @@ import FormSelect, { type FormSelectProps } from '@shared/components/form/FormSe
 import * as formUtils from '@shared/utils/form'
 
 const props: FormSelectProps = {
-  label: '',
+  label: 'Cool label',
   options: [
     { label: 'A', value: 'a' },
     { value: 'b' }, // For options without a label, the value should be displayed as a fallback.
@@ -81,18 +81,17 @@ test('updates the model value', async () => {
   expect(wrapper.props('modelValue')).toBe(props.options[1].value)
 })
 
-test('does not render a label', () => {
+test('renders a label with the expected properties', () => {
   const wrapper = mountComponent({ props })
-  expect(wrapper.find('label').exists()).toBe(false)
+  const label = wrapper.get('label')
+  expect(label.text()).toBe(props.label)
+  expect(label.attributes('for')).toBe(formControlId)
 })
 
-describe('with label text', () => {
-  const propsWithLabel = { ...props, label: 'Cool label' }
-
-  test('renders a label with the expected properties', () => {
-    const wrapper = mountComponent({ props: propsWithLabel })
-    const label = wrapper.get('label')
-    expect(label.text()).toBe(propsWithLabel.label)
-    expect(label.attributes('for')).toBe(formControlId)
+test('renders a visually-hidden label', () => {
+  const wrapper = mountComponent({
+    props: { ...props, withHiddenLabel: true },
   })
+  const label = wrapper.get('label')
+  expect(label.classes()).toContain('visually-hidden')
 })

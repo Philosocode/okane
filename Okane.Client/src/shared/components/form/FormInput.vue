@@ -11,8 +11,9 @@ export interface FormInputProps extends /* @vue-ignore */ InputHTMLAttributes {
   label: string
   name: string
 
-  type?: InputHTMLAttributes['type']
   error?: string
+  type?: InputHTMLAttributes['type']
+  withHiddenLabel?: boolean
 }
 
 const controlId = getUniqueFormControlId()
@@ -24,8 +25,11 @@ const errorLabelId = `${controlId}-error`
 
 <template>
   <div>
-    <label :for="controlId">{{ label }}</label>
+    <label :class="{ label: true, 'visually-hidden': props.withHiddenLabel }" :for="controlId">{{
+      label
+    }}</label>
     <input
+      class="input"
       v-bind="$attrs"
       v-model="model"
       :aria-describedby="props.error ? errorLabelId : undefined"
@@ -40,15 +44,22 @@ const errorLabelId = `${controlId}-error`
   </div>
 </template>
 
-<style scoped>
-input {
-  display: block;
-  margin-top: var(--space-2xs);
-  width: 100%;
-}
-
+<style scoped lang="scss">
 .error {
   color: var(--color-error);
   margin-top: 0.5rem;
+}
+
+.input {
+  display: block;
+  width: 100%;
+}
+
+.label {
+  margin-bottom: var(--space-2xs);
+}
+
+.visually-hidden {
+  @include visually-hidden;
 }
 </style>

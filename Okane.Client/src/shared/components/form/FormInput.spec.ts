@@ -35,6 +35,19 @@ test('renders a label with the expected text and attributes', () => {
   expect(label.attributes('for')).toBe(formControlId)
 })
 
+test('renders a visually-hidden label when withHiddenLabel is true', () => {
+  const wrapper = mountComponent({
+    props: {
+      ...props,
+      withHiddenLabel: true,
+    },
+  })
+
+  const label = wrapper.get('label')
+  expect(label.classes()).toContain('visually-hidden')
+})
+
+
 test('renders an input with the expected attributes', () => {
   const testId = 'cool-test-id'
   const wrapper = mountComponent({

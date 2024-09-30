@@ -7,7 +7,7 @@ import { http, HttpResponse } from 'msw'
 import FinanceRecordListItem from '@features/financeRecords/components/FinanceRecordListItem.vue'
 import InfiniteScroller from '@shared/components/InfiniteScroller.vue'
 
-import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
+import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
 import { DEFAULT_PAGE_SIZE } from '@shared/constants/request'
 import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { financeRecordHandlers } from '@tests/msw/handlers/financeRecord'

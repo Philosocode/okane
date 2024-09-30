@@ -8,10 +8,10 @@ import { type HttpHandler } from 'msw'
 import DeleteFinanceRecordModal from '@features/financeRecords/components/DeleteFinanceRecordModal.vue'
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 
+import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { SHARED_COPY } from '@shared/constants/copy'
-import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
 
 import * as deleteMutation from '@features/financeRecords/composables/useDeleteFinanceRecordMutation'
 import { useDeleteFinanceRecordStore } from '@features/financeRecords/composables/useDeleteFinanceRecordStore'

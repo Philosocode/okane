@@ -2,7 +2,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-import type { FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFilters'
+import type { FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
 
 export type QueryFinanceRecordStore = ReturnType<typeof useSearchFinanceRecordsStore>
 

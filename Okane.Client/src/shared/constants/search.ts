@@ -20,3 +20,19 @@ export const COMPARISON_OPERATOR_OPTION_MAP = {
 } as const
 
 export const ALL_COMPARISON_OPERATOR_OPTIONS = Object.values(COMPARISON_OPERATOR_OPTION_MAP)
+
+export enum SORT_DIRECTION {
+  ASCENDING = 'asc',
+  DESCENDING = 'desc',
+}
+
+export const SORT_DIRECTION_OPTIONS: SelectOption[] = [
+  {
+    label: 'Ascending',
+    value: SORT_DIRECTION.ASCENDING,
+  },
+  {
+    label: 'Descending',
+    value: SORT_DIRECTION.DESCENDING,
+  },
+]

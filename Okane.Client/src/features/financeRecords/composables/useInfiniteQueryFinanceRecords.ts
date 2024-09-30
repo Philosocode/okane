@@ -10,7 +10,7 @@ import { INITIAL_PAGE } from '@shared/constants/request'
 
 import type { APIPaginatedResponse } from '@shared/services/apiClient/types'
 import type { FinanceRecord } from '@features/financeRecords/types/financeRecord'
-import type { FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFilters'
+import type { FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
 
 import { useCleanUpInfiniteQuery } from '@shared/composables/useCleanUpInfiniteQuery'
 

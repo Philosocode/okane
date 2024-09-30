@@ -1,5 +1,5 @@
 // Internal
-import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFilters'
+import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
 
 export const queryKeys = {
   all: () => ['all'],

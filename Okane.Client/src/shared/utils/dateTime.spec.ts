@@ -23,4 +23,16 @@ describe('mapDate', () => {
 
     expect(dateTimeUtils.mapDate.to.dateTimeLocal(date)).toBe(expected)
   })
+
+  test('dateOnlyTimestamp', () => {
+    const date = new Date(2020, 9, 10, 10, 10, 10)
+    expect(dateTimeUtils.mapDate.to.dateOnlyTimestamp(date)).toBe('2020-10-10')
+  })
+})
+
+test('mapUTCTimestampToLocalDate', () => {
+  const utcTimestamp = '2023-06-15T10:30:00.000Z'
+  const expectedLocalDate = new Date(2023, 5, 15, 10, 30, 0, 0)
+  const result = dateTimeUtils.mapUTCTimestampToLocalDate(utcTimestamp)
+  expect(result).toEqual(expectedLocalDate)
 })

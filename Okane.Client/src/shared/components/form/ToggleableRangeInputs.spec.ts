@@ -5,6 +5,8 @@ import RangeInputs from '@shared/components/form/ToggleableRangeInputs.vue'
 import { ALL_COMPARISON_OPERATOR_OPTIONS, COMPARISON_OPERATOR } from '@shared/constants/search'
 import { SHARED_COPY } from '@shared/constants/copy'
 
+import { commonAsserts } from '@tests/utils/commonAsserts'
+
 const props = {
   isShowingRange: false,
   label: 'Test Label',
@@ -30,19 +32,12 @@ test('renders a legend containing the label', () => {
   expect(legend).toBeDefined()
 })
 
-test('renders a select dropdown to select an operator', () => {
+test('renders the expected operator options', () => {
   const wrapper = mountComponent({ props })
-  const select = wrapper.get(`select[name='${props.operatorSelectName}']`)
-  const options = select.findAll('option')
-  const optionSet = new Set<string>()
-  options.forEach((option) => {
-    const operator = option.attributes('value')
-    expect(operator).toBeDefined()
-    optionSet.add(operator!)
-  })
 
-  ALL_COMPARISON_OPERATOR_OPTIONS.forEach((option) => {
-    expect(optionSet.has(option.value)).toBe(true)
+  commonAsserts.rendersExpectedSelectOptions({
+    expectedOptions: ALL_COMPARISON_OPERATOR_OPTIONS,
+    select: wrapper.get(`select[name='${props.operatorSelectName}']`),
   })
 })
 

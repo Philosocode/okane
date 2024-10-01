@@ -3,7 +3,25 @@ export const SHARED_COPY = {
     CANCEL: 'Cancel',
     DELETE: 'Delete',
     EDIT: 'Edit',
+    RESET: 'Reset',
     SAVE: 'Save',
+  },
+  COMPARISON: {
+    EQUAL: {
+      SYMBOL: '=',
+      TEXT: 'Equal',
+    },
+    GREATER_THAN_EQUAL: {
+      SYMBOL: '≥',
+      TEXT: 'Greater than equal',
+    },
+    LESS_THAN_EQUAL: {
+      SYMBOL: '≤',
+      TEXT: 'Less than equal',
+    },
+  },
+  COMMON: {
+    ALL: 'all',
   },
   CONJUNCTIONS: {
     AND: 'and',

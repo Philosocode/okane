@@ -1,5 +1,5 @@
 // External
-import { defineComponent, toValue, type MaybeRefOrGetter, toRef } from 'vue'
+import { defineComponent, toValue } from 'vue'
 
 // Internal
 import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
@@ -16,7 +16,7 @@ import { apiClient } from '@shared/services/apiClient/apiClient'
 
 import { wrapInAPIResponse } from '@tests/utils/apiResponse'
 
-function getTestComponent(filters?: MaybeRefOrGetter<FinanceRecordsSearchFilters>) {
+function getTestComponent(filters: FinanceRecordsSearchFilters) {
   return defineComponent({
     setup() {
       useInfiniteQueryFinanceRecords(() => filters)
@@ -25,8 +25,7 @@ function getTestComponent(filters?: MaybeRefOrGetter<FinanceRecordsSearchFilters
   })
 }
 
-const searchFilters = toRef(DEFAULT_FINANCE_RECORD_SEARCH_FILTERS)
-
+const searchFilters = DEFAULT_FINANCE_RECORD_SEARCH_FILTERS
 const mountComponent = getMountComponent(getTestComponent(searchFilters), { withQueryClient: true })
 
 test('makes a request to fetch paginated finance records', () => {
@@ -35,7 +34,7 @@ test('makes a request to fetch paginated finance records', () => {
   mountComponent()
 
   expect(getSpy).toHaveBeenCalledWith(
-    financeRecordAPIRoutes.getPaginatedList({ page: INITIAL_PAGE }),
+    financeRecordAPIRoutes.getPaginatedList({ page: INITIAL_PAGE, searchFilters }),
     {
       signal: new AbortController().signal,
     },
@@ -53,12 +52,4 @@ test('cleans up the infinite query', () => {
   )
 
   getSpy.mockRestore()
-})
-
-test('does nothing if searchFilters are undefined', () => {
-  const getSpy = vi.spyOn(apiClient, 'get').mockResolvedValue(wrapInAPIResponse({}))
-
-  getMountComponent(getTestComponent(), { withQueryClient: true })()
-
-  expect(getSpy).not.toHaveBeenCalled()
 })

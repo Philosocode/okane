@@ -5,6 +5,7 @@ export enum BUTTON_TYPE {
 }
 
 export enum INPUT_TYPE {
+  DATE = 'date',
   DATETIME_LOCAL = 'datetime-local',
   NUMBER = 'number',
   PASSWORD = 'password',

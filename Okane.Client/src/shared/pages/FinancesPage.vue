@@ -7,6 +7,7 @@ import EditFinanceRecordModal from '@features/financeRecords/components/EditFina
 import FinanceRecordList from '@features/financeRecords/components/FinanceRecordList.vue'
 import Heading from '@shared/components/Heading.vue'
 import PageLayout from '@shared/layouts/PageLayout.vue'
+import SearchFiltersSection from '@features/financeRecords/components/SearchFinanceRecordsSection.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 </script>
@@ -14,6 +15,7 @@ import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 <template>
   <PageLayout>
     <Heading tag="h1">{{ FINANCES_COPY.FINANCES }}</Heading>
+    <SearchFiltersSection />
     <FinanceRecordList />
     <AddFinanceRecordButton />
 

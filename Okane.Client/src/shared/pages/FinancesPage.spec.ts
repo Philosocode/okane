@@ -12,6 +12,7 @@ const testIds = {
   EditFinanceRecordModal: 'EditFinanceRecordModal',
   Heading: 'Heading',
   FinanceRecordList: 'FinanceRecordList',
+  SearchFiltersSection: 'SearchFiltersSection',
 }
 
 const mountComponent = getMountComponent(FinancesPage, {
@@ -31,6 +32,9 @@ const mountComponent = getMountComponent(FinancesPage, {
       },
       FinanceRecordList: {
         template: `<div data-testid="${testIds.FinanceRecordList}" />`,
+      },
+      SearchFiltersSection: {
+        template: `<div data-testid="${testIds.SearchFiltersSection}" />`,
       },
     },
   },
@@ -73,6 +77,13 @@ test('renders a modal to edit a finance record', () => {
 test('renders a modal to delete a finance record', () => {
   commonAsserts.rendersElementWithTestId({
     testId: testIds.DeleteFinanceRecordModal,
+    wrapper: mountComponent(),
+  })
+})
+
+test('renders a modal to search finance records', () => {
+  commonAsserts.rendersElementWithTestId({
+    testId: testIds.SearchFiltersSection,
     wrapper: mountComponent(),
   })
 })

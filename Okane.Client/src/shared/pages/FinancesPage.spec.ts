@@ -1,8 +1,9 @@
 // Internal
 import FinancesPage from '@shared/pages/FinancesPage.vue'
 
-import { commonTests } from '@tests/utils/commonTests'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
+
+import { commonAsserts } from '@tests/utils/commonAsserts'
 
 const testIds = {
   AddFinanceRecordButton: 'AddFinanceRecordButton',
@@ -41,32 +42,37 @@ test('renders a page title', () => {
   expect(mainHeading.text()).toBe(FINANCES_COPY.FINANCES)
 })
 
-commonTests.rendersElementWithTestId({
-  testName: 'renders a list of finance records',
-  getWrapper: mountComponent,
-  testId: testIds.FinanceRecordList,
+test('renders a list of finance records', () => {
+  commonAsserts.rendersElementWithTestId({
+    testId: testIds.FinanceRecordList,
+    wrapper: mountComponent(),
+  })
 })
 
-commonTests.rendersElementWithTestId({
-  testName: 'renders a button to create a finance record',
-  getWrapper: mountComponent,
-  testId: testIds.AddFinanceRecordButton,
+test('renders a button to create a finance record', () => {
+  commonAsserts.rendersElementWithTestId({
+    testId: testIds.AddFinanceRecordButton,
+    wrapper: mountComponent(),
+  })
 })
 
-commonTests.rendersElementWithTestId({
-  testName: 'renders a modal to create a finance record',
-  getWrapper: mountComponent,
-  testId: testIds.CreateFinanceRecordModal,
+test('renders a modal to create a finance record', () => {
+  commonAsserts.rendersElementWithTestId({
+    testId: testIds.CreateFinanceRecordModal,
+    wrapper: mountComponent(),
+  })
 })
 
-commonTests.rendersElementWithTestId({
-  testName: 'renders a modal to edit a finance record',
-  getWrapper: mountComponent,
-  testId: testIds.EditFinanceRecordModal,
+test('renders a modal to edit a finance record', () => {
+  commonAsserts.rendersElementWithTestId({
+    testId: testIds.EditFinanceRecordModal,
+    wrapper: mountComponent(),
+  })
 })
 
-commonTests.rendersElementWithTestId({
-  testName: 'renders a modal to delete a finance record',
-  getWrapper: mountComponent,
-  testId: testIds.DeleteFinanceRecordModal,
+test('renders a modal to delete a finance record', () => {
+  commonAsserts.rendersElementWithTestId({
+    testId: testIds.DeleteFinanceRecordModal,
+    wrapper: mountComponent(),
+  })
 })

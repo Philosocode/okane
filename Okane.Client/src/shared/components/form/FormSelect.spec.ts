@@ -6,6 +6,8 @@ import FormSelect, { type FormSelectProps } from '@shared/components/form/FormSe
 
 import * as formUtils from '@shared/utils/form'
 
+import { commonAsserts } from '@tests/utils/commonAsserts'
+
 const props: FormSelectProps = {
   label: 'Cool label',
   name: 'Cool select',
@@ -47,23 +49,10 @@ test('renders the options', () => {
       modelValue: selectedValue,
     },
   })
-  const options = wrapper.findAll('option')
 
-  expect(options).toHaveLength(props.options.length)
-
-  options.forEach((option, idx) => {
-    const optionProp = props.options[idx]
-    expect(option.attributes('value')).toBe(optionProp.value)
-
-    const expectedText = optionProp.label ?? optionProp.value
-    expect(option.text()).toBe(expectedText)
-
-    let expectedSelectedValue = undefined
-    if (optionProp.value === selectedValue) {
-      expectedSelectedValue = ''
-    }
-
-    expect(option.attributes('selected')).toBe(expectedSelectedValue)
+  commonAsserts.rendersExpectedSelectOptions({
+    expectedOptions: props.options,
+    select: wrapper.get('select'),
   })
 })
 

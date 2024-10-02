@@ -8,6 +8,7 @@ import * as formUtils from '@shared/utils/form'
 
 const props: FormSelectProps = {
   label: 'Cool label',
+  name: 'Cool select',
   options: [
     { label: 'A', value: 'a' },
     { value: 'b' }, // For options without a label, the value should be displayed as a fallback.
@@ -33,7 +34,7 @@ test('renders a select with the expected attributes', () => {
     props,
   })
 
-  const select = wrapper.get('select')
+  const select = wrapper.get(`select[name='${props.name}']`)
   expect(select.attributes('data-testid')).toBe(testId)
   expect(select.attributes('id')).toBe(formControlId)
 })

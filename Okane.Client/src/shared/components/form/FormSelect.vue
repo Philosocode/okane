@@ -13,6 +13,7 @@ export type SelectOption = {
 export type FormSelectProps = {
   options: SelectOption[]
   label: string
+  name: string
 
   withHiddenLabel?: boolean
 }
@@ -26,7 +27,7 @@ const props = defineProps<FormSelectProps>()
     <label :class="{ label: true, 'visually-hidden': withHiddenLabel }" :for="controlId">
       {{ props.label }}
     </label>
-    <select class="select" :id="controlId" v-model="model" v-bind="$attrs">
+    <select class="select" :id="controlId" :name="props.name" v-model="model" v-bind="$attrs">
       <option
         v-for="option in options"
         :key="option.value"

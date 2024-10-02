@@ -9,6 +9,7 @@ const props = {
   isShowingRange: false,
   label: 'Test Label',
   operator: COMPARISON_OPERATOR.GTE,
+  operatorSelectName: 'coolOperator',
 }
 
 const testIds = {
@@ -31,7 +32,7 @@ test('renders a legend containing the label', () => {
 
 test('renders a select dropdown to select an operator', () => {
   const wrapper = mountComponent({ props })
-  const select = wrapper.getComponent(FormSelect)
+  const select = wrapper.get(`select[name='${props.operatorSelectName}']`)
   const options = select.findAll('option')
   const optionSet = new Set<string>()
   options.forEach((option) => {

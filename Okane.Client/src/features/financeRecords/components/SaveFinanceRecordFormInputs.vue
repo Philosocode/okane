@@ -47,6 +47,7 @@ const emit = defineEmits<{
       :model-value="formState.type"
       @update:model-value="emit('change', { type: $event })"
       :options="FINANCE_RECORD_TYPE_OPTIONS"
+      name="type"
       required
     />
   </div>

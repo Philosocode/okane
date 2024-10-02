@@ -149,7 +149,7 @@ describe('Type select', () => {
 
   test('renders a select element with the expected attributes', () => {
     const wrapper = mountComponent({ props })
-    const select = wrapper.get('select')
+    const select = wrapper.get(`select[name='type']`)
     expect(select.attributes()).toEqual(
       expect.objectContaining({
         id: expect.any(String),

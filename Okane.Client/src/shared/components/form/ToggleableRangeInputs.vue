@@ -10,6 +10,7 @@ type Props = {
   label: string
 
   operator?: COMPARISON_OPERATOR
+  operatorSelectName: string
 }
 
 const props = defineProps<Props>()
@@ -49,6 +50,7 @@ function toggleRange() {
           :model-value="props.operator"
           @update:model-value="emitChange"
           :label="SHARED_COPY.SEARCH.OPERATOR"
+          :name="props.operatorSelectName"
           :options="ALL_COMPARISON_OPERATOR_OPTIONS"
           with-hidden-label
         />

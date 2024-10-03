@@ -11,7 +11,7 @@ export const mapDate = createMappers({
    * @param d {Date}
    */
   dateTimeLocal(d: Date) {
-    return format(d, `yyyy-MM-dd'T'kk:mm`)
+    return format(d, `yyyy-MM-dd'T'HH:mm`)
   },
   dateOnlyTimestamp(d: Date) {
     return format(d, 'yyyy-MM-dd')

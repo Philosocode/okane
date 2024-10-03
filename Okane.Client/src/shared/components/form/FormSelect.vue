@@ -1,5 +1,7 @@
 <script setup lang="ts">
 // Internal
+import { VISUALLY_HIDDEN_CLASS } from '@shared/constants/styles'
+
 import { getUniqueFormControlId } from '@shared/utils/form'
 
 const model = defineModel<number | string>()
@@ -24,7 +26,7 @@ const props = defineProps<FormSelectProps>()
 
 <template>
   <div class="root">
-    <label :class="{ label: true, 'visually-hidden': withHiddenLabel }" :for="controlId">
+    <label :class="{ label: true, [VISUALLY_HIDDEN_CLASS]: withHiddenLabel }" :for="controlId">
       {{ props.label }}
     </label>
     <select class="select" :id="controlId" :name="props.name" v-model="model" v-bind="$attrs">
@@ -48,10 +50,6 @@ const props = defineProps<FormSelectProps>()
 
 .label {
   display: block;
-}
-
-.visually-hidden {
-  @include visually-hidden;
 }
 
 .select {

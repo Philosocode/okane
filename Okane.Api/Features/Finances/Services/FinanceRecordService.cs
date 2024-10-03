@@ -14,6 +14,7 @@ public interface IFinanceRecordService
     /// </summary>
     /// <param name="query"></param>
     /// <param name="parameters"></param>
+    /// <param name="userId"></param>
     /// <returns></returns>
     IQueryable<FinanceRecord> FilterQueryableFinanceRecords(
         IQueryable<FinanceRecord> query,

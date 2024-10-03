@@ -1,6 +1,6 @@
 // External
 import { flushPromises } from '@vue/test-utils'
-import { computed, defineComponent, toRef } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { http, HttpResponse } from 'msw'
 
 // Internal
@@ -33,13 +33,13 @@ const testIds = {
   noMoreItemsSlot: 'noMoreItemsSlot',
 }
 
+const searchFilters = DEFAULT_FINANCE_RECORD_SEARCH_FILTERS
+
 function getTestComponent(errorTemplate?: string) {
   return defineComponent({
     components: { FinanceRecordListItem, InfiniteScroller },
     setup() {
-      const queryResult = useInfiniteQueryFinanceRecords(
-        toRef(DEFAULT_FINANCE_RECORD_SEARCH_FILTERS),
-      )
+      const queryResult = useInfiniteQueryFinanceRecords(() => searchFilters)
       const items = computed(() => flattenPages(queryResult?.data?.value?.pages ?? []))
 
       return { queryResult, items }
@@ -97,7 +97,12 @@ afterAll(() => {
 })
 
 test('renders a loader while fetching items', async () => {
-  testServer.use(financeRecordHandlers.getPaginatedFinanceRecordsSuccess({ financeRecords }))
+  testServer.use(
+    financeRecordHandlers.getPaginatedFinanceRecordsSuccess({
+      financeRecords,
+      searchFilters,
+    }),
+  )
 
   const wrapper = mountComponent()
   const loader = wrapper.find(`div[data-testid="${testIds.loader}"]`)
@@ -105,7 +110,12 @@ test('renders a loader while fetching items', async () => {
 })
 
 test('renders the default slot when the response contains items', async () => {
-  testServer.use(financeRecordHandlers.getPaginatedFinanceRecordsSuccess({ financeRecords }))
+  testServer.use(
+    financeRecordHandlers.getPaginatedFinanceRecordsSuccess({
+      financeRecords,
+      searchFilters,
+    }),
+  )
 
   const wrapper = mountComponent()
 
@@ -121,6 +131,7 @@ describe('when there is no next page', () => {
       financeRecordHandlers.getPaginatedFinanceRecordsSuccess({
         financeRecords,
         hasNextPage: false,
+        searchFilters,
       }),
     )
   })
@@ -146,7 +157,12 @@ describe('when there is no next page', () => {
 
 describe('when the response contains no items', () => {
   beforeEach(() => {
-    testServer.use(financeRecordHandlers.getPaginatedFinanceRecordsSuccess({ financeRecords: [] }))
+    testServer.use(
+      financeRecordHandlers.getPaginatedFinanceRecordsSuccess({
+        financeRecords: [],
+        searchFilters,
+      }),
+    )
   })
 
   test('renders the noItems slot', async () => {
@@ -212,7 +228,7 @@ describe(`when there are more pages to fetch page`, () => {
   const page3FinanceRecord = createTestFinanceRecord({ description: 'page3FinanceRecord' })
 
   beforeEach(() => {
-    const apiRoute = getMSWURL(financeRecordAPIRoutes.getPaginatedList({ page: 0 }))
+    const apiRoute = getMSWURL(financeRecordAPIRoutes.getPaginatedList({ page: 0, searchFilters }))
 
     testServer.use(
       http.get(

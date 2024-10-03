@@ -82,7 +82,7 @@ test('does not render any error labels by default', () => {
 describe('Amount input', () => {
   test('renders the expected label', () => {
     const wrapper = mountComponent({ props })
-    const amountLabel = wrapper.findByText('label', FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.AMOUNT)
+    const amountLabel = wrapper.findByText('label', FINANCES_COPY.PROPERTIES.AMOUNT)
     expect(amountLabel.exists()).toBe(true)
   })
 
@@ -143,7 +143,7 @@ describe('Amount input', () => {
 describe('Type select', () => {
   test('renders the expected label', () => {
     const wrapper = mountComponent({ props })
-    const label = wrapper.findByText('label', FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.TYPE)
+    const label = wrapper.findByText('label', FINANCES_COPY.PROPERTIES.TYPE)
     expect(label.exists()).toBe(true)
   })
 
@@ -193,7 +193,7 @@ describe('Type select', () => {
 describe('Description input', () => {
   test('renders the expected label', () => {
     const wrapper = mountComponent({ props })
-    const label = wrapper.findByText('label', FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.DESCRIPTION)
+    const label = wrapper.findByText('label', FINANCES_COPY.PROPERTIES.DESCRIPTION)
     expect(label.exists()).toBe(true)
   })
 
@@ -230,7 +230,7 @@ describe('Description input', () => {
 describe('Happened at input', () => {
   test('renders the expected label', () => {
     const wrapper = mountComponent({ props })
-    const label = wrapper.findByText('label', FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.HAPPENED_AT)
+    const label = wrapper.findByText('label', FINANCES_COPY.PROPERTIES.HAPPENED_AT)
     expect(label.exists()).toBe(true)
   })
 

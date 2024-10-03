@@ -4,6 +4,7 @@ import type { InputHTMLAttributes } from 'vue'
 
 // Internal
 import { ARIA_LIVE } from '@shared/constants/aria'
+import { VISUALLY_HIDDEN_CLASS } from '@shared/constants/styles'
 
 import { getUniqueFormControlId } from '@shared/utils/form'
 
@@ -25,9 +26,11 @@ const errorLabelId = `${controlId}-error`
 
 <template>
   <div>
-    <label :class="{ label: true, 'visually-hidden': props.withHiddenLabel }" :for="controlId">{{
-      label
-    }}</label>
+    <label
+      :class="{ label: true, [VISUALLY_HIDDEN_CLASS]: props.withHiddenLabel }"
+      :for="controlId"
+      >{{ label }}</label
+    >
     <input
       class="input"
       v-bind="$attrs"
@@ -57,9 +60,5 @@ const errorLabelId = `${controlId}-error`
 
 .label {
   margin-bottom: var(--space-2xs);
-}
-
-.visually-hidden {
-  @include visually-hidden;
 }
 </style>

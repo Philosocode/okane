@@ -3,6 +3,7 @@ import FormInput, { type FormInputProps } from '@shared/components/form/FormInpu
 
 import { ARIA_LIVE } from '@shared/constants/aria'
 import { INPUT_TYPE } from '@shared/constants/form'
+import { VISUALLY_HIDDEN_CLASS } from '@shared/constants/styles'
 
 import * as formUtils from '@shared/utils/form'
 
@@ -44,9 +45,8 @@ test('renders a visually-hidden label when withHiddenLabel is true', () => {
   })
 
   const label = wrapper.get('label')
-  expect(label.classes()).toContain('visually-hidden')
+  expect(label.classes()).toContain(VISUALLY_HIDDEN_CLASS)
 })
-
 
 test('renders an input with the expected attributes', () => {
   const testId = 'cool-test-id'

@@ -4,6 +4,8 @@ import { expect } from 'vitest'
 // Internal
 import FormSelect, { type FormSelectProps } from '@shared/components/form/FormSelect.vue'
 
+import { VISUALLY_HIDDEN_CLASS } from '@shared/constants/styles'
+
 import * as formUtils from '@shared/utils/form'
 
 import { commonAsserts } from '@tests/utils/commonAsserts'
@@ -78,10 +80,10 @@ test('renders a label with the expected properties', () => {
   expect(label.attributes('for')).toBe(formControlId)
 })
 
-test('renders a visually-hidden label', () => {
+test('renders a visually-hidden label when withHiddenLabel is true', () => {
   const wrapper = mountComponent({
     props: { ...props, withHiddenLabel: true },
   })
   const label = wrapper.get('label')
-  expect(label.classes()).toContain('visually-hidden')
+  expect(label.classes()).toContain(VISUALLY_HIDDEN_CLASS)
 })

@@ -2,7 +2,7 @@
 import { http, HttpResponse } from 'msw'
 
 // Internal
-import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
+import { DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
 import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 
@@ -49,7 +49,7 @@ export const financeRecordHandlers = {
     const url = getMSWURL(
       financeRecordAPIRoutes.getPaginatedList({
         page: 0,
-        searchFilters: DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+        searchFilters: DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,
       }),
     )
     return http.get(url, () => {

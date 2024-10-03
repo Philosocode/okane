@@ -14,7 +14,7 @@ import { BUTTON_TYPE, INPUT_TYPE } from '@shared/constants/form'
 import { SHARED_COPY } from '@shared/constants/copy'
 import { SORT_DIRECTION_OPTIONS } from '@shared/constants/search'
 import {
-  DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+  DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,
   FINANCE_RECORD_SORT_FIELD_OPTIONS,
   SEARCH_FINANCE_RECORDS_TYPE_OPTIONS,
 } from '@features/financeRecords/constants/searchFinanceRecords'
@@ -40,7 +40,7 @@ function handleCancel() {
 }
 
 function handleReset() {
-  formState.value = { ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS }
+  formState.value = { ...DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS }
 }
 
 function handleSubmit() {

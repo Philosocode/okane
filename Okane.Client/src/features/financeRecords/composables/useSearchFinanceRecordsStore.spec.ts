@@ -1,11 +1,11 @@
 // Internal
-import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
+import { DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
 
 import { useSearchFinanceRecordsStore } from '@features/financeRecords/composables/useSearchFinanceRecordsStore'
 
 test('returns the search filters', () => {
   const store = useSearchFinanceRecordsStore()
-  expect(store.searchFilters).toEqual(DEFAULT_FINANCE_RECORD_SEARCH_FILTERS)
+  expect(store.searchFilters).toEqual(DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS)
 })
 
 test('returns the search modal display state', () => {

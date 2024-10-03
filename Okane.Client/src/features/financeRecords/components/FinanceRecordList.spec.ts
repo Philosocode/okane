@@ -4,7 +4,7 @@ import { flushPromises } from '@vue/test-utils'
 // Internal
 import FinanceRecordList from '@features/financeRecords/components/FinanceRecordList.vue'
 
-import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
+import { DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { financeRecordHandlers } from '@tests/msw/handlers/financeRecord'
 import { SHARED_COPY } from '@shared/constants/copy'
@@ -34,7 +34,7 @@ test('renders a list of finance records', async () => {
     financeRecordHandlers.getPaginatedFinanceRecordsSuccess({
       financeRecords,
       hasNextPage: false,
-      searchFilters: DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+      searchFilters: DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,
     }),
   )
 
@@ -58,7 +58,7 @@ test('renders the expected message if no records exist', async () => {
   testServer.use(
     financeRecordHandlers.getPaginatedFinanceRecordsSuccess({
       financeRecords: [],
-      searchFilters: DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+      searchFilters: DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,
     }),
   )
 

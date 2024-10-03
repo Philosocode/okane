@@ -2,7 +2,7 @@
 import { defineComponent, toValue } from 'vue'
 
 // Internal
-import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
+import { DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
 import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 import { INITIAL_PAGE } from '@shared/constants/request'
@@ -25,7 +25,7 @@ function getTestComponent(filters: FinanceRecordsSearchFilters) {
   })
 }
 
-const searchFilters = DEFAULT_FINANCE_RECORD_SEARCH_FILTERS
+const searchFilters = DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS
 const mountComponent = getMountComponent(getTestComponent(searchFilters), { withQueryClient: true })
 
 test('makes a request to fetch paginated finance records', () => {

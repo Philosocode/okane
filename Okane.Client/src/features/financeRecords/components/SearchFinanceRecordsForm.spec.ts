@@ -16,7 +16,7 @@ import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFina
 import { INPUT_TYPE } from '@shared/constants/form'
 import { SHARED_COPY } from '@shared/constants/copy'
 import {
-  DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+  DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,
   FINANCE_RECORD_SORT_FIELD_OPTIONS,
   SEARCH_FINANCE_RECORDS_TYPE_OPTIONS,
 } from '@features/financeRecords/constants/searchFinanceRecords'
@@ -212,7 +212,7 @@ describe('Save button', () => {
     const typeSelect = wrapper.get('select[name="type"]')
     await typeSelect.setValue(updates.type)
 
-    expect(searchStore.searchFilters).toEqual(DEFAULT_FINANCE_RECORD_SEARCH_FILTERS)
+    expect(searchStore.searchFilters).toEqual(DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS)
 
     const saveButton = wrapper.findByText('button', SHARED_COPY.ACTIONS.SAVE)
     await saveButton.trigger('submit')
@@ -224,7 +224,7 @@ describe('Save button', () => {
   test('does not update the search filters state when the form is invalid', async () => {
     const searchStore = useSearchFinanceRecordsStore()
     const initialSearchFilters = {
-      ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+      ...DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,
 
       // When the amountOperator is empty, that means an amount range is showing and both inputs need
       // to be populated.
@@ -269,14 +269,14 @@ describe('Cancel button', async () => {
     await cancelButton.trigger('click')
 
     expect(searchStore.modalIsShowing).toBe(false)
-    expect(searchStore.searchFilters).toEqual(DEFAULT_FINANCE_RECORD_SEARCH_FILTERS)
+    expect(searchStore.searchFilters).toEqual(DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS)
   })
 })
 
 describe('Reset button', async () => {
   test('resets the search filters state', async () => {
     const initialSearchFilters = {
-      ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+      ...DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,
       description: 'Initial description',
     }
 

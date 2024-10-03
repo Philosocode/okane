@@ -12,7 +12,7 @@ import { type SelectOption } from '@shared/components/form/FormSelect.vue'
 
 import { capitalize } from '@shared/utils/string'
 
-export const DEFAULT_FINANCE_RECORD_SEARCH_FILTERS: FinanceRecordsSearchFilters = {
+export const DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS: FinanceRecordsSearchFilters = {
   description: '',
   type: '',
 

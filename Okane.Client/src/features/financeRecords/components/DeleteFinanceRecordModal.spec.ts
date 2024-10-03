@@ -8,7 +8,7 @@ import { type HttpHandler } from 'msw'
 import DeleteFinanceRecordModal from '@features/financeRecords/components/DeleteFinanceRecordModal.vue'
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 
-import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
+import { DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { SHARED_COPY } from '@shared/constants/copy'
@@ -20,7 +20,7 @@ import { financeRecordHandlers } from '@tests/msw/handlers/financeRecord'
 import { testServer } from '@tests/msw/testServer'
 
 const financeRecordId = 540
-const searchFilters = DEFAULT_FINANCE_RECORD_SEARCH_FILTERS
+const searchFilters = DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS
 
 const helpers = {
   setFinanceRecordId() {

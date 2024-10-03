@@ -29,6 +29,7 @@ export const FINANCES_COPY = {
   },
 
   SEARCH_FINANCE_RECORDS_MODAL: {
+    APPLIED_SEARCH_FILTERS: 'Applied Search Filters',
     EDIT_SEARCH_FILTERS: 'Edit Search Filters',
     HAPPENED_AFTER: 'Happened after',
     HAPPENED_BEFORE: 'Happened before',

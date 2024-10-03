@@ -4,13 +4,34 @@ import { config, type DOMWrapper, type VueWrapper } from '@vue/test-utils'
 // Internal
 import type { HTMLElementTagName } from '@shared/types/html'
 
+type FindByTextOptions = {
+  isCaseInsensitive?: boolean
+  isExact?: boolean
+}
+
+function nodeMatchesText(
+  node: DOMWrapper<Element>,
+  text: string,
+  options?: FindByTextOptions,
+): boolean {
+  let nodeText = node.text()
+
+  if (options?.isCaseInsensitive) {
+    nodeText = nodeText.toLowerCase()
+    text = text.toLowerCase()
+  }
+
+  if (options?.isExact) return nodeText === text
+  return nodeText.includes(text)
+}
+
 function plugin(wrapper: VueWrapper) {
   return {
-    findAllByText(selector: HTMLElementTagName, text: string) {
-      return wrapper.findAll(selector).filter((node) => node.text().includes(text))
+    findAllByText(selector: HTMLElementTagName, text: string, options?: FindByTextOptions) {
+      return wrapper.findAll(selector).filter((node) => nodeMatchesText(node, text, options))
     },
-    findByText(selector: HTMLElementTagName, text: string) {
-      return wrapper.findAll(selector).find((node) => node.text().includes(text))
+    findByText(selector: HTMLElementTagName, text: string, options?: FindByTextOptions) {
+      return wrapper.findAll(selector).find((node) => nodeMatchesText(node, text, options))
     },
   }
 }
@@ -22,11 +43,13 @@ declare module '@vue/test-utils' {
     findAllByText<K extends HTMLElementTagName>(
       element: K,
       text: string,
+      options?: FindByTextOptions,
     ): DOMWrapper<HTMLElementTagNameMap[K]>[]
 
     findByText<K extends HTMLElementTagName>(
       element: K,
       text: string,
+      options?: FindByTextOptions,
     ): DOMWrapper<HTMLElementTagNameMap[K]>
   }
 }

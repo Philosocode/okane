@@ -27,3 +27,9 @@ test('renders a modal to edit search filters', () => {
   const modal = wrapper.findComponent(SearchFinanceRecordsModal)
   expect(modal.exists()).toBe(true)
 })
+
+test('renders a summary of applied search filters', () => {
+  const wrapper = mountComponent()
+  const summary = wrapper.findComponent(SearchFinanceRecordsSection)
+  expect(summary.exists()).toBe(true)
+})

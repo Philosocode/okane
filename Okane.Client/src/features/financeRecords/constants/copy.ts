@@ -17,15 +17,10 @@ export const FINANCES_COPY = {
     TYPE: 'Type',
   },
 
-  // TODO: Pull fields from FIELDS.
   SAVE_FINANCE_RECORD_MODAL: {
-    AMOUNT: 'Amount',
     CREATE_FINANCE_RECORD: 'Create Finance Record',
-    DESCRIPTION: 'Description',
     EDIT_FINANCE_RECORD: 'Edit Finance Record',
-    HAPPENED_AT: 'Happened At',
     SHOW_MODAL: 'Show save finance record modal.',
-    TYPE: 'Type',
   },
 
   SEARCH_FINANCE_RECORDS_MODAL: {

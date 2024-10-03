@@ -32,7 +32,7 @@ const emit = defineEmits<{
   <div class="first-row">
     <FormInput
       :error="props.formErrors.amount"
-      :label="FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.AMOUNT"
+      :label="FINANCES_COPY.PROPERTIES.AMOUNT"
       :max="FINANCE_RECORD_MAX_AMOUNT"
       :min="FINANCE_RECORD_MIN_AMOUNT"
       :model-value="formState.amount"
@@ -43,7 +43,7 @@ const emit = defineEmits<{
       :type="INPUT_TYPE.NUMBER"
     />
     <FormSelect
-      :label="FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.TYPE"
+      :label="FINANCES_COPY.PROPERTIES.TYPE"
       :model-value="formState.type"
       @update:model-value="emit('change', { type: $event })"
       :options="FINANCE_RECORD_TYPE_OPTIONS"
@@ -53,7 +53,7 @@ const emit = defineEmits<{
   </div>
   <FormInput
     :error="props.formErrors.description"
-    :label="FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.DESCRIPTION"
+    :label="FINANCES_COPY.PROPERTIES.DESCRIPTION"
     :maxlength="FINANCE_RECORD_DESCRIPTION_MAX_LENGTH"
     name="description"
     :model-value="formState.description"
@@ -63,7 +63,7 @@ const emit = defineEmits<{
   />
   <FormInput
     :error="props.formErrors.happenedAt"
-    :label="FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.HAPPENED_AT"
+    :label="FINANCES_COPY.PROPERTIES.HAPPENED_AT"
     name="happenedAt"
     required
     :type="INPUT_TYPE.DATETIME_LOCAL"

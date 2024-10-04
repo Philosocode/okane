@@ -12,11 +12,15 @@ const TestComponent = defineComponent({
   components: { ToggleMenu },
   props: {
     actions: Array,
+    menuId: String,
   },
   template: `
     <template>
-      <div data-testid="${outsideOfMenuTestId}" />
-      <ToggleMenu :actions="$props.actions" />
+      <div data-testid="${outsideOfMenuTestId}">Hello</div>
+      
+      <div>
+        <ToggleMenu :actions="$props.actions" :menu-id="$props.menuId" />
+      </div>
     </template>
   `,
 })
@@ -38,58 +42,83 @@ function getActions() {
   ]
 }
 
-test('renders a menu toggle', () => {
-  const wrapper = mountComponent()({
-    props: {
-      actions: getActions(),
-    },
-  })
+const props = {
+  actions: [],
+  menuId: 'toggle-menu-id',
+}
 
+const selectors = {
+  menu: 'ul[role="menu"]',
+  toggleButton: 'button[aria-haspopup="true"]',
+}
+
+test('renders a menu toggle', () => {
+  const wrapper = mountComponent()({ props })
   const menuToggle = wrapper.get('button')
+  expect(menuToggle.attributes('aria-haspopup')).toBe('true')
+  expect(menuToggle.attributes('aria-controls')).toBe(props.menuId)
+  expect(menuToggle.attributes('aria-expanded')).toBe('false')
+
   const title = menuToggle.get(`title`)
   expect(title.text()).toBe(SHARED_COPY.MENU.TOGGLE_MENU)
 })
 
 test('initially hides the menu', () => {
-  const wrapper = mountComponent()({
-    props: {
-      actions: getActions(),
-    },
-  })
-
-  const menu = wrapper.get('ul.menu')
-  expect(menu.isVisible()).toBe(false)
+  const wrapper = mountComponent()({ props })
+  const menu = wrapper.find(selectors.menu)
+  expect(menu.exists()).toBe(false)
 })
 
 describe('after clicking the menu toggle', () => {
-  function setUp() {
+  async function setUp() {
     const actions = getActions()
 
     const wrapper = mountComponent()({
-      props: { actions },
+      attachTo: document.body,
+      props: { ...props, actions },
     })
+
+    const toggleButton = wrapper.get(selectors.toggleButton)
+    await toggleButton.trigger('click')
 
     return { actions, wrapper }
   }
 
+  test('shows the menu', async () => {
+    const { wrapper } = await setUp()
+    const toggleButton = wrapper.get(selectors.toggleButton)
+    expect(toggleButton.attributes('aria-expanded')).toBe('true')
+
+    const menu = wrapper.get(selectors.menu)
+    expect(menu.attributes('id')).toBe(props.menuId)
+  })
+
   test('renders clickable menu actions', async () => {
-    const { actions, wrapper } = setUp()
+    const { actions, wrapper } = await setUp()
+    const menuLis = wrapper.findAll('li[role="presentation"]')
+    expect(menuLis).toHaveLength(actions.length)
 
-    for (const action of actions) {
-      const button = wrapper.findByText('button', action.text)
-      expect(button.exists()).toBe(true)
+    for (let i = 0; i < menuLis.length; i++) {
+      const menuButton = menuLis[i].get('button[role="menuitem"]')
+      expect(menuButton.text()).toBe(actions[i].text)
 
-      await button.trigger('click')
-      expect(action.onClick).toHaveBeenCalledOnce()
+      await menuButton.trigger('click')
+      expect(actions[i].onClick).toHaveBeenCalledOnce()
+
+      // After clicking an action, the menu should be closed and re-opened.
+      const menu = wrapper.find(selectors.menu)
+      expect(menu.exists()).toBe(false)
+
+      const toggleButton = wrapper.get(selectors.toggleButton)
+      await toggleButton.trigger('click')
     }
   })
 
   test('hides the menu when clicking away', async () => {
-    const { wrapper } = setUp()
+    const { wrapper } = await setUp()
     const outsideOfMenu = wrapper.get(`[data-testid="${outsideOfMenuTestId}"]`)
     await outsideOfMenu.trigger('click')
-
-    const menu = wrapper.get('ul.menu')
-    expect(menu.isVisible()).toBe(false)
+    const menu = wrapper.find(selectors.menu)
+    expect(menu.exists()).toBe(false)
   })
 })

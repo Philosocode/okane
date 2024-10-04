@@ -50,10 +50,16 @@ test('renders the description', () => {
   expect(description.exists()).toBe(true)
 })
 
-test('renders a menu', () => {
+test('renders a menu', async () => {
   const wrapper = mountComponent()
   const menuComponent = wrapper.findComponent(ToggleMenu)
   expect(menuComponent.exists()).toBe(true)
+
+  const toggleButton = menuComponent.get(`button[aria-haspopup]`)
+  await toggleButton.trigger('click')
+
+  const menu = wrapper.find('ul[role="menu"]')
+  expect(menu.attributes('id')).toBe(`toggle-menu-${financeRecord.id}`)
 })
 
 describe('with the menu open', () => {

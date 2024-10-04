@@ -2,7 +2,7 @@
 // External
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { onClickOutside } from '@vueuse/core'
-import { ref } from 'vue'
+import { ref, useTemplateRef } from 'vue'
 
 // Internal
 import { SHARED_COPY } from '@shared/constants/copy'
@@ -14,9 +14,10 @@ type MenuAction = {
 
 type Props = {
   actions: MenuAction[]
+  menuId: string
 }
 
-const rootRef = ref()
+const rootRef = useTemplateRef<HTMLDivElement>('rootRef')
 const props = defineProps<Props>()
 const menuIsShowing = ref(false)
 
@@ -32,13 +33,21 @@ function handleClick(callback: MenuAction['onClick']) {
 
 <template>
   <div class="root" ref="rootRef">
-    <button class="menu-toggle" @click="menuIsShowing = !menuIsShowing">
+    <button
+      aria-haspopup="true"
+      :aria-controls="props.menuId"
+      :aria-expanded="menuIsShowing"
+      class="menu-toggle"
+      @click="menuIsShowing = !menuIsShowing"
+    >
       <FontAwesomeIcon icon="fa-solid fa-ellipsis-vertical" :title="SHARED_COPY.MENU.TOGGLE_MENU" />
     </button>
 
-    <ul v-show="menuIsShowing" class="menu">
-      <li v-for="action in props.actions" :key="action.text">
-        <button class="menu-item" @click="handleClick(action.onClick)">{{ action.text }}</button>
+    <ul v-if="menuIsShowing" class="menu" :id="props.menuId" role="menu">
+      <li v-for="action in props.actions" :key="action.text" role="presentation">
+        <button class="menu-item" role="menuitem" @click="handleClick(action.onClick)">
+          {{ action.text }}
+        </button>
       </li>
     </ul>
   </div>

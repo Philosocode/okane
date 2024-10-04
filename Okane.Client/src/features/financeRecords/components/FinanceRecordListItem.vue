@@ -57,7 +57,7 @@ const menuActions = [
     </div>
 
     <div class="menu-container">
-      <ToggleMenu :actions="menuActions" is-showing />
+      <ToggleMenu :actions="menuActions" :menu-id="`toggle-menu-${financeRecord.id}`" is-showing />
     </div>
   </div>
 </template>

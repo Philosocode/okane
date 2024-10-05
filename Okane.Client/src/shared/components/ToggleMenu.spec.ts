@@ -4,6 +4,7 @@ import { defineComponent } from 'vue'
 // Internal
 import ToggleMenu from '@shared/components/ToggleMenu.vue'
 
+import { ARIA_ATTRIBUTES } from '@shared/constants/aria'
 import { SHARED_COPY } from '@shared/constants/copy'
 
 const outsideOfMenuTestId = 'outsideOfMenu'
@@ -49,15 +50,15 @@ const props = {
 
 const selectors = {
   menu: 'ul[role="menu"]',
-  toggleButton: 'button[aria-haspopup="true"]',
+  toggleButton: `button[${ARIA_ATTRIBUTES.HAS_POPUP}="true"]`,
 }
 
 test('renders a menu toggle', () => {
   const wrapper = mountComponent()({ props })
   const menuToggle = wrapper.get('button')
-  expect(menuToggle.attributes('aria-haspopup')).toBe('true')
-  expect(menuToggle.attributes('aria-controls')).toBe(props.menuId)
-  expect(menuToggle.attributes('aria-expanded')).toBe('false')
+  expect(menuToggle.attributes(ARIA_ATTRIBUTES.HAS_POPUP)).toBe('true')
+  expect(menuToggle.attributes(ARIA_ATTRIBUTES.CONTROLS)).toBe(props.menuId)
+  expect(menuToggle.attributes(ARIA_ATTRIBUTES.EXPANDED)).toBe('false')
 
   const title = menuToggle.get(`title`)
   expect(title.text()).toBe(SHARED_COPY.MENU.TOGGLE_MENU)
@@ -87,7 +88,7 @@ describe('after clicking the menu toggle', () => {
   test('shows the menu', async () => {
     const { wrapper } = await setUp()
     const toggleButton = wrapper.get(selectors.toggleButton)
-    expect(toggleButton.attributes('aria-expanded')).toBe('true')
+    expect(toggleButton.attributes(ARIA_ATTRIBUTES.EXPANDED)).toBe('true')
 
     const menu = wrapper.get(selectors.menu)
     expect(menu.attributes('id')).toBe(props.menuId)

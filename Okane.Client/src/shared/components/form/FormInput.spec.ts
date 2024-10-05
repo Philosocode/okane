@@ -1,9 +1,9 @@
 // Internal
 import FormInput, { type FormInputProps } from '@shared/components/form/FormInput.vue'
 
-import { ARIA_LIVE } from '@shared/constants/aria'
 import { INPUT_TYPE } from '@shared/constants/form'
 import { VISUALLY_HIDDEN_CLASS } from '@shared/constants/styles'
+import { ARIA_ATTRIBUTES, ARIA_LIVE } from '@shared/constants/aria'
 
 import * as formUtils from '@shared/utils/form'
 
@@ -103,8 +103,8 @@ describe('with an error', () => {
     })
 
     const input = wrapper.get('input')
-    expect(input.attributes('aria-describedby')).toBe(`${formControlId}-error`)
-    expect(input.attributes('aria-invalid')).toBe('true')
+    expect(input.attributes(ARIA_ATTRIBUTES.DESCRIBED_BY)).toBe(`${formControlId}-error`)
+    expect(input.attributes(ARIA_ATTRIBUTES.INVALID)).toBe('true')
   })
 
   test('renders the error text', () => {
@@ -114,7 +114,7 @@ describe('with an error', () => {
 
     const error = wrapper.get('.error')
     expect(error.text()).toBe(propsWithError.error)
-    expect(error.attributes('aria-live')).toBe(ARIA_LIVE.ASSERTIVE)
+    expect(error.attributes(ARIA_ATTRIBUTES.LIVE)).toBe(ARIA_LIVE.ASSERTIVE)
     expect(error.attributes('id')).toBe(`${formControlId}-error`)
   })
 })

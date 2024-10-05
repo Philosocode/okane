@@ -1,9 +1,9 @@
 // Internal
 import SaveFinanceRecordFormInputs from '@features/financeRecords/components/SaveFinanceRecordFormInputs.vue'
 
-import { ARIA_LIVE } from '@shared/constants/aria'
 import { INPUT_TYPE } from '@shared/constants/form'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
+import { ARIA_ATTRIBUTES, ARIA_LIVE } from '@shared/constants/aria'
 import {
   FINANCE_RECORD_DESCRIPTION_MAX_LENGTH,
   FINANCE_RECORD_MAX_AMOUNT,
@@ -60,7 +60,7 @@ const sharedTests = {
 
       expect(errorLabel.attributes()).toEqual(
         expect.objectContaining({
-          'aria-live': ARIA_LIVE.ASSERTIVE,
+          [ARIA_ATTRIBUTES.LIVE]: ARIA_LIVE.ASSERTIVE,
           id: `${element.element.id}-error`,
         }),
       )

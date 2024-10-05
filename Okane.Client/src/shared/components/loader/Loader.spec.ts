@@ -1,6 +1,8 @@
 // Internal
 import Loader from '@shared/components/loader/Loader.vue'
 
+import { ARIA_ATTRIBUTES } from '@shared/constants/aria'
+
 const mountComponent = getMountComponent(Loader)
 
 test('renders an accessible SVG with a default title', () => {
@@ -12,7 +14,7 @@ test('renders an accessible SVG with a default title', () => {
   expect(title.text()).toBe('Loading...')
 
   const spinner = svg.get('g')
-  expect(spinner.attributes('aria-hidden')).toBe('true')
+  expect(spinner.attributes(ARIA_ATTRIBUTES.HIDDEN)).toBe('true')
 })
 
 test('renders with the passed title', () => {

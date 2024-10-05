@@ -1,0 +1,4 @@
+GET {{BASE_URL}}/finance-records/stats
+Authorization: {{AUTH_HEADER}}
+
+HTTP 200

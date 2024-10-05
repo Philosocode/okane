@@ -51,6 +51,7 @@ watch(
       aria-modal="true"
       :aria-labelledby="props.modalHeadingId"
       class="modal"
+      :data-disable-document-scroll="props.isShowing"
       ref="dialogRef"
       v-bind="$attrs"
       @close="emitModalClose"

@@ -1,6 +1,7 @@
 // Internal
 import Modal from '@shared/components/modal/Modal.vue'
 
+import { ARIA_ATTRIBUTES } from '@shared/constants/aria'
 import { DATA_ATTRIBUTES } from '@shared/constants/dataAttributes'
 import { SHARED_COPY } from '@shared/constants/copy'
 
@@ -23,9 +24,9 @@ const mountComponent = getMountComponent(Modal, {
 test('renders a dialog', () => {
   const wrapper = mountComponent({ props })
   const dialog = wrapper.get('dialog')
-  expect(dialog.attributes('aria-modal')).toBe('true')
-  expect(dialog.attributes('aria-labelledby')).toBe(props.modalHeadingId)
-  expect(dialog.attributes('data-disable-document-scroll')).toBe('true')
+  expect(dialog.attributes(ARIA_ATTRIBUTES.MODAL)).toBe('true')
+  expect(dialog.attributes(ARIA_ATTRIBUTES.LABELLED_BY)).toBe(props.modalHeadingId)
+  expect(dialog.attributes(DATA_ATTRIBUTES.DISABLE_DOCUMENT_SCROLL)).toBe('true')
 })
 
 test('does not render the modal content when the modal is hidden', () => {

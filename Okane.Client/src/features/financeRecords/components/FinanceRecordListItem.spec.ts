@@ -7,6 +7,7 @@ import { type VueWrapper } from '@vue/test-utils'
 import FinanceRecordListItem from '@features/financeRecords/components/FinanceRecordListItem.vue'
 import ToggleMenu from '@shared/components/ToggleMenu.vue'
 
+import { ARIA_ATTRIBUTES } from '@shared/constants/aria'
 import { FINANCE_RECORD_TIMESTAMP_FORMAT } from '@features/financeRecords/constants/financeRecordList'
 import { SHARED_COPY } from '@shared/constants/copy'
 
@@ -55,7 +56,7 @@ test('renders a menu', async () => {
   const menuComponent = wrapper.findComponent(ToggleMenu)
   expect(menuComponent.exists()).toBe(true)
 
-  const toggleButton = menuComponent.get(`button[aria-haspopup]`)
+  const toggleButton = menuComponent.get(`button[${ARIA_ATTRIBUTES.HAS_POPUP}]`)
   await toggleButton.trigger('click')
 
   const menu = wrapper.find('ul[role="menu"]')

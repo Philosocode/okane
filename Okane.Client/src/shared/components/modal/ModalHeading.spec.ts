@@ -3,7 +3,7 @@ import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 
 const mountComponent = getMountComponent(ModalHeading)
 
-test('renders an h3 containing the passed content', () => {
+test('renders a specific heading type containing the passed content', () => {
   const text = 'Hello world'
   const wrapper = mountComponent({
     slots: {
@@ -13,4 +13,13 @@ test('renders an h3 containing the passed content', () => {
 
   const heading = wrapper.find('h3')
   expect(heading.text()).toBe(text)
+})
+
+test('passes extra attributes', () => {
+  const testId = 'coolTestId'
+  const wrapper = mountComponent({
+    props: { 'data-testid': testId },
+  })
+  const heading = wrapper.find('h3')
+  expect(heading.attributes('data-testid')).toBe(testId)
 })

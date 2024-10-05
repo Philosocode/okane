@@ -106,6 +106,15 @@ describe('Amount input', () => {
     expect(inputElement.value).toBe(formState.amount.toString())
   })
 
+  test('focuses the input on mount', () => {
+    const wrapper = mountComponent({
+      attachTo: document.body,
+      props,
+    })
+    const input = wrapper.get(elementSelectors.amountInput)
+    expect(input.element).toBe(document.activeElement)
+  })
+
   describe('validity tests', () => {
     test.each([
       { amount: FINANCE_RECORD_MIN_AMOUNT, isValid: true },

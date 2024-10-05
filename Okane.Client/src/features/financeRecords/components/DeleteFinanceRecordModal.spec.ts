@@ -16,6 +16,7 @@ import { SHARED_COPY } from '@shared/constants/copy'
 import * as deleteMutation from '@features/financeRecords/composables/useDeleteFinanceRecordMutation'
 import { useDeleteFinanceRecordStore } from '@features/financeRecords/composables/useDeleteFinanceRecordStore'
 
+import { commonAsserts } from '@tests/utils/commonAsserts'
 import { financeRecordHandlers } from '@tests/msw/handlers/financeRecord'
 import { testServer } from '@tests/msw/testServer'
 
@@ -51,6 +52,13 @@ test('renders the modal heading', () => {
   const wrapper = mountComponent()
   const heading = wrapper.findComponent(ModalHeading)
   expect(heading.text()).toBe(FINANCES_COPY.DELETE_FINANCE_RECORD_MODAL.DELETE_FINANCE_RECORD)
+})
+
+test('renders an accessible dialog', () => {
+  helpers.setFinanceRecordId()
+
+  const wrapper = mountComponent()
+  commonAsserts.rendersAnAccessibleDialog({ dialog: wrapper.get('dialog') })
 })
 
 test('renders the confirmation text', () => {

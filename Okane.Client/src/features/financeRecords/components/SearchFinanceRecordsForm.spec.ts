@@ -57,6 +57,12 @@ describe('Description input', () => {
     const searchStore = useSearchFinanceRecordsStore()
     expect(searchStore.searchFilters.description).toBe(description)
   })
+
+  test('focuses the input on mount', async () => {
+    const wrapper = mountComponent({ attachTo: document.body })
+    const input = wrapper.get('input[name="description"]')
+    expect(input.element).toBe(document.activeElement)
+  })
 })
 
 describe('Type select', () => {

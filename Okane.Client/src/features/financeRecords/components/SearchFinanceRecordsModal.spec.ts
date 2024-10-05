@@ -7,6 +7,8 @@ import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
 import { useSearchFinanceRecordsStore } from '@features/financeRecords/composables/useSearchFinanceRecordsStore'
 
+import { commonAsserts } from '@tests/utils/commonAsserts'
+
 const mountComponent = getMountComponent(SearchFinanceRecordsModal, {
   global: {
     stubs: {
@@ -24,6 +26,11 @@ test('renders the modal heading', () => {
   const wrapper = mountComponent()
   const modalHeading = wrapper.getComponent(ModalHeading)
   expect(modalHeading.text()).toBe(FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.EDIT_SEARCH_FILTERS)
+})
+
+test('renders an accessible dialog', () => {
+  const wrapper = mountComponent()
+  commonAsserts.rendersAnAccessibleDialog({ dialog: wrapper.get('dialog') })
 })
 
 test('renders a form to edit finance records search filters', () => {

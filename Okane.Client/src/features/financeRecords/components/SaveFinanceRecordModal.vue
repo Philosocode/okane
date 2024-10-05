@@ -28,6 +28,7 @@ const emit = defineEmits<{
   (event: 'submit'): void
 }>()
 
+const modalHeadingId = 'save-finance-record-modal-haeding'
 const formRef = useTemplateRef<HTMLFormElement>('form')
 
 function handleChange(updates: Partial<SaveFinanceRecordFormState>): void {
@@ -46,8 +47,8 @@ function handleSave() {
 </script>
 
 <template>
-  <Modal :is-showing="isShowing" @close="handleClose">
-    <ModalHeading>{{ title }}</ModalHeading>
+  <Modal :is-showing="isShowing" :modal-heading-id="modalHeadingId" @close="handleClose">
+    <ModalHeading :id="modalHeadingId">{{ title }}</ModalHeading>
 
     <form ref="form" @submit.prevent class="form">
       <SaveFinanceRecordFormInputs

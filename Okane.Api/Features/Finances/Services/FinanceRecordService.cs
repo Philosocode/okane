@@ -42,6 +42,7 @@ public class FinanceRecordService : IFinanceRecordService
 
         if (parameters.Description is not null)
         {
+            // TODO(70) Use tsvector.
             query = query.Where(
                 r => EF.Functions.ILike(r.Description, $"%{parameters.Description}%")
             );

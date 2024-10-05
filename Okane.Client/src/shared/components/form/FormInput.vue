@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // External
-import type { InputHTMLAttributes } from 'vue'
+import { type InputHTMLAttributes, onMounted, useTemplateRef } from 'vue'
 
 // Internal
 import { ARIA_LIVE } from '@shared/constants/aria'
@@ -13,15 +13,21 @@ export interface FormInputProps extends /* @vue-ignore */ InputHTMLAttributes {
   name: string
 
   error?: string
+  focusOnMount?: boolean
   type?: InputHTMLAttributes['type']
   withHiddenLabel?: boolean
 }
 
 const controlId = getUniqueFormControlId()
+const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
 const model = defineModel<number | string>()
 const props = defineProps<FormInputProps>()
 
 const errorLabelId = `${controlId}-error`
+
+onMounted(() => {
+  if (props.focusOnMount) inputRef.value?.focus()
+})
 </script>
 
 <template>
@@ -33,6 +39,7 @@ const errorLabelId = `${controlId}-error`
     >
     <input
       class="input"
+      ref="inputRef"
       v-bind="$attrs"
       v-model="model"
       :aria-describedby="props.error ? errorLabelId : undefined"

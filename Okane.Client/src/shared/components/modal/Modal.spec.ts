@@ -3,7 +3,10 @@ import Modal from '@shared/components/modal/Modal.vue'
 
 import { SHARED_COPY } from '@shared/constants/copy'
 
-const isShowingProps = { isShowing: true }
+const props = {
+  isShowing: true,
+  modalHeadingId: 'cool-heading-id',
+}
 
 const mountComponent = getMountComponent(Modal, {
   global: {
@@ -17,16 +20,15 @@ const mountComponent = getMountComponent(Modal, {
 // These tests are a bit bare-bones because, at the moment, jsdom doesn't properly support
 // HTMLDialogElement (e.g. show, showModal, close). See: https://github.com/jsdom/jsdom/issues/3294
 test('renders a dialog', () => {
-  const wrapper = mountComponent({
-    props: isShowingProps,
-  })
-
-  expect(wrapper.find('dialog').exists()).toBe(true)
+  const wrapper = mountComponent({ props })
+  const dialog = wrapper.get('dialog')
+  expect(dialog.attributes('aria-modal')).toBe('true')
+  expect(dialog.attributes('aria-labelledby')).toBe(props.modalHeadingId)
 })
 
 test('does not render the modal content when the modal is hidden', () => {
   const wrapper = mountComponent({
-    props: { isShowing: false },
+    props: { ...props, isShowing: false },
   })
 
   const button = wrapper.find('button')
@@ -34,10 +36,7 @@ test('does not render the modal content when the modal is hidden', () => {
 })
 
 test('renders a close button that closes the modal', async () => {
-  const wrapper = mountComponent({
-    props: isShowingProps,
-  })
-
+  const wrapper = mountComponent({ props })
   const closeButton = wrapper.get('button')
   const title = closeButton.get('title')
   expect(title.text()).toBe(SHARED_COPY.MODAL.CLOSE_MODAL)
@@ -48,10 +47,19 @@ test('renders a close button that closes the modal', async () => {
 
 test('renders the slot content', () => {
   const wrapper = mountComponent({
-    props: isShowingProps,
+    props,
     slots: { default: '<h1>Hello world</h1>' },
   })
 
   const modal = wrapper.getComponent(Modal)
   expect(modal.get('h1').text()).toBe('Hello world')
+})
+
+test('passes extra attributes', () => {
+  const id = 'dialogId'
+  const wrapper = mountComponent({
+    props: { ...props, id },
+  })
+  const dialog = wrapper.find(`#${id}`)
+  expect(dialog.exists()).toBe(true)
 })

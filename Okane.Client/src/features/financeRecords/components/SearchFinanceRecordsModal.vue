@@ -14,6 +14,7 @@ import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types
 
 import { useSearchFinanceRecordsStore } from '@features/financeRecords/composables/useSearchFinanceRecordsStore'
 
+const modalHeadingId = 'search-finance-records-modal-heading'
 const formState = ref<FinanceRecordsSearchFilters>({ ...DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS })
 const searchStore = useSearchFinanceRecordsStore()
 
@@ -23,8 +24,12 @@ function handleClose() {
 </script>
 
 <template>
-  <Modal :is-showing="searchStore.modalIsShowing" @close="handleClose">
-    <ModalHeading>{{
+  <Modal
+    :is-showing="searchStore.modalIsShowing"
+    :modal-heading-id="modalHeadingId"
+    @close="handleClose"
+  >
+    <ModalHeading :id="modalHeadingId">{{
       FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.EDIT_SEARCH_FILTERS
     }}</ModalHeading>
     <SearchFinanceRecordsForm :form-state="formState" />

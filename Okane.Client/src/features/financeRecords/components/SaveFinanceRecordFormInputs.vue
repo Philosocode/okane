@@ -32,6 +32,7 @@ const emit = defineEmits<{
   <div class="first-row">
     <FormInput
       :error="props.formErrors.amount"
+      focus-on-mount
       :label="FINANCES_COPY.PROPERTIES.AMOUNT"
       :max="FINANCE_RECORD_MAX_AMOUNT"
       :min="FINANCE_RECORD_MIN_AMOUNT"

@@ -8,6 +8,7 @@ import { SHARED_COPY } from '@shared/constants/copy'
 
 import { getInitialFormErrors } from '@shared/utils/form'
 
+import { commonAsserts } from '@tests/utils/commonAsserts'
 import { createTestSaveFinanceRecordFormState } from '@tests/factories/financeRecord'
 
 const formState = createTestSaveFinanceRecordFormState()
@@ -48,6 +49,11 @@ test('renders the modal heading', () => {
   const wrapper = mountComponent()
   const heading = wrapper.getComponent(ModalHeading)
   expect(heading.text()).toBe(props.title)
+})
+
+test('renders an accessible dialog', () => {
+  const wrapper = mountComponent()
+  commonAsserts.rendersAnAccessibleDialog({ dialog: wrapper.get('dialog') })
 })
 
 test('renders the form inputs', () => {

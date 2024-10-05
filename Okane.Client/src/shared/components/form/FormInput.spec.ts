@@ -66,6 +66,21 @@ test('renders an input with the expected attributes', () => {
   )
 })
 
+test('does not focus the input by default', async () => {
+  const wrapper = mountComponent({ attachTo: document.body, props })
+  const input = wrapper.get('input')
+  expect(input.element).not.toBe(document.activeElement)
+})
+
+test('focuses the input on mount when focusOnMount is true', async () => {
+  const wrapper = mountComponent({
+    attachTo: document.body,
+    props: { ...props, focusOnMount: true },
+  })
+  const input = wrapper.get('input')
+  expect(input.element).toBe(document.activeElement)
+})
+
 test('typing in the input updates its value', () => {
   const wrapper = mountComponent({ props })
   const input = wrapper.get('input')

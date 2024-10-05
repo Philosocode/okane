@@ -2,9 +2,16 @@
 import { type DOMWrapper, type VueWrapper } from '@vue/test-utils'
 
 // Internal
+import ModalHeading from '@shared/components/modal/ModalHeading.vue'
+
 import { type SelectOption } from '@shared/components/form/FormSelect.vue'
 
 export const commonAsserts = {
+  rendersAnAccessibleDialog(args: { dialog: Omit<DOMWrapper<Element>, 'exists'> }) {
+    const dialogLabelledBy = args.dialog.attributes('aria-labelledby')
+    const heading = args.dialog.getComponent(ModalHeading)
+    expect(heading.attributes('id')).toBe(dialogLabelledBy)
+  },
   rendersExpectedSelectOptions(args: {
     expectedOptions: SelectOption[]
     select: Omit<DOMWrapper<Element>, 'exists'>

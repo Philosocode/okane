@@ -56,6 +56,7 @@ function handleSubmit() {
   <div>
     <form class="form" ref="form" @submit.prevent="handleSubmit">
       <FormInput
+        focus-on-mount
         :label="FINANCES_COPY.PROPERTIES.DESCRIPTION"
         v-model="formState.description"
         name="description"

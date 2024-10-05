@@ -12,6 +12,7 @@ import type { FinanceRecord } from '@features/financeRecords/types/financeRecord
 
 import { useDeleteFinanceRecordStore } from '@features/financeRecords/composables/useDeleteFinanceRecordStore'
 import { useSaveFinanceRecordStore } from '@features/financeRecords/composables/useSaveFinanceRecordStore'
+import { computed } from 'vue'
 
 type Props = {
   financeRecord: FinanceRecord
@@ -19,7 +20,9 @@ type Props = {
 
 const { financeRecord } = defineProps<Props>()
 
-const dateTime = formatDate(financeRecord.happenedAt, FINANCE_RECORD_TIMESTAMP_FORMAT)
+const dateTime = computed(() =>
+  formatDate(financeRecord.happenedAt, FINANCE_RECORD_TIMESTAMP_FORMAT),
+)
 
 const saveStore = useSaveFinanceRecordStore()
 const deleteStore = useDeleteFinanceRecordStore()

@@ -80,7 +80,7 @@ public class TokenServiceTests : DatabaseTest
     [Fact]
     public async Task GenerateRefreshTokenAsync_ReturnsANewUniqueRefreshToken()
     {
-        var apiUser = DbContextUtils.AddApiUser(Db);
+        var apiUser = UserUtils.AddApiUser(Db);
         InsertRefreshToken(_guids[0].ToString(), apiUser.Id);
         await Db.SaveChangesAsync();
 
@@ -103,7 +103,7 @@ public class TokenServiceTests : DatabaseTest
     [Fact]
     public async Task RevokeRefreshTokenAsync_UpdatesTheRevokedAtField()
     {
-        var apiUser = DbContextUtils.AddApiUser(Db);
+        var apiUser = UserUtils.AddApiUser(Db);
         InsertRefreshToken(_guids[0].ToString(), apiUser.Id);
         RefreshToken refreshTokenToRevoke = InsertRefreshToken(_guids[1].ToString(), apiUser.Id);
 
@@ -121,7 +121,7 @@ public class TokenServiceTests : DatabaseTest
     [Fact]
     public async Task RevokeRefreshTokenAsync_DoesNothing_WhenTokenNotFound()
     {
-        var apiUser = DbContextUtils.AddApiUser(Db);
+        var apiUser = UserUtils.AddApiUser(Db);
         InsertRefreshToken(_guids[0].ToString(), apiUser.Id);
         await Db.SaveChangesAsync();
 
@@ -134,7 +134,7 @@ public class TokenServiceTests : DatabaseTest
     [Fact]
     public async Task RevokeRefreshTokenAsync_DoesNothing_WhenTokenBelongsToDifferentUser()
     {
-        var apiUser = DbContextUtils.AddApiUser(Db);
+        var apiUser = UserUtils.AddApiUser(Db);
         RefreshToken refreshToken = InsertRefreshToken(_guids[0].ToString(), apiUser.Id);
         await Db.SaveChangesAsync();
 
@@ -147,7 +147,7 @@ public class TokenServiceTests : DatabaseTest
     [Fact]
     public async Task RevokeRefreshTokenAsync_DoesNothing_WhenTokenAlreadyRevoked()
     {
-        var apiUser = DbContextUtils.AddApiUser(Db);
+        var apiUser = UserUtils.AddApiUser(Db);
         var revokedAt = new DateTime(2024, 1, 1).ToUniversalTime();
         var alreadyRevokedRefreshToken = new RefreshToken
         {

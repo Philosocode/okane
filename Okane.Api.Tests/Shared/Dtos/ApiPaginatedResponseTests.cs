@@ -15,7 +15,7 @@ public class ApiPaginatedResponseTests
     {
         private async Task SetUp(int n = PageQueryParameters.DefaultPageSize)
         {
-            var user = DbContextUtils.AddApiUser(Db);
+            var user = UserUtils.AddApiUser(Db);
 
             n = int.Max(1, n);
 

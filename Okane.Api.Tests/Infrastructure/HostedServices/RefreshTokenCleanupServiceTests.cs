@@ -20,7 +20,7 @@ public class RefreshTokenCleanupServiceTests(PostgresApiFactory apiFactory) : Da
     [Fact]
     public async Task RemovesExpiredAndRevokedTokens()
     {
-        ApiUser user = DbContextUtils.AddApiUser(Db);
+        ApiUser user = UserUtils.AddApiUser(Db);
 
         var expiredToken = new RefreshToken
         {

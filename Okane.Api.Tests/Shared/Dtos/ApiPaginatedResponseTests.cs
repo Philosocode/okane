@@ -11,34 +11,20 @@ namespace Okane.Api.Tests.Shared.Dtos;
 
 public class ApiPaginatedResponseTests
 {
-    public class CreateAsync : ApiPaginatedResponseTests, IDisposable
+    public class CreateAsync(PostgresApiFactory apiFactory) : DatabaseTest(apiFactory)
     {
-        private readonly InMemoryContextFactory _contextFactory = new();
-        private readonly ApiDbContext _db;
-
-        public CreateAsync()
-        {
-            _db = _contextFactory.CreateContext();
-        }
-
-        public void Dispose()
-        {
-            _db.Dispose();
-            _contextFactory.Dispose();
-        }
-
         private async Task SetUp(int n = PageQueryParameters.DefaultPageSize)
         {
-            var user = DbContextUtils.AddApiUser(_db);
+            var user = DbContextUtils.AddApiUser(Db);
 
             n = int.Max(1, n);
 
             for (var i = 0; i < n; i++)
             {
-                _db.Add(FinanceRecordStubFactory.Create(user.Id));
+                Db.Add(FinanceRecordStubFactory.Create(user.Id));
             }
 
-            await _db.SaveChangesAsync();
+            await Db.SaveChangesAsync();
         }
 
         [Fact]
@@ -48,7 +34,7 @@ public class ApiPaginatedResponseTests
             await SetUp(n);
 
             var response = await ApiPaginatedResponse<FinanceRecord>.CreateAsync(
-                _db.FinanceRecords,
+                Db.FinanceRecords,
                 new PageQueryParameters()
             );
 
@@ -62,14 +48,14 @@ public class ApiPaginatedResponseTests
             await SetUp(n);
 
             var response = await ApiPaginatedResponse<FinanceRecord>.CreateAsync(
-                _db.FinanceRecords,
+                Db.FinanceRecords,
                 new PageQueryParameters { PageSize = 1 }
             );
 
             response.HasNextPage.Should().BeTrue();
 
             response = await ApiPaginatedResponse<FinanceRecord>.CreateAsync(
-                _db.FinanceRecords,
+                Db.FinanceRecords,
                 new PageQueryParameters { Page = 2, PageSize = 1 }
             );
 
@@ -82,14 +68,14 @@ public class ApiPaginatedResponseTests
             await SetUp();
 
             var response = await ApiPaginatedResponse<FinanceRecord>.CreateAsync(
-                _db.FinanceRecords,
+                Db.FinanceRecords,
                 new PageQueryParameters { Page = PageQueryParameters.InitialPage }
             );
 
             response.HasPreviousPage.Should().BeFalse();
 
             response = await ApiPaginatedResponse<FinanceRecord>.CreateAsync(
-                _db.FinanceRecords,
+                Db.FinanceRecords,
                 new PageQueryParameters { Page = PageQueryParameters.InitialPage + 1 }
             );
 
@@ -101,7 +87,7 @@ public class ApiPaginatedResponseTests
         {
             await SetUp();
 
-            var query = _db.FinanceRecords;
+            var query = Db.FinanceRecords;
             var response = await ApiPaginatedResponse<FinanceRecord>.CreateAsync(
                 query,
                 new PageQueryParameters()
@@ -116,7 +102,7 @@ public class ApiPaginatedResponseTests
         {
             await SetUp();
 
-            var query = _db.FinanceRecords;
+            var query = Db.FinanceRecords;
             var response = await ApiPaginatedResponse<FinanceRecord>.CreateAsync(
                 query,
                 new PageQueryParameters { Page = -1 }
@@ -137,7 +123,7 @@ public class ApiPaginatedResponseTests
         {
             await SetUp();
 
-            var query = _db.FinanceRecords;
+            var query = Db.FinanceRecords;
             var response = await ApiPaginatedResponse<FinanceRecord>.CreateAsync(
                 query,
                 new PageQueryParameters { PageSize = 0 }

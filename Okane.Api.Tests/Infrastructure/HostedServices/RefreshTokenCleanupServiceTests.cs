@@ -12,18 +12,15 @@ using Okane.Api.Tests.Testing.Utils;
 
 namespace Okane.Api.Tests.Infrastructure.HostedServices;
 
-public class RefreshTokenCleanupServiceTests
+public class RefreshTokenCleanupServiceTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFactory)
 {
-    private readonly InMemoryContextFactory _contextFactory = new();
     private readonly IDateTimeWrapper _dateTimeWrapper = new TestingDateTimeWrapper();
-
     private readonly ILogger<RefreshTokenCleaner> _logger = Substitute.For<ILogger<RefreshTokenCleaner>>();
 
     [Fact]
     public async Task RemovesExpiredAndRevokedTokens()
     {
-        ApiDbContext db = _contextFactory.CreateContext();
-        ApiUser user = DbContextUtils.AddApiUser(db);
+        ApiUser user = DbContextUtils.AddApiUser(Db);
 
         var expiredToken = new RefreshToken
         {
@@ -55,19 +52,19 @@ public class RefreshTokenCleanupServiceTests
             ExpiresAt = _dateTimeWrapper.UtcNow.AddDays(1)
         };
 
-        await db.AddRangeAsync([
+        await Db.AddRangeAsync([
             expiredToken,
             revokedToken,
             revokedAndExpiredToken,
             validToken
         ]);
 
-        await db.SaveChangesAsync();
+        await Db.SaveChangesAsync();
 
-        var cleaner = new RefreshTokenCleaner(_dateTimeWrapper, db, _logger);
+        var cleaner = new RefreshTokenCleaner(_dateTimeWrapper, Db, _logger);
         await cleaner.ExecuteAsync(CancellationToken.None);
 
-        List<RefreshToken> remainingRefreshTokens = await db.RefreshTokens.ToListAsync();
+        List<RefreshToken> remainingRefreshTokens = await Db.RefreshTokens.ToListAsync();
         remainingRefreshTokens.Should().ContainSingle(t => t.Token == validToken.Token);
     }
 }

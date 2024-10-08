@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using NpgsqlTypes;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Infrastructure.Database.Constants;
 using Okane.Api.Infrastructure.Database.Entities;
@@ -17,6 +18,8 @@ public class FinanceRecord : IOwnedEntity
     [MaxLength(DbConstants.MaxStringLength)]
     public required string Description { get; set; }
 
+    public NpgsqlTsVector SearchVector { get; set; } = default!;
+
     public required DateTime HappenedAt { get; set; }
 
     public required FinanceRecordType Type { get; set; }
@@ -30,6 +33,15 @@ public class FinanceRecordEntityConfiguration : IEntityTypeConfiguration<Finance
 {
     public void Configure(EntityTypeBuilder<FinanceRecord> builder)
     {
+        builder
+            .HasGeneratedTsVectorColumn(
+                fr => fr.SearchVector,
+                "english",
+                fr => new { fr.Description }
+            )
+            .HasIndex(fr => fr.SearchVector)
+            .HasMethod("GIN");
+
         builder.Property<DateTime>("CreatedAt")
             .HasDefaultValueSql("NOW()");
     }

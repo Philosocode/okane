@@ -88,7 +88,7 @@ public class GetFinanceRecordsStatsTests(PostgresApiFactory apiFactory) : Databa
         var stats = await FetchStatsAsync("description=Goodbye");
         stats.Should().BeEquivalentTo(s_emptyStats);
 
-        stats = await FetchStatsAsync("description=llo wor");
+        stats = await FetchStatsAsync("description=hello");
         stats.Should().BeEquivalentTo(matchingStats);
     }
 

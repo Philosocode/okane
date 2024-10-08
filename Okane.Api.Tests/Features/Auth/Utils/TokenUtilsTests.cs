@@ -69,6 +69,6 @@ public class TokenUtilsTests
 
         DateTime expiresAt = DateTime.Parse(cookieData["expires"]);
         DateTime expectedExpiresAt = dateTimeWrapper.UtcNow.AddDays(jwtSettings.RefreshTokenTtlDays);
-        expiresAt.Should().Be(expectedExpiresAt);
+        expiresAt.ToUniversalTime().Should().Be(expectedExpiresAt);
     }
 }

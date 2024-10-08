@@ -42,35 +42,39 @@ public class FinanceRecordService : IFinanceRecordService
 
         if (parameters.Description is not null)
         {
-            // TODO(70) Use tsvector.
             query = query.Where(
-                r => EF.Functions.ILike(r.Description, $"%{parameters.Description}%")
+                fr => fr.SearchVector.Matches(
+                    // Referenced: https://github.com/npgsql/efcore.pg/issues/1724#issuecomment-1013649670
+                    EF.Functions.ToTsQuery(
+                        (string)(object)EF.Functions.PlainToTsQuery(parameters.Description) + ":*"
+                    )
+                )
             );
         }
 
         if (parameters.HappenedBefore is not null)
         {
-            query = query.Where(r => r.HappenedAt <= parameters.HappenedBefore.Value.ToUniversalTime());
+            query = query.Where(fr => fr.HappenedAt <= parameters.HappenedBefore.Value.ToUniversalTime());
         }
 
         if (parameters.HappenedAfter is not null)
         {
-            query = query.Where(r => r.HappenedAt >= parameters.HappenedAfter.Value.ToUniversalTime());
+            query = query.Where(fr => fr.HappenedAt >= parameters.HappenedAfter.Value.ToUniversalTime());
         }
 
         if (parameters.MinAmount is not null)
         {
-            query = query.Where(r => r.Amount >= parameters.MinAmount);
+            query = query.Where(fr => fr.Amount >= parameters.MinAmount);
         }
 
         if (parameters.MaxAmount is not null)
         {
-            query = query.Where(r => r.Amount <= parameters.MaxAmount);
+            query = query.Where(fr => fr.Amount <= parameters.MaxAmount);
         }
 
         if (parameters.Type is not null)
         {
-            query = query.Where(r => r.Type == parameters.Type);
+            query = query.Where(fr => fr.Type == parameters.Type);
         }
 
         return query;

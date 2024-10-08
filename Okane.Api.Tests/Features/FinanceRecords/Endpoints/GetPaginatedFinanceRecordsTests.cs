@@ -316,7 +316,7 @@ public class GetPaginatedFinanceRecordsTests(PostgresApiFactory apiFactory) : Da
 
     // Filtering.
     [Fact]
-    public async Task ReturnsAListOfFinanceRecords_FilteredByDescription()
+    public async Task ReturnsAListOfFinanceRecords_FilteredByDescription_WithSingleSearchTerm()
     {
         await AssertFinanceRecordsAreSortedAndFiltered(
             "description=sir",
@@ -327,24 +327,60 @@ public class GetPaginatedFinanceRecordsTests(PostgresApiFactory apiFactory) : Da
                     FinanceRecordStubFactory.Create(userId),
                     FinanceRecordStubFactory.Create(userId),
                     FinanceRecordStubFactory.Create(userId),
+                    FinanceRecordStubFactory.Create(userId),
                     FinanceRecordStubFactory.Create(userId)
                 };
 
-                financeRecords[0].Description = "Hello world";
-                financeRecords[1].Description = "Hello sir";
-                financeRecords[2].Description = "Aesir";
-                financeRecords[3].Description = "Sirloin steak";
+                financeRecords[0].Description = "Sir Doggo"; // First word exact match.
+                financeRecords[1].Description = "Sirloin steak"; // First word partial match.
+                financeRecords[2].Description = "Yes sir"; // Different word exact match.
+                financeRecords[3].Description = "Yes sirloin"; // Different word partial match.
+                financeRecords[4].Description = "Random text 123";
 
                 return financeRecords;
             },
             financeRecords =>
             [
+                financeRecords[0],
                 financeRecords[1],
                 financeRecords[2],
-                financeRecords[3]
+                financeRecords[3],
             ]
         );
     }
+
+    [Fact]
+    public async Task ReturnsAListOfFinanceRecords_FilteredByDescription_WithMultipleSearchTerms()
+    {
+        await AssertFinanceRecordsAreSortedAndFiltered(
+            "description=hi bye",
+            userId =>
+            {
+                var financeRecords = new List<FinanceRecord>
+                {
+                    FinanceRecordStubFactory.Create(userId),
+                    FinanceRecordStubFactory.Create(userId),
+                    FinanceRecordStubFactory.Create(userId),
+                    FinanceRecordStubFactory.Create(userId),
+                    FinanceRecordStubFactory.Create(userId)
+                };
+
+                financeRecords[0].Description = "Hi bye"; // Exact phrase match.
+                financeRecords[1].Description = "Hi apple bye"; // Phrase match with extra word.
+                financeRecords[2].Description = "Hi there"; // First word match.
+                financeRecords[3].Description = "Hey bye"; // Second word match.
+                financeRecords[4].Description = "Random text 123";
+
+                return financeRecords;
+            },
+            financeRecords =>
+            [
+                financeRecords[0],
+                financeRecords[1]
+            ]
+        );
+    }
+
 
     [Fact]
     public async Task ReturnsAListOfFinanceRecords_FilteredByHappenedAtBefore()

@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Okane.Api.Shared.Exceptions;
@@ -18,24 +17,22 @@ using Okane.Api.Tests.Testing.Utils;
 
 namespace Okane.Api.Tests.Shared.Exceptions;
 
-public class GlobalExceptionHandlerTests
+public class GlobalExceptionHandlerTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFactory)
 {
     private const string Endpoint = "/testing-endpoint";
     private const string ErrorMessage = "Prod blew up.";
+    private readonly PostgresApiFactory _apiFactory = apiFactory;
 
-    private static WebApplicationFactory<IApiMarker> SetUpApiFactory(
+    private WebApplicationFactory<IApiMarker> SetUpApiFactory(
         ITestService testService,
         string environment = "")
     {
-        return new InMemoryApiFactory().WithWebHostBuilder(builder =>
+        return _apiFactory.WithWebHostBuilder(builder =>
         {
-            var builderEnvironment = Environments.Development;
-            if (!environment.IsNullOrEmpty())
+            if (environment != "")
             {
-                builderEnvironment = environment;
+                builder.UseEnvironment(environment);
             }
-
-            builder.UseEnvironment(builderEnvironment);
 
             builder.ConfigureTestServices(services =>
             {
@@ -150,7 +147,7 @@ public class GlobalExceptionHandlerTests
         var exception = new InvalidOperationException(ErrorMessage);
         testService.DoSomethingAsync().Throws(exception);
 
-        WebApplicationFactory<IApiMarker> apiFactory = SetUpApiFactory(testService, Environments.Production);
+        var apiFactory = SetUpApiFactory(testService, Environments.Staging);
         HttpClient client = apiFactory.CreateClient();
 
         HttpResponseMessage response = await client.GetAsync(Endpoint);

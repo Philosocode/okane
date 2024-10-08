@@ -19,7 +19,7 @@ public static class UserUtils
 
         return apiUser;
     }
-    
+
     public static async Task<UserResponse> RegisterUserAsync(HttpClient client, Register.Request request)
     {
         HttpResponseMessage response = await client.PostAsJsonAsync("/auth/register", request);

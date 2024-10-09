@@ -11,15 +11,24 @@ import { ARIA_ATTRIBUTES } from '@shared/constants/aria'
 import { FINANCE_RECORD_TIMESTAMP_FORMAT } from '@features/financeRecords/constants/financeRecordList'
 import { SHARED_COPY } from '@shared/constants/copy'
 
-import { useDeleteFinanceRecordStore } from '@features/financeRecords/composables/useDeleteFinanceRecordStore'
 import { useSaveFinanceRecordStore } from '@features/financeRecords/composables/useSaveFinanceRecordStore'
+
+import {
+  DELETE_FINANCE_RECORD_ID_SYMBOL,
+  useDeleteFinanceRecordId,
+  type DeleteFinanceRecordIdProvider,
+} from '@features/financeRecords/providers/deleteFinanceRecordIdProvider'
 
 import { createTestFinanceRecord } from '@tests/factories/financeRecord'
 
 const financeRecord = createTestFinanceRecord()
 const mountComponent = getMountComponent(FinanceRecordListItem, {
   props: { financeRecord },
-  withPinia: true,
+  global: {
+    provide: {
+      [DELETE_FINANCE_RECORD_ID_SYMBOL]: useDeleteFinanceRecordId(),
+    },
+  },
 })
 
 test('renders the type', () => {
@@ -65,9 +74,17 @@ test('renders a menu', async () => {
 
 describe('with the menu open', () => {
   let wrapper: VueWrapper
+  let deleteProvider: DeleteFinanceRecordIdProvider
 
   beforeEach(async () => {
-    wrapper = mountComponent()
+    deleteProvider = useDeleteFinanceRecordId()
+    wrapper = mountComponent({
+      global: {
+        provide: {
+          [DELETE_FINANCE_RECORD_ID_SYMBOL]: deleteProvider,
+        },
+      },
+    })
 
     const menuComponent = wrapper.findComponent(ToggleMenu)
     const menuTrigger = menuComponent.get('button')
@@ -84,13 +101,12 @@ describe('with the menu open', () => {
     expect(saveStore.editingFinanceRecord).toEqual(financeRecord)
   })
 
-  test('renders an option to delete a finance record', async () => {
+  test.only('renders an option to delete a finance record', async () => {
     const deleteButton = wrapper.findByText('button', SHARED_COPY.ACTIONS.DELETE)
     expect(deleteButton.exists()).toBe(true)
 
-    const deleteStore = useDeleteFinanceRecordStore()
-    expect(deleteStore.financeRecordId).toBeUndefined()
+    expect(deleteProvider.id).toBeUndefined()
     await deleteButton.trigger('click')
-    expect(deleteStore.financeRecordId).toBe(financeRecord.id)
+    expect(deleteProvider.id).toBe(financeRecord.id)
   })
 })

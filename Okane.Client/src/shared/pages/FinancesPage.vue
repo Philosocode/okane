@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// External
+import { provide } from 'vue'
+
 // Internal
 import AddFinanceRecordButton from '@features/financeRecords/components/AddFinanceRecordButton.vue'
 import CreateFinanceRecordModal from '@features/financeRecords/components/CreateFinanceRecordModal.vue'
@@ -10,6 +13,13 @@ import PageLayout from '@shared/layouts/PageLayout.vue'
 import SearchFiltersSection from '@features/financeRecords/components/SearchFinanceRecordsSection.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
+
+import {
+  useDeleteFinanceRecordId,
+  DELETE_FINANCE_RECORD_ID_SYMBOL,
+} from '@features/financeRecords/providers/deleteFinanceRecordIdProvider'
+
+provide(DELETE_FINANCE_RECORD_ID_SYMBOL, useDeleteFinanceRecordId())
 </script>
 
 <template>

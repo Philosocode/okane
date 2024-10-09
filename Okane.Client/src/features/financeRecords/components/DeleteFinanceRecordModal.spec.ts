@@ -13,8 +13,13 @@ import { financeRecordQueryKeys } from '@features/financeRecords/constants/query
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { SHARED_COPY } from '@shared/constants/copy'
 
+import {
+  DELETE_FINANCE_RECORD_ID_SYMBOL,
+  type DeleteFinanceRecordIdProvider,
+  useDeleteFinanceRecordId,
+} from '@features/financeRecords/providers/deleteFinanceRecordIdProvider'
+
 import * as deleteMutation from '@features/financeRecords/composables/useDeleteFinanceRecordMutation'
-import { useDeleteFinanceRecordStore } from '@features/financeRecords/composables/useDeleteFinanceRecordStore'
 
 import { commonAsserts } from '@tests/utils/commonAsserts'
 import { financeRecordHandlers } from '@tests/msw/handlers/financeRecord'
@@ -22,16 +27,11 @@ import { testServer } from '@tests/msw/testServer'
 
 const financeRecordId = 540
 const searchFilters = DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS
-
-const helpers = {
-  setFinanceRecordId() {
-    const store = useDeleteFinanceRecordStore()
-    store.setDeletingFinanceRecordId(financeRecordId)
-  },
-}
-
 const mountComponent = getMountComponent(DeleteFinanceRecordModal, {
   global: {
+    provide: {
+      [DELETE_FINANCE_RECORD_ID_SYMBOL]: useDeleteFinanceRecordId(),
+    },
     stubs: {
       teleport: true,
     },
@@ -40,43 +40,59 @@ const mountComponent = getMountComponent(DeleteFinanceRecordModal, {
   withQueryClient: true,
 })
 
+const helpers = {
+  getDeleteProviderWithIdSet() {
+    const deleteProvider = useDeleteFinanceRecordId()
+
+    deleteProvider.setId(financeRecordId)
+
+    return deleteProvider
+  },
+}
+
+function mountComponentWithDeleteProvider(provider: DeleteFinanceRecordIdProvider) {
+  return mountComponent({
+    global: {
+      provide: {
+        [DELETE_FINANCE_RECORD_ID_SYMBOL]: provider,
+      },
+    },
+  })
+}
+
 test('does not render the modal content when the finance record ID is empty', () => {
-  const wrapper = mountComponent()
+  const wrapper = mountComponentWithDeleteProvider(useDeleteFinanceRecordId())
   const heading = wrapper.findComponent(ModalHeading)
   expect(heading.exists()).toBe(false)
 })
 
 test('renders the modal heading', () => {
-  helpers.setFinanceRecordId()
-
-  const wrapper = mountComponent()
+  const deleteProvider = helpers.getDeleteProviderWithIdSet()
+  const wrapper = mountComponentWithDeleteProvider(deleteProvider)
   const heading = wrapper.findComponent(ModalHeading)
   expect(heading.text()).toBe(FINANCES_COPY.DELETE_FINANCE_RECORD_MODAL.DELETE_FINANCE_RECORD)
 })
 
 test('renders an accessible dialog', () => {
-  helpers.setFinanceRecordId()
-
-  const wrapper = mountComponent()
+  const deleteProvider = helpers.getDeleteProviderWithIdSet()
+  const wrapper = mountComponentWithDeleteProvider(deleteProvider)
   commonAsserts.rendersAnAccessibleDialog({ dialog: wrapper.get('dialog') })
 })
 
 test('renders the confirmation text', () => {
-  helpers.setFinanceRecordId()
-
-  const wrapper = mountComponent()
+  const deleteProvider = helpers.getDeleteProviderWithIdSet()
+  const wrapper = mountComponentWithDeleteProvider(deleteProvider)
   const text = wrapper.findByText('p', FINANCES_COPY.DELETE_FINANCE_RECORD_MODAL.ARE_YOU_SURE)
   expect(text.exists()).toBe(true)
 })
 
 test('renders a cancel button to close the modal', async () => {
-  const store = useDeleteFinanceRecordStore()
-  helpers.setFinanceRecordId()
-  const wrapper = mountComponent()
+  const deleteProvider = helpers.getDeleteProviderWithIdSet()
+  const wrapper = mountComponentWithDeleteProvider(deleteProvider)
 
   const cancelButton = wrapper.findByText('button', SHARED_COPY.ACTIONS.CANCEL)
   await cancelButton.trigger('click')
-  expect(store.financeRecordId).toBeUndefined()
+  expect(deleteProvider.id).toBeUndefined()
 })
 
 describe('when clicking the delete button', () => {
@@ -87,16 +103,15 @@ describe('when clicking the delete button', () => {
   ) {
     testServer.use(handler)
 
-    helpers.setFinanceRecordId()
-
-    const wrapper = mountComponent()
+    const deleteProvider = helpers.getDeleteProviderWithIdSet()
+    const wrapper = mountComponentWithDeleteProvider(deleteProvider)
 
     const deleteButton = wrapper.findByText('button', SHARED_COPY.ACTIONS.DELETE)
     await deleteButton.trigger('click')
 
     await flushPromises()
 
-    return wrapper
+    return { deleteProvider, wrapper }
   }
 
   test('calls useDeleteFinanceRecordMutation with the query key', async () => {
@@ -113,14 +128,14 @@ describe('when clicking the delete button', () => {
   })
 
   test('closes the modal when the DELETE request is successful', async () => {
-    await setUp()
-    const deleteStore = useDeleteFinanceRecordStore()
-    expect(deleteStore.financeRecordId).toBeUndefined()
+    const { deleteProvider } = await setUp()
+    expect(deleteProvider.id).toBeUndefined()
   })
 
   test("does not close the modal when there's an error deleting the finance record", async () => {
-    await setUp(financeRecordHandlers.deleteFinanceRecordError({ id: financeRecordId }))
-    const deleteStore = useDeleteFinanceRecordStore()
-    expect(deleteStore.financeRecordId).toBe(financeRecordId)
+    const { deleteProvider } = await setUp(
+      financeRecordHandlers.deleteFinanceRecordError({ id: financeRecordId }),
+    )
+    expect(deleteProvider.id).toBe(financeRecordId)
   })
 })

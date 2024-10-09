@@ -1,7 +1,12 @@
+// External
+import { defineComponent, inject } from 'vue'
+
 // Internal
 import FinancesPage from '@shared/pages/FinancesPage.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
+
+import * as deleteFinanceRecordIdProvider from '@features/financeRecords/providers/deleteFinanceRecordIdProvider'
 
 import { commonAsserts } from '@tests/utils/commonAsserts'
 
@@ -86,4 +91,34 @@ test('renders a modal to search finance records', () => {
     testId: testIds.SearchFiltersSection,
     wrapper: mountComponent(),
   })
+})
+
+test('provides delete finance record state', () => {
+  const fakeId = 123
+  const providerSpy = vi
+    .spyOn(deleteFinanceRecordIdProvider, 'useDeleteFinanceRecordId')
+    .mockReturnValue({
+      id: fakeId,
+      setId: vi.fn(),
+    })
+
+  const ListStub = defineComponent({
+    setup() {
+      const provider = inject(deleteFinanceRecordIdProvider.DELETE_FINANCE_RECORD_ID_SYMBOL)
+      return { provider }
+    },
+    template: `<span id="providerId">{{ provider.id }}</span>`,
+  })
+
+  const wrapper = mountComponent({
+    global: {
+      stubs: {
+        FinanceRecordList: ListStub,
+      },
+    },
+  })
+
+  expect(wrapper.get('#providerId').text()).toBe(fakeId.toString())
+
+  providerSpy.mockRestore()
 })

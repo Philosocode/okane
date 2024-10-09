@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // External
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 
 // Internal
 import DeleteFinanceRecordModalActions from '@features/financeRecords/components/DeleteFinanceRecordModalActions.vue'
@@ -10,11 +10,15 @@ import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
-import { useDeleteFinanceRecordStore } from '@features/financeRecords/composables/useDeleteFinanceRecordStore'
 import { useDeleteFinanceRecordMutation } from '@features/financeRecords/composables/useDeleteFinanceRecordMutation'
 import { useSearchFinanceRecordsStore } from '@features/financeRecords/composables/useSearchFinanceRecordsStore'
 
-const deleteStore = useDeleteFinanceRecordStore()
+import {
+  DELETE_FINANCE_RECORD_ID_SYMBOL,
+  type DeleteFinanceRecordIdProvider,
+} from '@features/financeRecords/providers/deleteFinanceRecordIdProvider'
+
+const deleteProvider = inject(DELETE_FINANCE_RECORD_ID_SYMBOL) as DeleteFinanceRecordIdProvider
 const searchStore = useSearchFinanceRecordsStore()
 
 const modalHeadingId = 'delete-finance-record-modal-heading'
@@ -22,11 +26,11 @@ const queryKey = computed(() => financeRecordQueryKeys.listByFilters(searchStore
 const deleteMutation = useDeleteFinanceRecordMutation(queryKey)
 
 function handleClose() {
-  deleteStore.clearDeletingFinanceRecordId()
+  deleteProvider.setId(undefined)
 }
 
 function handleDelete() {
-  const id = deleteStore.financeRecordId
+  const id = deleteProvider.id
   if (id) {
     deleteMutation.mutate(id, {
       onSuccess() {
@@ -38,11 +42,7 @@ function handleDelete() {
 </script>
 
 <template>
-  <Modal
-    :is-showing="!!deleteStore.financeRecordId"
-    :modal-heading-id="modalHeadingId"
-    @close="handleClose"
-  >
+  <Modal :is-showing="!!deleteProvider.id" :modal-heading-id="modalHeadingId" @close="handleClose">
     <ModalHeading :id="modalHeadingId">{{
       FINANCES_COPY.DELETE_FINANCE_RECORD_MODAL.DELETE_FINANCE_RECORD
     }}</ModalHeading>

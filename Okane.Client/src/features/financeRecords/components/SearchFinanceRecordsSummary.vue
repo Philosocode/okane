@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // External
-import { storeToRefs } from 'pinia'
-import { computed, toValue } from 'vue'
+import { computed, inject } from 'vue'
 
 // Internal
 import Heading from '@shared/components/Heading.vue'
@@ -10,15 +9,17 @@ import { COMPARISON_OPERATOR } from '@shared/constants/search'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { SHARED_COPY } from '@shared/constants/copy'
 
-import { useSearchFinanceRecordsStore } from '@features/financeRecords/composables/useSearchFinanceRecordsStore'
+import {
+  SEARCH_FINANCE_RECORDS_SYMBOL,
+  type SearchFinanceRecordsProvider,
+} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
 import { capitalize } from '@shared/utils/string'
 
-const searchStore = useSearchFinanceRecordsStore()
-const { searchFilters } = storeToRefs(searchStore)
+const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
 
 const amountCriteria = computed(() => {
-  const filters = toValue(searchFilters)
+  const { filters } = searchProvider
 
   if (filters.amountOperator && filters.amount1) {
     return `${filters.amountOperator} ${filters.amount1.toFixed(2)}`
@@ -36,7 +37,7 @@ const amountCriteria = computed(() => {
 })
 
 const happenedAtCriteria = computed(() => {
-  const filters = toValue(searchFilters)
+  const { filters } = searchProvider
   const formatter = new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' })
 
   if (filters.happenedAtOperator && filters.happenedAt1) {
@@ -67,18 +68,18 @@ const happenedAtCriteria = computed(() => {
     <ul class="search-criteria">
       <li>
         {{ FINANCES_COPY.PROPERTIES.TYPE }}:
-        {{ searchStore.searchFilters.type || capitalize(SHARED_COPY.COMMON.ALL) }}
+        {{ searchProvider.filters.type || capitalize(SHARED_COPY.COMMON.ALL) }}
       </li>
-      <li v-if="searchFilters.description">
-        {{ FINANCES_COPY.PROPERTIES.DESCRIPTION }}: {{ searchStore.searchFilters.description }}
+      <li v-if="searchProvider.filters.description">
+        {{ FINANCES_COPY.PROPERTIES.DESCRIPTION }}: {{ searchProvider.filters.description }}
       </li>
       <li v-if="amountCriteria">{{ FINANCES_COPY.PROPERTIES.AMOUNT }}: {{ amountCriteria }}</li>
       <li v-if="happenedAtCriteria">
         {{ FINANCES_COPY.PROPERTIES.HAPPENED_AT }}: {{ happenedAtCriteria }}
       </li>
       <li>
-        {{ SHARED_COPY.SEARCH.SORT_BY }}: {{ searchFilters.sortField }},
-        {{ searchFilters.sortDirection }}
+        {{ SHARED_COPY.SEARCH.SORT_BY }}: {{ searchProvider.filters.sortField }},
+        {{ searchProvider.filters.sortDirection }}
       </li>
     </ul>
   </section>

@@ -4,10 +4,14 @@ import { defineComponent, inject } from 'vue'
 // Internal
 import FinancesPage from '@shared/pages/FinancesPage.vue'
 
+import { DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
+
+import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
 
 import * as deleteFinanceRecordIdProvider from '@features/financeRecords/providers/deleteFinanceRecordIdProvider'
 import * as saveFinanceRecordProvider from '@features/financeRecords/providers/saveFinanceRecordProvider'
+import * as searchFinanceRecordsProvider from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
 import { commonAsserts } from '@tests/utils/commonAsserts'
 import { createTestFinanceRecord } from '@tests/factories/financeRecord'
@@ -161,6 +165,48 @@ test('provides save finance record state', () => {
 
   expect(wrapper.get('#providerIsCreating').text()).toBe(isCreating.toString())
   expect(wrapper.get('#providerFinanceRecordId').text()).toBe(financeRecord.id.toString())
+
+  providerSpy.mockRestore()
+})
+
+test('provides search finance records state', () => {
+  const description = 'Cool description'
+  const modalIsShowing = true
+  const providerSpy = vi
+    .spyOn(searchFinanceRecordsProvider, 'useSearchFinanceRecordsProvider')
+    .mockReturnValue({
+      filters: {
+        ...DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,
+        description,
+      },
+      modalIsShowing,
+      setFilters: vi.fn(),
+      setModalIsShowing: vi.fn(),
+    })
+
+  const ListStub = defineComponent({
+    setup() {
+      const provider = inject(searchFinanceRecordsProvider.SEARCH_FINANCE_RECORDS_SYMBOL)
+      return { provider }
+    },
+    template: `
+      <div>
+        <span id="providerFilters">{{ provider.filters.description }}</span>
+        <span id="providerModalIsShowing">{{ provider.modalIsShowing }}</span>
+      </div>
+    `,
+  })
+
+  const wrapper = mountComponent({
+    global: {
+      stubs: {
+        FinanceRecordList: ListStub,
+      },
+    },
+  })
+
+  expect(wrapper.get('#providerFilters').text()).toBe(description)
+  expect(wrapper.get('#providerModalIsShowing').text()).toBe(`${modalIsShowing}`)
 
   providerSpy.mockRestore()
 })

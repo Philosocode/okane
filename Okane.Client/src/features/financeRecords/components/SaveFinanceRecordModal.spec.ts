@@ -30,7 +30,6 @@ const mountComponent = getMountComponent(SaveFinanceRecordModal, {
     },
   },
   props,
-  withPinia: true,
   withQueryClient: true,
 })
 

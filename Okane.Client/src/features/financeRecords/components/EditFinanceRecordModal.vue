@@ -11,12 +11,15 @@ import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import type { SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
 import { useEditFinanceRecordMutation } from '@features/financeRecords/composables/useEditFinanceRecordMutation'
-import { useSearchFinanceRecordsStore } from '@features/financeRecords/composables/useSearchFinanceRecordsStore'
 
 import {
   SAVE_FINANCE_RECORD_SYMBOL,
   type SaveFinanceRecordProvider,
 } from '@features/financeRecords/providers/saveFinanceRecordProvider'
+import {
+  SEARCH_FINANCE_RECORDS_SYMBOL,
+  type SearchFinanceRecordsProvider,
+} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
 import { getFormErrorsFromAPIResponse } from '@shared/services/apiClient/utils'
 import { getInitialFormErrors } from '@shared/utils/form'
@@ -31,9 +34,8 @@ import {
 } from '@features/financeRecords/utils/mappers'
 
 const saveProvider = inject(SAVE_FINANCE_RECORD_SYMBOL) as SaveFinanceRecordProvider
-
-const searchStore = useSearchFinanceRecordsStore()
-const queryKey = computed(() => financeRecordQueryKeys.listByFilters(searchStore.searchFilters))
+const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
+const queryKey = computed(() => financeRecordQueryKeys.listByFilters(searchProvider.filters))
 
 const editMutation = useEditFinanceRecordMutation(queryKey)
 

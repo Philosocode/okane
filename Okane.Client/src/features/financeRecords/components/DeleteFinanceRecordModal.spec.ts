@@ -18,6 +18,10 @@ import {
   type DeleteFinanceRecordIdProvider,
   useDeleteFinanceRecordId,
 } from '@features/financeRecords/providers/deleteFinanceRecordIdProvider'
+import {
+  SEARCH_FINANCE_RECORDS_SYMBOL,
+  useSearchFinanceRecordsProvider,
+} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
 import * as deleteMutation from '@features/financeRecords/composables/useDeleteFinanceRecordMutation'
 
@@ -31,12 +35,12 @@ const mountComponent = getMountComponent(DeleteFinanceRecordModal, {
   global: {
     provide: {
       [DELETE_FINANCE_RECORD_ID_SYMBOL]: useDeleteFinanceRecordId(),
+      [SEARCH_FINANCE_RECORDS_SYMBOL]: useSearchFinanceRecordsProvider(),
     },
     stubs: {
       teleport: true,
     },
   },
-  withPinia: true,
   withQueryClient: true,
 })
 

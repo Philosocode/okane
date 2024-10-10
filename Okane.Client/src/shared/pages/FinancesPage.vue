@@ -18,14 +18,18 @@ import {
   DELETE_FINANCE_RECORD_ID_SYMBOL,
   useDeleteFinanceRecordId,
 } from '@features/financeRecords/providers/deleteFinanceRecordIdProvider'
-
 import {
   SAVE_FINANCE_RECORD_SYMBOL,
   useSaveFinanceRecordProvider,
 } from '@features/financeRecords/providers/saveFinanceRecordProvider'
+import {
+  SEARCH_FINANCE_RECORDS_SYMBOL,
+  useSearchFinanceRecordsProvider,
+} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
 provide(DELETE_FINANCE_RECORD_ID_SYMBOL, useDeleteFinanceRecordId())
 provide(SAVE_FINANCE_RECORD_SYMBOL, useSaveFinanceRecordProvider())
+provide(SEARCH_FINANCE_RECORDS_SYMBOL, useSearchFinanceRecordsProvider())
 </script>
 
 <template>

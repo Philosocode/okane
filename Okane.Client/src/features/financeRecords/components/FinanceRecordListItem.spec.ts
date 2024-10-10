@@ -11,13 +11,17 @@ import { ARIA_ATTRIBUTES } from '@shared/constants/aria'
 import { FINANCE_RECORD_TIMESTAMP_FORMAT } from '@features/financeRecords/constants/financeRecordList'
 import { SHARED_COPY } from '@shared/constants/copy'
 
-import { useSaveFinanceRecordStore } from '@features/financeRecords/composables/useSaveFinanceRecordStore'
-
 import {
   DELETE_FINANCE_RECORD_ID_SYMBOL,
   useDeleteFinanceRecordId,
   type DeleteFinanceRecordIdProvider,
 } from '@features/financeRecords/providers/deleteFinanceRecordIdProvider'
+
+import {
+  SAVE_FINANCE_RECORD_SYMBOL,
+  useSaveFinanceRecordProvider,
+  type SaveFinanceRecordProvider,
+} from '@features/financeRecords/providers/saveFinanceRecordProvider'
 
 import { createTestFinanceRecord } from '@tests/factories/financeRecord'
 
@@ -27,6 +31,7 @@ const mountComponent = getMountComponent(FinanceRecordListItem, {
   global: {
     provide: {
       [DELETE_FINANCE_RECORD_ID_SYMBOL]: useDeleteFinanceRecordId(),
+      [SAVE_FINANCE_RECORD_SYMBOL]: useSaveFinanceRecordProvider(),
     },
   },
 })
@@ -34,14 +39,12 @@ const mountComponent = getMountComponent(FinanceRecordListItem, {
 test('renders the type', () => {
   const wrapper = mountComponent()
   const type = wrapper.findByText('span', financeRecord.type)
-
   expect(type.exists()).toBe(true)
 })
 
 test('renders the amount', () => {
   const wrapper = mountComponent()
   const amount = wrapper.findByText('div', financeRecord.amount.toString())
-
   expect(amount.exists()).toBe(true)
 })
 
@@ -49,14 +52,12 @@ test('renders the type and timestamp', () => {
   const expectedTimestamp = formatDate(financeRecord.happenedAt, FINANCE_RECORD_TIMESTAMP_FORMAT)
   const wrapper = mountComponent()
   const topRow = wrapper.get('.top-row')
-
   expect(topRow.text()).toBe(`${financeRecord.type} - ${expectedTimestamp}`)
 })
 
 test('renders the description', () => {
   const wrapper = mountComponent()
   const description = wrapper.findByText('div', financeRecord.description.toString())
-
   expect(description.exists()).toBe(true)
 })
 
@@ -75,13 +76,17 @@ test('renders a menu', async () => {
 describe('with the menu open', () => {
   let wrapper: VueWrapper
   let deleteProvider: DeleteFinanceRecordIdProvider
+  let saveProvider: SaveFinanceRecordProvider
 
   beforeEach(async () => {
     deleteProvider = useDeleteFinanceRecordId()
+    saveProvider = useSaveFinanceRecordProvider()
+
     wrapper = mountComponent({
       global: {
         provide: {
           [DELETE_FINANCE_RECORD_ID_SYMBOL]: deleteProvider,
+          [SAVE_FINANCE_RECORD_SYMBOL]: saveProvider,
         },
       },
     })
@@ -95,13 +100,12 @@ describe('with the menu open', () => {
     const editButton = wrapper.findByText('button', SHARED_COPY.ACTIONS.EDIT)
     expect(editButton.exists()).toBe(true)
 
-    const saveStore = useSaveFinanceRecordStore()
-    expect(saveStore.editingFinanceRecord).toBeUndefined()
+    expect(saveProvider.editingFinanceRecord).toBeUndefined()
     await editButton.trigger('click')
-    expect(saveStore.editingFinanceRecord).toEqual(financeRecord)
+    expect(saveProvider.editingFinanceRecord).toEqual(financeRecord)
   })
 
-  test.only('renders an option to delete a finance record', async () => {
+  test('renders an option to delete a finance record', async () => {
     const deleteButton = wrapper.findByText('button', SHARED_COPY.ACTIONS.DELETE)
     expect(deleteButton.exists()).toBe(true)
 

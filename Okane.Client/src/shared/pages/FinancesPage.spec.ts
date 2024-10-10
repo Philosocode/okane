@@ -7,8 +7,10 @@ import FinancesPage from '@shared/pages/FinancesPage.vue'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
 import * as deleteFinanceRecordIdProvider from '@features/financeRecords/providers/deleteFinanceRecordIdProvider'
+import * as saveFinanceRecordProvider from '@features/financeRecords/providers/saveFinanceRecordProvider'
 
 import { commonAsserts } from '@tests/utils/commonAsserts'
+import { createTestFinanceRecord } from '@tests/factories/financeRecord'
 
 const testIds = {
   AddFinanceRecordButton: 'AddFinanceRecordButton',
@@ -119,6 +121,46 @@ test('provides delete finance record state', () => {
   })
 
   expect(wrapper.get('#providerId').text()).toBe(fakeId.toString())
+
+  providerSpy.mockRestore()
+})
+
+test('provides save finance record state', () => {
+  const isCreating = true
+  const financeRecord = createTestFinanceRecord()
+
+  const providerSpy = vi
+    .spyOn(saveFinanceRecordProvider, 'useSaveFinanceRecordProvider')
+    .mockReturnValue({
+      isCreating,
+      editingFinanceRecord: financeRecord,
+      setIsCreating: vi.fn(),
+      setEditingFinanceRecord: vi.fn(),
+    })
+
+  const ListStub = defineComponent({
+    setup() {
+      const provider = inject(saveFinanceRecordProvider.SAVE_FINANCE_RECORD_SYMBOL)
+      return { provider }
+    },
+    template: `
+      <div>
+        <span id="providerIsCreating">{{ provider.isCreating }}</span>
+        <span id="providerFinanceRecordId">{{ provider.editingFinanceRecord.id }}</span>
+      </div>
+    `,
+  })
+
+  const wrapper = mountComponent({
+    global: {
+      stubs: {
+        FinanceRecordList: ListStub,
+      },
+    },
+  })
+
+  expect(wrapper.get('#providerIsCreating').text()).toBe(isCreating.toString())
+  expect(wrapper.get('#providerFinanceRecordId').text()).toBe(financeRecord.id.toString())
 
   providerSpy.mockRestore()
 })

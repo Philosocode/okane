@@ -12,10 +12,14 @@ import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
 import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
-import { useSaveFinanceRecordStore } from '@features/financeRecords/composables/useSaveFinanceRecordStore'
-
 import { apiClient } from '@shared/services/apiClient/apiClient'
 import { mapSaveFinanceRecordFormState } from '@features/financeRecords/utils/mappers'
+
+import {
+  SAVE_FINANCE_RECORD_SYMBOL,
+  type SaveFinanceRecordProvider,
+  useSaveFinanceRecordProvider,
+} from '@features/financeRecords/providers/saveFinanceRecordProvider'
 
 import { createTestAPIFormErrors } from '@tests/factories/formErrors'
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
@@ -29,15 +33,26 @@ const mountComponent = getMountComponent(CreateFinanceRecordModal, {
     },
   },
   withQueryClient: true,
-  withPinia: true,
 })
 
-beforeEach(() => {
-  const saveStore = useSaveFinanceRecordStore()
-  saveStore.setIsCreating(true)
-})
+function mountWithSaveProvider(saveProvider: SaveFinanceRecordProvider) {
+  return mountComponent({
+    global: {
+      provide: {
+        [SAVE_FINANCE_RECORD_SYMBOL]: saveProvider,
+      },
+    },
+  })
+}
 
 const helpers = {
+  getCreatingSaveProvider() {
+    const saveProvider = useSaveFinanceRecordProvider()
+
+    saveProvider.setIsCreating(true)
+
+    return saveProvider
+  },
   setFormState(wrapper: VueWrapper, formState: SaveFinanceRecordFormState) {
     const modal = wrapper.getComponent(SaveFinanceRecordModal)
     modal.vm.$emit('change', formState)
@@ -50,26 +65,25 @@ const helpers = {
 }
 
 test('does not render the modal content when not creating a finance record', () => {
-  const saveStore = useSaveFinanceRecordStore()
-  saveStore.setIsCreating(false)
-
-  const wrapper = mountComponent()
+  const wrapper = mountWithSaveProvider(useSaveFinanceRecordProvider())
   const heading = wrapper.findComponent(ModalHeading)
   expect(heading.exists()).toBe(false)
 })
 
 test('renders the modal heading', () => {
-  const wrapper = mountComponent()
+  const saveProvider = helpers.getCreatingSaveProvider()
+  const wrapper = mountWithSaveProvider(saveProvider)
+
   const heading = wrapper.getComponent(ModalHeading)
   expect(heading.text()).toBe(FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.CREATE_FINANCE_RECORD)
 })
 
 test('closes the modal', async () => {
-  const wrapper = mountComponent()
+  const saveProvider = helpers.getCreatingSaveProvider()
+  const wrapper = mountWithSaveProvider(saveProvider)
   const modal = wrapper.getComponent(SaveFinanceRecordModal)
   modal.vm.$emit('close')
-  const saveStore = useSaveFinanceRecordStore()
-  expect(saveStore.isCreating).toBe(false)
+  expect(saveProvider.isCreating).toBe(false)
 })
 
 describe('with a successful request to create a finance record', () => {
@@ -79,7 +93,8 @@ describe('with a successful request to create a finance record', () => {
 
   test('makes a POST request to create a finance record', async () => {
     const postSpy = vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInAPIResponse(null))
-    const wrapper = mountComponent()
+    const saveProvider = helpers.getCreatingSaveProvider()
+    const wrapper = mountWithSaveProvider(saveProvider)
 
     helpers.setFormState(wrapper, formState)
     await helpers.submitForm(wrapper)
@@ -93,7 +108,8 @@ describe('with a successful request to create a finance record', () => {
 
   test('resets the amount and description', async () => {
     const postSpy = vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInAPIResponse(null))
-    const wrapper = mountComponent()
+    const saveProvider = helpers.getCreatingSaveProvider()
+    const wrapper = mountWithSaveProvider(saveProvider)
 
     helpers.setFormState(wrapper, formState)
     await helpers.submitForm(wrapper)
@@ -120,7 +136,8 @@ describe('with a successful request to create a finance record', () => {
       .mockRejectedValueOnce(createTestProblemDetails(apiErrors))
       .mockResolvedValueOnce(wrapInAPIResponse(null))
 
-    const wrapper = mountComponent()
+    const saveProvider = helpers.getCreatingSaveProvider()
+    const wrapper = mountWithSaveProvider(saveProvider)
 
     helpers.setFormState(wrapper, formState)
     await helpers.submitForm(wrapper)
@@ -145,7 +162,8 @@ describe('with an error creating a finance record', () => {
       happenedAt: '',
     })
     const postSpy = vi.spyOn(apiClient, 'post').mockRejectedValue(apiErrors)
-    const wrapper = mountComponent()
+    const saveProvider = helpers.getCreatingSaveProvider()
+    const wrapper = mountWithSaveProvider(saveProvider)
 
     helpers.setFormState(wrapper, formState)
     await helpers.submitForm(wrapper)

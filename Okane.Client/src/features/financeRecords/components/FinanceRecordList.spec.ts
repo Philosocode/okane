@@ -9,11 +9,23 @@ import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { financeRecordHandlers } from '@tests/msw/handlers/financeRecord'
 import { SHARED_COPY } from '@shared/constants/copy'
 
-import { testServer } from '@tests/msw/testServer'
+import {
+  DELETE_FINANCE_RECORD_ID_SYMBOL,
+  useDeleteFinanceRecordId,
+} from '@features/financeRecords/providers/deleteFinanceRecordIdProvider'
+import {
+  SAVE_FINANCE_RECORD_SYMBOL,
+  useSaveFinanceRecordProvider,
+} from '@features/financeRecords/providers/saveFinanceRecordProvider'
+import {
+  SEARCH_FINANCE_RECORDS_SYMBOL,
+  useSearchFinanceRecordsProvider,
+} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
 import { getRange } from '@shared/utils/array'
 
 import { createTestFinanceRecord } from '@tests/factories/financeRecord'
+import { testServer } from '@tests/msw/testServer'
 
 const financeRecords = getRange({ end: 5 }).map((n) =>
   createTestFinanceRecord({
@@ -24,7 +36,17 @@ const financeRecords = getRange({ end: 5 }).map((n) =>
 
 const mountComponent = getMountComponent(FinanceRecordList, {
   global: {
-    stubs: { Observer: true, teleport: true },
+    provide: {
+      [SEARCH_FINANCE_RECORDS_SYMBOL]: useSearchFinanceRecordsProvider(),
+
+      // Needed for FinanceRecordListItem.
+      [DELETE_FINANCE_RECORD_ID_SYMBOL]: useDeleteFinanceRecordId(),
+      [SAVE_FINANCE_RECORD_SYMBOL]: useSaveFinanceRecordProvider(),
+    },
+    stubs: {
+      Observer: true,
+      teleport: true,
+    },
   },
   withQueryClient: true,
 })
@@ -63,7 +85,6 @@ test('renders the expected message if no records exist', async () => {
   )
 
   const testId = 'FinanceRecordListItem'
-
   const wrapper = mountComponent({
     global: {
       stubs: {

@@ -7,11 +7,29 @@ import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 import { SHARED_COPY } from '@shared/constants/copy'
 
-import { useSearchFinanceRecordsStore } from '@features/financeRecords/composables/useSearchFinanceRecordsStore'
+import {
+  SEARCH_FINANCE_RECORDS_SYMBOL,
+  useSearchFinanceRecordsProvider,
+  type SearchFinanceRecordsProvider,
+} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
 import { capitalize } from '@shared/utils/string'
 
-const mountComponent = getMountComponent(SearchFinanceRecordsSummary)
+function mountWithProviders(
+  args: {
+    searchProvider: SearchFinanceRecordsProvider
+  } = {
+    searchProvider: useSearchFinanceRecordsProvider(),
+  },
+) {
+  return getMountComponent(SearchFinanceRecordsSummary, {
+    global: {
+      provide: {
+        [SEARCH_FINANCE_RECORDS_SYMBOL]: args.searchProvider,
+      },
+    },
+  })()
+}
 
 const helpers = {
   getDateTimeFormatter() {
@@ -20,16 +38,16 @@ const helpers = {
 }
 
 test('renders the expected heading', () => {
-  const wrapper = mountComponent()
+  const wrapper = mountWithProviders()
   const heading = wrapper.getComponent(Heading)
   expect(heading.text()).toBe(FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.APPLIED_SEARCH_FILTERS)
 })
 
 test('does not render missing fields', () => {
-  const searchStore = useSearchFinanceRecordsStore()
-  searchStore.searchFilters.happenedAt1 = undefined
+  const searchProvider = useSearchFinanceRecordsProvider()
+  searchProvider.setFilters({ happenedAt1: undefined })
 
-  const wrapper = mountComponent()
+  const wrapper = mountWithProviders({ searchProvider })
   const missingFields = [
     FINANCES_COPY.PROPERTIES.DESCRIPTION,
     FINANCES_COPY.PROPERTIES.AMOUNT,
@@ -42,65 +60,68 @@ test('does not render missing fields', () => {
 })
 
 test('renders a default type of all', () => {
-  const wrapper = mountComponent()
+  const wrapper = mountWithProviders()
   const text = `${FINANCES_COPY.PROPERTIES.TYPE}: ${capitalize(SHARED_COPY.COMMON.ALL)}`
   const li = wrapper.findByText('li', text)
   expect(li).toBeDefined()
 })
 
 test('renders a specific type', () => {
-  const searchStore = useSearchFinanceRecordsStore()
-  searchStore.searchFilters.type = FINANCE_RECORD_TYPE.REVENUE
+  const searchProvider = useSearchFinanceRecordsProvider()
+  searchProvider.setFilters({ type: FINANCE_RECORD_TYPE.REVENUE })
 
-  const wrapper = mountComponent()
-  const text = `${FINANCES_COPY.PROPERTIES.TYPE}: ${searchStore.searchFilters.type}`
+  const wrapper = mountWithProviders({ searchProvider })
+  const text = `${FINANCES_COPY.PROPERTIES.TYPE}: ${searchProvider.filters.type}`
   const li = wrapper.findByText('li', text)
   expect(li).toBeDefined()
 })
 
 test('renders the sortDirection and sortField', () => {
-  const searchStore = useSearchFinanceRecordsStore()
-  const { searchFilters } = searchStore
-
-  const wrapper = mountComponent()
-  const text = `${SHARED_COPY.SEARCH.SORT_BY}: ${searchFilters.sortField}, ${searchFilters.sortDirection}`
+  const searchProvider = useSearchFinanceRecordsProvider()
+  const { filters } = searchProvider
+  const wrapper = mountWithProviders({ searchProvider })
+  const text = `${SHARED_COPY.SEARCH.SORT_BY}: ${filters.sortField}, ${filters.sortDirection}`
   const li = wrapper.findByText('li', text)
   expect(li).toBeDefined()
 })
 
 test('renders a description when passed', () => {
-  const searchStore = useSearchFinanceRecordsStore()
-  searchStore.searchFilters.description = 'Cool description'
+  const searchProvider = useSearchFinanceRecordsProvider()
+  searchProvider.setFilters({ description: 'Cool description' })
 
-  const wrapper = mountComponent()
-  const text = `${FINANCES_COPY.PROPERTIES.DESCRIPTION}: ${searchStore.searchFilters.description}`
+  const wrapper = mountWithProviders({ searchProvider })
+  const text = `${FINANCES_COPY.PROPERTIES.DESCRIPTION}: ${searchProvider.filters.description}`
   const li = wrapper.findByText('li', text)
   expect(li).toBeDefined()
 })
 
 test('renders an amount with operator', () => {
-  const searchStore = useSearchFinanceRecordsStore()
   const amount1 = 1
   const operator = COMPARISON_OPERATOR.GTE
-  searchStore.searchFilters.amount1 = amount1
-  searchStore.searchFilters.amount2 = 2
-  searchStore.searchFilters.amountOperator = operator
+  const searchProvider = useSearchFinanceRecordsProvider()
+  searchProvider.setFilters({
+    amount1,
+    amount2: 2,
+    amountOperator: operator,
+  })
 
-  const wrapper = mountComponent()
+  const wrapper = mountWithProviders({ searchProvider })
   const text = `${FINANCES_COPY.PROPERTIES.AMOUNT}: ${operator} ${amount1.toFixed(2)}`
   const li = wrapper.findByText('li', text, { isExact: true })
   expect(li).toBeDefined()
 })
 
 test('renders an amount range', () => {
-  const searchStore = useSearchFinanceRecordsStore()
   const amount1 = 1
   const amount2 = 2
-  searchStore.searchFilters.amount1 = amount1
-  searchStore.searchFilters.amount2 = amount2
-  searchStore.searchFilters.amountOperator = undefined
+  const searchProvider = useSearchFinanceRecordsProvider()
+  searchProvider.setFilters({
+    amount1,
+    amount2,
+    amountOperator: undefined,
+  })
 
-  const wrapper = mountComponent()
+  const wrapper = mountWithProviders({ searchProvider })
   const textParts = [
     `${FINANCES_COPY.PROPERTIES.AMOUNT}:`,
     COMPARISON_OPERATOR.GTE,
@@ -116,30 +137,34 @@ test('renders an amount range', () => {
 })
 
 test('renders a happenedAt with operator', () => {
-  const searchStore = useSearchFinanceRecordsStore()
   const happenedAt1 = new Date('2024-01-01')
   const operator = COMPARISON_OPERATOR.GTE
-  searchStore.searchFilters.happenedAt1 = happenedAt1
-  searchStore.searchFilters.happenedAt2 = new Date('2025-01-01')
-  searchStore.searchFilters.happenedAtOperator = operator
+  const searchProvider = useSearchFinanceRecordsProvider()
+  searchProvider.setFilters({
+    happenedAt1,
+    happenedAt2: new Date('2025-01-01'),
+    happenedAtOperator: operator,
+  })
 
   const formatter = helpers.getDateTimeFormatter()
-  const wrapper = mountComponent()
+  const wrapper = mountWithProviders({ searchProvider })
   const text = `${FINANCES_COPY.PROPERTIES.HAPPENED_AT}: ${operator} ${formatter.format(happenedAt1)}`
   const li = wrapper.findByText('li', text, { isExact: true })
   expect(li).toBeDefined()
 })
 
 test('renders a happenedAt range', () => {
-  const searchStore = useSearchFinanceRecordsStore()
   const happenedAt1 = new Date('2024-01-01')
   const happenedAt2 = new Date('2025-01-01')
-  searchStore.searchFilters.happenedAt1 = happenedAt1
-  searchStore.searchFilters.happenedAt2 = happenedAt2
-  searchStore.searchFilters.happenedAtOperator = undefined
+  const searchProvider = useSearchFinanceRecordsProvider()
+  searchProvider.setFilters({
+    happenedAt1,
+    happenedAt2,
+    happenedAtOperator: undefined,
+  })
 
   const formatter = helpers.getDateTimeFormatter()
-  const wrapper = mountComponent()
+  const wrapper = mountWithProviders({ searchProvider })
   const textParts = [
     `${FINANCES_COPY.PROPERTIES.HAPPENED_AT}:`,
     COMPARISON_OPERATOR.GTE,

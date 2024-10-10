@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // External
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 
 // Internal
 import Modal from '@shared/components/modal/Modal.vue'
@@ -11,21 +11,23 @@ import { DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS } from '@features/financeRecords
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
 import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
-
-import { useSearchFinanceRecordsStore } from '@features/financeRecords/composables/useSearchFinanceRecordsStore'
+import {
+  SEARCH_FINANCE_RECORDS_SYMBOL,
+  type SearchFinanceRecordsProvider,
+} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
 const modalHeadingId = 'search-finance-records-modal-heading'
 const formState = ref<FinanceRecordsSearchFilters>({ ...DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS })
-const searchStore = useSearchFinanceRecordsStore()
+const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
 
 function handleClose() {
-  searchStore.setModalIsShowing(false)
+  searchProvider.setModalIsShowing(false)
 }
 </script>
 
 <template>
   <Modal
-    :is-showing="searchStore.modalIsShowing"
+    :is-showing="searchProvider.modalIsShowing"
     :modal-heading-id="modalHeadingId"
     @close="handleClose"
   >

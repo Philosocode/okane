@@ -16,6 +16,10 @@ import { apiClient } from '@shared/services/apiClient/apiClient'
 import { mapSaveFinanceRecordFormState } from '@features/financeRecords/utils/mappers'
 
 import {
+  SEARCH_FINANCE_RECORDS_SYMBOL,
+  useSearchFinanceRecordsProvider,
+} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+import {
   SAVE_FINANCE_RECORD_SYMBOL,
   type SaveFinanceRecordProvider,
   useSaveFinanceRecordProvider,
@@ -35,11 +39,12 @@ const mountComponent = getMountComponent(CreateFinanceRecordModal, {
   withQueryClient: true,
 })
 
-function mountWithSaveProvider(saveProvider: SaveFinanceRecordProvider) {
+function mountWithProviders(args: { saveProvider: SaveFinanceRecordProvider }) {
   return mountComponent({
     global: {
       provide: {
-        [SAVE_FINANCE_RECORD_SYMBOL]: saveProvider,
+        [SAVE_FINANCE_RECORD_SYMBOL]: args.saveProvider,
+        [SEARCH_FINANCE_RECORDS_SYMBOL]: useSearchFinanceRecordsProvider(),
       },
     },
   })
@@ -65,14 +70,14 @@ const helpers = {
 }
 
 test('does not render the modal content when not creating a finance record', () => {
-  const wrapper = mountWithSaveProvider(useSaveFinanceRecordProvider())
+  const wrapper = mountWithProviders({ saveProvider: useSaveFinanceRecordProvider() })
   const heading = wrapper.findComponent(ModalHeading)
   expect(heading.exists()).toBe(false)
 })
 
 test('renders the modal heading', () => {
   const saveProvider = helpers.getCreatingSaveProvider()
-  const wrapper = mountWithSaveProvider(saveProvider)
+  const wrapper = mountWithProviders({ saveProvider })
 
   const heading = wrapper.getComponent(ModalHeading)
   expect(heading.text()).toBe(FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.CREATE_FINANCE_RECORD)
@@ -80,7 +85,7 @@ test('renders the modal heading', () => {
 
 test('closes the modal', async () => {
   const saveProvider = helpers.getCreatingSaveProvider()
-  const wrapper = mountWithSaveProvider(saveProvider)
+  const wrapper = mountWithProviders({ saveProvider })
   const modal = wrapper.getComponent(SaveFinanceRecordModal)
   modal.vm.$emit('close')
   expect(saveProvider.isCreating).toBe(false)
@@ -94,7 +99,7 @@ describe('with a successful request to create a finance record', () => {
   test('makes a POST request to create a finance record', async () => {
     const postSpy = vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInAPIResponse(null))
     const saveProvider = helpers.getCreatingSaveProvider()
-    const wrapper = mountWithSaveProvider(saveProvider)
+    const wrapper = mountWithProviders({ saveProvider })
 
     helpers.setFormState(wrapper, formState)
     await helpers.submitForm(wrapper)
@@ -109,7 +114,7 @@ describe('with a successful request to create a finance record', () => {
   test('resets the amount and description', async () => {
     const postSpy = vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInAPIResponse(null))
     const saveProvider = helpers.getCreatingSaveProvider()
-    const wrapper = mountWithSaveProvider(saveProvider)
+    const wrapper = mountWithProviders({ saveProvider })
 
     helpers.setFormState(wrapper, formState)
     await helpers.submitForm(wrapper)
@@ -137,7 +142,7 @@ describe('with a successful request to create a finance record', () => {
       .mockResolvedValueOnce(wrapInAPIResponse(null))
 
     const saveProvider = helpers.getCreatingSaveProvider()
-    const wrapper = mountWithSaveProvider(saveProvider)
+    const wrapper = mountWithProviders({ saveProvider })
 
     helpers.setFormState(wrapper, formState)
     await helpers.submitForm(wrapper)
@@ -163,7 +168,7 @@ describe('with an error creating a finance record', () => {
     })
     const postSpy = vi.spyOn(apiClient, 'post').mockRejectedValue(apiErrors)
     const saveProvider = helpers.getCreatingSaveProvider()
-    const wrapper = mountWithSaveProvider(saveProvider)
+    const wrapper = mountWithProviders({ saveProvider })
 
     helpers.setFormState(wrapper, formState)
     await helpers.submitForm(wrapper)

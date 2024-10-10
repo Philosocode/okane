@@ -17,6 +17,10 @@ import {
 } from '@features/financeRecords/utils/mappers'
 
 import {
+  SEARCH_FINANCE_RECORDS_SYMBOL,
+  useSearchFinanceRecordsProvider,
+} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+import {
   SAVE_FINANCE_RECORD_SYMBOL,
   type SaveFinanceRecordProvider,
   useSaveFinanceRecordProvider,
@@ -57,13 +61,13 @@ function mountWithProviders(args: { saveProvider?: SaveFinanceRecordProvider } =
     global: {
       provide: {
         [SAVE_FINANCE_RECORD_SYMBOL]: saveProvider,
+        [SEARCH_FINANCE_RECORDS_SYMBOL]: useSearchFinanceRecordsProvider(),
       },
       stubs: {
         teleport: true,
       },
     },
     withQueryClient: true,
-    withPinia: true,
   })()
 }
 

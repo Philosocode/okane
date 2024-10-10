@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // External
-import { ref, useTemplateRef } from 'vue'
+import { inject, ref, useTemplateRef } from 'vue'
 
 // Internal
 import FormInput from '@shared/components/form/FormInput.vue'
@@ -21,12 +21,14 @@ import {
 
 import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
 
-import { useSearchFinanceRecordsStore } from '@features/financeRecords/composables/useSearchFinanceRecordsStore'
+import {
+  SEARCH_FINANCE_RECORDS_SYMBOL,
+  type SearchFinanceRecordsProvider,
+} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
-const searchStore = useSearchFinanceRecordsStore()
+const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
 const formRef = useTemplateRef<HTMLFormElement>('form')
-
-const formState = ref<FinanceRecordsSearchFilters>({ ...searchStore.searchFilters })
+const formState = ref<FinanceRecordsSearchFilters>({ ...searchProvider.filters })
 
 function handleChange(updates: Partial<FinanceRecordsSearchFilters>) {
   formState.value = {
@@ -36,7 +38,7 @@ function handleChange(updates: Partial<FinanceRecordsSearchFilters>) {
 }
 
 function handleCancel() {
-  searchStore.setModalIsShowing(false)
+  searchProvider.setModalIsShowing(false)
 }
 
 function handleReset() {
@@ -46,7 +48,7 @@ function handleReset() {
 function handleSubmit() {
   if (!formRef.value?.checkValidity()) return
 
-  searchStore.searchFilters = { ...formState.value }
+  searchProvider.setFilters(formState.value)
 
   handleCancel()
 }

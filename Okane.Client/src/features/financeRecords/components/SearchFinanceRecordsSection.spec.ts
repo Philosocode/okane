@@ -4,22 +4,37 @@ import SearchFinanceRecordsSection from '@features/financeRecords/components/Sea
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
-import { useSearchFinanceRecordsStore } from '@features/financeRecords/composables/useSearchFinanceRecordsStore'
+import {
+  SEARCH_FINANCE_RECORDS_SYMBOL,
+  useSearchFinanceRecordsProvider,
+} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
-const mountComponent = getMountComponent(SearchFinanceRecordsSection)
+const mountComponent = getMountComponent(SearchFinanceRecordsSection, {
+  global: {
+    provide: {
+      [SEARCH_FINANCE_RECORDS_SYMBOL]: useSearchFinanceRecordsProvider(),
+    },
+  },
+})
 
 test('renders a button to open the search filters modal', async () => {
-  const wrapper = mountComponent()
-  const searchStore = useSearchFinanceRecordsStore()
-  searchStore.setModalIsShowing(false)
+  const searchProvider = useSearchFinanceRecordsProvider()
+  searchProvider.setModalIsShowing(false)
 
+  const wrapper = mountComponent({
+    global: {
+      provide: {
+        [SEARCH_FINANCE_RECORDS_SYMBOL]: searchProvider,
+      },
+    },
+  })
   const editButton = wrapper.findByText(
     'button',
     FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.EDIT_SEARCH_FILTERS,
   )
   await editButton.trigger('click')
 
-  expect(searchStore.modalIsShowing).toBe(true)
+  expect(searchProvider.modalIsShowing).toBe(true)
 })
 
 test('renders a modal to edit search filters', () => {

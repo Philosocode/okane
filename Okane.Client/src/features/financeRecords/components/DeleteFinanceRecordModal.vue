@@ -11,7 +11,11 @@ import { financeRecordQueryKeys } from '@features/financeRecords/constants/query
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
 import { useDeleteFinanceRecordMutation } from '@features/financeRecords/composables/useDeleteFinanceRecordMutation'
-import { useSearchFinanceRecordsStore } from '@features/financeRecords/composables/useSearchFinanceRecordsStore'
+
+import {
+  SEARCH_FINANCE_RECORDS_SYMBOL,
+  type SearchFinanceRecordsProvider,
+} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
 import {
   DELETE_FINANCE_RECORD_ID_SYMBOL,
@@ -19,10 +23,10 @@ import {
 } from '@features/financeRecords/providers/deleteFinanceRecordIdProvider'
 
 const deleteProvider = inject(DELETE_FINANCE_RECORD_ID_SYMBOL) as DeleteFinanceRecordIdProvider
-const searchStore = useSearchFinanceRecordsStore()
+const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
 
 const modalHeadingId = 'delete-finance-record-modal-heading'
-const queryKey = computed(() => financeRecordQueryKeys.listByFilters(searchStore.searchFilters))
+const queryKey = computed(() => financeRecordQueryKeys.listByFilters(searchProvider.filters))
 const deleteMutation = useDeleteFinanceRecordMutation(queryKey)
 
 function handleClose() {

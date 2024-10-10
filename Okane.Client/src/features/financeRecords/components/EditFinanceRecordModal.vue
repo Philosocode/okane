@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // External
-import { computed, ref, watchEffect } from 'vue'
+import { computed, inject, ref, watchEffect } from 'vue'
 
 // Internal
 import SaveFinanceRecordModal from '@features/financeRecords/components/SaveFinanceRecordModal.vue'
@@ -11,8 +11,12 @@ import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import type { SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
 import { useEditFinanceRecordMutation } from '@features/financeRecords/composables/useEditFinanceRecordMutation'
-import { useSaveFinanceRecordStore } from '@features/financeRecords/composables/useSaveFinanceRecordStore'
 import { useSearchFinanceRecordsStore } from '@features/financeRecords/composables/useSearchFinanceRecordsStore'
+
+import {
+  SAVE_FINANCE_RECORD_SYMBOL,
+  type SaveFinanceRecordProvider,
+} from '@features/financeRecords/providers/saveFinanceRecordProvider'
 
 import { getFormErrorsFromAPIResponse } from '@shared/services/apiClient/utils'
 import { getInitialFormErrors } from '@shared/utils/form'
@@ -26,7 +30,7 @@ import {
   mapSaveFinanceRecordFormState,
 } from '@features/financeRecords/utils/mappers'
 
-const saveStore = useSaveFinanceRecordStore()
+const saveProvider = inject(SAVE_FINANCE_RECORD_SYMBOL) as SaveFinanceRecordProvider
 
 const searchStore = useSearchFinanceRecordsStore()
 const queryKey = computed(() => financeRecordQueryKeys.listByFilters(searchStore.searchFilters))
@@ -34,8 +38,8 @@ const queryKey = computed(() => financeRecordQueryKeys.listByFilters(searchStore
 const editMutation = useEditFinanceRecordMutation(queryKey)
 
 const initialFormState = computed(() => {
-  if (!saveStore.editingFinanceRecord) return getInitialSaveFinanceRecordFormState()
-  return mapFinanceRecord.to.saveFinanceRecordFormState(saveStore.editingFinanceRecord)
+  if (!saveProvider.editingFinanceRecord) return getInitialSaveFinanceRecordFormState()
+  return mapFinanceRecord.to.saveFinanceRecordFormState(saveProvider.editingFinanceRecord)
 })
 
 const formState = ref<SaveFinanceRecordFormState>(getInitialSaveFinanceRecordFormState())
@@ -55,11 +59,11 @@ function handleChange(updates: Partial<SaveFinanceRecordFormState>) {
 }
 
 function handleClose() {
-  saveStore.setEditingFinanceRecord(undefined)
+  saveProvider.setEditingFinanceRecord(undefined)
 }
 
 function handleSubmit() {
-  const id = saveStore.editingFinanceRecord?.id
+  const id = saveProvider.editingFinanceRecord?.id
   if (!id) return
 
   const { changes, hasChanges } = getSaveFinanceRecordFormChanges(
@@ -90,7 +94,7 @@ function handleSubmit() {
   <SaveFinanceRecordModal
     :form-errors="formErrors"
     :form-state="formState"
-    :is-showing="!!saveStore.editingFinanceRecord"
+    :is-showing="!!saveProvider.editingFinanceRecord"
     :title="FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.EDIT_FINANCE_RECORD"
     @change="handleChange"
     @close="handleClose"

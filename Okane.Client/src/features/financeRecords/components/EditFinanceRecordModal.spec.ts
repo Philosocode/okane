@@ -11,12 +11,16 @@ import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
 import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
-import { useSaveFinanceRecordStore } from '@features/financeRecords/composables/useSaveFinanceRecordStore'
-
 import {
   mapFinanceRecord,
   mapSaveFinanceRecordFormState,
 } from '@features/financeRecords/utils/mappers'
+
+import {
+  SAVE_FINANCE_RECORD_SYMBOL,
+  type SaveFinanceRecordProvider,
+  useSaveFinanceRecordProvider,
+} from '@features/financeRecords/providers/saveFinanceRecordProvider'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
@@ -25,25 +29,16 @@ import { createTestFinanceRecord } from '@tests/factories/financeRecord'
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { wrapInAPIResponse } from '@tests/utils/apiResponse'
 
-const mountComponent = getMountComponent(EditFinanceRecordModal, {
-  global: {
-    stubs: {
-      teleport: true,
-    },
-  },
-  withQueryClient: true,
-  withPinia: true,
-})
-
 const editingFinanceRecord = createTestFinanceRecord()
 const initialFormState = mapFinanceRecord.to.saveFinanceRecordFormState(editingFinanceRecord)
 
-beforeEach(() => {
-  const saveStore = useSaveFinanceRecordStore()
-  saveStore.setEditingFinanceRecord(editingFinanceRecord)
-})
-
 const helpers = {
+  getEditingSaveProvider() {
+    const saveProvider = useSaveFinanceRecordProvider()
+    saveProvider.setEditingFinanceRecord(editingFinanceRecord)
+
+    return saveProvider
+  },
   setFormState(wrapper: VueWrapper, formState: Partial<SaveFinanceRecordFormState>) {
     const modal = wrapper.getComponent(SaveFinanceRecordModal)
     modal.vm.$emit('change', formState)
@@ -55,31 +50,48 @@ const helpers = {
   },
 }
 
-test('does not render the modal content when not editing a finance record', () => {
-  const saveStore = useSaveFinanceRecordStore()
-  saveStore.setEditingFinanceRecord(undefined)
+function mountWithProviders(args: { saveProvider?: SaveFinanceRecordProvider } = {}) {
+  const saveProvider = args.saveProvider ?? helpers.getEditingSaveProvider()
 
-  const wrapper = mountComponent()
+  return getMountComponent(EditFinanceRecordModal, {
+    global: {
+      provide: {
+        [SAVE_FINANCE_RECORD_SYMBOL]: saveProvider,
+      },
+      stubs: {
+        teleport: true,
+      },
+    },
+    withQueryClient: true,
+    withPinia: true,
+  })()
+}
+
+test('does not render the modal content when not editing a finance record', () => {
+  const saveProvider = useSaveFinanceRecordProvider()
+  saveProvider.setEditingFinanceRecord(undefined)
+
+  const wrapper = mountWithProviders({ saveProvider })
   const heading = wrapper.findComponent(ModalHeading)
   expect(heading.exists()).toBe(false)
 })
 
 test('renders the modal heading', () => {
-  const wrapper = mountComponent()
+  const wrapper = mountWithProviders()
   const heading = wrapper.getComponent(ModalHeading)
   expect(heading.text()).toBe(FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.EDIT_FINANCE_RECORD)
 })
 
 test('closes the modal', async () => {
-  const wrapper = mountComponent()
+  const saveProvider = helpers.getEditingSaveProvider()
+  const wrapper = mountWithProviders({ saveProvider })
   const modal = wrapper.getComponent(SaveFinanceRecordModal)
   modal.vm.$emit('close')
-  const saveStore = useSaveFinanceRecordStore()
-  expect(saveStore.editingFinanceRecord).toBeUndefined()
+  expect(saveProvider.editingFinanceRecord).toBeUndefined()
 })
 
 test('sets the initial form state based on the editingFinanceRecord', async () => {
-  const wrapper = mountComponent()
+  const wrapper = mountWithProviders()
 
   const amountInput = wrapper.get('input[name="amount"]').element as HTMLInputElement
   expect(amountInput.value).toBe(initialFormState.amount.toString())
@@ -95,20 +107,18 @@ test('sets the initial form state based on the editingFinanceRecord', async () =
 })
 
 test('updates the form state when the initial form state changes', async () => {
-  const wrapper = mountComponent()
   const updates = { amount: 100_000 }
-  const saveStore = useSaveFinanceRecordStore()
-  saveStore.setEditingFinanceRecord({ ...editingFinanceRecord, ...updates })
+  const saveProvider = useSaveFinanceRecordProvider()
+  saveProvider.setEditingFinanceRecord({ ...editingFinanceRecord, ...updates })
 
-  await flushPromises()
-
+  const wrapper = mountWithProviders({ saveProvider })
   const amountInput = wrapper.get('input[name="amount"]').element as HTMLInputElement
   expect(amountInput.value).toBe(updates.amount.toString())
 })
 
 test("does not make a request when the form state hasn't changed", async () => {
   const patchSpy = vi.spyOn(apiClient, 'patch')
-  const wrapper = mountComponent()
+  const wrapper = mountWithProviders()
 
   await helpers.submitForm(wrapper)
   expect(patchSpy).not.toHaveBeenCalled()
@@ -121,7 +131,7 @@ describe('with a successful request to edit a finance record', () => {
 
   test('makes a PATCH request to update the finance record', async () => {
     const patchSpy = vi.spyOn(apiClient, 'patch').mockResolvedValue(wrapInAPIResponse(null))
-    const wrapper = mountComponent()
+    const wrapper = mountWithProviders()
 
     helpers.setFormState(wrapper, updates)
     await helpers.submitForm(wrapper)
@@ -138,13 +148,13 @@ describe('with a successful request to edit a finance record', () => {
 
   test('closes the form', async () => {
     const patchSpy = vi.spyOn(apiClient, 'patch').mockResolvedValue(wrapInAPIResponse(null))
-    const wrapper = mountComponent()
+    const saveProvider = helpers.getEditingSaveProvider()
+    const wrapper = mountWithProviders({ saveProvider })
 
     helpers.setFormState(wrapper, updates)
     await helpers.submitForm(wrapper)
 
-    const saveStore = useSaveFinanceRecordStore()
-    expect(saveStore.editingFinanceRecord).toBeUndefined()
+    expect(saveProvider.editingFinanceRecord).toBeUndefined()
 
     patchSpy.mockRestore()
   })
@@ -156,7 +166,7 @@ describe('with a successful request to edit a finance record', () => {
       .mockRejectedValueOnce(createTestProblemDetails(apiErrors))
       .mockResolvedValueOnce(wrapInAPIResponse(null))
 
-    const wrapper = mountComponent()
+    const wrapper = mountWithProviders()
 
     helpers.setFormState(wrapper, updates)
     await helpers.submitForm(wrapper)
@@ -180,7 +190,7 @@ describe('with an error updating a finance record', () => {
       happenedAt: '',
     })
     const patchSpy = vi.spyOn(apiClient, 'patch').mockRejectedValue(apiErrors)
-    const wrapper = mountComponent()
+    const wrapper = mountWithProviders()
 
     helpers.setFormState(wrapper, { amount: 10_000 })
     await helpers.submitForm(wrapper)

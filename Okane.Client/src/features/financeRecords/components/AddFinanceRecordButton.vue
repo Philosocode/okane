@@ -1,17 +1,21 @@
 <script setup lang="ts">
 // External
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { inject } from 'vue'
 
 // Internal
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
-import { useSaveFinanceRecordStore } from '@features/financeRecords/composables/useSaveFinanceRecordStore'
+import {
+  SAVE_FINANCE_RECORD_SYMBOL,
+  type SaveFinanceRecordProvider,
+} from '@features/financeRecords/providers/saveFinanceRecordProvider'
 
-const saveStore = useSaveFinanceRecordStore()
+const saveProvider = inject(SAVE_FINANCE_RECORD_SYMBOL) as SaveFinanceRecordProvider
 </script>
 
 <template>
-  <button class="button" @click="saveStore.setIsCreating(true)">
+  <button class="button" @click="saveProvider.setIsCreating(true)">
     <FontAwesomeIcon
       icon="fa-solid fa-plus"
       :title="FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.SHOW_MODAL"

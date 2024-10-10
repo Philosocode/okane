@@ -3,9 +3,18 @@ import AddFinanceRecordButton from '@features/financeRecords/components/AddFinan
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
-import { useSaveFinanceRecordStore } from '@features/financeRecords/composables/useSaveFinanceRecordStore'
+import {
+  SAVE_FINANCE_RECORD_SYMBOL,
+  useSaveFinanceRecordProvider,
+} from '@features/financeRecords/providers/saveFinanceRecordProvider'
 
-const mountComponent = getMountComponent(AddFinanceRecordButton, { withPinia: true })
+const mountComponent = getMountComponent(AddFinanceRecordButton, {
+  global: {
+    provide: {
+      [SAVE_FINANCE_RECORD_SYMBOL]: useSaveFinanceRecordProvider(),
+    },
+  },
+})
 
 test('renders a button to add a finance record', () => {
   const wrapper = mountComponent()
@@ -14,13 +23,19 @@ test('renders a button to add a finance record', () => {
 })
 
 test('updates the creating state on click', async () => {
-  const saveStore = useSaveFinanceRecordStore()
-  const wrapper = mountComponent()
+  const saveProvider = useSaveFinanceRecordProvider()
+  const wrapper = mountComponent({
+    global: {
+      provide: {
+        [SAVE_FINANCE_RECORD_SYMBOL]: saveProvider,
+      },
+    },
+  })
 
-  expect(saveStore.isCreating).toBe(false)
+  expect(saveProvider.isCreating).toBe(false)
 
   const button = wrapper.get('button')
   await button.trigger('click')
 
-  expect(saveStore.isCreating).toBe(true)
+  expect(saveProvider.isCreating).toBe(true)
 })

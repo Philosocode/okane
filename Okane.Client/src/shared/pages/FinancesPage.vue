@@ -15,11 +15,17 @@ import SearchFiltersSection from '@features/financeRecords/components/SearchFina
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
 import {
-  useDeleteFinanceRecordId,
   DELETE_FINANCE_RECORD_ID_SYMBOL,
+  useDeleteFinanceRecordId,
 } from '@features/financeRecords/providers/deleteFinanceRecordIdProvider'
 
+import {
+  SAVE_FINANCE_RECORD_SYMBOL,
+  useSaveFinanceRecordProvider,
+} from '@features/financeRecords/providers/saveFinanceRecordProvider'
+
 provide(DELETE_FINANCE_RECORD_ID_SYMBOL, useDeleteFinanceRecordId())
+provide(SAVE_FINANCE_RECORD_SYMBOL, useSaveFinanceRecordProvider())
 </script>
 
 <template>

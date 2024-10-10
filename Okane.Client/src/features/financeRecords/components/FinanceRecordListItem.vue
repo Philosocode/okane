@@ -11,7 +11,10 @@ import { SHARED_COPY } from '@shared/constants/copy'
 
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
 
-import { useSaveFinanceRecordStore } from '@features/financeRecords/composables/useSaveFinanceRecordStore'
+import {
+  SAVE_FINANCE_RECORD_SYMBOL,
+  type SaveFinanceRecordProvider,
+} from '@features/financeRecords/providers/saveFinanceRecordProvider'
 
 import {
   DELETE_FINANCE_RECORD_ID_SYMBOL,
@@ -29,10 +32,10 @@ const dateTime = computed(() =>
 )
 
 const deleteProvider = inject(DELETE_FINANCE_RECORD_ID_SYMBOL) as DeleteFinanceRecordIdProvider
-const saveStore = useSaveFinanceRecordStore()
+const saveProvider = inject(SAVE_FINANCE_RECORD_SYMBOL) as SaveFinanceRecordProvider
 
 function handleEdit() {
-  saveStore.setEditingFinanceRecord({ ...financeRecord })
+  saveProvider.setEditingFinanceRecord({ ...financeRecord })
 }
 
 function handleDelete() {

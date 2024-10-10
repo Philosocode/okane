@@ -1,13 +1,14 @@
 // External
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, type InjectionKey } from 'vue'
 
 // Internal
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
 
-export type SaveFinanceRecordStore = ReturnType<typeof useSaveFinanceRecordStore>
+export type SaveFinanceRecordProvider = ReturnType<typeof useSaveFinanceRecordProvider>
 
-export const useSaveFinanceRecordStore = defineStore('SaveFinanceRecordStore', () => {
+export const SAVE_FINANCE_RECORD_SYMBOL = Symbol() as InjectionKey<SaveFinanceRecordProvider>
+
+export function useSaveFinanceRecordProvider() {
   const isCreating = ref(false)
   const editingFinanceRecord = ref<FinanceRecord>()
 
@@ -20,10 +21,14 @@ export const useSaveFinanceRecordStore = defineStore('SaveFinanceRecordStore', (
   }
 
   return {
-    editingFinanceRecord,
-    isCreating,
+    get editingFinanceRecord() {
+      return editingFinanceRecord.value
+    },
+    get isCreating() {
+      return isCreating.value
+    },
 
     setIsCreating,
     setEditingFinanceRecord,
   }
-})
+}

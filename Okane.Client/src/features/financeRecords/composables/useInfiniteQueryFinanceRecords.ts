@@ -1,5 +1,5 @@
 // External
-import { computed, toValue, type MaybeRefOrGetter } from 'vue'
+import { computed, inject } from 'vue'
 
 import { type QueryFunctionContext, useInfiniteQuery } from '@tanstack/vue-query'
 
@@ -13,6 +13,11 @@ import { type FinanceRecord } from '@features/financeRecords/types/financeRecord
 import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
 
 import { useCleanUpInfiniteQuery } from '@shared/composables/useCleanUpInfiniteQuery'
+
+import {
+  SEARCH_FINANCE_RECORDS_SYMBOL,
+  type SearchFinanceRecordsProvider,
+} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
@@ -29,15 +34,13 @@ export function fetchPaginatedFinanceRecords({
   return apiClient.get(url, { signal })
 }
 
-export function useInfiniteQueryFinanceRecords(
-  searchFilters: MaybeRefOrGetter<FinanceRecordsSearchFilters>,
-) {
-  const queryKey = computed(() => financeRecordQueryKeys.listByFilters(toValue(searchFilters)))
+export function useInfiniteQueryFinanceRecords() {
+  const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
+  const queryKey = computed(() => financeRecordQueryKeys.listByFilters(searchProvider.filters))
 
   useCleanUpInfiniteQuery(queryKey)
 
   return useInfiniteQuery({
-    enabled: Boolean(toValue(searchFilters)),
     queryKey,
     queryFn: fetchPaginatedFinanceRecords,
     initialPageParam: INITIAL_PAGE,

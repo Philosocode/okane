@@ -1,13 +1,20 @@
 // External
-import { defineComponent, toRef } from 'vue'
+import { defineComponent } from 'vue'
 import { flushPromises } from '@vue/test-utils'
 
 // Internal
 import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
+import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
 
 import { useEditFinanceRecordMutation } from '@features/financeRecords/composables/useEditFinanceRecordMutation'
+
+import {
+  SEARCH_FINANCE_RECORDS_SYMBOL,
+  type SearchFinanceRecordsProvider,
+  useSearchFinanceRecordsProvider,
+} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
@@ -23,8 +30,6 @@ const spyOn = {
   },
 }
 
-const queryKey = toRef(['a'])
-
 const changes: Partial<FinanceRecord> = { amount: 99 }
 const id = 540
 
@@ -33,20 +38,30 @@ const TestComponent = defineComponent({
     shouldPassSearchFilters: Boolean,
   },
   setup() {
-    const mutation = useEditFinanceRecordMutation(queryKey)
+    const mutation = useEditFinanceRecordMutation()
     mutation.mutate({ changes, id })
   },
   template: '<div />',
 })
 
-function mountComponent() {
-  return getMountComponent(TestComponent, { withQueryClient: true })()
+function mountWithProviders(args: { searchProvider?: SearchFinanceRecordsProvider } = {}) {
+  let searchProvider = args.searchProvider
+  if (!searchProvider) searchProvider = useSearchFinanceRecordsProvider()
+
+  return getMountComponent(TestComponent, {
+    global: {
+      provide: {
+        [SEARCH_FINANCE_RECORDS_SYMBOL]: searchProvider,
+      },
+    },
+    withQueryClient: true,
+  })()
 }
 
 test('makes a PATCH request to the expected endpoint', async () => {
   const patchSpy = spyOn.patch()
 
-  mountComponent()
+  mountWithProviders()
   await flushPromises()
   expect(patchSpy).toHaveBeenCalledWith(financeRecordAPIRoutes.patchFinanceRecord({ id }), changes)
 
@@ -56,10 +71,13 @@ test('makes a PATCH request to the expected endpoint', async () => {
 test('invalidates the query key when search filters are passed', async () => {
   const patchSpy = spyOn.patch()
   const invalidateSpy = spyOn.invalidateQueries()
+  const searchProvider = useSearchFinanceRecordsProvider()
 
-  mountComponent()
+  mountWithProviders()
   await flushPromises()
-  expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: queryKey.value })
+  expect(invalidateSpy).toHaveBeenCalledWith({
+    queryKey: financeRecordQueryKeys.listByFilters(searchProvider.filters),
+  })
 
   patchSpy.mockRestore()
   invalidateSpy.mockRestore()

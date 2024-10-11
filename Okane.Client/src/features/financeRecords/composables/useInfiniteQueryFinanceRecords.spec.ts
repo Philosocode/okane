@@ -2,12 +2,9 @@
 import { defineComponent, toValue } from 'vue'
 
 // Internal
-import { DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
 import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 import { INITIAL_PAGE } from '@shared/constants/request'
-
-import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
 
 import * as useCleanUpInfiniteQuery from '@shared/composables/useCleanUpInfiniteQuery'
 import { useInfiniteQueryFinanceRecords } from '@features/financeRecords/composables/useInfiniteQueryFinanceRecords'
@@ -15,26 +12,46 @@ import { useInfiniteQueryFinanceRecords } from '@features/financeRecords/composa
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
 import { wrapInAPIResponse } from '@tests/utils/apiResponse'
+import {
+  SEARCH_FINANCE_RECORDS_SYMBOL,
+  type SearchFinanceRecordsProvider,
+  useSearchFinanceRecordsProvider,
+} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
-function getTestComponent(filters: FinanceRecordsSearchFilters) {
+function getTestComponent() {
   return defineComponent({
     setup() {
-      useInfiniteQueryFinanceRecords(() => filters)
+      useInfiniteQueryFinanceRecords()
     },
     template: '<div />',
   })
 }
 
-const searchFilters = DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS
-const mountComponent = getMountComponent(getTestComponent(searchFilters), { withQueryClient: true })
+function mountWithProviders(args: { searchProvider?: SearchFinanceRecordsProvider } = {}) {
+  let searchProvider = args.searchProvider
+  if (!searchProvider) searchProvider = useSearchFinanceRecordsProvider()
+
+  return getMountComponent(getTestComponent(), {
+    global: {
+      provide: {
+        [SEARCH_FINANCE_RECORDS_SYMBOL]: searchProvider,
+      },
+    },
+    withQueryClient: true,
+  })()
+}
 
 test('makes a request to fetch paginated finance records', () => {
   const getSpy = vi.spyOn(apiClient, 'get').mockResolvedValue(wrapInAPIResponse({}))
+  const searchProvider = useSearchFinanceRecordsProvider()
 
-  mountComponent()
+  mountWithProviders({ searchProvider })
 
   expect(getSpy).toHaveBeenCalledWith(
-    financeRecordAPIRoutes.getPaginatedList({ page: INITIAL_PAGE, searchFilters }),
+    financeRecordAPIRoutes.getPaginatedList({
+      page: INITIAL_PAGE,
+      searchFilters: searchProvider.filters,
+    }),
     {
       signal: new AbortController().signal,
     },
@@ -44,11 +61,12 @@ test('makes a request to fetch paginated finance records', () => {
 test('cleans up the infinite query', () => {
   const getSpy = vi.spyOn(apiClient, 'get').mockResolvedValue(wrapInAPIResponse({}))
   const cleanUpSpy = vi.spyOn(useCleanUpInfiniteQuery, 'useCleanUpInfiniteQuery').mockReturnValue()
+  const searchProvider = useSearchFinanceRecordsProvider()
 
-  mountComponent()
+  mountWithProviders()
 
   expect(toValue(cleanUpSpy.mock.calls[0][0])).toEqual(
-    financeRecordQueryKeys.listByFilters(searchFilters),
+    financeRecordQueryKeys.listByFilters(searchProvider.filters),
   )
 
   getSpy.mockRestore()

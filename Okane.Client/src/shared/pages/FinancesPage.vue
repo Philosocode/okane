@@ -11,6 +11,7 @@ import FinanceRecordList from '@features/financeRecords/components/FinanceRecord
 import Heading from '@shared/components/Heading.vue'
 import PageLayout from '@shared/layouts/PageLayout.vue'
 import SearchFiltersSection from '@features/financeRecords/components/SearchFinanceRecordsSection.vue'
+import TotalRevenueAndExpenses from '@features/financeRecords/components/TotalRevenueAndExpenses.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
@@ -35,6 +36,7 @@ provide(SEARCH_FINANCE_RECORDS_SYMBOL, useSearchFinanceRecordsProvider())
 <template>
   <PageLayout>
     <Heading tag="h1">{{ FINANCES_COPY.FINANCES }}</Heading>
+    <TotalRevenueAndExpenses />
     <SearchFiltersSection />
     <FinanceRecordList />
     <AddFinanceRecordButton />

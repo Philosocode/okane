@@ -7,8 +7,6 @@ import FinancesPage from '@shared/pages/FinancesPage.vue'
 import { DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
-import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
-
 import * as deleteFinanceRecordIdProvider from '@features/financeRecords/providers/deleteFinanceRecordIdProvider'
 import * as saveFinanceRecordProvider from '@features/financeRecords/providers/saveFinanceRecordProvider'
 import * as searchFinanceRecordsProvider from '@features/financeRecords/providers/searchFinanceRecordsProvider'
@@ -21,8 +19,9 @@ const testIds = {
   CreateFinanceRecordModal: 'CreateFinanceRecordModal',
   DeleteFinanceRecordModal: 'DeleteFinanceRecordModal',
   EditFinanceRecordModal: 'EditFinanceRecordModal',
-  Heading: 'Heading',
   FinanceRecordList: 'FinanceRecordList',
+  Heading: 'Heading',
+  TotalRevenueAndExpenses: 'TotalRevenueAndExpenses',
   SearchFiltersSection: 'SearchFiltersSection',
 }
 
@@ -47,6 +46,9 @@ const mountComponent = getMountComponent(FinancesPage, {
       SearchFiltersSection: {
         template: `<div data-testid="${testIds.SearchFiltersSection}" />`,
       },
+      TotalRevenueAndExpenses: {
+        template: `<div data-testid="${testIds.TotalRevenueAndExpenses}" />`,
+      },
     },
   },
 })
@@ -55,6 +57,13 @@ test('renders a page title', () => {
   const wrapper = mountComponent()
   const mainHeading = wrapper.get('h1')
   expect(mainHeading.text()).toBe(FINANCES_COPY.FINANCES)
+})
+
+test('renders total revenue and expenses', () => {
+  commonAsserts.rendersElementWithTestId({
+    testId: testIds.TotalRevenueAndExpenses,
+    wrapper: mountComponent(),
+  })
 })
 
 test('renders a list of finance records', () => {

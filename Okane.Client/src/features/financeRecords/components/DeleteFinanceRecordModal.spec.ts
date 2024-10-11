@@ -118,15 +118,11 @@ describe('when clicking the delete button', () => {
     return { deleteProvider, wrapper }
   }
 
-  test('calls useDeleteFinanceRecordMutation with the query key', async () => {
+  test('calls useDeleteFinanceRecordMutation', async () => {
     const deleteSpy = vi.spyOn(deleteMutation, 'useDeleteFinanceRecordMutation')
     await setUp()
 
     expect(deleteSpy).toHaveBeenCalledOnce()
-
-    const calledWith = deleteSpy.mock.calls[0]
-    const [queryKey] = calledWith
-    expect(toValue(queryKey)).toEqual(financeRecordQueryKeys.listByFilters(searchFilters))
 
     deleteSpy.mockRestore()
   })

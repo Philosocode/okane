@@ -68,15 +68,20 @@ test('makes a PATCH request to the expected endpoint', async () => {
   patchSpy.mockRestore()
 })
 
-test('invalidates the query key when search filters are passed', async () => {
+test('invalidates the expected query keys', async () => {
   const patchSpy = spyOn.patch()
   const invalidateSpy = spyOn.invalidateQueries()
   const searchProvider = useSearchFinanceRecordsProvider()
 
   mountWithProviders()
   await flushPromises()
+
+  expect(invalidateSpy).toHaveBeenCalledTimes(2)
   expect(invalidateSpy).toHaveBeenCalledWith({
     queryKey: financeRecordQueryKeys.listByFilters(searchProvider.filters),
+  })
+  expect(invalidateSpy).toHaveBeenCalledWith({
+    queryKey: financeRecordQueryKeys.stats(searchProvider.filters),
   })
 
   patchSpy.mockRestore()

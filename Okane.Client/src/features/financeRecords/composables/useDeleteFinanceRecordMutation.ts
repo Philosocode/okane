@@ -31,6 +31,10 @@ export function useDeleteFinanceRecordMutation() {
           return removeItemFromPages(data, (item) => item.id !== id)
         },
       )
+
+      void queryClient.invalidateQueries({
+        queryKey: financeRecordQueryKeys.stats(searchProvider.filters),
+      })
     },
   })
 }

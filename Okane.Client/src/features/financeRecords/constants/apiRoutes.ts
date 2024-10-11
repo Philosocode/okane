@@ -21,6 +21,10 @@ export const financeRecordAPIRoutes = {
 
     return `${basePath}?${searchParams.toString()}`
   },
+  getStats(args: { searchFilters: FinanceRecordsSearchFilters }) {
+    const searchParams = mapFinanceRecordsSearchFilters.to.URLSearchParams(args.searchFilters)
+    return `${basePath}/stats?${searchParams.toString()}`
+  },
   deleteFinanceRecord: ({ id }: { id: number }) => `${basePath}/${id}`,
   patchFinanceRecord: ({ id }: { id: number }) => `${basePath}/${id}`,
   postFinanceRecord: () => basePath,

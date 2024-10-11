@@ -66,7 +66,7 @@ test('makes a POST request to the expected endpoint', async () => {
   expect(postSpy).toHaveBeenCalledWith(financeRecordAPIRoutes.postFinanceRecord(), financeRecord)
 })
 
-test('invalidates the query key when search filters are passed', async () => {
+test('invalidates the expected query keys', async () => {
   spyOn.post()
   const invalidateSpy = spyOn.invalidateQueries()
   const searchProvider = useSearchFinanceRecordsProvider()
@@ -75,7 +75,12 @@ test('invalidates the query key when search filters are passed', async () => {
 
   await flushPromises()
 
+  expect(invalidateSpy).toHaveBeenCalledTimes(2)
+
   expect(invalidateSpy).toHaveBeenCalledWith({
     queryKey: financeRecordQueryKeys.listByFilters(searchProvider.filters),
+  })
+  expect(invalidateSpy).toHaveBeenCalledWith({
+    queryKey: financeRecordQueryKeys.stats(searchProvider.filters),
   })
 })

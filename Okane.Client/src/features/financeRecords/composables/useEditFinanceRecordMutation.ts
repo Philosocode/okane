@@ -34,6 +34,9 @@ export function useEditFinanceRecordMutation() {
       void queryClient.invalidateQueries({
         queryKey: financeRecordQueryKeys.listByFilters(searchProvider.filters),
       })
+      void queryClient.invalidateQueries({
+        queryKey: financeRecordQueryKeys.stats(searchProvider.filters),
+      })
     },
   })
 }

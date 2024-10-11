@@ -17,6 +17,11 @@ export const FINANCES_COPY = {
     TYPE: 'Type',
   },
 
+  RECORD_TYPES: {
+    EXPENSE: 'Expense',
+    REVENUE: 'Revenue',
+  },
+
   SAVE_FINANCE_RECORD_MODAL: {
     CREATE_FINANCE_RECORD: 'Create Finance Record',
     EDIT_FINANCE_RECORD: 'Edit Finance Record',
@@ -30,5 +35,10 @@ export const FINANCES_COPY = {
     HAPPENED_BEFORE: 'Happened before',
     MAX_AMOUNT: 'Max amount',
     MIN_AMOUNT: 'Min amount',
+  },
+
+  STATS: {
+    EXPENSES: 'Expenses',
+    RECORD: 'record',
   },
 } as const

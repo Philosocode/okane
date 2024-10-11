@@ -110,3 +110,13 @@ export function removePrefixCharacters(s: string, prefixCharacter: string): stri
 
   return s.slice(startIdx)
 }
+
+/**
+ * Conditionally pluralize a string if amount isn't  1.
+ *
+ * @param args
+ */
+export function pluralize(args: { text: string; count?: number; suffix: string }): string {
+  if (args.count == 1) return args.text
+  return `${args.text}${args.suffix}`
+}

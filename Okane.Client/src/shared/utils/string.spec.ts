@@ -95,6 +95,16 @@ describe('isUppercaseString', () => {
   })
 })
 
+describe('pluralize', () => {
+  test('it pluralizes the word with the expected suffix', () => {
+    expect(stringUtils.pluralize({ text: 'record', count: 2, suffix: 's' })).toBe('records')
+  })
+
+  test('it returns the word as-is if the count is 1', () => {
+    expect(stringUtils.pluralize({ text: 'record', count: 1, suffix: 's' })).toBe('record')
+  })
+})
+
 describe('removePrefixCharacters', () => {
   test.each([
     ['ABCD', 'A', 'BCD'],

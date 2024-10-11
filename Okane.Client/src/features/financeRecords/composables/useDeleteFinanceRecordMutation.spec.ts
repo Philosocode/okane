@@ -8,6 +8,12 @@ import { financeRecordQueryKeys } from '@features/financeRecords/constants/query
 
 import { useDeleteFinanceRecordMutation } from '@features/financeRecords/composables/useDeleteFinanceRecordMutation'
 
+import {
+  SEARCH_FINANCE_RECORDS_SYMBOL,
+  type SearchFinanceRecordsProvider,
+  useSearchFinanceRecordsProvider,
+} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
 import { removeItemFromPages } from '@shared/utils/pagination'
@@ -15,11 +21,6 @@ import { removeItemFromPages } from '@shared/utils/pagination'
 import { createTestFinanceRecord } from '@tests/factories/financeRecord'
 import { testQueryClient } from '@tests/queryClient/testQueryClient'
 import { wrapInAPIPaginatedResponse, wrapInAPIResponse } from '@tests/utils/apiResponse'
-import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  type SearchFinanceRecordsProvider,
-  useSearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
 const spyOn = {
   delete() {
@@ -91,4 +92,19 @@ test('removes the finance record from the query cache', async () => {
   expect(cachedData).toEqual(
     removeItemFromPages(initialCachedData, (item) => item.id !== financeRecordId),
   )
+})
+
+test('invalidates the stats key', async () => {
+  const invalidateSpy = vi.spyOn(testQueryClient, 'invalidateQueries')
+  const searchProvider = useSearchFinanceRecordsProvider()
+
+  spyOn.delete()
+  mountWithProviders({ searchProvider })
+  await flushPromises()
+
+  expect(invalidateSpy).toHaveBeenCalledWith({
+    queryKey: financeRecordQueryKeys.stats(searchProvider.filters),
+  })
+
+  invalidateSpy.mockRestore()
 })

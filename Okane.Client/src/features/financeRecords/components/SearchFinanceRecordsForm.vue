@@ -42,7 +42,7 @@ function handleCancel() {
 }
 
 function handleReset() {
-  formState.value = { ...DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS }
+  formState.value = { ...searchProvider.filters }
 }
 
 function handleSubmit() {
@@ -107,7 +107,7 @@ function handleSubmit() {
           {{ SHARED_COPY.ACTIONS.CANCEL }}
         </button>
 
-        <button class="reset-button" @click="handleReset" :type="BUTTON_TYPE.RESET">
+        <button class="reset-button" @click.prevent="handleReset" :type="BUTTON_TYPE.RESET">
           {{ SHARED_COPY.ACTIONS.RESET }}
         </button>
       </ModalActions>

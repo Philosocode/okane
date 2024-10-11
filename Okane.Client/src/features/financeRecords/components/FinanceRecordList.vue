@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // External
-import { computed, inject } from 'vue'
+import { computed } from 'vue'
 
 // Internal
 import FinanceRecordListItem from '@features/financeRecords/components/FinanceRecordListItem.vue'
@@ -11,15 +11,9 @@ import { SHARED_COPY } from '@shared/constants/copy'
 
 import { useInfiniteQueryFinanceRecords } from '@features/financeRecords/composables/useInfiniteQueryFinanceRecords'
 
-import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  type SearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
-
 import { flattenPages } from '@shared/utils/pagination'
 
-const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
-const queryResult = useInfiniteQueryFinanceRecords(() => searchProvider.filters)
+const queryResult = useInfiniteQueryFinanceRecords()
 const financeRecords = computed(() => flattenPages(queryResult.data.value?.pages))
 </script>
 

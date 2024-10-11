@@ -1,12 +1,11 @@
 <script setup lang="ts">
 // External
-import { computed, inject, ref } from 'vue'
+import { inject, ref } from 'vue'
 
 // Internal
 import SaveFinanceRecordModal from '@features/financeRecords/components/SaveFinanceRecordModal.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
-import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 
 import type { SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
@@ -17,22 +16,14 @@ import {
   type SaveFinanceRecordProvider,
 } from '@features/financeRecords/providers/saveFinanceRecordProvider'
 
-import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  type SearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
-
 import { getFormErrorsFromAPIResponse } from '@shared/services/apiClient/utils'
 import { getInitialFormErrors } from '@shared/utils/form'
 import { getInitialSaveFinanceRecordFormState } from '@features/financeRecords/utils/saveFinanceRecord'
 import { isObjectType } from '@shared/utils/object'
 import { mapSaveFinanceRecordFormState } from '@features/financeRecords/utils/mappers'
 
+const createMutation = useCreateFinanceRecordMutation()
 const saveProvider = inject(SAVE_FINANCE_RECORD_SYMBOL) as SaveFinanceRecordProvider
-const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
-
-const queryKey = computed(() => financeRecordQueryKeys.listByFilters(searchProvider.filters))
-const createMutation = useCreateFinanceRecordMutation(queryKey)
 
 const formState = ref<SaveFinanceRecordFormState>(getInitialSaveFinanceRecordFormState())
 const initialFormErrors = getInitialFormErrors(formState.value)

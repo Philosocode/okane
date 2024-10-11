@@ -1,11 +1,17 @@
 // External
-import { toValue, type MaybeRefOrGetter } from 'vue'
-import { useMutation, useQueryClient, type QueryKey } from '@tanstack/vue-query'
+import { inject } from 'vue'
+import { useMutation, useQueryClient } from '@tanstack/vue-query'
 
 // Internal
 import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
+import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
+
+import {
+  SEARCH_FINANCE_RECORDS_SYMBOL,
+  type SearchFinanceRecordsProvider,
+} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
@@ -18,13 +24,16 @@ type MutationArgs = {
   id: number
 }
 
-export function useEditFinanceRecordMutation(queryKey: MaybeRefOrGetter<QueryKey>) {
+export function useEditFinanceRecordMutation() {
+  const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (args: MutationArgs) => patchFinanceRecord(args.id, args.changes),
     onSuccess() {
-      void queryClient.invalidateQueries({ queryKey: toValue(queryKey) })
+      void queryClient.invalidateQueries({
+        queryKey: financeRecordQueryKeys.listByFilters(searchProvider.filters),
+      })
     },
   })
 }

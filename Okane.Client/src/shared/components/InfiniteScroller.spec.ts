@@ -14,6 +14,11 @@ import { financeRecordHandlers } from '@tests/msw/handlers/financeRecord'
 
 import { useInfiniteQueryFinanceRecords } from '@features/financeRecords/composables/useInfiniteQueryFinanceRecords'
 
+import {
+  SEARCH_FINANCE_RECORDS_SYMBOL,
+  useSearchFinanceRecordsProvider,
+} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+
 import { flattenPages } from '@shared/utils/pagination'
 import { getRange } from '@shared/utils/array'
 import { wrapInAPIPaginatedResponse, wrapInAPIResponse } from '@tests/utils/apiResponse'
@@ -39,7 +44,7 @@ function getTestComponent(errorTemplate?: string) {
   return defineComponent({
     components: { FinanceRecordListItem, InfiniteScroller },
     setup() {
-      const queryResult = useInfiniteQueryFinanceRecords(() => searchFilters)
+      const queryResult = useInfiniteQueryFinanceRecords()
       const items = computed(() => flattenPages(queryResult?.data?.value?.pages ?? []))
 
       return { queryResult, items }
@@ -66,14 +71,28 @@ function getTestComponent(errorTemplate?: string) {
   })
 }
 
+const FinanceRecordListItemStub = defineComponent({
+  props: {
+    financeRecord: Object,
+  },
+  template: `<div>{{ $props.financeRecord.description }}</div>`,
+})
+
 const ObserverStub = defineComponent({
   template: `<button data-testid="${testIds.loadMoreButton}" @click="$emit('change', true)" />`,
 })
 
 function mountComponent(errorTemplate?: string) {
+  const searchProvider = useSearchFinanceRecordsProvider()
+  searchProvider.setFilters(searchFilters)
+
   return getMountComponent(getTestComponent(errorTemplate), {
     global: {
+      provide: {
+        [SEARCH_FINANCE_RECORDS_SYMBOL]: searchProvider,
+      },
       stubs: {
+        FinanceRecordListItem: FinanceRecordListItemStub,
         Loader: {
           template: `<div data-testid="${testIds.loader}" />`,
         },
@@ -301,7 +320,7 @@ describe(`when there are more pages to fetch page`, () => {
     page2FinanceRecordDescription = wrapper.findByText('div', page2FinanceRecord.description)
     page3FinanceRecordDescription = wrapper.findByText('div', page3FinanceRecord.description)
 
-    expect(page2FinanceRecordDescription.exists()).toBe(true)
+    expect(page2FinanceRecordDescription).toBeDefined()
     expect(page3FinanceRecordDescription).toBeUndefined()
 
     loadMoreButton = wrapper.get(`button[data-testid="${testIds.loadMoreButton}"]`)
@@ -311,7 +330,7 @@ describe(`when there are more pages to fetch page`, () => {
     page2FinanceRecordDescription = wrapper.findByText('div', page2FinanceRecord.description)
     page3FinanceRecordDescription = wrapper.findByText('div', page3FinanceRecord.description)
 
-    expect(page2FinanceRecordDescription.exists()).toBe(true)
-    expect(page3FinanceRecordDescription.exists()).toBe(true)
+    expect(page2FinanceRecordDescription).toBeDefined()
+    expect(page3FinanceRecordDescription).toBeDefined()
   })
 })

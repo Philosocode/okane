@@ -1,21 +1,15 @@
 <script setup lang="ts">
 // External
-import { computed, inject } from 'vue'
+import { inject } from 'vue'
 
 // Internal
 import DeleteFinanceRecordModalActions from '@features/financeRecords/components/DeleteFinanceRecordModalActions.vue'
 import Modal from '@shared/components/modal/Modal.vue'
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 
-import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
 import { useDeleteFinanceRecordMutation } from '@features/financeRecords/composables/useDeleteFinanceRecordMutation'
-
-import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  type SearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
 import {
   DELETE_FINANCE_RECORD_ID_SYMBOL,
@@ -23,11 +17,9 @@ import {
 } from '@features/financeRecords/providers/deleteFinanceRecordIdProvider'
 
 const deleteProvider = inject(DELETE_FINANCE_RECORD_ID_SYMBOL) as DeleteFinanceRecordIdProvider
-const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
 
 const modalHeadingId = 'delete-finance-record-modal-heading'
-const queryKey = computed(() => financeRecordQueryKeys.listByFilters(searchProvider.filters))
-const deleteMutation = useDeleteFinanceRecordMutation(queryKey)
+const deleteMutation = useDeleteFinanceRecordMutation()
 
 function handleClose() {
   deleteProvider.setId(undefined)

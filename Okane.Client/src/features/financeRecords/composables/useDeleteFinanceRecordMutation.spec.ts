@@ -81,7 +81,7 @@ test('removes the finance record from the query cache', async () => {
   }
 
   const searchProvider = useSearchFinanceRecordsProvider()
-  const queryKey = financeRecordQueryKeys.listByFilters(searchProvider.filters)
+  const queryKey = financeRecordQueryKeys.listByFilters({ filters: searchProvider.filters })
 
   testQueryClient.setQueryData(queryKey, initialCachedData)
   spyOn.delete()
@@ -103,7 +103,7 @@ test('invalidates the stats key', async () => {
   await flushPromises()
 
   expect(invalidateSpy).toHaveBeenCalledWith({
-    queryKey: financeRecordQueryKeys.stats(searchProvider.filters),
+    queryKey: financeRecordQueryKeys.stats({ filters: searchProvider.filters }),
   })
 
   invalidateSpy.mockRestore()

@@ -4,8 +4,8 @@ import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types
 export const queryKeys = {
   all: () => ['all'],
   lists: () => [...queryKeys.all(), 'lists'],
-  listByFilters: (filters: FinanceRecordsSearchFilters) => [...queryKeys.lists(), filters],
-  stats: (filters: FinanceRecordsSearchFilters) => [...queryKeys.all(), 'stats', filters],
+  listByFilters: (args: { filters: FinanceRecordsSearchFilters }) => [...queryKeys.lists(), args.filters],
+  stats: (args: { filters: FinanceRecordsSearchFilters }) => [...queryKeys.all(), 'stats', args.filters],
 }
 
 export const financeRecordQueryKeys = queryKeys

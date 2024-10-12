@@ -36,7 +36,9 @@ export function fetchPaginatedFinanceRecords({
 
 export function useInfiniteQueryFinanceRecords() {
   const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
-  const queryKey = computed(() => financeRecordQueryKeys.listByFilters(searchProvider.filters))
+  const queryKey = computed(() =>
+    financeRecordQueryKeys.listByFilters({ filters: searchProvider.filters }),
+  )
 
   useCleanUpInfiniteQuery(queryKey)
 

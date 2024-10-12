@@ -25,7 +25,7 @@ export function useDeleteFinanceRecordMutation() {
     mutationFn: (id: number) => deleteFinanceRecord(id),
     onSuccess(_, id) {
       queryClient.setQueryData<InfiniteData<APIPaginatedResponse<FinanceRecord>>>(
-        financeRecordQueryKeys.listByFilters(searchProvider.filters),
+        financeRecordQueryKeys.listByFilters({ filters: searchProvider.filters }),
         (data) => {
           if (!data) return data
           return removeItemFromPages(data, (item) => item.id !== id)
@@ -33,7 +33,7 @@ export function useDeleteFinanceRecordMutation() {
       )
 
       void queryClient.invalidateQueries({
-        queryKey: financeRecordQueryKeys.stats(searchProvider.filters),
+        queryKey: financeRecordQueryKeys.stats({ filters: searchProvider.filters }),
       })
     },
   })

@@ -78,9 +78,9 @@ test('invalidates the expected query keys', async () => {
   expect(invalidateSpy).toHaveBeenCalledTimes(2)
 
   expect(invalidateSpy).toHaveBeenCalledWith({
-    queryKey: financeRecordQueryKeys.listByFilters(searchProvider.filters),
+    queryKey: financeRecordQueryKeys.listByFilters({ filters: searchProvider.filters }),
   })
   expect(invalidateSpy).toHaveBeenCalledWith({
-    queryKey: financeRecordQueryKeys.stats(searchProvider.filters),
+    queryKey: financeRecordQueryKeys.stats({ filters: searchProvider.filters }),
   })
 })

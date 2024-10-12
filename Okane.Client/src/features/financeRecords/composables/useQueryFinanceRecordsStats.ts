@@ -27,7 +27,7 @@ function fetchStats({
 
 export function useQueryFinanceRecordsStats() {
   const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
-  const queryKey = computed(() => financeRecordQueryKeys.stats(searchProvider.filters))
+  const queryKey = computed(() => financeRecordQueryKeys.stats({ filters: searchProvider.filters }))
 
   return useQuery({
     queryKey,

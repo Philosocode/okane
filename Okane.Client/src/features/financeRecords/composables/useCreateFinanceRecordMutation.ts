@@ -27,11 +27,11 @@ export function useCreateFinanceRecordMutation() {
     mutationFn: (financeRecord: PreCreationFinanceRecord) => postFinanceRecord(financeRecord),
     onSuccess() {
       void queryClient.invalidateQueries({
-        queryKey: financeRecordQueryKeys.listByFilters(searchProvider.filters),
+        queryKey: financeRecordQueryKeys.listByFilters({ filters: searchProvider.filters }),
       })
 
       void queryClient.invalidateQueries({
-        queryKey: financeRecordQueryKeys.stats(searchProvider.filters),
+        queryKey: financeRecordQueryKeys.stats({ filters: searchProvider.filters }),
       })
     },
   })

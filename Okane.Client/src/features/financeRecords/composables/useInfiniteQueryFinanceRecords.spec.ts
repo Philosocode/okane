@@ -66,7 +66,7 @@ test('cleans up the infinite query', () => {
   mountWithProviders()
 
   expect(toValue(cleanUpSpy.mock.calls[0][0])).toEqual(
-    financeRecordQueryKeys.listByFilters(searchProvider.filters),
+    financeRecordQueryKeys.listByFilters({ filters: searchProvider.filters }),
   )
 
   getSpy.mockRestore()

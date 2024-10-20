@@ -12,6 +12,8 @@ using Okane.Api.Features.Auth.Utils;
 using Okane.Api.Features.Finances.Entities;
 using Okane.Api.Features.Finances.Services;
 using Okane.Api.Infrastructure.Database;
+using Okane.Api.Infrastructure.Emails.Config;
+using Okane.Api.Infrastructure.Emails.Services;
 using Okane.Api.Infrastructure.HealthCheck;
 using Okane.Api.Infrastructure.HostedServices;
 using Okane.Api.Shared.Exceptions;
@@ -122,6 +124,15 @@ public static class ConfigureServices
 
     private static void AddAppServices(this WebApplicationBuilder builder)
     {
+        builder.Services.Configure<EmailSettings>(
+            builder.Configuration.GetSection(nameof(EmailSettings))
+        );
+
+        var emailSettings = new EmailSettings();
+        builder.Configuration.Bind(nameof(EmailSettings), emailSettings);
+
+        builder.Services.AddScoped<ISmtpClientGenerator, SmtpClientGenerator>();
+        builder.Services.AddScoped<IEmailService, EmailService>();
         builder.Services.AddScoped<IFinanceRecordService, FinanceRecordService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
     }

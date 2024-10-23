@@ -42,7 +42,8 @@ public class GetFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTest
     [Fact]
     public async Task ReturnsANotFound_WhenRecordCreatedByDifferentUser()
     {
-        var otherUser = await UserUtils.RegisterUserAsync(_client);
+        var otherUserEmail = await UserUtils.RegisterUserAsync(_client);
+        var otherUser = await UserUtils.GetByEmail(Db, otherUserEmail);
         var financeRecord = FinanceRecordStubFactory.Create(otherUser.Id);
 
         await Db.FinanceRecords.AddAsync(financeRecord);

@@ -22,6 +22,7 @@ public class UserMappersTests
         {
             Id = apiUser.Id,
             Email = apiUser.Email,
+            EmailConfirmed = apiUser.EmailConfirmed,
             Name = apiUser.Name
         };
 

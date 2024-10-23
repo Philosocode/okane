@@ -22,6 +22,8 @@ public static class Endpoints
             .MapEndpoint<Register>()
             .MapEndpoint<Login>()
             .MapEndpoint<Logout>()
+            .MapEndpoint<SendVerificationEmail>()
+            .MapEndpoint<VerifyEmail>()
             .MapEndpoint<RotateRefreshToken>()
             .MapEndpoint<RevokeRefreshToken>()
             .MapEndpoint<GetSelf>();

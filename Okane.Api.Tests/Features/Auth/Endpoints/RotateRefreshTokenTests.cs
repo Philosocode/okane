@@ -136,11 +136,14 @@ public class RotateRefreshTokenTests(PostgresApiFactory apiFactory) : DatabaseTe
         }
 
         // We'll also register another user and check that their tokens are NOT affected.
-        UserResponse otherUser = await UserUtils.RegisterUserAsync(client, new Register.Request(
+        var otherUserEmail = "other@okane.com";
+        await UserUtils.RegisterUserAsync(client, new Register.Request(
             "Other User",
-            "other@okane.com",
+            otherUserEmail,
             TestUser.Password
         ));
+
+        var otherUser = await UserUtils.GetByEmail(Db, otherUserEmail);
 
         for (var i = 0; i < refreshTokensPerUser; i++)
         {
@@ -148,7 +151,6 @@ public class RotateRefreshTokenTests(PostgresApiFactory apiFactory) : DatabaseTe
         }
 
         await Db.SaveChangesAsync();
-
         await AssertInvalidRefreshTokenErrorAsync(client);
 
         // If we don't do this, the updates from ExecuteUpdateAsync won't be available; stale data

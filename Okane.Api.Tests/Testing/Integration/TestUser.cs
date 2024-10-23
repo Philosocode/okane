@@ -21,18 +21,32 @@ public static class TestUser
         Name = Name
     };
 
+    /// <summary>
+    ///     Register a new user with TestUser credentials.
+    /// </summary>
+    /// <param name="client"></param>
     public static async Task RegisterTestUserAsync(this HttpClient client)
     {
         var request = new Register.Request(User.Name, User.Email!, Password);
         await client.PostAsJsonAsync("/auth/register", request);
     }
 
+    /// <summary>
+    ///     Logs in the TestUser.
+    /// </summary>
+    /// <param name="client"></param>
+    /// <returns></returns>
     public static async Task<HttpResponseMessage> LogInTestUserAsync(this HttpClient client)
     {
         var request = new Login.Request(User.Email!, Password);
         return await client.PostAsJsonAsync("/auth/login", request);
     }
 
+    /// <summary>
+    ///     Registers and logs in the TestUser.
+    /// </summary>
+    /// <param name="client"></param>
+    /// <returns>Login response</returns>
     public static async Task<AuthenticateResponse> RegisterAndLogInTestUserAsync(this HttpClient client)
     {
         await client.RegisterTestUserAsync();
@@ -45,6 +59,11 @@ public static class TestUser
         return authResponse;
     }
 
+    /// <summary>
+    ///     Queries the TestUser in the database.
+    /// </summary>
+    /// <param name="db"></param>
+    /// <returns>The TestUser</returns>
     public static async Task<ApiUser> FindTestUserAsync(this ApiDbContext db)
     {
         return await db.Users.SingleAsync(u => u.Email == User.Email);

@@ -82,7 +82,8 @@ public class GetPaginatedFinanceRecordsTests(PostgresApiFactory apiFactory) : Da
     [Fact]
     public async Task ExcludesFinanceRecordsCreatedByOtherUsers()
     {
-        var otherUser = await UserUtils.RegisterUserAsync(_client);
+        var otherUserEmail = await UserUtils.RegisterUserAsync(_client);
+        var otherUser = await UserUtils.GetByEmail(Db, otherUserEmail);
         var otherFinanceRecord = FinanceRecordStubFactory.Create(otherUser.Id);
         await Db.AddAsync(otherFinanceRecord);
 

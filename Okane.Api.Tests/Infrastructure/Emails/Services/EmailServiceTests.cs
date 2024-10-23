@@ -1,4 +1,3 @@
-using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
@@ -27,8 +26,8 @@ public class EmailServiceTests
         [Fact]
         public async Task SendsAnEmail()
         {
-            var client = Substitute.For<ISmtpClient>();
-            var service = new EmailService(_options, new TestingSmtpClientGenerator(client));
+            var generator = new TestingSmtpClientGenerator();
+            var service = new EmailService(_options, generator);
 
             var to = "sirDoggo@okane.com";
             var subject = "A cool subject";
@@ -43,7 +42,7 @@ public class EmailServiceTests
             expectedEmail.Subject = subject;
             expectedEmail.Body = new TextPart(TextFormat.Html) { Text = html };
 
-            await client.Received(1).SendAsync(
+            await generator.SmtpClient.Received(1).SendAsync(
                 Arg.Is<MimeMessage>(
                     m =>
                         m.To.Equals(expectedEmail.To) &&
@@ -52,7 +51,7 @@ public class EmailServiceTests
                         && m.Body.ToString().Equals(expectedEmail.Body.ToString())
                 ),
                 cancellationToken);
-            await client.Received(1).DisconnectAsync(true, cancellationToken);
+            await generator.SmtpClient.Received(1).DisconnectAsync(true, cancellationToken);
         }
     }
 }

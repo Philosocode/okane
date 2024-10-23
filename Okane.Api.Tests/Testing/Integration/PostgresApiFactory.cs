@@ -1,6 +1,7 @@
 using System.Data.Common;
 using DotNet.Testcontainers.Builders;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,9 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging.Abstractions;
 using Okane.Api.Infrastructure.Database;
+using Okane.Api.Infrastructure.Emails.Services;
 using Okane.Api.Tests.Testing.Extensions;
+using Okane.Api.Tests.Testing.Mocks.Wrappers;
 using Respawn;
 using Testcontainers.PostgreSql;
 using ILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
@@ -73,6 +76,14 @@ public class PostgresApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifet
                 options.UseNpgsql(_container.GetConnectionString());
             });
             services.EnsureDbCreated();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.SignIn.RequireConfirmedEmail = false;
+            });
+
+            services.RemoveAll<ISmtpClientGenerator>();
+            services.AddScoped<ISmtpClientGenerator, TestingSmtpClientGenerator>();
 
             services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
             services.RemoveAll<IHostedService>();

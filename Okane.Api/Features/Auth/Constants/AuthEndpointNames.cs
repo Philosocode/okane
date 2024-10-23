@@ -8,4 +8,6 @@ public static class AuthEndpointNames
     public const string Register = "Register";
     public const string RefreshToken = "RefreshToken";
     public const string RevokeToken = "RevokeToken";
+    public const string SendVerificationEmail = "SendVerificationEmail";
+    public const string VerifyEmail = "VerifyEmail";
 }

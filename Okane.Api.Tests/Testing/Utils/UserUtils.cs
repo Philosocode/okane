@@ -1,9 +1,8 @@
 using System.Net.Http.Json;
-using Okane.Api.Features.Auth.Dtos.Responses;
+using Microsoft.EntityFrameworkCore;
 using Okane.Api.Features.Auth.Endpoints;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Infrastructure.Database;
-using Okane.Api.Shared.Dtos.ApiResponses;
 using Okane.Api.Tests.Testing.Integration;
 using Okane.Api.Tests.Testing.StubFactories;
 
@@ -20,19 +19,20 @@ public static class UserUtils
         return apiUser;
     }
 
-    public static async Task<UserResponse> RegisterUserAsync(HttpClient client, Register.Request request)
+    public static async Task<ApiUser> GetByEmail(ApiDbContext db, string email)
     {
-        HttpResponseMessage response = await client.PostAsJsonAsync("/auth/register", request);
-        var userResponse = await response.Content.ReadFromJsonAsync<ApiResponse<UserResponse>>();
-        return userResponse!.Items[0];
+        return await db.Users.SingleAsync(u => u.Email == email);
     }
 
-    public static async Task<UserResponse> RegisterUserAsync(HttpClient client)
+    public static async Task RegisterUserAsync(HttpClient client, Register.Request request)
+    {
+        await client.PostAsJsonAsync("/auth/register", request);
+    }
+
+    public static async Task<string> RegisterUserAsync(HttpClient client)
     {
         var user = ApiUserStubFactory.Create();
-        return await RegisterUserAsync(
-            client,
-            new Register.Request(user.Name, user.Email!, TestUser.Password)
-        );
+        await RegisterUserAsync(client, new Register.Request(user.Name, user.Email!, TestUser.Password));
+        return user.Email!;
     }
 }

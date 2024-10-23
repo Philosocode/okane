@@ -5,7 +5,7 @@ using Okane.Api.Infrastructure.Emails.Config;
 
 namespace Okane.Api.Infrastructure.Emails.Services;
 
-internal interface IEmailService
+public interface IEmailService
 {
     Task SendAsync(string to, string subject, string html, CancellationToken cancellationToken);
 }

@@ -42,7 +42,8 @@ public class DeleteFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseT
     [Fact]
     public async Task DoesNotDeleteFinanceRecordsForOtherUsers()
     {
-        var otherUser = await UserUtils.RegisterUserAsync(_client);
+        var otherUserEmail = await UserUtils.RegisterUserAsync(_client);
+        var otherUser = await UserUtils.GetByEmail(Db, otherUserEmail);
         var otherFinanceRecord = FinanceRecordStubFactory.Create(otherUser.Id);
         await Db.AddAsync(otherFinanceRecord);
 
@@ -52,17 +53,13 @@ public class DeleteFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseT
 
         await Db.SaveChangesAsync();
 
-        var deleteResponse = await _client.DeleteAsync(
-            $"finance-records/{ownFinanceRecord.Id}"
-        );
+        var deleteResponse = await _client.DeleteAsync($"finance-records/{ownFinanceRecord.Id}");
         deleteResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
         var remainingFinanceRecords = await Db.FinanceRecords.ToListAsync();
         remainingFinanceRecords.Should().ContainSingle(r => r.Id == otherFinanceRecord.Id);
 
-        deleteResponse = await _client.DeleteAsync(
-            $"finance-records/{otherFinanceRecord.Id}"
-        );
+        deleteResponse = await _client.DeleteAsync($"finance-records/{otherFinanceRecord.Id}");
         deleteResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
     }
 }

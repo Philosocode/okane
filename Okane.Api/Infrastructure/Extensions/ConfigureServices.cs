@@ -14,6 +14,7 @@ using Okane.Api.Features.Finances.Services;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Emails.Config;
 using Okane.Api.Infrastructure.Emails.Services;
+using Okane.Api.Infrastructure.Emails.Utils;
 using Okane.Api.Infrastructure.HealthCheck;
 using Okane.Api.Infrastructure.HostedServices;
 using Okane.Api.Shared.Exceptions;
@@ -185,13 +186,18 @@ public static class ConfigureServices
             options.Password.RequireNonAlphanumeric = true;
             options.Password.RequiredLength = 12; // Min length
 
-            // TODO #16: Users need to confirm their account before they can login.
-            // options.SignIn.RequireConfirmedAccount = true;
-
+            options.User.RequireUniqueEmail = true;
             options.Lockout.AllowedForNewUsers = true;
 
-            options.User.RequireUniqueEmail = true;
+            options.SignIn.RequireConfirmedEmail = true;
+            options.Tokens.ProviderMap.Add(
+                "CustomEmailConfirmation",
+                new TokenProviderDescriptor(typeof(EmailConfirmationTokenProvider<ApiUser>))
+            );
+            options.Tokens.EmailConfirmationTokenProvider = "CustomEmailConfirmation";
         });
+
+        builder.Services.AddTransient<EmailConfirmationTokenProvider<ApiUser>>();
 
         builder.Services.AddAuthorization();
     }

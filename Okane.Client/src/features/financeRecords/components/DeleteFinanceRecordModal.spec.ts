@@ -7,7 +7,6 @@ import { type HttpHandler } from 'msw'
 import DeleteFinanceRecordModal from '@features/financeRecords/components/DeleteFinanceRecordModal.vue'
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 
-import { DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { SHARED_COPY } from '@shared/constants/copy'
 

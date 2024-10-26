@@ -66,6 +66,7 @@ onMounted(() => {
 }
 
 .label {
+  display: inline-block;
   margin-bottom: var(--space-2xs);
 }
 </style>

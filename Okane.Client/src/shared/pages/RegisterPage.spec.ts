@@ -1,58 +1,45 @@
 // External
-import { flushPromises } from '@vue/test-utils'
+import { beforeEach } from 'vitest'
+import { flushPromises, VueWrapper } from '@vue/test-utils'
 
 // Internal
-import AuthForm from '@features/auth/components/AuthForm.vue'
+import RegisterForm from '@features/auth/components/RegisterForm.vue'
 import RegisterPage from '@shared/pages/RegisterPage.vue'
+import SuccessfullyRegistered from '@features/auth/components/SuccessfullyRegistered.vue'
 
-import { AUTH_COPY } from '@features/auth/constants/copy'
-
-import { useAuthStore } from '@features/auth/composables/useAuthStore'
-import { useMockedStore } from '@tests/composables/useMockedStore'
-
-import { createTestAuthFormState } from '@tests/factories/authForm'
-import { createAppRouter, appRoutes, ROUTE_NAME } from '@shared/services/router/router'
-
-const router = createAppRouter()
-const mountComponent = getMountComponent(RegisterPage, { withPinia: true, withRouter: router })
-
-const formData = createTestAuthFormState()
-
-beforeEach(async () => {
-  await router.push({ name: ROUTE_NAME.REGISTER })
+const mountComponent = getMountComponent(RegisterPage, {
+  global: {
+    stubs: {
+      RegisterForm: true,
+    },
+  },
 })
 
-test('renders a register heading', () => {
+test('renders a RegisterForm', () => {
   const wrapper = mountComponent()
-  const heading = wrapper.get('h1')
-  expect(heading.text()).toBe(AUTH_COPY.REGISTER)
+  expect(wrapper.findComponent(RegisterForm).exists()).toBe(true)
 })
 
-test('redirects to the login page on successful login', async () => {
-  const authStore = useMockedStore(useAuthStore)
-  vi.spyOn(authStore, 'register').mockResolvedValue()
-
+test('does not render a SuccessfullyRegistered component', () => {
   const wrapper = mountComponent()
-
-  wrapper.findComponent(AuthForm).vm.$emit('submit', formData)
-  await flushPromises()
-
-  expect(location.pathname).toBe(appRoutes.login.buildPath())
+  expect(wrapper.findComponent(SuccessfullyRegistered).exists()).toBe(false)
 })
 
-test('logs a console error on unsuccessful register', async () => {
-  const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
-  const registerError = 'Invalid credentials'
+describe('when the user successfully registers', () => {
+  async function emitSucceeded(wrapper: VueWrapper) {
+    wrapper.getComponent(RegisterForm).vm.$emit('succeeded')
+    await flushPromises()
+  }
 
-  const authStore = useMockedStore(useAuthStore)
-  vi.spyOn(authStore, 'register').mockRejectedValue(registerError)
+  test('does not render a RegisterForm', async () => {
+    const wrapper = mountComponent()
+    await emitSucceeded(wrapper)
+    expect(wrapper.findComponent(RegisterForm).exists()).toBe(false)
+  })
 
-  const wrapper = mountComponent()
-  wrapper.findComponent(AuthForm).vm.$emit('submit', formData)
-
-  await flushPromises()
-
-  expect(consoleSpy).toHaveBeenCalledWith('Error registering:', registerError)
-
-  expect(location.pathname).toBe(appRoutes.register.buildPath())
+  test('renders a SuccessfullyRegistered component', async () => {
+    const wrapper = mountComponent()
+    await emitSucceeded(wrapper)
+    expect(wrapper.findComponent(SuccessfullyRegistered).exists()).toBe(true)
+  })
 })

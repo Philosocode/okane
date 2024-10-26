@@ -9,4 +9,9 @@ export const AUTH_COPY = {
     NAME: 'Name',
     PASSWORD: 'Password',
   },
+
+  SUCCESSFULLY_REGISTERED: {
+    HEADING: 'Successfully registered!',
+    BODY: `Thanks for registering! In a few minutes, you should receive an email to verify your account.`,
+  },
 } as const

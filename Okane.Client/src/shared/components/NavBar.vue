@@ -13,7 +13,7 @@ const authStore = useAuthStore()
 </script>
 
 <template>
-  <nav>
+  <nav class="nav">
     <template v-if="authStore.isLoggedIn">
       <RouterLink :to="{ name: ROUTE_NAME.FINANCES }">{{ FINANCES_COPY.FINANCES }}</RouterLink>
       <RouterLink to="#" @click="authStore.logout">{{ AUTH_COPY.LOGOUT }}</RouterLink>
@@ -26,18 +26,10 @@ const authStore = useAuthStore()
 </template>
 
 <style scoped lang="scss">
-nav {
+.nav {
   display: flex;
   justify-content: center;
   gap: 1rem;
   padding: 1rem;
-}
-
-a {
-  color: var(--color-green-200);
-
-  &:hover {
-    color: var(--color-green-400);
-  }
 }
 </style>

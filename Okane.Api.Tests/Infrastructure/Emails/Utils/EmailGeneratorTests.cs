@@ -1,3 +1,4 @@
+using System.Net;
 using FluentAssertions;
 using Okane.Api.Features.Auth.Constants;
 using Okane.Api.Infrastructure.Emails.Utils;
@@ -29,7 +30,8 @@ public class EmailGeneratorTests
         {
             var email = "sirdoggo@okane.com";
             var token = "cool-token-123";
-            var expectedUrl = $"{Origin}{AuthClientUrls.VerifyEmail}?email={email}&token={token}";
+            var expectedQueryString = $"?email={WebUtility.UrlEncode(email)}&token={WebUtility.UrlEncode(token)}";
+            var expectedUrl = $"{Origin}{AuthClientUrls.VerifyEmail}{expectedQueryString}";
             var content = EmailGenerator.VerifyYourEmail(email, token, Origin);
             content.Subject.Should().Be(EmailGenerator.VerifyYourEmailSubject);
             content.Body.Should().Contain(

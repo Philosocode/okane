@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text;
 using Okane.Api.Features.Auth.Constants;
 using Okane.Api.Infrastructure.Emails.Constants;
@@ -42,11 +43,11 @@ public static class EmailGenerator
     {
         {
             var builder = new StringBuilder();
-            var url = $"{AuthClientUrls.VerifyEmail}?email={email}&token={token}";
+            var url = $"{AuthClientUrls.VerifyEmail}?email={WebUtility.UrlEncode(email)}&token={WebUtility.UrlEncode(token)}";
 
             builder.Append(@"<p>Thanks for registering on Okane! Click the following link to verify your email: ");
             builder.Append(CreateEmailLink(url, origin));
-            builder.Append(@".</p>");
+            builder.Append(@"</p>");
 
             return new EmailTextContent(VerifyYourEmailSubject, builder.ToString());
         }

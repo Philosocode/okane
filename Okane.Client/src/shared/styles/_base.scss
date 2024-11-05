@@ -30,6 +30,14 @@ body:has([data-disable-document-scroll="true"]) {
   overflow: hidden;
 }
 
+a {
+  color: var(--color-green-200);
+
+  &:hover {
+    color: var(--color-green-400);
+  }
+}
+
 .visually-hidden {
   clip: rect(0 0 0 0);
   clip-path: inset(100%);

@@ -6,4 +6,6 @@ export const authAPIRoutes = {
   logout: () => `${basePath}/logout`,
   refreshToken: () => `${basePath}/refresh-token`,
   register: () => `${basePath}/register`,
+  sendVerificationEmail: () => `${basePath}/send-verification-email`,
+  verifyEmail: () => `${basePath}/verify-email`,
 } as const

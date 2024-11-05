@@ -5,6 +5,7 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import FinancesPage from '@shared/pages/FinancesPage.vue'
 import LoginPage from '@shared/pages/LoginPage.vue'
 import RegisterPage from '@shared/pages/RegisterPage.vue'
+import VerifyEmailPage from '@shared/pages/VerifyEmailPage.vue'
 
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
 
@@ -14,6 +15,7 @@ export enum ROUTE_NAME {
   FINANCES = 'finances',
   LOGIN = 'login',
   REGISTER = 'register',
+  VERIFY_EMAIL = 'verifyEmail',
 }
 
 export type Route = RouteRecordRaw & {
@@ -38,6 +40,13 @@ export const appRoutes: Record<ROUTE_NAME, Route> = {
     buildPath: () => '/register',
     name: ROUTE_NAME.REGISTER,
     component: RegisterPage,
+    meta: { isPublic: true, isPublicOnly: true },
+  },
+  [ROUTE_NAME.VERIFY_EMAIL]: {
+    path: '/verify-email',
+    buildPath: () => '/verify-email',
+    name: ROUTE_NAME.VERIFY_EMAIL,
+    component: VerifyEmailPage,
     meta: { isPublic: true, isPublicOnly: true },
   },
 }

@@ -14,7 +14,10 @@ import { createAppRouter, appRoutes, ROUTE_NAME } from '@shared/services/router/
 import { createTestAuthFormState } from '@tests/factories/authForm'
 
 const router = createAppRouter()
-const mountComponent = getMountComponent(LoginPage, { withPinia: true, withRouter: router })
+const mountComponent = getMountComponent(LoginPage, {
+  withQueryClient: true,
+  withRouter: router,
+})
 
 const formData = createTestAuthFormState()
 

@@ -9,9 +9,18 @@ export interface AuthFormState {
 }
 
 export type PasswordChecks = {
-  hasDigit: boolean
-  hasLowercase: boolean
-  hasUppercase: boolean
-  hasNonAlphanumeric: boolean
-  hasRequiredLength: boolean
+  insufficientLength?: boolean
+  invalidPasswordConfirm?: boolean
+  missingDigit?: boolean
+  missingLowercase?: boolean
+  missingUppercase?: boolean
+  missingNonAlphanumeric?: boolean
+}
+
+export type PasswordRequirements = {
+  minLength: number
+  requireDigit: boolean
+  requireLowercase: boolean
+  requireUppercase: boolean
+  requireNonAlphanumeric: boolean
 }

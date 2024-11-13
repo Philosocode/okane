@@ -1,7 +1,7 @@
 // Internal
 import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
 
-export const queryKeys = {
+const queryKeys = {
   all: () => ['financeRecords'],
   lists: () => [...queryKeys.all(), 'lists'],
   listByFilters: (args: { filters: FinanceRecordsSearchFilters }) => [

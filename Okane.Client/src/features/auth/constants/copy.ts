@@ -8,6 +8,16 @@ export const AUTH_COPY = {
     EMAIL: 'Email',
     NAME: 'Name',
     PASSWORD: 'Password',
+
+    PASSWORD_REQUIREMENTS: {
+      DIGIT: '1 digit',
+      HEADING: 'Password requirements',
+      LOWERCASE_LETTER: '1 lowercase letter',
+      MATCHING_PASSWORDS: '"Confirm password" matches "Password"',
+      MIN_LENGTH: (n: number) => `${n} or more characters`,
+      NON_ALPHANUMERIC_SYMBOL: '1 non-alphanumeric symbol (e.g. @, $)',
+      UPPERCASE_LETTER: '1 uppercase letter',
+    },
   },
 
   SUCCESSFULLY_REGISTERED: {

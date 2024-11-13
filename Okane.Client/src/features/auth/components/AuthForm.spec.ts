@@ -1,13 +1,24 @@
+// External
+import { flushPromises, VueWrapper } from '@vue/test-utils'
+import { http, HttpResponse } from 'msw'
+
 // Internal
 import AuthForm from '@features/auth/components/AuthForm.vue'
 
+import { authAPIRoutes } from '@features/auth/constants/apiRoutes'
 import { AUTH_COPY } from '@features/auth/constants/copy'
 
 import { type AuthFormType } from '@features/auth/types/authForm'
 
 import { capitalize } from '@shared/utils/string'
 
-const mountComponent = getMountComponent(AuthForm)
+import { createTestPasswordRequirements } from '@tests/factories/authForm'
+import { getMSWURL } from '@tests/utils/url'
+import { testServer } from '@tests/msw/testServer'
+import { wrapInAPIResponse } from '@tests/utils/apiResponse'
+
+const mountComponent = getMountComponent(AuthForm, { withQueryClient: true })
+const passwordRequirements = createTestPasswordRequirements()
 
 makeFormAssertions('login')
 makeFormAssertions('register')
@@ -15,9 +26,20 @@ makeFormAssertions('register')
 function makeFormAssertions(formType: AuthFormType) {
   describe(`${capitalize(formType)} form`, () => {
     const props = { props: { formType } } as const
+    let wrapper: VueWrapper
+
+    beforeEach(async () => {
+      testServer.use(
+        http.get(getMSWURL(authAPIRoutes.passwordRequirements()), () =>
+          HttpResponse.json(wrapInAPIResponse(passwordRequirements)),
+        ),
+      )
+
+      wrapper = mountComponent(props)
+      await flushPromises()
+    })
 
     test('renders the expected form controls', () => {
-      const wrapper = mountComponent(props)
       const emailInput = wrapper.get('input[name="email"]')
       expect(emailInput.attributes('type')).toBe('email')
       expect(wrapper.findByText('label', AUTH_COPY.AUTH_FORM.EMAIL)).toBeTruthy()
@@ -42,7 +64,6 @@ function makeFormAssertions(formType: AuthFormType) {
     })
 
     test(`renders a disabled ${formType} button`, () => {
-      const wrapper = mountComponent(props)
       const submitButton = wrapper.get('button[type="submit"')
       expect(submitButton.text()).toBe(capitalize(formType))
 
@@ -51,7 +72,6 @@ function makeFormAssertions(formType: AuthFormType) {
     })
 
     test('submits the form', async () => {
-      const wrapper = mountComponent(props)
       const submitButton = wrapper.get('button[type="submit"]')
 
       const formData = {
@@ -78,8 +98,8 @@ function makeFormAssertions(formType: AuthFormType) {
         await passwordConfirmInput.setValue(formData.password)
         expect(submitButton.attributes()).toHaveProperty('disabled')
 
-        // For the register form, it's not just enough to have a password. That password has to be valid.
-        formData.password = '!!!CoolPassword12345!!!'
+        // For the register form, it's not just enough to have a password. The password also has to be valid.
+        formData.password = '!aA1'.repeat(passwordRequirements.minLength)
         await passwordInput.setValue(formData.password)
         expect(submitButton.attributes()).toHaveProperty('disabled')
 

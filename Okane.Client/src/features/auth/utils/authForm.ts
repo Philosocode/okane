@@ -1,54 +1,67 @@
-import type { PasswordChecks } from '@features/auth/types/authForm'
-import { MIN_PASSWORD_LENGTH } from '@features/auth/constants/authForm'
+// Internal
+import { type PasswordChecks } from '@features/auth/types/authForm'
+
 import * as stringUtils from '@shared/utils/string'
 
 /**
- * Check if a password is valid. See Okane.Api/Features/Auth/Extensions/AuthExtensions.cs for valid password criteria.
+ * Check if a password is valid based on the given requirements.
  *
- * This is true if:
- * - length >= MIN_PASSWORD_LENGTH
- * - has a digit
- * - has a lowercase character
- * - has an uppercase character
- * - has a non-alphanumeric character
- *
- * @param password
- * @returns Whether or not the password is valid along with the password checks.
+ * @param args
  */
-export function isValidPassword(password: string): {
+export function validatePassword(args: {
+  password: string
+  passwordConfirm: string
+  minPasswordLength: number
+}): {
   isValid: boolean
   passwordChecks: PasswordChecks
 } {
-  const checks: PasswordChecks = {
-    hasDigit: false,
-    hasLowercase: false,
-    hasRequiredLength: password.length >= MIN_PASSWORD_LENGTH,
-    hasUppercase: false,
-    hasNonAlphanumeric: false,
+  const checks: PasswordChecks = {}
+  const has = {
+    digit: false,
+    nonAlphanumeric: false,
+    lowercase: false,
+    uppercase: false,
   }
+  let validRequirements = 0
 
-  for (const currChar of password) {
-    if (!checks.hasDigit && stringUtils.isIntegerString(currChar)) {
-      checks.hasDigit = true
+  for (let i = 0; i < args.password.length && validRequirements < Object.keys(has).length; i++) {
+    const currChar = args.password[i]
+
+    if (!has.digit && stringUtils.isIntegerString(currChar)) {
+      has.digit = true
+      validRequirements++
     }
 
-    if (!checks.hasNonAlphanumeric && !stringUtils.isAlphanumericString(currChar)) {
-      checks.hasNonAlphanumeric = true
+    if (!has.nonAlphanumeric && !stringUtils.isAlphanumericString(currChar)) {
+      has.nonAlphanumeric = true
+      validRequirements++
     }
 
     if (stringUtils.isAlphabetString(currChar)) {
-      if (!checks.hasLowercase && stringUtils.isLowercaseString(currChar)) {
-        checks.hasLowercase = true
+      if (!has.lowercase && stringUtils.isLowercaseString(currChar)) {
+        has.lowercase = true
+        validRequirements++
       }
 
-      if (!checks.hasUppercase && stringUtils.isUppercaseString(currChar)) {
-        checks.hasUppercase = true
+      if (!has.uppercase && stringUtils.isUppercaseString(currChar)) {
+        has.uppercase = true
+        validRequirements++
       }
     }
   }
 
+  if (args.password.length < args.minPasswordLength) checks.insufficientLength = true
+  if (!has.digit) checks.missingDigit = true
+  if (!has.nonAlphanumeric) checks.missingNonAlphanumeric = true
+  if (!has.lowercase) checks.missingLowercase = true
+  if (!has.uppercase) checks.missingUppercase = true
+  if (!args.passwordConfirm || args.password !== args.passwordConfirm) {
+    checks.invalidPasswordConfirm = true
+  }
+
   return {
-    isValid: !Object.values(checks).includes(false),
+    isValid: Object.getOwnPropertyNames(checks).length === 0,
     passwordChecks: checks,
   }
 }

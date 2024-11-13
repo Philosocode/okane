@@ -65,7 +65,7 @@ const happenedAtCriteria = computed(() => {
     <Heading class="heading" tag="h4">{{
       FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.APPLIED_SEARCH_FILTERS
     }}</Heading>
-    <ul class="search-criteria">
+    <ul class="bulleted-list">
       <li>
         {{ FINANCES_COPY.PROPERTIES.TYPE }}:
         {{ searchProvider.filters.type || capitalize(SHARED_COPY.COMMON.ALL) }}
@@ -94,10 +94,5 @@ const happenedAtCriteria = computed(() => {
 
 .heading {
   margin-block: 0;
-}
-
-.search-criteria {
-  list-style-type: disc;
-  padding-left: var(--space-md);
 }
 </style>

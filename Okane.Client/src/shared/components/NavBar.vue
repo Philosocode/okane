@@ -19,8 +19,10 @@ const authStore = useAuthStore()
       <RouterLink to="#" @click="authStore.logout">{{ AUTH_COPY.LOGOUT }}</RouterLink>
     </template>
     <template v-else>
-      <RouterLink :to="{ name: ROUTE_NAME.LOGIN }">{{ AUTH_COPY.LOGIN }}</RouterLink>
-      <RouterLink :to="{ name: ROUTE_NAME.REGISTER }">{{ AUTH_COPY.REGISTER }}</RouterLink>
+      <RouterLink :to="{ name: ROUTE_NAME.LOGIN }">{{ AUTH_COPY.AUTH_FORM.LOGIN }}</RouterLink>
+      <RouterLink :to="{ name: ROUTE_NAME.REGISTER }">{{
+        AUTH_COPY.AUTH_FORM.REGISTER
+      }}</RouterLink>
     </template>
   </nav>
 </template>

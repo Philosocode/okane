@@ -15,9 +15,8 @@ function getPasswordRequirements({
   return apiClient.get(authAPIRoutes.passwordRequirements(), { signal })
 }
 
-export function useQueryPasswordRequirements({ enabled = true } = {}) {
+export function useQueryPasswordRequirements() {
   return useQuery({
-    enabled,
     queryKey: authQueryKeys.passwordRequirements(),
     queryFn: getPasswordRequirements,
     select: (data) => data.items[0],

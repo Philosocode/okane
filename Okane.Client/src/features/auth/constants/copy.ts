@@ -1,13 +1,16 @@
 export const AUTH_COPY = {
-  LOGIN: 'Login',
   LOGOUT: 'Logout',
-  REGISTER: 'Register',
 
   AUTH_FORM: {
     CONFIRM_PASSWORD: 'Confirm password',
     EMAIL: 'Email',
+
+    LOGIN: 'Login',
+    LOGIN_ERROR: 'Invalid email or password',
     NAME: 'Name',
     PASSWORD: 'Password',
+    REGISTER: 'Register',
+    REGISTER_ERROR: 'Error registering. Refresh the page and try again.',
 
     PASSWORD_REQUIREMENTS: {
       DIGIT: '1 digit',

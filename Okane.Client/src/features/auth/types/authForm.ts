@@ -1,13 +1,3 @@
-// Internal
-export type AuthFormType = 'register' | 'login'
-
-export interface AuthFormState {
-  email: string
-  name: string
-  password: string
-  passwordConfirm: string
-}
-
 export type PasswordChecks = {
   insufficientLength?: boolean
   invalidPasswordConfirm?: boolean

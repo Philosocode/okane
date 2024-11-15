@@ -27,10 +27,10 @@ test('renders links for unauthenticated users', () => {
   const allLinks = wrapper.findAll('a')
   expect(allLinks).toHaveLength(2)
 
-  const loginLink = wrapper.findByText('a', AUTH_COPY.LOGIN)
+  const loginLink = wrapper.findByText('a', AUTH_COPY.AUTH_FORM.LOGIN)
   expect(loginLink.attributes('href')).toBe(appRoutes.login.buildPath())
 
-  const registerLink = wrapper.findByText('a', AUTH_COPY.REGISTER)
+  const registerLink = wrapper.findByText('a', AUTH_COPY.AUTH_FORM.REGISTER)
   expect(registerLink.attributes('href')).toBe(appRoutes.register.buildPath())
 })
 
@@ -57,7 +57,7 @@ describe('when authenticated', () => {
   })
 
   test('logs the user out', async () => {
-    testServer.use(authHandlers.logoutSuccess())
+    testServer.use(authHandlers.postLogoutSuccess())
 
     const wrapper = mountComponent()
     const logoutLink = wrapper.findByText('a', AUTH_COPY.LOGOUT)

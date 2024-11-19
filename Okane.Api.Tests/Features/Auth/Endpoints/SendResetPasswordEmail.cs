@@ -12,16 +12,16 @@ using Okane.Api.Tests.Testing.Mocks;
 
 namespace Okane.Api.Tests.Features.Auth.Endpoints;
 
-public class SendVerificationEmailTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFactory)
+public class SendResetPasswordEmailTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFactory)
 {
     private readonly PostgresApiFactory _apiFactory = apiFactory;
 
     [Fact]
     public async Task ReturnsNoContent_WhenUserDoesNotExist()
     {
-        var request = new SendVerificationEmail.Request(TestUser.Email);
+        var request = new SendResetPasswordEmail.Request(TestUser.Email);
         var client = _apiFactory.CreateClient();
-        var response = await client.PostAsJsonAsync("/auth/send-verification-email", request);
+        var response = await client.PostAsJsonAsync("/auth/send-reset-password-email", request);
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
 
@@ -43,12 +43,12 @@ public class SendVerificationEmailTests(PostgresApiFactory apiFactory) : Databas
         var calls = TestingEmailService.CreateCalls();
         TestingEmailService.SetCalls(calls);
 
-        var request = new SendVerificationEmail.Request(TestUser.Email);
-        var response = await client.PostAsJsonAsync("/auth/send-verification-email", request);
+        var request = new SendResetPasswordEmail.Request(TestUser.Email);
+        var response = await client.PostAsJsonAsync("/auth/send-reset-password-email", request);
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
         calls.Should().HaveCount(1);
-        calls[0].Subject.Should().Be(EmailGenerator.VerifyYourEmailSubject);
+        calls[0].Subject.Should().Be(EmailGenerator.ResetYourPasswordSubject);
         calls[0].To.Should().Be(loginResponse.User.Email);
     }
 }

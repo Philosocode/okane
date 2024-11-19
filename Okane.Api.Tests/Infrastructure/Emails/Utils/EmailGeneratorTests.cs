@@ -23,6 +23,23 @@ public class EmailGeneratorTests
         }
     }
 
+    public class ResetYourPassword : EmailGeneratorTests
+    {
+        [Fact]
+        public void SendsAnEmail_WithAResetPasswordLink()
+        {
+            var email = "sirdoggo@okane.com";
+            var token = "cool-token-123";
+            var expectedQueryString = $"?email={WebUtility.UrlEncode(email)}&token={WebUtility.UrlEncode(token)}";
+            var expectedUrl = $"{Origin}{AuthClientUrls.ResetPassword}{expectedQueryString}";
+            var content = EmailGenerator.ResetYourPassword(email, token, Origin);
+            content.Subject.Should().Be(EmailGenerator.ResetYourPasswordSubject);
+            content.Body.Should().Contain(
+                $"<a href=\"{expectedUrl}\">{expectedUrl}</a>"
+            );
+        }
+    }
+
     public class VerifyYourEmail : EmailGeneratorTests
     {
         [Fact]

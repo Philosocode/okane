@@ -11,30 +11,13 @@ using Okane.Api.Infrastructure.Emails.Services;
 using Okane.Api.Infrastructure.Emails.Utils;
 using Okane.Api.Tests.Testing.Constants;
 using Okane.Api.Tests.Testing.Integration;
+using Okane.Api.Tests.Testing.Mocks;
 
 namespace Okane.Api.Tests.Features.Auth.Endpoints;
 
 public class RegisterTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFactory)
 {
     private readonly PostgresApiFactory _apiFactory = apiFactory;
-
-    private class TestingEmailService : IEmailService
-    {
-        public record Call(string To, string Subject, string Html);
-
-        public static readonly List<Call> Calls = [];
-
-        public static void ClearCalls()
-        {
-            Calls.Clear();
-        }
-
-        public Task SendAsync(string to, string subject, string html, CancellationToken cancellationToken)
-        {
-            Calls.Add(new Call(to, subject, html));
-            return Task.CompletedTask;
-        }
-    }
 
     private HttpClient CreateClient()
     {
@@ -56,38 +39,48 @@ public class RegisterTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFact
         TestUser.Password
     );
 
-    private static void AssertSendsVerificationEmail(string email, int expectedCalls = 1)
+    private static void AssertSendsVerificationEmail(
+        string email,
+        IList<TestingEmailServiceCall> calls,
+        int expectedCalls = 1)
     {
-        TestingEmailService.Calls.Count.Should().Be(expectedCalls);
-        TestingEmailService.Calls.Last().Subject.Should().Be(EmailGenerator.VerifyYourEmailSubject);
-        TestingEmailService.Calls.Last().To.Should().Be(email);
+        calls.Count.Should().Be(expectedCalls);
+        calls.Last().Subject.Should().Be(EmailGenerator.VerifyYourEmailSubject);
+        calls.Last().To.Should().Be(email);
     }
 
     [Fact]
     public async Task RegistersANewUserAndSendsAVerificationEmail()
     {
+        var calls = TestingEmailService.CreateCalls();
+        TestingEmailService.SetCalls(calls);
+
         var client = CreateClient();
         var response = await client.PostAsJsonAsync("/auth/register", _validRequest);
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
-        AssertSendsVerificationEmail(_validRequest.Email);
-        TestingEmailService.ClearCalls();
+        AssertSendsVerificationEmail(_validRequest.Email, calls);
     }
 
     [Fact]
     public async Task ResendsVerificationEmail_WithDuplicateUnverifiedEmail()
     {
+        var calls = TestingEmailService.CreateCalls();
+        TestingEmailService.SetCalls(calls);
+
         var client = CreateClient();
         await client.RegisterTestUserAsync();
 
         var response = await client.PostAsJsonAsync("/auth/register", _validRequest);
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
-        AssertSendsVerificationEmail(_validRequest.Email, 2);
-        TestingEmailService.ClearCalls();
+        AssertSendsVerificationEmail(_validRequest.Email, calls, 2);
     }
 
     [Fact]
     public async Task SendsAlreadyRegisteredEmail_WithDuplicateVerifiedEmail()
     {
+        var calls = TestingEmailService.CreateCalls();
+        TestingEmailService.SetCalls(calls);
+
         var client = CreateClient();
         await client.RegisterTestUserAsync();
 
@@ -100,10 +93,9 @@ public class RegisterTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFact
 
         var response = await client.PostAsJsonAsync("/auth/register", _validRequest);
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
-        TestingEmailService.Calls.Count.Should().Be(2);
-        TestingEmailService.Calls.Last().Subject.Should().Be(EmailGenerator.AccountAlreadyRegisteredSubject);
-        TestingEmailService.Calls.Last().To.Should().Be(_validRequest.Email);
-        TestingEmailService.ClearCalls();
+        calls.Count.Should().Be(2);
+        calls.Last().Subject.Should().Be(EmailGenerator.AccountAlreadyRegisteredSubject);
+        calls.Last().To.Should().Be(_validRequest.Email);
     }
 
     // Input validation.

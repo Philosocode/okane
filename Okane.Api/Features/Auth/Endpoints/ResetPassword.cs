@@ -10,24 +10,24 @@ using Okane.Api.Shared.Exceptions;
 
 namespace Okane.Api.Features.Auth.Endpoints;
 
-public class VerifyEmail : IEndpoint
+public class ResetPassword : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder builder)
     {
         builder
-            .MapPost("/verify-email", HandleAsync)
+            .MapPost("/reset-password", HandleAsync)
             .AllowAnonymous()
-            .WithName(AuthEndpointNames.VerifyEmail)
-            .WithSummary("Verify email.");
+            .WithName(AuthEndpointNames.ResetPassword)
+            .WithSummary("Reset password.");
     }
 
-    public record Request(string Email, string Token);
+    public record Request(string Email, string Password, string Token);
 
     private static async Task<Results<BadRequest<ProblemDetails>, NoContent>>
         HandleAsync(
             HttpContext context,
             ApiDbContext db,
-            ILogger<VerifyEmail> logger,
+            ILogger<ResetPassword> logger,
             Request request,
             UserManager<ApiUser> userManager,
             CancellationToken cancellationToken)
@@ -36,19 +36,19 @@ public class VerifyEmail : IEndpoint
             u => u.Email == request.Email, cancellationToken
         );
 
-        var validationError = TypedResults.BadRequest(
-            new ApiException("Error validating email").ToProblemDetails()
+        var resetPasswordError = TypedResults.BadRequest(
+            new ApiException("Error resetting password").ToProblemDetails()
         );
 
         if (user is null)
         {
-            return validationError;
+            return resetPasswordError;
         }
 
-        var validationResult = await userManager.ConfirmEmailAsync(user, request.Token);
-        if (!validationResult.Succeeded)
+        var resetResult = await userManager.ResetPasswordAsync(user, request.Token, request.Password);
+        if (!resetResult.Succeeded)
         {
-            return validationError;
+            return resetPasswordError;
         }
 
         return TypedResults.NoContent();

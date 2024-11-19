@@ -8,6 +8,7 @@ namespace Okane.Api.Infrastructure.Emails.Utils;
 public static class EmailGenerator
 {
     public const string AccountAlreadyRegisteredSubject = "Someone tried to register with your email on Okane";
+    public const string ResetYourPasswordSubject = "Reset your password on Okane";
     public const string VerifyYourEmailSubject = "Verify your email on Okane";
 
     /// <summary>
@@ -38,6 +39,22 @@ public static class EmailGenerator
 
         return new EmailTextContent(AccountAlreadyRegisteredSubject, builder.ToString());
     }
+
+    public static EmailTextContent ResetYourPassword(string email, string token, string? origin)
+    {
+        {
+            var builder = new StringBuilder();
+            var url = $"{AuthClientUrls.ResetPassword}?email={WebUtility.UrlEncode(email)}&token={WebUtility.UrlEncode(token)}";
+
+            builder.Append(@"<p>You've requested to reset your password on Okane. ");
+            builder.Append(@"<p>Click the following link to reset your password: ");
+            builder.Append(CreateEmailLink(url, origin));
+            builder.Append(@"</p>");
+
+            return new EmailTextContent(ResetYourPasswordSubject, builder.ToString());
+        }
+    }
+
 
     public static EmailTextContent VerifyYourEmail(string email, string token, string? origin)
     {

@@ -6,7 +6,6 @@ import AuthForm from '@features/auth/components/AuthForm.vue'
 
 const mountComponent = getMountComponent(AuthForm)
 const props = {
-  submitButtonIsDisabled: false,
   submitButtonText: 'Hello world',
   submitError: 'Something exploded',
 }

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 export type AuthFormProps = {
-  submitButtonIsDisabled: boolean
   submitButtonText: string
 
+  submitButtonIsDisabled?: boolean
   submitError?: string
 }
 

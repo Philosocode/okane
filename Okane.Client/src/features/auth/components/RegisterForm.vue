@@ -3,7 +3,7 @@
 import { computed, ref } from 'vue'
 
 // Internal
-import AuthFormWrapper from '@features/auth/components/AuthForm.vue'
+import AuthForm from '@features/auth/components/AuthForm.vue'
 import FormInput from '@shared/components/form/FormInput.vue'
 import Heading from '@shared/components/Heading.vue'
 import PasswordRequirements from '@features/auth/components/PasswordRequirements.vue'
@@ -75,7 +75,7 @@ async function handleSubmit() {
 
 <template>
   <Heading tag="h1">{{ AUTH_COPY.AUTH_FORM.REGISTER }}</Heading>
-  <AuthFormWrapper
+  <AuthForm
     :submit-button-is-disabled="!formIsValid"
     :submit-button-text="AUTH_COPY.AUTH_FORM.REGISTER"
     :submit-error="hasSubmitError ? AUTH_COPY.AUTH_FORM.REGISTER_ERROR : ''"
@@ -114,5 +114,5 @@ async function handleSubmit() {
       :checks="validatePasswordResult?.passwordChecks ?? {}"
       :min-password-length="passwordRequirements.minLength"
     />
-  </AuthFormWrapper>
+  </AuthForm>
 </template>

@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { computed, ref } from 'vue'
 
 // Internal
-import AuthFormWrapper from '@features/auth/components/AuthForm.vue'
+import AuthForm from '@features/auth/components/AuthForm.vue'
 import FormInput from '@shared/components/form/FormInput.vue'
 import Heading from '@shared/components/Heading.vue'
 
@@ -38,7 +38,7 @@ async function handleSubmit() {
 
 <template>
   <Heading tag="h1">{{ AUTH_COPY.AUTH_FORM.LOGIN }}</Heading>
-  <AuthFormWrapper
+  <AuthForm
     :submit-button-is-disabled="!formIsValid"
     :submit-button-text="AUTH_COPY.AUTH_FORM.LOGIN"
     :submit-error="submitFailed ? AUTH_COPY.AUTH_FORM.LOGIN_ERROR : ''"
@@ -57,5 +57,5 @@ async function handleSubmit() {
       :type="INPUT_TYPE.PASSWORD"
       v-model="formState.password"
     />
-  </AuthFormWrapper>
+  </AuthForm>
 </template>

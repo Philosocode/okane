@@ -1,10 +1,10 @@
 export const AUTH_COPY = {
+  FORGOT_PASSWORD: 'I forgot my password.',
   LOGOUT: 'Logout',
 
   AUTH_FORM: {
     CONFIRM_PASSWORD: 'Confirm password',
     EMAIL: 'Email',
-
     LOGIN: 'Login',
     LOGIN_ERROR: 'Invalid email or password',
     NAME: 'Name',
@@ -20,6 +20,16 @@ export const AUTH_COPY = {
       MIN_LENGTH: (n: number) => `${n} or more characters`,
       NON_ALPHANUMERIC_SYMBOL: '1 non-alphanumeric symbol (e.g. @, $)',
       UPPERCASE_LETTER: '1 uppercase letter',
+    },
+  },
+
+  SEND_RESET_PASSWORD_EMAIL: {
+    ERROR: 'Error sending reset password email. Please try again later.',
+    ENTER_YOUR_EMAIL: 'Enter your email to reset your password.',
+    RESET_PASSWORD: 'Reset Password',
+    SUCCESS: {
+      HEADING: 'Sent email!',
+      BODY: 'In a few minutes, you should receive an email to reset your password.',
     },
   },
 

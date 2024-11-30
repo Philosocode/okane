@@ -6,7 +6,6 @@ import NavBar from '@shared/components/NavBar.vue'
 
 import { authHandlers } from '@tests/msw/handlers/auth'
 import { AUTH_COPY } from '@features/auth/constants/copy'
-import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { appRoutes } from '@shared/services/router/router'
 
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
@@ -46,11 +45,7 @@ describe('when authenticated', () => {
     const wrapper = mountComponent()
 
     const allLinks = wrapper.findAll('a')
-    expect(allLinks).toHaveLength(2)
-
-    const financesURL = appRoutes.finances.buildPath()
-    const financesLink = wrapper.get(`a[href="${financesURL}"]`)
-    expect(financesLink.text()).toBe(FINANCES_COPY.FINANCES)
+    expect(allLinks).toHaveLength(1)
 
     const logoutLink = wrapper.get(`a[href="/#"]`)
     expect(logoutLink.text()).toBe(AUTH_COPY.LOGOUT)

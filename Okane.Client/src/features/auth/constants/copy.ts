@@ -23,6 +23,18 @@ export const AUTH_COPY = {
     },
   },
 
+  RESET_PASSWORD: {
+    HEADING: 'Reset Password',
+    INVALID_URL: 'Invalid URL. Please request a new reset password email and try again.',
+    RESET_ERROR:
+      'Error resetting password. Please request a new reset password email and try again.',
+    RESET_SUCCEEDED: {
+      SUCCESS: 'Successfully reset password!',
+      CLICK_HERE: 'Click here to login.',
+    },
+    SUBMIT_BUTTON: 'Reset Password',
+  },
+
   SEND_RESET_PASSWORD_EMAIL: {
     ERROR: 'Error sending reset password email. Please try again later.',
     ENTER_YOUR_EMAIL: 'Enter your email to reset your password.',

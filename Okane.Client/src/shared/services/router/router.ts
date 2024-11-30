@@ -5,6 +5,7 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import FinancesPage from '@shared/pages/FinancesPage.vue'
 import LoginPage from '@shared/pages/LoginPage.vue'
 import RegisterPage from '@shared/pages/RegisterPage.vue'
+import ResetPasswordPage from '@shared/pages/ResetPasswordPage.vue'
 import SendResetPasswordEmail from '@shared/pages/SendResetPasswordEmailPage.vue'
 import VerifyEmailPage from '@shared/pages/VerifyEmailPage.vue'
 
@@ -16,6 +17,7 @@ export enum ROUTE_NAME {
   FINANCES = 'finances',
   LOGIN = 'login',
   REGISTER = 'register',
+  RESET_PASSWORD = 'resetPassword',
   SEND_RESET_PASSWORD_EMAIL = 'sendResetPasswordEmail',
   VERIFY_EMAIL = 'verifyEmail',
 }
@@ -42,6 +44,13 @@ export const appRoutes: Record<ROUTE_NAME, Route> = {
     buildPath: () => '/register',
     name: ROUTE_NAME.REGISTER,
     component: RegisterPage,
+    meta: { isPublic: true, isPublicOnly: true },
+  },
+  [ROUTE_NAME.RESET_PASSWORD]: {
+    path: '/reset-password',
+    buildPath: () => '/reset-password',
+    name: ROUTE_NAME.RESET_PASSWORD,
+    component: ResetPasswordPage,
     meta: { isPublic: true, isPublicOnly: true },
   },
   [ROUTE_NAME.SEND_RESET_PASSWORD_EMAIL]: {

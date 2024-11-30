@@ -15,7 +15,6 @@ const authStore = useAuthStore()
 <template>
   <nav class="nav">
     <template v-if="authStore.isLoggedIn">
-      <RouterLink :to="{ name: ROUTE_NAME.FINANCES }">{{ FINANCES_COPY.FINANCES }}</RouterLink>
       <RouterLink to="#" @click="authStore.logout">{{ AUTH_COPY.LOGOUT }}</RouterLink>
     </template>
     <template v-else>

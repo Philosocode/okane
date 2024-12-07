@@ -30,6 +30,7 @@ public static class Endpoints
             .MapEndpoint<RevokeRefreshToken>()
             .MapEndpoint<GetPasswordRequirements>()
             .MapEndpoint<GetSelf>()
+            .MapEndpoint<PatchSelf>()
             .MapEndpoint<DeleteSelf>();
 
         endpoints

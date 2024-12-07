@@ -7,6 +7,7 @@ public static class AuthEndpointNames
     public const string GetSelf = "GetSelf";
     public const string Login = "Login";
     public const string Logout = "Logout";
+    public const string PatchSelf = "PatchSelf";
     public const string RefreshToken = "RefreshToken";
     public const string Register = "Register";
     public const string ResetPassword = "ResetPassword";

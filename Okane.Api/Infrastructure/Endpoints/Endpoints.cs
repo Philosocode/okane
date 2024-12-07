@@ -29,7 +29,8 @@ public static class Endpoints
             .MapEndpoint<RotateRefreshToken>()
             .MapEndpoint<RevokeRefreshToken>()
             .MapEndpoint<GetPasswordRequirements>()
-            .MapEndpoint<GetSelf>();
+            .MapEndpoint<GetSelf>()
+            .MapEndpoint<DeleteSelf>();
 
         endpoints
             .MapGroup("/finance-records")

@@ -6,7 +6,6 @@ import { RouterLink } from 'vue-router'
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
-import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { ROUTE_NAME } from '@shared/services/router/router'
 
 const authStore = useAuthStore()

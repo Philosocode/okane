@@ -10,7 +10,10 @@ import { type AuthenticateResponse } from '@features/auth/types/authResponse'
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
 
 import * as appQueryClient from '@shared/services/queryClient/queryClient'
+import * as router from '@shared/services/router/router'
 import { apiClient } from '@shared/services/apiClient/apiClient'
+import { createAppRouter, ROUTE_NAME } from '@shared/services/router/router'
+
 import { testQueryClient } from '@tests/queryClient/testQueryClient'
 import { testServer } from '@tests/msw/testServer'
 
@@ -73,20 +76,38 @@ test('handleRefreshToken', async () => {
   await authStore.logout()
 })
 
-test('logout', async () => {
+function setUpResetState() {
   const authStore = useAuthStore()
   authStore.$patch({
     authUser: createTestUser(),
     jwtToken: createTestJWTToken(),
   })
 
-  const queryKey = ['key']
+  const queryKey = ['hey']
   testQueryClient.setQueryData(queryKey, 'value')
   vi.spyOn(appQueryClient, 'getQueryClient').mockReturnValue(testQueryClient)
+
+  return { authStore, queryKey }
+}
+
+test('resetState', async () => {
+  const { authStore, queryKey } = setUpResetState()
+  await authStore.resetState()
+
+  expect(authStore.authUser).toBeUndefined()
+  expect(authStore.jwtToken).toBeUndefined()
+  expect(testQueryClient.getQueryData(queryKey)).toBeUndefined()
+})
+
+test('logout', async () => {
+  const testRouter = createAppRouter()
+  vi.spyOn(router, 'getRouter').mockReturnValue(testRouter)
+  const { authStore, queryKey } = setUpResetState()
 
   await authStore.logout()
 
   expect(authStore.authUser).toBeUndefined()
   expect(authStore.jwtToken).toBeUndefined()
   expect(testQueryClient.getQueryData(queryKey)).toBeUndefined()
+  expect(testRouter.currentRoute.value.name).toBe(ROUTE_NAME.LOGIN)
 })

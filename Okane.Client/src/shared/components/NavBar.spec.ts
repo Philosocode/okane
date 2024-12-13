@@ -7,6 +7,7 @@ import NavBar from '@shared/components/NavBar.vue'
 import { authHandlers } from '@tests/msw/handlers/auth'
 import { AUTH_COPY } from '@features/auth/constants/copy'
 import { appRoutes } from '@shared/services/router/router'
+import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
 
@@ -20,17 +21,43 @@ const mountComponent = getMountComponent(NavBar, {
   withRouter: true,
 })
 
-test('renders links for unauthenticated users', () => {
-  const wrapper = mountComponent()
+const sharedAsserts = {
+  rendersLink(args: { link: string; text: string }) {
+    const wrapper = mountComponent()
+    const link = wrapper.findByText('a', args.text)
+    expect(link.attributes('href')).toBe(args.link)
+  },
+  doesNotRenderLink(args: { text: string }) {
+    const wrapper = mountComponent()
+    const link = wrapper.findByText('a', args.text)
+    expect(link).toBeUndefined()
+  },
+}
 
-  const allLinks = wrapper.findAll('a')
-  expect(allLinks).toHaveLength(2)
+test('renders a login link', () => {
+  sharedAsserts.rendersLink({
+    link: appRoutes.login.buildPath(),
+    text: AUTH_COPY.AUTH_FORM.LOGIN,
+  })
+})
 
-  const loginLink = wrapper.findByText('a', AUTH_COPY.AUTH_FORM.LOGIN)
-  expect(loginLink.attributes('href')).toBe(appRoutes.login.buildPath())
+test('renders a register link', () => {
+  sharedAsserts.rendersLink({
+    link: appRoutes.register.buildPath(),
+    text: AUTH_COPY.AUTH_FORM.REGISTER,
+  })
+})
 
-  const registerLink = wrapper.findByText('a', AUTH_COPY.AUTH_FORM.REGISTER)
-  expect(registerLink.attributes('href')).toBe(appRoutes.register.buildPath())
+test('does not render a finances link', () => {
+  sharedAsserts.doesNotRenderLink({ text: FINANCES_COPY.FINANCES })
+})
+
+test('does not render an account link', () => {
+  sharedAsserts.doesNotRenderLink({ text: AUTH_COPY.ACCOUNT_PAGE.LINK })
+})
+
+test('does not render a logout link', () => {
+  sharedAsserts.doesNotRenderLink({ text: AUTH_COPY.LOGOUT })
 })
 
 describe('when authenticated', () => {
@@ -41,17 +68,21 @@ describe('when authenticated', () => {
     authStore.jwtToken = createTestJWTToken()
   })
 
-  test('renders links for authenticated users', () => {
-    const wrapper = mountComponent()
-
-    const allLinks = wrapper.findAll('a')
-    expect(allLinks).toHaveLength(1)
-
-    const logoutLink = wrapper.get(`a[href="/#"]`)
-    expect(logoutLink.text()).toBe(AUTH_COPY.LOGOUT)
+  test('renders a finances link', () => {
+    sharedAsserts.rendersLink({
+      link: appRoutes.finances.buildPath(),
+      text: FINANCES_COPY.FINANCES,
+    })
   })
 
-  test('logs the user out', async () => {
+  test('renders an account link', () => {
+    sharedAsserts.rendersLink({
+      link: appRoutes.account.buildPath(),
+      text: AUTH_COPY.ACCOUNT_PAGE.LINK,
+    })
+  })
+
+  test('renders a logout link', async () => {
     testServer.use(authHandlers.postLogoutSuccess())
 
     const wrapper = mountComponent()
@@ -64,5 +95,13 @@ describe('when authenticated', () => {
     expect(authStore.authUser).toBeUndefined()
     expect(authStore.jwtToken).toBeUndefined()
     expect(globalThis.location.pathname).toBe(appRoutes.login.buildPath())
+  })
+
+  test('does not render a login link', async () => {
+    sharedAsserts.doesNotRenderLink({ text: AUTH_COPY.AUTH_FORM.LOGIN })
+  })
+
+  test('does not render a register link', async () => {
+    sharedAsserts.doesNotRenderLink({ text: AUTH_COPY.AUTH_FORM.REGISTER })
   })
 })

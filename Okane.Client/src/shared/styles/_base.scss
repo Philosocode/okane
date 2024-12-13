@@ -38,6 +38,11 @@ a {
   }
 }
 
+.active-link {
+  color: var(--color-green-400);
+  font-weight: bold;
+}
+
 .bulleted-list {
   list-style-type: disc;
   padding-left: var(--space-md);

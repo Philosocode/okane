@@ -5,14 +5,14 @@ import { defineStore } from 'pinia'
 // Internal
 import { authAPIRoutes } from '@features/auth/constants/apiRoutes'
 
-import type { User } from '@features/users/types'
-import type { Timeout } from '@shared/types/shared'
+import { type AuthenticateResponse } from '@features/auth/types/authResponse'
+import { type User } from '@features/users/types'
+import { type Timeout } from '@shared/types/shared'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 import { ROUTE_NAME, getRouter } from '@shared/services/router/router'
 
 import { getQueryClient } from '@shared/services/queryClient/queryClient'
-import type { AuthenticateResponse } from '@features/auth/types/authResponse'
 import { getJWTTokenPayload } from '@features/auth/utils/authResponse'
 
 export type AuthStore = ReturnType<typeof useAuthStore>
@@ -69,6 +69,19 @@ export const useAuthStore = defineStore('AuthStore', () => {
   }
 
   /**
+   * Reset the auth store state.
+   */
+  function resetState() {
+    clearTimeout(refreshTokenInterval.value)
+
+    authUser.value = undefined
+    jwtToken.value = undefined
+
+    const queryClient = getQueryClient()
+    queryClient.clear()
+  }
+
+  /**
    * Start a timer to refresh the JWT token before it expires.
    */
   function startRefreshTokenTimer() {
@@ -84,18 +97,11 @@ export const useAuthStore = defineStore('AuthStore', () => {
   }
 
   /**
-   * Log out the user by clearing the store state.
+   * Log out the user and reset the store state.
    */
   async function logout() {
     await apiClient.post(authAPIRoutes.logout())
-    clearTimeout(refreshTokenInterval.value)
-
-    authUser.value = undefined
-    jwtToken.value = undefined
-
-    const queryClient = getQueryClient()
-    queryClient.clear()
-
+    resetState()
     await getRouter().push({ name: ROUTE_NAME.LOGIN })
   }
 
@@ -104,9 +110,10 @@ export const useAuthStore = defineStore('AuthStore', () => {
     isLoggedIn,
     jwtToken,
 
-    register,
-    login,
     handleRefreshToken,
+    login,
     logout,
+    register,
+    resetState,
   }
 })

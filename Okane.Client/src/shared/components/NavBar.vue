@@ -6,6 +6,7 @@ import { RouterLink } from 'vue-router'
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
+import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { ROUTE_NAME } from '@shared/services/router/router'
 
 const authStore = useAuthStore()
@@ -14,7 +15,11 @@ const authStore = useAuthStore()
 <template>
   <nav class="nav">
     <template v-if="authStore.isLoggedIn">
-      <RouterLink to="#" @click="authStore.logout">{{ AUTH_COPY.LOGOUT }}</RouterLink>
+      <RouterLink :to="{ name: ROUTE_NAME.FINANCES }">{{ FINANCES_COPY.FINANCES }}</RouterLink>
+      <RouterLink :to="{ name: ROUTE_NAME.ACCOUNT }">{{ AUTH_COPY.ACCOUNT_PAGE.LINK }}</RouterLink>
+      <RouterLink to="#" @click="authStore.logout" exactActiveClass="">{{
+        AUTH_COPY.LOGOUT
+      }}</RouterLink>
     </template>
     <template v-else>
       <RouterLink :to="{ name: ROUTE_NAME.LOGIN }">{{ AUTH_COPY.AUTH_FORM.LOGIN }}</RouterLink>

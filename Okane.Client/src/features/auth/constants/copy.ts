@@ -1,4 +1,17 @@
 export const AUTH_COPY = {
+  ACCOUNT_DELETED: {
+    HEADING: 'Account Successfully Deleted',
+    TEXT: 'Your account has been permanently deleted. Thank you for using Okane.',
+  },
+
+  ACCOUNT_PAGE: {
+    DELETE_ACCOUNT: 'Delete Account',
+    DELETE_ACCOUNT_CONFIRMATION: 'Are you sure you want to permanently delete your account?',
+    DELETE_ACCOUNT_ERROR: 'Error deleting account. Please try again later.',
+    HEADING: 'Account Page',
+    LINK: 'Account',
+  },
+
   FORGOT_PASSWORD: 'I forgot my password.',
   LOGOUT: 'Logout',
 

@@ -1,0 +1,11 @@
+PATCH {{BASE_URL}}/auth/self
+Authorization: {{AUTH_HEADER}}
+{
+  "name": "Updated"
+}
+
+HTTP 200
+[Asserts]
+jsonpath "$.status" == 200
+jsonpath "$.items" count == 1
+jsonpath "$.items[0].name" == "Updated"

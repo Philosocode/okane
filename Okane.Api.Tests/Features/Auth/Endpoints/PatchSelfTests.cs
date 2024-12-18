@@ -34,7 +34,7 @@ public class PatchSelfTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFac
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var userFromDb = await Db.Users.SingleAsync(u => u.Email == TestUser.Email);
-        userFromDb.Name.Should().Be(TestUser.Name);
+        userFromDb.Name.Should().Be(_validRequest.Name);
     }
 
     [Fact]
@@ -44,7 +44,7 @@ public class PatchSelfTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFac
         var updateResponse = await _client.PatchAsJsonAsync("/auth/self", updateRequest);
         updateResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var loginRequest = new Login.Request(TestUser.Email!, updateRequest.NewPassword);
+        var loginRequest = new Login.Request(TestUser.Email, updateRequest.NewPassword!);
         var loginResponse = await _client.PostAsJsonAsync("/auth/login", loginRequest);
         loginResponse.StatusCode.Should().Be(HttpStatusCode.OK);
     }
@@ -55,14 +55,13 @@ public class PatchSelfTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFac
         var updateResponse = await _client.PatchAsJsonAsync("/auth/self", _validRequest);
         updateResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var loginRequest = new Login.Request(TestUser.Email!, _validRequest.NewPassword);
+        var loginRequest = new Login.Request(TestUser.Email, _validRequest.NewPassword!);
         var loginResponse = await _client.PostAsJsonAsync("/auth/login", loginRequest);
         loginResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var authResponse = await loginResponse.Content.ReadFromJsonAsync<ApiResponse<AuthenticateResponse>>();
         authResponse.Should().NotBeNull();
-
-        var user = authResponse?.Items.Should().ContainSingle(
+        authResponse?.Items.Should().ContainSingle(
             r => r.User.Name == _validRequest.Name
         );
     }

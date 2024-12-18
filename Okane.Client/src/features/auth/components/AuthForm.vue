@@ -4,6 +4,7 @@ export type AuthFormProps = {
 
   submitButtonIsDisabled?: boolean
   submitError?: string
+  submitSuccess?: string
 }
 
 const props = defineProps<AuthFormProps>()
@@ -23,6 +24,7 @@ const emit = defineEmits<{
       </button>
 
       <p v-if="props.submitError" class="submit-error">{{ props.submitError }}</p>
+      <p v-else-if="props.submitSuccess" class="submit-success">{{ props.submitSuccess }}</p>
     </fieldset>
   </form>
 </template>
@@ -49,5 +51,9 @@ const emit = defineEmits<{
 
 .submit-error {
   color: var(--color-error);
+}
+
+.submit-success {
+  color: var(--color-green-400);
 }
 </style>

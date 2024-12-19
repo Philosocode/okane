@@ -5,16 +5,21 @@ export const AUTH_COPY = {
   },
 
   ACCOUNT_PAGE: {
-    CURRENT_PASSWORD: 'Current Password',
+    CURRENT_PASSWORD: 'Current password',
     DELETE_ACCOUNT: 'Delete Account',
     DELETE_ACCOUNT_CONFIRMATION: 'Are you sure you want to permanently delete your account?',
     DELETE_ACCOUNT_ERROR: 'Error deleting account. Please try again later.',
     EDIT_NAME: 'Edit Name',
     EDIT_NAME_ERROR: 'Error editing name. Please try again later.',
     EDIT_NAME_SUCCESS: 'Successfully edited name.',
+    EDIT_PASSWORD: 'Edit Password',
+    EDIT_PASSWORD_ERROR_GENERAL: 'Error editing password. Please try again later.',
+    EDIT_PASSWORD_ERROR_CURRENT_PASSWORD_INVALID: 'Current password is invalid.',
+    EDIT_PASSWORD_SUCCESS: 'Successfully edited password.',
     HEADING: 'Account Page',
     LINK: 'Account',
-    NEW_PASSWORD: 'New Password',
+    NEW_PASSWORD: 'New password',
+    NEW_PASSWORD_CONFIRM: 'Confirm new password',
   },
 
   FORGOT_PASSWORD: 'I forgot my password.',

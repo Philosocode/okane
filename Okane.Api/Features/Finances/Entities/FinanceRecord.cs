@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NpgsqlTypes;
 using Okane.Api.Features.Auth.Entities;
+using Okane.Api.Features.Tags.Entities;
 using Okane.Api.Infrastructure.Database.Constants;
 using Okane.Api.Infrastructure.Database.Entities;
 
@@ -18,7 +19,7 @@ public class FinanceRecord : IOwnedEntity
     [MaxLength(DbConstants.MaxStringLength)]
     public required string Description { get; set; }
 
-    public NpgsqlTsVector SearchVector { get; set; } = default!;
+    public NpgsqlTsVector SearchVector { get; set; } = null!;
 
     public required DateTime HappenedAt { get; set; }
 
@@ -26,7 +27,9 @@ public class FinanceRecord : IOwnedEntity
 
     // Navigation.
     public string UserId { get; set; } = string.Empty;
-    public ApiUser User { get; set; } = default!;
+    public ApiUser User { get; set; } = null!;
+
+    public ICollection<Tag> Tags { get; set; } = null!;
 }
 
 public class FinanceRecordEntityConfiguration : IEntityTypeConfiguration<FinanceRecord>
@@ -44,5 +47,10 @@ public class FinanceRecordEntityConfiguration : IEntityTypeConfiguration<Finance
 
         builder.Property<DateTime>("CreatedAt")
             .HasDefaultValueSql("NOW()");
+
+        builder
+            .HasMany(fr => fr.Tags)
+            .WithMany(t => t.FinanceRecords)
+            .UsingEntity<FinanceRecordTag>();
     }
 }

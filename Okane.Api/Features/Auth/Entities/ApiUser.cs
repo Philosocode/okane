@@ -10,6 +10,7 @@ public class ApiUser : IdentityUser
     [MaxLength(DbConstants.MaxStringLength)]
     public required string Name { get; set; }
 
+    // Navigation.
     [JsonIgnore]
-    public ICollection<RefreshToken> RefreshTokens { get; set; } = default!;
+    public ICollection<RefreshToken> RefreshTokens { get; set; } = null!;
 }

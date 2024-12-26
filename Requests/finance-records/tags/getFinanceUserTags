@@ -1,0 +1,4 @@
+GET {{BASE_URL}}/finance-records/tags
+Authorization: {{AUTH_HEADER}}
+
+HTTP 200

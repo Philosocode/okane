@@ -4,6 +4,7 @@ public static class FinanceRecordEndpointNames
 {
     public const string GetFinanceRecord = "GetFinanceRecord";
     public const string GetFinanceRecordsStats = "GetFinanceRecordsStats";
+    public const string GetFinanceUserTags = "GetFinanceUserTags";
     public const string GetPaginatedFinanceRecords = "GetPaginatedFinanceRecords";
     public const string PostFinanceRecord = "PostFinanceRecord";
     public const string PatchFinanceRecord = "PatchFinanceRecord";

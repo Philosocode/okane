@@ -42,7 +42,8 @@ public static class Endpoints
             .MapEndpoint<GetFinanceUserTags>()
             .MapEndpoint<PostFinanceRecord>()
             .MapEndpoint<PatchFinanceRecord>()
-            .MapEndpoint<DeleteFinanceRecord>();
+            .MapEndpoint<DeleteFinanceRecord>()
+            .MapEndpoint<DeleteFinanceUserTag>();
     }
 
     private static IEndpointRouteBuilder MapEndpoint<TEndpoint>(this IEndpointRouteBuilder builder)

@@ -135,6 +135,7 @@ public static class ConfigureServices
         builder.Services.AddScoped<ISmtpClientGenerator, SmtpClientGenerator>();
         builder.Services.AddScoped<IEmailService, EmailService>();
         builder.Services.AddScoped<IFinanceRecordService, FinanceRecordService>();
+        builder.Services.AddScoped<IFinanceTagService, FinanceTagService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
     }
 

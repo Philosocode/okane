@@ -50,18 +50,18 @@ public class PostFinanceRecord : IEndpoint
             return TypedResults.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var createdRecord = await db.FinanceRecords.AddAsync(financeRecord, cancellationToken);
+        await db.FinanceRecords.AddAsync(financeRecord, cancellationToken);
         await db.SaveChangesAsync(cancellationToken);
 
-        var response = new ApiResponse<FinanceRecordResponse>(createdRecord.Entity.ToFinanceRecordResponse())
+        var response = new ApiResponse<FinanceRecordResponse>(financeRecord.ToFinanceRecordResponse())
         {
             Status = HttpStatusCode.Created
         };
 
         return TypedResults.CreatedAtRoute(
             response,
-            FinanceRecordEndpointNames.PostFinanceRecord,
-            new { id = createdRecord.Entity.Id }
+            FinanceRecordEndpointNames.GetFinanceRecord,
+            new { financeRecordId = financeRecord.Id }
         );
     }
 }

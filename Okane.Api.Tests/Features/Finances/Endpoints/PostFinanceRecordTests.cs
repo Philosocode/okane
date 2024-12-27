@@ -50,8 +50,8 @@ public class PostFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTes
 
         var expectedLocation = UrlUtils.GetUriByRouteName(
             _apiFactory,
-            FinanceRecordEndpointNames.PostFinanceRecord,
-            new { id = createdRecord.Id }
+            FinanceRecordEndpointNames.GetFinanceRecord,
+            new { financeRecordId = createdRecord.Id }
         );
 
         response.Headers.Location.Should().Be(expectedLocation);

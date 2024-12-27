@@ -9,4 +9,5 @@ public static class FinanceRecordEndpointNames
     public const string PostFinanceRecord = "PostFinanceRecord";
     public const string PatchFinanceRecord = "PatchFinanceRecord";
     public const string DeleteFinanceRecord = "DeleteFinanceRecord";
+    public const string DeleteFinanceUserTag = "DeleteFinanceUserTag";
 }

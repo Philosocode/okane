@@ -12,15 +12,18 @@ public class DeleteFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseT
     private readonly HttpClient _client = apiFactory.CreateClient();
 
     [Fact]
-    public async Task DeletesAFinanceRecord()
+    public async Task DeletesAFinanceRecordAndTags()
     {
+        // Setup.
         var loginResponse = await _client.RegisterAndLogInTestUserAsync();
 
-        // Setup.
+        var tags = TagStubFactory.CreateN(2);
         var financeRecord1 = FinanceRecordStubFactory.Create(loginResponse.User.Id);
+        financeRecord1.Tags = tags;
         var financeRecord2 = FinanceRecordStubFactory.Create(loginResponse.User.Id);
-        await Db.AddAsync(financeRecord1);
-        await Db.AddAsync(financeRecord2);
+        financeRecord2.Tags = tags;
+
+        Db.AddRange(financeRecord1, financeRecord2);
         await Db.SaveChangesAsync();
 
         var deleteResponse = await _client.DeleteAsync($"finance-records/{financeRecord1.Id}");
@@ -29,6 +32,11 @@ public class DeleteFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseT
         var remainingFinanceRecords = await Db.FinanceRecords.ToListAsync();
         remainingFinanceRecords.Should().HaveCount(1);
         remainingFinanceRecords[0].Id.Should().Be(financeRecord2.Id);
+
+        var remainingFinanceRecordTags = await Db.FinanceRecordTags.ToListAsync();
+        remainingFinanceRecordTags.Should()
+            .HaveCount(tags.Count)
+            .And.NotContain(frt => frt.FinanceRecordId == financeRecord1.Id);
     }
 
     [Fact]

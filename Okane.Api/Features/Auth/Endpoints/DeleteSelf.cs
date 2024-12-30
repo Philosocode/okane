@@ -34,10 +34,21 @@ public class DeleteSelf : IEndpoint
         await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
         try
         {
+            // Finances.
+            await db.FinanceRecordTags
+                .Include(frt => frt.FinanceRecord)
+                .Where(frt => frt.FinanceRecord.UserId == userId)
+                .ExecuteDeleteAsync(cancellationToken);
+
+            await db.FinanceUserTags
+                .Where(fut => fut.UserId == userId)
+                .ExecuteDeleteAsync(cancellationToken);
+
             await db.FinanceRecords
                 .Where(fr => fr.UserId == userId)
                 .ExecuteDeleteAsync(cancellationToken);
 
+            // Refresh tokens.
             await db.RefreshTokens
                 .Where(t => t.UserId == userId)
                 .ExecuteDeleteAsync(cancellationToken);

@@ -25,6 +25,7 @@ public class DeleteFinanceRecord : IEndpoint
             HttpContext context,
             ApiDbContext db,
             int financeRecordId,
+            ILogger<DeleteFinanceRecord> logger,
             CancellationToken cancellationToken)
     {
         var userId = claimsPrincipal.GetUserId();
@@ -39,8 +40,28 @@ public class DeleteFinanceRecord : IEndpoint
             return TypedResults.NotFound();
         }
 
-        db.Remove(financeRecord);
-        await db.SaveChangesAsync(cancellationToken);
+        await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
+        try
+        {
+            await db.FinanceRecordTags
+                .Where(frt => frt.FinanceRecordId == financeRecordId)
+                .ExecuteDeleteAsync(cancellationToken);
+
+            db.Remove(financeRecord);
+            await db.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync(cancellationToken);
+
+            logger.LogWarning(
+                "Transaction error: {FinanceRecordId}, {Error}",
+                financeRecordId, ex.Message
+            );
+
+            throw;
+        }
 
         return TypedResults.NoContent();
     }

@@ -9,6 +9,7 @@ public static class FinanceRecordEndpointNames
     public const string GetPaginatedFinanceRecords = "GetPaginatedFinanceRecords";
     public const string PostFinanceRecord = "PostFinanceRecord";
     public const string PostFinanceUserTag = "PostFinanceUserTag";
+    public const string PostRenameFinanceUserTag = "PostRenameFinanceUserTag";
     public const string PatchFinanceRecord = "PatchFinanceRecord";
     public const string DeleteFinanceRecord = "DeleteFinanceRecord";
     public const string DeleteFinanceUserTag = "DeleteFinanceUserTag";

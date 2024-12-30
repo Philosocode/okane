@@ -49,7 +49,9 @@ public class GetPaginatedFinanceRecords : IEndpoint
         query = financeRecordService.SortQueryableFinanceRecords(query, sortParameters);
 
         var response = await ApiPaginatedResponse<FinanceRecordResponse>.CreateAsync(
-            query.Select(fr => fr.ToFinanceRecordResponse()),
+            query
+                .Include(fr => fr.Tags.OrderBy(t => t.Name))
+                .Select(fr => fr.ToFinanceRecordResponse()),
             pageParameters
         );
 

@@ -32,6 +32,8 @@ public class GetFinanceRecord : IEndpoint
     {
         var userId = claimsPrincipal.GetUserId();
         FinanceRecord? financeRecord = await db.FinanceRecords
+            .AsNoTracking()
+            .Include(fr => fr.Tags.OrderBy(t => t.Name))
             .SingleOrDefaultAsync(
                 r => r.UserId == userId && r.Id == financeRecordId,
                 cancellationToken

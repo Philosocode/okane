@@ -80,6 +80,36 @@ public class GetPaginatedFinanceRecordsTests(PostgresApiFactory apiFactory) : Da
     }
 
     [Fact]
+    public async Task IncludesFinanceRecordTags()
+    {
+        var tags = await TagUtils.CreateAndSaveNTagsAsync(Db, 2);
+        var loginResponse = await _client.RegisterAndLogInTestUserAsync();
+        var financeRecords = new List<FinanceRecord>();
+        for (var i = 0; i < 2; i++)
+        {
+            var financeRecord = FinanceRecordStubFactory.Create(loginResponse.User.Id);
+            financeRecord.Tags = tags;
+            financeRecords.Add(financeRecord);
+        }
+
+        Db.AddRange(financeRecords);
+        await Db.SaveChangesAsync();
+
+        var response = await _client.GetAsync($"/finance-records?pageSize={financeRecords.Count}");
+        response.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        var page = await response
+            .Content
+            .ReadFromJsonAsync<ApiPaginatedResponse<FinanceRecordResponse>>();
+
+        var tagIds = tags.Select(t => t.Id).ToList();
+        foreach (var financeRecordResponse in page!.Items)
+        {
+            financeRecordResponse.Tags.Select(t => t.Id).Should().BeEquivalentTo(tagIds);
+        }
+    }
+
+    [Fact]
     public async Task ExcludesFinanceRecordsCreatedByOtherUsers()
     {
         var otherUserEmail = await UserUtils.RegisterUserAsync(_client);
@@ -150,7 +180,7 @@ public class GetPaginatedFinanceRecordsTests(PostgresApiFactory apiFactory) : Da
     {
         var loginResponse = await _client.RegisterAndLogInTestUserAsync();
         var financeRecords = getInputFinanceRecords(loginResponse.User.Id);
-        await Db.AddRangeAsync(financeRecords);
+        Db.AddRange(financeRecords);
         await Db.SaveChangesAsync();
 
         var response = await _client.GetAsync($"/finance-records?{queryString}");
@@ -162,7 +192,10 @@ public class GetPaginatedFinanceRecordsTests(PostgresApiFactory apiFactory) : Da
 
         var expectedFinanceRecords = getExpectedFinanceRecords(financeRecords);
         var expectedItems = expectedFinanceRecords.Select(fr => fr.ToFinanceRecordResponse());
-        page?.Items.Should().BeEquivalentTo(expectedItems);
+        page?.Items.Should().BeEquivalentTo(
+            expectedItems,
+            options => options.For(fr => fr.Tags).Exclude(t => t.FinanceRecords)
+        );
     }
 
     // Sorting.
@@ -503,6 +536,45 @@ public class GetPaginatedFinanceRecordsTests(PostgresApiFactory apiFactory) : Da
             ]
         );
     }
+
+    [Fact]
+    public async Task ReturnsAListOfFinanceRecords_FilteredByTagIds()
+    {
+        var tags = TagStubFactory.CreateN(3);
+        Db.AddRange(tags);
+        await Db.SaveChangesAsync();
+
+        await AssertFinanceRecordsAreSortedAndFiltered(
+            $"tagId={tags[0].Id}&tagId={tags[1].Id}",
+            userId =>
+            {
+                var financeRecords = new List<FinanceRecord>
+                {
+                    FinanceRecordStubFactory.Create(userId),
+                    FinanceRecordStubFactory.Create(userId),
+                    FinanceRecordStubFactory.Create(userId),
+
+                    // Shouldn't be included.
+                    FinanceRecordStubFactory.Create(userId),
+                    FinanceRecordStubFactory.Create(userId)
+                };
+
+                financeRecords[0].Tags = [tags[0]];
+                financeRecords[1].Tags = [tags[1]];
+                financeRecords[2].Tags = [tags[0], tags[1]];
+                financeRecords[3].Tags = [tags[2]];
+
+                return financeRecords;
+            },
+            financeRecords =>
+            [
+                financeRecords[0],
+                financeRecords[1],
+                financeRecords[2]
+            ]
+        );
+    }
+
 
     [Fact]
     public async Task ReturnsAListOfFinanceRecords_FilteredByType()

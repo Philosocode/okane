@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
 using Okane.Api.Features.Finances.Dtos;
-using Okane.Api.Features.Finances.Mappers;
+using Okane.Api.Features.Tags.Entities;
 using Okane.Api.Shared.Dtos.ApiResponses;
 using Okane.Api.Tests.Testing.Integration;
 using Okane.Api.Tests.Testing.StubFactories;
@@ -19,17 +19,24 @@ public class GetFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTest
     {
         var loginResponse = await _client.RegisterAndLogInTestUserAsync();
         var financeRecord = FinanceRecordStubFactory.Create(loginResponse.User.Id);
+        financeRecord.Tags =
+        [
+            new Tag { Name = "b" },
+            new Tag { Name = "a" }
+        ];
 
-        await Db.FinanceRecords.AddAsync(financeRecord);
+        Db.FinanceRecords.Add(financeRecord);
         await Db.SaveChangesAsync();
 
         var response = await _client.GetAsync($"/finance-records/{financeRecord.Id}");
         response.Should().HaveStatusCode(HttpStatusCode.OK);
 
         var content = await response.Content.ReadFromJsonAsync<ApiResponse<FinanceRecordResponse>>();
-        content?.Items.Should()
-            .ContainSingle()
-            .Which.Should().BeEquivalentTo(financeRecord.ToFinanceRecordResponse());
+        content?.Items.Should().ContainSingle();
+
+        var fetchedFinanceRecord = content?.Items.First();
+        fetchedFinanceRecord?.Id.Should().Be(financeRecord.Id);
+        fetchedFinanceRecord?.Tags.Select(t => t.Name).Should().BeEquivalentTo("a", "b");
     }
 
     [Fact]

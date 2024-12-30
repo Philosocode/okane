@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Okane.Api.Features.Finances.Constants;
 using Okane.Api.Features.Finances.Dtos;
 using Okane.Api.Features.Finances.Entities;
+using Okane.Api.Infrastructure.Database;
 using Okane.Api.Shared.Constants;
 using Okane.Api.Shared.Extensions;
 
@@ -31,7 +32,7 @@ public interface IFinanceRecordService
     );
 }
 
-public class FinanceRecordService : IFinanceRecordService
+public class FinanceRecordService(ApiDbContext db) : IFinanceRecordService
 {
     public IQueryable<FinanceRecord> FilterQueryableFinanceRecords(
         IQueryable<FinanceRecord> query,
@@ -70,6 +71,15 @@ public class FinanceRecordService : IFinanceRecordService
         if (parameters.MaxAmount is not null)
         {
             query = query.Where(fr => fr.Amount <= parameters.MaxAmount);
+        }
+
+        if (parameters.TagIds?.Length > 0)
+        {
+            query = query.Where(
+                fr => db.FinanceRecordTags.Any(
+                    frt => frt.FinanceRecordId == fr.Id && parameters.TagIds.Contains(frt.TagId)
+                )
+            );
         }
 
         if (parameters.Type is not null)

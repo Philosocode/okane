@@ -16,7 +16,7 @@ public class GetFinanceUserTag : IEndpoint
     public static void Map(IEndpointRouteBuilder builder)
     {
         builder
-            .MapGet("/tags/{financeUserTagId:int}", HandleAsync)
+            .MapGet("/{financeUserTagId:int}", HandleAsync)
             .WithName(FinanceRecordEndpointNames.GetFinanceUserTag)
             .WithSummary("Get finance user tag by ID.");
     }

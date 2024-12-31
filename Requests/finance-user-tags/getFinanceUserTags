@@ -1,4 +1,4 @@
-GET {{BASE_URL}}/finance-records/tags
+GET {{BASE_URL}}/finance-user-tags
 Authorization: {{AUTH_HEADER}}
 
 HTTP 200

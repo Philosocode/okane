@@ -20,7 +20,7 @@ public class PostRenameFinanceUserTag : IEndpoint
     public static void Map(IEndpointRouteBuilder builder)
     {
         builder
-            .MapPost("/tags/{financeUserTagId:int}/rename", HandleAsync)
+            .MapPost("/{financeUserTagId:int}/rename", HandleAsync)
             .WithName(FinanceRecordEndpointNames.PostRenameFinanceUserTag)
             .WithSummary("Rename a finance user tag.");
     }

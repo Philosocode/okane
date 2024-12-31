@@ -16,7 +16,7 @@ public class GetFinanceUserTags : IEndpoint
     public static void Map(IEndpointRouteBuilder builder)
     {
         builder
-            .MapGet("/tags", HandleAsync)
+            .MapGet("/", HandleAsync)
             .WithName(FinanceRecordEndpointNames.GetFinanceUserTags)
             .WithSummary("Get finance user tags created by the request user.");
     }

@@ -39,13 +39,17 @@ public static class Endpoints
             .MapEndpoint<GetFinanceRecord>()
             .MapEndpoint<GetPaginatedFinanceRecords>()
             .MapEndpoint<GetFinanceRecordsStats>()
+            .MapEndpoint<PostFinanceRecord>()
+            .MapEndpoint<PatchFinanceRecord>()
+            .MapEndpoint<DeleteFinanceRecord>();
+
+        endpoints
+            .MapGroup("/finance-user-tags")
+            .WithTags("Finance User Tags")
             .MapEndpoint<GetFinanceUserTag>()
             .MapEndpoint<GetFinanceUserTags>()
-            .MapEndpoint<PostFinanceRecord>()
             .MapEndpoint<PostFinanceUserTag>()
             .MapEndpoint<PostRenameFinanceUserTag>()
-            .MapEndpoint<PatchFinanceRecord>()
-            .MapEndpoint<DeleteFinanceRecord>()
             .MapEndpoint<DeleteFinanceUserTag>();
     }
 

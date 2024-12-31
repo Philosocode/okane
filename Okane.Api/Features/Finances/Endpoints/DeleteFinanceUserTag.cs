@@ -13,7 +13,7 @@ public class DeleteFinanceUserTag : IEndpoint
     public static void Map(IEndpointRouteBuilder builder)
     {
         builder
-            .MapDelete("/tags/{financeUserTagId:int}", HandleAsync)
+            .MapDelete("/{financeUserTagId:int}", HandleAsync)
             .WithName(FinanceRecordEndpointNames.DeleteFinanceUserTag)
             .WithSummary("Delete a finance user tag created by the request user.");
     }

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Okane.Api.Features.Finances.Dtos;
 using Okane.Api.Features.Finances.Endpoints;
 using Okane.Api.Features.Finances.Entities;
+using Okane.Api.Features.Finances.Validators;
 using Okane.Api.Infrastructure.Database.Constants;
 using Okane.Api.Shared.Dtos.ApiResponses;
 using Okane.Api.Tests.Testing.Constants;
@@ -16,7 +17,7 @@ using Okane.Api.Tests.Testing.Utils;
 
 namespace Okane.Api.Tests.Features.Finances.Endpoints;
 
-public class PatchFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFactory), IAsyncLifetime
+public class PatchFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFactory)
 {
     private readonly HttpClient _client = apiFactory.CreateClient();
 
@@ -24,6 +25,7 @@ public class PatchFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTe
         100,
         "Groceries",
         DateTime.UtcNow,
+        null,
         FinanceRecordType.Expense
     );
 
@@ -82,6 +84,96 @@ public class PatchFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTe
         financeRecord2FromDb.Should().BeEquivalentTo(financeRecord2);
     }
 
+    [Fact]
+    public async Task DoesNotUpdateTags_WhenTagIdsIsEmpty()
+    {
+        var tags = await TagUtils.CreateAndSaveNTagsAsync(Db, 1);
+        var loginResponse = await _client.RegisterAndLogInTestUserAsync();
+        var userTags = FinanceTagUtils.AddFinanceUserTags(Db, tags, loginResponse.User.Id);
+
+        var financeRecord = FinanceRecordStubFactory.Create(loginResponse.User.Id);
+        financeRecord.Tags = tags;
+        Db.Add(financeRecord);
+        await Db.SaveChangesAsync();
+
+        var patchResponse = await _client.PatchAsJsonAsync(
+            $"/finance-records/{financeRecord.Id}",
+            s_validRequest
+        );
+        patchResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        var financeRecordTags = await Db.FinanceRecordTags.ToListAsync();
+        financeRecordTags.Should()
+            .ContainSingle(frt => frt.FinanceRecordId == financeRecord.Id && frt.TagId == tags[0].Id);
+    }
+
+    [Fact]
+    public async Task RemovesAllTags_WhenTagIdsIsEmpty()
+    {
+        // Arrange.
+        var tags = await TagUtils.CreateAndSaveNTagsAsync(Db, 2);
+        var loginResponse = await _client.RegisterAndLogInTestUserAsync();
+        var userTags = FinanceTagUtils.AddFinanceUserTags(
+            Db, tags, loginResponse.User.Id, FinanceRecordType.Revenue
+        );
+        Db.AddRange(userTags);
+
+        var financeRecord1 = FinanceRecordStubFactory.Create(loginResponse.User.Id);
+        financeRecord1.Tags = tags;
+        financeRecord1.Type = FinanceRecordType.Revenue;
+
+        // Use to check that tags are only removed from the modified finance record.
+        var financeRecord2 = FinanceRecordStubFactory.Create(loginResponse.User.Id);
+        financeRecord2.Tags = tags;
+        financeRecord2.Type = FinanceRecordType.Revenue;
+
+        Db.AddRange(financeRecord1, financeRecord2);
+        await Db.SaveChangesAsync();
+
+        // Act.
+        var patchResponse = await _client.PatchAsJsonAsync(
+            $"/finance-records/{financeRecord1.Id}",
+            s_validRequest with { TagIds = [] }
+        );
+        patchResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        var financeRecordTags = await Db.FinanceRecordTags.ToListAsync();
+        financeRecordTags.Should()
+            .OnlyContain(frt => frt.FinanceRecordId == financeRecord2.Id)
+            .And.HaveCount(tags.Count);
+    }
+
+    [Fact]
+    public async Task AddsNewTagsAndRemovesExcludedTags()
+    {
+        // Arrange.
+        var tags = await TagUtils.CreateAndSaveNTagsAsync(Db, 3);
+        var loginResponse = await _client.RegisterAndLogInTestUserAsync();
+        var userTags = FinanceTagUtils.AddFinanceUserTags(
+            Db, tags, loginResponse.User.Id, FinanceRecordType.Revenue
+        );
+        Db.AddRange(userTags);
+
+        var financeRecord = FinanceRecordStubFactory.Create(loginResponse.User.Id);
+        financeRecord.Tags = [tags[0], tags[1]];
+        financeRecord.Type = FinanceRecordType.Revenue;
+        Db.AddRange(financeRecord);
+        await Db.SaveChangesAsync();
+
+        // Act.
+        var patchResponse = await _client.PatchAsJsonAsync(
+            $"/finance-records/{financeRecord.Id}",
+            s_validRequest with { TagIds = [tags[1].Id, tags[2].Id] }
+        );
+        patchResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        var tagIds = await Db.FinanceRecordTags
+            .Select(frt => frt.TagId)
+            .ToListAsync();
+        tagIds.Should().BeEquivalentTo([tags[1].Id, tags[2].Id]);
+    }
+
+    // Validation.
     public static TheoryData<PatchFinanceRecord.Request> InvalidRequests => new()
     {
         s_validRequest with { Amount = -1 },
@@ -126,12 +218,126 @@ public class PatchFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTe
         response.Should().HaveStatusCode(HttpStatusCode.BadRequest);
     }
 
+    private static async Task AssertTagsValidationErrorAsync(HttpResponseMessage response)
+    {
+        response.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+        var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+        problemDetails?.Status.Should().Be(StatusCodes.Status400BadRequest);
+        problemDetails?.Title.Should().Be(ValidationConstants.ValidationErrorTitle);
+        problemDetails?.Errors.Should().ContainKey("Tags");
+        problemDetails?.Errors["Tags"].Should().ContainSingle(FinanceRecordValidator.InvalidTagsMessage);
+    }
+
+    [Fact]
+    public async Task ReturnsAnError_WhenTryingToAddATagWithoutAnyFinanceUserTags()
+    {
+        // Arrange.
+        var tags = await TagUtils.CreateAndSaveNTagsAsync(Db, 1);
+        var loginResponse = await _client.RegisterAndLogInTestUserAsync();
+        var financeRecord = FinanceRecordStubFactory.Create(loginResponse.User.Id);
+        Db.Add(financeRecord);
+        await Db.SaveChangesAsync();
+
+        // Act.
+        var request = s_validRequest with { TagIds = [tags[0].Id] };
+        var response = await _client.PatchAsJsonAsync(
+            $"/finance-records/{financeRecord.Id}",
+            request
+        );
+
+        await AssertTagsValidationErrorAsync(response);
+    }
+
+    [Fact]
+    public async Task ReturnsAnError_WhenFinanceUserTagWithDifferentTypeExists()
+    {
+        // Arrange.
+        var tags = await TagUtils.CreateAndSaveNTagsAsync(Db, 1);
+        var loginResponse = await _client.RegisterAndLogInTestUserAsync();
+        var financeUserTags = FinanceTagUtils.AddFinanceUserTags(
+            Db, tags, loginResponse.User.Id, FinanceRecordType.Revenue
+        );
+        Db.AddRange(financeUserTags);
+
+        var financeRecord = FinanceRecordStubFactory.Create(loginResponse.User.Id);
+        financeRecord.Type = FinanceRecordType.Expense;
+        Db.Add(financeRecord);
+        await Db.SaveChangesAsync();
+
+        // Act.
+        var request = s_validRequest with { TagIds = tags.Select(t => t.Id).ToArray() };
+        var response = await _client.PatchAsJsonAsync(
+            $"/finance-records/{financeRecord.Id}",
+            request
+        );
+        await AssertTagsValidationErrorAsync(response);
+    }
+
+    [Fact]
+    public async Task ReturnsAnError_WhenSomeTagsHaveNoCorrespondingFinanceUserTag()
+    {
+        // Arrange.
+        var tags = await TagUtils.CreateAndSaveNTagsAsync(Db, 2);
+        var loginResponse = await _client.RegisterAndLogInTestUserAsync();
+        var financeUserTags = FinanceTagUtils.AddFinanceUserTags(
+            Db, [tags[0]], loginResponse.User.Id, FinanceRecordType.Revenue
+        );
+        Db.AddRange(financeUserTags);
+        await Db.SaveChangesAsync();
+
+        var financeRecord = FinanceRecordStubFactory.Create(loginResponse.User.Id);
+        financeRecord.Type = FinanceRecordType.Revenue;
+        Db.Add(financeRecord);
+        await Db.SaveChangesAsync();
+
+        // Act.
+        var request = s_validRequest with { TagIds = tags.Select(t => t.Id).ToArray() };
+        var response = await _client.PatchAsJsonAsync(
+            $"/finance-records/{financeRecord.Id}",
+            request
+        );
+        await AssertTagsValidationErrorAsync(response);
+    }
+
+    [Fact]
+    public async Task ReturnsAnError_WhenFinanceUserTagsWereCreatedByADifferentUser()
+    {
+        // Arrange.
+        var tags = await TagUtils.CreateAndSaveNTagsAsync(Db, 1);
+        var otherUserEmail = await UserUtils.RegisterUserAsync(_client);
+        var otherUser = await UserUtils.GetByEmailAsync(Db, otherUserEmail);
+        var financeUserTags = FinanceTagUtils.AddFinanceUserTags(
+            Db, tags, otherUser.Id, FinanceRecordType.Revenue
+        );
+
+        Db.AddRange(financeUserTags);
+        await Db.SaveChangesAsync();
+
+        var loginResponse = await _client.RegisterAndLogInTestUserAsync();
+
+        var financeRecord = FinanceRecordStubFactory.Create(loginResponse.User.Id);
+        financeRecord.Type = FinanceRecordType.Revenue;
+        Db.Add(financeRecord);
+        await Db.SaveChangesAsync();
+
+        // Act.
+        var request = s_validRequest with { TagIds = tags.Select(t => t.Id).ToArray() };
+        var response = await _client.PatchAsJsonAsync(
+            $"/finance-records/{financeRecord.Id}",
+            request
+        );
+        await AssertTagsValidationErrorAsync(response);
+    }
+
+    // 404.
     [Fact]
     public async Task ReturnsA404_WhenFinanceRecordDoesNotExist()
     {
         await _client.RegisterAndLogInTestUserAsync();
         var patchResponse = await _client.PatchAsJsonAsync(
-            $"/finance-records/{Guid.NewGuid}",
+            $"/finance-records/{Guid.NewGuid()}",
             s_validRequest
         );
         patchResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);

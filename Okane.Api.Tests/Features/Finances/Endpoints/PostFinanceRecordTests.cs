@@ -7,6 +7,7 @@ using Okane.Api.Features.Finances.Constants;
 using Okane.Api.Features.Finances.Dtos;
 using Okane.Api.Features.Finances.Endpoints;
 using Okane.Api.Features.Finances.Entities;
+using Okane.Api.Features.Finances.Validators;
 using Okane.Api.Infrastructure.Database.Constants;
 using Okane.Api.Shared.Dtos.ApiResponses;
 using Okane.Api.Tests.Testing.Constants;
@@ -24,7 +25,8 @@ public class PostFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTes
         100,
         "Groceries",
         DateTime.UtcNow,
-        FinanceRecordType.Expense
+        FinanceRecordType.Expense,
+        []
     );
 
     [Fact]
@@ -44,6 +46,7 @@ public class PostFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTes
             Amount = s_validRequest.Amount,
             Description = s_validRequest.Description,
             HappenedAt = s_validRequest.HappenedAt,
+            Tags = [],
             Type = s_validRequest.Type,
             Id = createdRecord.Id
         });
@@ -81,6 +84,7 @@ public class PostFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTes
         problemDetails?.Title.Should().Be(ValidationConstants.ValidationErrorTitle);
     }
 
+    // Validation.
     [Fact]
     public async Task ReturnsAnError_WithAnInvalidType()
     {
@@ -96,5 +100,81 @@ public class PostFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTes
 
         var response = await _client.PostAsJsonAsync("/finance-records", request);
         response.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+    }
+
+    private static async Task AssertTagsValidationErrorAsync(HttpResponseMessage response)
+    {
+        response.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+        var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+        problemDetails?.Status.Should().Be(StatusCodes.Status400BadRequest);
+        problemDetails?.Title.Should().Be(ValidationConstants.ValidationErrorTitle);
+        problemDetails?.Errors.Should().ContainKey("Tags");
+        problemDetails?.Errors["Tags"].Should().ContainSingle(FinanceRecordValidator.InvalidTagsMessage);
+    }
+
+
+    [Fact]
+    public async Task ReturnsAnError_WhenTryingToAddATagWithoutAnyFinanceUserTags()
+    {
+        await _client.RegisterAndLogInTestUserAsync();
+        var tags = await TagUtils.CreateAndSaveNTagsAsync(Db, 1);
+
+        var request = s_validRequest with { TagIds = [tags[0].Id] };
+        var response = await _client.PostAsJsonAsync("/finance-records", request);
+        await AssertTagsValidationErrorAsync(response);
+    }
+
+    [Fact]
+    public async Task ReturnsAnError_WhenFinanceUserTagWithDifferentTypeExists()
+    {
+        var loginResponse = await _client.RegisterAndLogInTestUserAsync();
+        var tags = await TagUtils.CreateAndSaveNTagsAsync(Db, 1);
+        var financeUserTags = FinanceTagUtils.AddFinanceUserTags(
+            Db, tags, loginResponse.User.Id, FinanceRecordType.Revenue
+        );
+        Db.AddRange(financeUserTags);
+        await Db.SaveChangesAsync();
+
+        var request = s_validRequest with { TagIds = tags.Select(t => t.Id).ToArray() };
+        var response = await _client.PostAsJsonAsync("/finance-records", request);
+        await AssertTagsValidationErrorAsync(response);
+    }
+
+    [Fact]
+    public async Task ReturnsAnError_WhenSomeTagsHaveNoCorrespondingFinanceUserTag()
+    {
+        var loginResponse = await _client.RegisterAndLogInTestUserAsync();
+        var tags = await TagUtils.CreateAndSaveNTagsAsync(Db, 2);
+        var financeUserTags = FinanceTagUtils.AddFinanceUserTags(
+            Db, [tags[0]], loginResponse.User.Id, FinanceRecordType.Revenue
+        );
+        Db.AddRange(financeUserTags);
+        await Db.SaveChangesAsync();
+
+        var request = s_validRequest with { TagIds = tags.Select(t => t.Id).ToArray() };
+        var response = await _client.PostAsJsonAsync("/finance-records", request);
+        await AssertTagsValidationErrorAsync(response);
+    }
+
+    [Fact]
+    public async Task ReturnsAnError_WhenFinanceUserTagsWereCreatedByADifferentUser()
+    {
+        // Arrange.
+        await _client.RegisterAndLogInTestUserAsync();
+        var tags = await TagUtils.CreateAndSaveNTagsAsync(Db, 1);
+        var otherUserEmail = await UserUtils.RegisterUserAsync(_client);
+        var otherUser = await UserUtils.GetByEmailAsync(Db, otherUserEmail);
+        var financeUserTags = FinanceTagUtils.AddFinanceUserTags(
+            Db, tags, otherUser.Id, FinanceRecordType.Revenue
+        );
+
+        Db.AddRange(financeUserTags);
+        await Db.SaveChangesAsync();
+
+        var request = s_validRequest with { TagIds = tags.Select(t => t.Id).ToArray() };
+        var response = await _client.PostAsJsonAsync("/finance-records", request);
+        await AssertTagsValidationErrorAsync(response);
     }
 }

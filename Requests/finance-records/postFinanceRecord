@@ -4,6 +4,7 @@ Authorization: {{AUTH_HEADER}}
   "amount": 100,
   "description": "Cool finance record",
   "happenedAt": "2024-01-01T12:00:00Z",
+  "tagIds": [],
   "type": "Expense"
 }
 

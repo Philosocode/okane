@@ -7,6 +7,8 @@ using Okane.Api.Features.Finances.Constants;
 using Okane.Api.Features.Finances.Dtos;
 using Okane.Api.Features.Finances.Entities;
 using Okane.Api.Features.Finances.Mappers;
+using Okane.Api.Features.Finances.Services;
+using Okane.Api.Features.Finances.Validators;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Endpoints;
 using Okane.Api.Shared.Dtos.ApiResponses;
@@ -23,7 +25,13 @@ public class PatchFinanceRecord : IEndpoint
             .WithSummary("Update a finance record.");
     }
 
-    public record Request(decimal? Amount, string? Description, DateTime? HappenedAt, FinanceRecordType? Type);
+    public record Request(
+        decimal? Amount,
+        string? Description,
+        DateTime? HappenedAt,
+        IList<int>? TagIds,
+        FinanceRecordType? Type
+    );
 
     private static async Task<Results<Ok<ApiResponse<FinanceRecordResponse>>, NotFound, ValidationProblem>>
         HandleAsync(
@@ -31,12 +39,15 @@ public class PatchFinanceRecord : IEndpoint
             HttpContext context,
             ApiDbContext db,
             int financeRecordId,
+            ILogger<PatchFinanceRecord> logger,
             Request request,
+            IFinanceTagService tagService,
             IValidator<FinanceRecord> validator,
             CancellationToken cancellationToken)
     {
         var userId = claimsPrincipal.GetUserId();
         var financeRecord = await db.FinanceRecords
+            .Include(fr => fr.Tags)
             .SingleOrDefaultAsync(
                 r => r.UserId == userId && r.Id == financeRecordId,
                 cancellationToken
@@ -62,18 +73,56 @@ public class PatchFinanceRecord : IEndpoint
             financeRecord.HappenedAt = request.HappenedAt.Value;
         }
 
+        var tagsAreValid = true;
+        if (request.TagIds is not null)
+        {
+            tagsAreValid = await tagService.ValidateRequestTagsAsync(
+                request.TagIds,
+                financeRecord.Type,
+                userId,
+                cancellationToken
+            );
+        }
+
         if (request.Type.HasValue)
         {
             financeRecord.Type = request.Type.Value;
         }
 
         var validationResult = await validator.ValidateAsync(financeRecord, cancellationToken);
-        if (!validationResult.IsValid)
+        var validationErrors = validationResult.ToDictionary();
+        if (!tagsAreValid)
         {
-            return TypedResults.ValidationProblem(validationResult.ToDictionary());
+            validationErrors["Tags"] = [FinanceRecordValidator.InvalidTagsMessage];
         }
 
-        await db.SaveChangesAsync(cancellationToken);
+        if (!validationResult.IsValid || !tagsAreValid)
+        {
+            return TypedResults.ValidationProblem(validationErrors);
+        }
+
+        await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
+        try
+        {
+            if (request.TagIds is not null)
+            {
+                await tagService.SyncFinanceRecordTagsAsync(request.TagIds, financeRecord, cancellationToken);
+            }
+
+            await db.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync(cancellationToken);
+
+            logger.LogWarning(
+                "Transaction error {FinanceRecordId}: {Error}",
+                financeRecord.Id, ex.Message
+            );
+
+            throw;
+        }
 
         var response = new ApiResponse<FinanceRecordResponse>(financeRecord.ToFinanceRecordResponse());
         return TypedResults.Ok(response);

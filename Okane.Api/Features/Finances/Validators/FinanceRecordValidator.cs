@@ -6,6 +6,8 @@ namespace Okane.Api.Features.Finances.Validators;
 
 public class FinanceRecordValidator : AbstractValidator<FinanceRecord>
 {
+    public const string InvalidTagsMessage = "Tags must only include tags you've created.";
+
     public FinanceRecordValidator()
     {
         RuleFor(r => r.Amount)

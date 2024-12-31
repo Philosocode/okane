@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Okane.Api.Features.Finances.Entities;
@@ -18,6 +19,7 @@ public class Tag : IEntity
     public string Name { get; set; } = string.Empty;
 
     // Navigation.
+    [JsonIgnore]
     public ICollection<FinanceRecord> FinanceRecords { get; set; } = null!;
 }
 

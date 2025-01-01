@@ -28,7 +28,7 @@ const emit = defineEmits<{
   (event: 'submit'): void
 }>()
 
-const modalHeadingId = 'save-finance-record-modal-haeding'
+const modalHeadingId = 'save-finance-record-modal-heading'
 const formRef = useTemplateRef<HTMLFormElement>('form')
 
 function handleChange(updates: Partial<SaveFinanceRecordFormState>): void {

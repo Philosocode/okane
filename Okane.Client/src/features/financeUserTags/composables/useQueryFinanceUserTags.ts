@@ -1,0 +1,37 @@
+// External
+import { useQuery, type QueryFunctionContext } from '@tanstack/vue-query'
+
+// Internal
+import { apiClient } from '@shared/services/apiClient/apiClient'
+
+import { financeUserTagQueryKeys } from '@features/financeUserTags/constants/queryKeys'
+import { financeUserTagAPIRoutes } from '@features/financeUserTags/constants/apiRoutes'
+
+import { type APIResponse } from '@shared/services/apiClient/types'
+import {
+  type FinanceUserTag,
+  type FinanceUserTagMap,
+} from '@features/financeUserTags/types/financeUserTag'
+
+function getFinanceUserTags({
+  signal,
+}: QueryFunctionContext): Promise<APIResponse<FinanceUserTag>> {
+  return apiClient.get(financeUserTagAPIRoutes.getAll(), { signal })
+}
+
+export function useQueryFinanceUserTags() {
+  return useQuery({
+    queryKey: financeUserTagQueryKeys.listAll(),
+    queryFn: getFinanceUserTags,
+    select: (response) => {
+      const userTagMap: FinanceUserTagMap = { Expense: [], Revenue: [] }
+
+      response.items.forEach((userTag) => {
+        userTagMap[userTag.type].push(userTag)
+      })
+
+      return userTagMap
+    },
+    staleTime: Infinity,
+  })
+}

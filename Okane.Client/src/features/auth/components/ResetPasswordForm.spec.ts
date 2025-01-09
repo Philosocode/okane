@@ -13,7 +13,7 @@ import { HTTP_STATUS_CODE } from '@shared/constants/http'
 import { INPUT_TYPE } from '@shared/constants/form'
 import { appRoutes, createAppRouter } from '@shared/services/router/router'
 
-import { createTestPasswordRequirements } from '@tests/factories/authForm'
+import { createTestPasswordRequirements } from '@tests/factories/passwordRequirements'
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { getMSWURL } from '@tests/utils/url'
 import { testServer } from '@tests/msw/testServer'

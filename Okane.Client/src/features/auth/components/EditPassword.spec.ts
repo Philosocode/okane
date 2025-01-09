@@ -12,7 +12,7 @@ import { AUTH_COPY } from '@features/auth/constants/copy'
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 import { BUTTON_TYPE, INPUT_TYPE } from '@shared/constants/form'
 
-import { createTestPasswordRequirements } from '@tests/factories/authForm'
+import { createTestPasswordRequirements } from '@tests/factories/passwordRequirements'
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { getMSWURL } from '@tests/utils/url'
 import { testServer } from '@tests/msw/testServer'

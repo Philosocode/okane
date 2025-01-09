@@ -6,7 +6,7 @@ import { authAPIRoutes } from '@features/auth/constants/apiRoutes'
 
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 
-import { createTestPasswordRequirements } from '@tests/factories/authForm'
+import { createTestPasswordRequirements } from '@tests/factories/passwordRequirements'
 import { getMSWURL } from '@tests/utils/url'
 import { wrapInAPIResponse } from '@tests/utils/apiResponse'
 

@@ -9,9 +9,9 @@ import { AUTH_COPY } from '@features/auth/constants/copy'
 import { INPUT_TYPE } from '@shared/constants/form'
 
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
-import { useMockedStore } from '@tests/composables/useMockedStore'
 
-import { createTestPasswordRequirements } from '@tests/factories/authForm'
+import { createTestPasswordRequirements } from '@tests/factories/passwordRequirements'
+import { useMockedStore } from '@tests/composables/useMockedStore'
 
 const passwordRequirements = createTestPasswordRequirements()
 

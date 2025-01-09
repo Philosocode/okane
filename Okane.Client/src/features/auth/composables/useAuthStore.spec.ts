@@ -17,13 +17,18 @@ import { createAppRouter, ROUTE_NAME } from '@shared/services/router/router'
 import { testQueryClient } from '@tests/queryClient/testQueryClient'
 import { testServer } from '@tests/msw/testServer'
 
-import { createTestAuthFormState } from '@tests/factories/authForm'
 import { createTestJWTToken } from '@tests/factories/jwtToken'
 import { createTestUser } from '@tests/factories/user'
 import { omitObjectKeys } from '@shared/utils/object'
 import { wrapInAPIResponse } from '@tests/utils/apiResponse'
 
-const formData = createTestAuthFormState()
+const formData = {
+  email: 'test@test.com',
+  name: 'Test',
+  password: 'Aa1@'.repeat(4),
+  passwordConfirm: 'Aa1@'.repeat(4),
+}
+
 const authResponse: AuthenticateResponse = {
   items: [{ jwtToken: createTestJWTToken(), user: createTestUser() }],
   status: HTTP_STATUS_CODE.OK_200,

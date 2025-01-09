@@ -15,7 +15,7 @@ import { commonAsserts } from '@tests/utils/commonAsserts'
 import { createTestFinanceRecord } from '@tests/factories/financeRecord'
 
 const testIds = {
-  AddFinanceRecordButton: 'AddFinanceRecordButton',
+  CreateFinanceRecordButton: 'CreateFinanceRecordButton',
   CreateFinanceRecordModal: 'CreateFinanceRecordModal',
   DeleteFinanceRecordModal: 'DeleteFinanceRecordModal',
   EditFinanceRecordModal: 'EditFinanceRecordModal',
@@ -28,8 +28,8 @@ const testIds = {
 const mountComponent = getMountComponent(FinancesPage, {
   global: {
     stubs: {
-      AddFinanceRecordButton: {
-        template: `<div data-testid="${testIds.AddFinanceRecordButton}" />`,
+      CreateFinanceRecordButton: {
+        template: `<div data-testid="${testIds.CreateFinanceRecordButton}" />`,
       },
       CreateFinanceRecordModal: {
         template: `<div data-testid="${testIds.CreateFinanceRecordModal}" />`,
@@ -75,7 +75,7 @@ test('renders a list of finance records', () => {
 
 test('renders a button to create a finance record', () => {
   commonAsserts.rendersElementWithTestId({
-    testId: testIds.AddFinanceRecordButton,
+    testId: testIds.CreateFinanceRecordButton,
     wrapper: mountComponent(),
   })
 })

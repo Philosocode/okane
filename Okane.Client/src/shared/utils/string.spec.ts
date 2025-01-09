@@ -14,6 +14,23 @@ describe('capitalize', () => {
   })
 })
 
+describe('compareStrings', () => {
+  test('returns -1 when s1 < s2', () => {
+    expect(stringUtils.compareStrings('a', 'aa')).toBe(-1)
+    expect(stringUtils.compareStrings('A', 'a')).toBe(-1)
+  })
+
+  test('returns 0 when s1 === s2', () => {
+    expect(stringUtils.compareStrings('a', 'a')).toBe(0)
+    expect(stringUtils.compareStrings('AA', 'AA')).toBe(0)
+  })
+
+  test('returns 1 when s1 > s2', () => {
+    expect(stringUtils.compareStrings('aa', 'a')).toBe(1)
+    expect(stringUtils.compareStrings('a', 'A')).toBe(1)
+  })
+})
+
 describe('isAlphabetString', () => {
   test.each([
     ['a', true],

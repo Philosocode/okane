@@ -25,6 +25,18 @@ export function uncapitalize(s: string): string {
 }
 
 /**
+ * Compare two strings.
+ *
+ * @param s1
+ * @param s2
+ */
+export function compareStrings(s1: string, s2: string) {
+  if (s1 < s2) return -1
+  if (s1 === s2) return 0
+  return 1
+}
+
+/**
  * Check if each character in s is in the A-Z alphabet.
  *
  * @param s

@@ -3,7 +3,7 @@
 import { provide } from 'vue'
 
 // Internal
-import AddFinanceRecordButton from '@features/financeRecords/components/AddFinanceRecordButton.vue'
+import CreateFinanceRecordButton from '@features/financeRecords/components/CreateFinanceRecordButton.vue'
 import CreateFinanceRecordModal from '@features/financeRecords/components/CreateFinanceRecordModal.vue'
 import DeleteFinanceRecordModal from '@features/financeRecords/components/DeleteFinanceRecordModal.vue'
 import EditFinanceRecordModal from '@features/financeRecords/components/EditFinanceRecordModal.vue'
@@ -39,7 +39,7 @@ provide(SEARCH_FINANCE_RECORDS_SYMBOL, useSearchFinanceRecordsProvider())
     <TotalRevenueAndExpenses />
     <SearchFiltersSection />
     <FinanceRecordList />
-    <AddFinanceRecordButton />
+    <CreateFinanceRecordButton />
 
     <CreateFinanceRecordModal />
     <EditFinanceRecordModal />

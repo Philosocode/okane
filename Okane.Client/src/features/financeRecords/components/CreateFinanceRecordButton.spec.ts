@@ -1,5 +1,5 @@
 // Internal
-import AddFinanceRecordButton from '@features/financeRecords/components/AddFinanceRecordButton.vue'
+import CreateFinanceRecordButton from '@features/financeRecords/components/CreateFinanceRecordButton.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
@@ -8,7 +8,7 @@ import {
   useSaveFinanceRecordProvider,
 } from '@features/financeRecords/providers/saveFinanceRecordProvider'
 
-const mountComponent = getMountComponent(AddFinanceRecordButton, {
+const mountComponent = getMountComponent(CreateFinanceRecordButton, {
   global: {
     provide: {
       [SAVE_FINANCE_RECORD_SYMBOL]: useSaveFinanceRecordProvider(),
@@ -19,7 +19,7 @@ const mountComponent = getMountComponent(AddFinanceRecordButton, {
 test('renders a button to add a finance record', () => {
   const wrapper = mountComponent()
   const button = wrapper.get('button')
-  expect(button.text()).toBe(FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.SHOW_MODAL)
+  expect(button.get('title').text()).toBe(FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.SHOW_MODAL)
 })
 
 test('updates the creating state on click', async () => {

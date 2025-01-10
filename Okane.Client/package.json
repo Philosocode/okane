@@ -21,6 +21,7 @@
     "@fortawesome/vue-fontawesome": "^3.0.8",
     "@tanstack/vue-query": "^5.51.9",
     "@tanstack/vue-query-devtools": "^5.51.9",
+    "@vueform/multiselect": "^2.6.11",
     "@vueuse/core": "^11.0.1",
     "date-fns": "^3.6.0",
     "lodash.clonedeep": "^4.5.0",

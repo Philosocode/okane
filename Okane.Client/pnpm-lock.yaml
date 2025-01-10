@@ -26,6 +26,9 @@ importers:
       '@tanstack/vue-query-devtools':
         specifier: ^5.51.9
         version: 5.51.21(@tanstack/vue-query@5.51.21(vue@3.5.4(typescript@5.5.4)))(vue@3.5.4(typescript@5.5.4))
+      '@vueform/multiselect':
+        specifier: ^2.6.11
+        version: 2.6.11
       '@vueuse/core':
         specifier: ^11.0.1
         version: 11.0.1(vue@3.5.4(typescript@5.5.4))
@@ -803,6 +806,9 @@ packages:
 
   '@vue/tsconfig@0.5.1':
     resolution: {integrity: sha512-VcZK7MvpjuTPx2w6blwnwZAu5/LgBUtejFOi3pPGQFXQN5Ela03FUtd2Qtg4yWGGissVL0dr6Ro1LfOFh+PCuQ==}
+
+  '@vueform/multiselect@2.6.11':
+    resolution: {integrity: sha512-iG4TGfqE3baftbSGF0PhoS+xZOCnV0ChkDo9rwhJ/Qi2YlCdb6tyQCjvyug3jnzncga8+d85kx0WvG7rDYFqiA==}
 
   '@vueuse/core@11.0.1':
     resolution: {integrity: sha512-YTrekI18WwEyP3h168Fir94G/HNC27wvXJI21Alm0sPOwvhihfkrvHIe+5PNJq+MpgWdRcsjvE/38JaoKrgZhQ==}
@@ -2758,6 +2764,8 @@ snapshots:
       vue-component-type-helpers: 2.0.29
 
   '@vue/tsconfig@0.5.1': {}
+
+  '@vueform/multiselect@2.6.11': {}
 
   '@vueuse/core@11.0.1(vue@3.5.4(typescript@5.5.4))':
     dependencies:

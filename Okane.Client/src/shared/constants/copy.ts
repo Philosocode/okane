@@ -35,6 +35,14 @@ export const SHARED_COPY = {
   MODAL: {
     CLOSE_MODAL: 'Close Modal',
   },
+
+  TAG_COMBOBOX: {
+    LABEL: 'Tags',
+    NO_OPTIONS: 'No tags created.',
+    NO_RESULTS: 'No matching tags found.',
+    PLACEHOLDER: 'Select tags...',
+  },
+
   SEARCH: {
     OPERATOR: 'Operator',
     SORT_BY: 'Sort By',

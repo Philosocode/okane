@@ -13,6 +13,7 @@ import { useAuthStore } from '@features/auth/composables/useAuthStore'
 
 import { getQueryClient } from '@shared/services/queryClient/queryClient'
 
+import '@vueform/multiselect/themes/default.css'
 import '@shared/styles/index.scss'
 import '@shared/services/fontAwesome/fontAwesome'
 

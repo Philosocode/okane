@@ -21,15 +21,15 @@ export const mapFinanceRecord = createMappers({
 })
 
 export const mapSaveFinanceRecordFormState = createMappers({
+  createFinanceRecordRequest(formState: SaveFinanceRecordFormState) {
+    return { ...formState, happenedAt: new Date(formState.happenedAt) }
+  },
   partialFinanceRecord(formState: Partial<SaveFinanceRecordFormState>): Partial<FinanceRecord> {
     const { happenedAt, ...rest } = formState
     return {
       ...rest,
       ...(happenedAt && { happenedAt: new Date(happenedAt) }),
     }
-  },
-  preCreationFinanceRecord(formState: SaveFinanceRecordFormState) {
-    return { ...formState, happenedAt: new Date(formState.happenedAt) }
   },
 })
 

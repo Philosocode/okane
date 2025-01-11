@@ -80,5 +80,10 @@ function mapFinanceRecordsSearchFiltersToURLSearchParams(
     params.append('happenedBefore', endOfDay(happenedAtResult.max).toISOString())
   }
 
+  // Tags.
+  filters.tags.forEach((tag) => {
+    params.append('tagId', tag.id.toString())
+  })
+
   return params
 }

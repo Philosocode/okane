@@ -2,6 +2,7 @@
 import { COMPARISON_OPERATOR, SORT_DIRECTION } from '@shared/constants/search'
 
 import { type FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
+import { type Tag } from '@shared/types/tag'
 
 export type FinanceRecordsSearchFilters = {
   description: string
@@ -17,4 +18,6 @@ export type FinanceRecordsSearchFilters = {
   happenedAt1?: Date
   happenedAt2?: Date
   happenedAtOperator?: COMPARISON_OPERATOR
+
+  tags: Tag[]
 }

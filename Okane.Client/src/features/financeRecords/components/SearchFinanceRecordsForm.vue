@@ -1,18 +1,20 @@
 <script setup lang="ts">
 // External
-import { inject, ref, useTemplateRef } from 'vue'
+import { computed, inject, ref, useTemplateRef } from 'vue'
 
 // Internal
+import FinanceRecordAmountFilter from '@features/financeRecords/components/FinanceRecordAmountFilter.vue'
+import FinanceRecordHappenedAtFilter from '@features/financeRecords/components/FinanceRecordHappenedAtFilter.vue'
+import FinanceUserTagCombobox from '@features/financeUserTags/components/FinanceUserTagCombobox.vue'
 import FormInput from '@shared/components/form/FormInput.vue'
 import FormSelect from '@shared/components/form/FormSelect.vue'
 import ModalActions from '@shared/components/modal/ModalActions.vue'
-import FinanceRecordAmountFilter from '@features/financeRecords/components/FinanceRecordAmountFilter.vue'
-import FinanceRecordHappenedAtFilter from '@features/financeRecords/components/FinanceRecordHappenedAtFilter.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
-import { BUTTON_TYPE, INPUT_TYPE } from '@shared/constants/form'
+import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 import { SHARED_COPY } from '@shared/constants/copy'
 import { SORT_DIRECTION_OPTIONS } from '@shared/constants/search'
+import { BUTTON_TYPE, INPUT_TYPE } from '@shared/constants/form'
 import {
   FINANCE_RECORD_SORT_FIELD_OPTIONS,
   SEARCH_FINANCE_RECORDS_TYPE_OPTIONS,
@@ -24,6 +26,14 @@ import {
   SEARCH_FINANCE_RECORDS_SYMBOL,
   type SearchFinanceRecordsProvider,
 } from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+
+const userTagTypes = computed(() => {
+  if (formState.value.type === '') {
+    return [FINANCE_RECORD_TYPE.EXPENSE, FINANCE_RECORD_TYPE.REVENUE]
+  }
+
+  return [formState.value.type]
+})
 
 const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
 const formRef = useTemplateRef<HTMLFormElement>('form')
@@ -67,7 +77,8 @@ function handleSubmit() {
       <FormSelect
         :label="FINANCES_COPY.PROPERTIES.TYPE"
         name="type"
-        v-model="formState.type"
+        :model-value="formState.type"
+        @update:model-value="(type) => handleChange({ tags: [], type })"
         :options="SEARCH_FINANCE_RECORDS_TYPE_OPTIONS"
       />
 
@@ -99,6 +110,13 @@ function handleSubmit() {
           v-model="formState.sortDirection"
         />
       </div>
+
+      <FinanceUserTagCombobox
+        id="search-finance-records-tag-combobox"
+        :selected-tags="formState.tags"
+        :tag-types="userTagTypes"
+        @change="(tags) => handleChange({ tags })"
+      />
 
       <ModalActions>
         <button :type="BUTTON_TYPE.SUBMIT">{{ SHARED_COPY.ACTIONS.SAVE }}</button>

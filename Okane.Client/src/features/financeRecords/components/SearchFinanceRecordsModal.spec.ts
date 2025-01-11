@@ -26,9 +26,11 @@ function mountWithProviders(args?: { searchProvider: SearchFinanceRecordsProvide
         [SEARCH_FINANCE_RECORDS_SYMBOL]: searchProvider,
       },
       stubs: {
+        SearchFinanceRecordsForm: true,
         teleport: true,
       },
     },
+    withQueryClient: true,
   })()
 }
 

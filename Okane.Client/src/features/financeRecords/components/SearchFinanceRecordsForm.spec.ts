@@ -1,5 +1,5 @@
 // External
-import { VueWrapper } from '@vue/test-utils'
+import { flushPromises, type VueWrapper } from '@vue/test-utils'
 
 // Internal
 import FinanceRecordAmountFilter from '@features/financeRecords/components/FinanceRecordAmountFilter.vue'
@@ -22,6 +22,7 @@ import {
 } from '@shared/constants/search'
 
 import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
+import { type FinanceUserTagMap } from '@features/financeUserTags/types/financeUserTag'
 
 import {
   SEARCH_FINANCE_RECORDS_SYMBOL,
@@ -30,19 +31,49 @@ import {
 } from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
 import { commonAsserts } from '@tests/utils/commonAsserts'
+import { createTestTag } from '@tests/factories/tag'
+import { createTestFinanceUserTag } from '@tests/factories/financeUserTag'
+import { financeUserTagHandlers } from '@tests/msw/handlers/financeUserTag'
+import { testServer } from '@tests/msw/testServer'
 
-function mountWithProviders(args: { searchProvider?: SearchFinanceRecordsProvider } = {}) {
+const userTagMap: FinanceUserTagMap = {
+  Expense: [
+    createTestFinanceUserTag({
+      id: 1,
+      tag: createTestTag({ id: 1, name: '1' }),
+      type: FINANCE_RECORD_TYPE.EXPENSE,
+    }),
+  ],
+  Revenue: [
+    createTestFinanceUserTag({
+      id: 2,
+      tag: createTestTag({ id: 2, name: '2' }),
+      type: FINANCE_RECORD_TYPE.REVENUE,
+    }),
+  ],
+}
+
+const userTags = [...userTagMap.Expense, ...userTagMap.Revenue]
+
+async function mountWithProviders(args: { searchProvider?: SearchFinanceRecordsProvider } = {}) {
   let searchProvider = args.searchProvider
   if (!searchProvider) searchProvider = useSearchFinanceRecordsProvider()
 
-  return getMountComponent(SearchFinanceRecordsForm, {
+  testServer.use(financeUserTagHandlers.getAllSuccess({ userTags }))
+
+  const wrapper = getMountComponent(SearchFinanceRecordsForm, {
     attachTo: document.body,
     global: {
       provide: {
         [SEARCH_FINANCE_RECORDS_SYMBOL]: searchProvider,
       },
     },
+    withQueryClient: true,
   })()
+
+  await flushPromises()
+
+  return wrapper
 }
 
 const helpers = {
@@ -53,8 +84,8 @@ const helpers = {
 }
 
 describe('Description input', () => {
-  test('renders an input with the expected properties and label', () => {
-    const wrapper = mountWithProviders()
+  test('renders an input with the expected properties and label', async () => {
+    const wrapper = await mountWithProviders()
     const input = wrapper.get('input[name="description"]')
     expect(input.attributes('type')).toBe(INPUT_TYPE.TEXT)
 
@@ -64,7 +95,7 @@ describe('Description input', () => {
 
   test('updates the search filters description state', async () => {
     const searchProvider = useSearchFinanceRecordsProvider()
-    const wrapper = mountWithProviders({ searchProvider })
+    const wrapper = await mountWithProviders({ searchProvider })
     const input = wrapper.get('input[name="description"]')
     const description = 'Test description'
 
@@ -75,15 +106,15 @@ describe('Description input', () => {
   })
 
   test('focuses the input on mount', async () => {
-    const wrapper = mountWithProviders()
+    const wrapper = await mountWithProviders()
     const input = wrapper.get('input[name="description"]')
     expect(input.element).toBe(document.activeElement)
   })
 })
 
 describe('Type select', () => {
-  test('renders a select and label', () => {
-    const wrapper = mountWithProviders()
+  test('renders a select and label', async () => {
+    const wrapper = await mountWithProviders()
     const select = wrapper.find('select[name="type"]')
     expect(select.exists()).toBe(true)
 
@@ -91,8 +122,8 @@ describe('Type select', () => {
     expect(label).toBeDefined()
   })
 
-  test('renders the expected select options', () => {
-    const wrapper = mountWithProviders()
+  test('renders the expected select options', async () => {
+    const wrapper = await mountWithProviders()
 
     commonAsserts.rendersExpectedSelectOptions({
       expectedOptions: SEARCH_FINANCE_RECORDS_TYPE_OPTIONS,
@@ -100,28 +131,31 @@ describe('Type select', () => {
     })
   })
 
-  test('updates the search filters type state', async () => {
+  test('updates the search filters type state and resets the tags', async () => {
     const searchProvider = useSearchFinanceRecordsProvider()
-    const wrapper = mountWithProviders({ searchProvider })
+    searchProvider.setFilters({ tags: [userTags[0].tag] })
+
+    const wrapper = await mountWithProviders({ searchProvider })
     const input = wrapper.get('select[name="type"]')
 
     await input.setValue(FINANCE_RECORD_TYPE.REVENUE)
     await helpers.submitForm(wrapper)
 
     expect(searchProvider.filters.type).toBe(FINANCE_RECORD_TYPE.REVENUE)
+    expect(searchProvider.filters.tags).toEqual([])
   })
 })
 
 describe('Amount filter', () => {
-  test('renders an amount filter', () => {
-    const wrapper = mountWithProviders()
+  test('renders an amount filter', async () => {
+    const wrapper = await mountWithProviders()
     const amountFilter = wrapper.findComponent(FinanceRecordAmountFilter)
     expect(amountFilter.exists()).toBe(true)
   })
 
   test('updates the search filters amount state', async () => {
     const searchProvider = useSearchFinanceRecordsProvider()
-    const wrapper = mountWithProviders({ searchProvider })
+    const wrapper = await mountWithProviders({ searchProvider })
     const amountFilter = wrapper.findComponent(FinanceRecordAmountFilter)
     const changes: Partial<FinanceRecordsSearchFilters> = {
       amount1: 1,
@@ -137,15 +171,15 @@ describe('Amount filter', () => {
 })
 
 describe('Happened at filter', () => {
-  test('renders a happened at filter', () => {
-    const wrapper = mountWithProviders()
+  test('renders a happened at filter', async () => {
+    const wrapper = await mountWithProviders()
     const happenedAtFilter = wrapper.findComponent(FinanceRecordHappenedAtFilter)
     expect(happenedAtFilter.exists()).toBe(true)
   })
 
   test('updates the search filters happenedAt state', async () => {
     const searchProvider = useSearchFinanceRecordsProvider()
-    const wrapper = mountWithProviders({ searchProvider })
+    const wrapper = await mountWithProviders({ searchProvider })
     const amountFilter = wrapper.findComponent(FinanceRecordAmountFilter)
     const changes: Partial<FinanceRecordsSearchFilters> = {
       happenedAt1: new Date(),
@@ -161,8 +195,8 @@ describe('Happened at filter', () => {
 })
 
 describe('Sort by select', () => {
-  test('renders a select and label', () => {
-    const wrapper = mountWithProviders()
+  test('renders a select and label', async () => {
+    const wrapper = await mountWithProviders()
     const select = wrapper.find('select[name="sortBy"]')
     expect(select.exists()).toBe(true)
 
@@ -170,8 +204,8 @@ describe('Sort by select', () => {
     expect(label).toBeDefined()
   })
 
-  test('renders the expected select options', () => {
-    const wrapper = mountWithProviders()
+  test('renders the expected select options', async () => {
+    const wrapper = await mountWithProviders()
 
     commonAsserts.rendersExpectedSelectOptions({
       expectedOptions: FINANCE_RECORD_SORT_FIELD_OPTIONS,
@@ -181,7 +215,7 @@ describe('Sort by select', () => {
 
   test('updates the search filters sort field state', async () => {
     const searchProvider = useSearchFinanceRecordsProvider()
-    const wrapper = mountWithProviders({ searchProvider })
+    const wrapper = await mountWithProviders({ searchProvider })
     const input = wrapper.get('select[name="sortBy"]')
 
     await input.setValue(FINANCE_RECORD_SORT_FIELD_OPTIONS[0].value)
@@ -192,8 +226,8 @@ describe('Sort by select', () => {
 })
 
 describe('Sort direction select', () => {
-  test('renders a select and label', () => {
-    const wrapper = mountWithProviders()
+  test('renders a select and label', async () => {
+    const wrapper = await mountWithProviders()
     const select = wrapper.find('select[name="sortDirection"]')
     expect(select.exists()).toBe(true)
 
@@ -201,8 +235,8 @@ describe('Sort direction select', () => {
     expect(label).toBeDefined()
   })
 
-  test('renders the expected select options', () => {
-    const wrapper = mountWithProviders()
+  test('renders the expected select options', async () => {
+    const wrapper = await mountWithProviders()
 
     commonAsserts.rendersExpectedSelectOptions({
       expectedOptions: SORT_DIRECTION_OPTIONS,
@@ -212,7 +246,7 @@ describe('Sort direction select', () => {
 
   test('updates the search filters sort direction state', async () => {
     const searchProvider = useSearchFinanceRecordsProvider()
-    const wrapper = mountWithProviders({ searchProvider })
+    const wrapper = await mountWithProviders({ searchProvider })
     const input = wrapper.get('select[name="sortDirection"]')
 
     await input.setValue(SORT_DIRECTION.ASCENDING)
@@ -222,12 +256,63 @@ describe('Sort direction select', () => {
   })
 })
 
+describe('Tag combobox', () => {
+  function getTagOption(wrapper: VueWrapper, tagName: string) {
+    return wrapper.find(`li[aria-label="${tagName}"]`)
+  }
+
+  test('renders all tag options when type not set', async () => {
+    const wrapper = await mountWithProviders()
+
+    userTags.forEach((userTag) => {
+      expect(getTagOption(wrapper, userTag.tag.name).exists()).toBe(true)
+    })
+  })
+
+  test(`renders expense tag options when type is set to ${FINANCE_RECORD_TYPE.EXPENSE}`, async () => {
+    const searchProvider = useSearchFinanceRecordsProvider()
+    searchProvider.setFilters({ type: FINANCE_RECORD_TYPE.EXPENSE })
+    const wrapper = await mountWithProviders({ searchProvider })
+
+    userTagMap.Expense.forEach((userTag) => {
+      expect(getTagOption(wrapper, userTag.tag.name).exists()).toBe(true)
+    })
+
+    userTagMap.Revenue.forEach((userTag) => {
+      expect(getTagOption(wrapper, userTag.tag.name).exists()).toBe(false)
+    })
+  })
+
+  test(`renders revenue tag options when type is set to ${FINANCE_RECORD_TYPE.REVENUE}`, async () => {
+    const searchProvider = useSearchFinanceRecordsProvider()
+    searchProvider.setFilters({ type: FINANCE_RECORD_TYPE.REVENUE })
+    const wrapper = await mountWithProviders({ searchProvider })
+
+    userTagMap.Revenue.forEach((userTag) => {
+      expect(getTagOption(wrapper, userTag.tag.name).exists()).toBe(true)
+    })
+
+    userTagMap.Expense.forEach((userTag) => {
+      expect(getTagOption(wrapper, userTag.tag.name).exists()).toBe(false)
+    })
+  })
+
+  test('updates the search filters tags state', async () => {
+    const searchProvider = useSearchFinanceRecordsProvider()
+    const wrapper = await mountWithProviders({ searchProvider })
+    const tagOption = getTagOption(wrapper, userTags[0].tag.name)
+    await tagOption.trigger('click')
+    await helpers.submitForm(wrapper)
+    expect(searchProvider.filters.tags).toEqual([userTags[0].tag])
+  })
+})
+
 describe('Save button', () => {
   test('updates multiple search filters and closes the modal', async () => {
     const searchProvider = useSearchFinanceRecordsProvider()
     searchProvider.setModalIsShowing(true)
 
-    const wrapper = mountWithProviders({ searchProvider })
+    const wrapper = await mountWithProviders({ searchProvider })
     const updates = { description: 'Cool description', type: FINANCE_RECORD_TYPE.REVENUE }
     const descriptionInput = wrapper.get('input[name="description"]')
     await descriptionInput.setValue(updates.description)
@@ -254,7 +339,7 @@ describe('Save button', () => {
     }
     searchProvider.setFilters(initialSearchFilters)
 
-    const wrapper = mountWithProviders({ searchProvider })
+    const wrapper = await mountWithProviders({ searchProvider })
     const updates = { amount1: 1, amount2: 2 }
 
     const amount1Input = wrapper.get('input[name="amount1"]')
@@ -282,7 +367,7 @@ describe('Cancel button', async () => {
     const searchProvider = useSearchFinanceRecordsProvider()
     searchProvider.setModalIsShowing(true)
 
-    const wrapper = mountWithProviders({ searchProvider })
+    const wrapper = await mountWithProviders({ searchProvider })
     const descriptionInput = wrapper.get('input[name="description"]')
     await descriptionInput.setValue('Cool')
 
@@ -303,7 +388,7 @@ describe('Reset button', async () => {
     const searchProvider = useSearchFinanceRecordsProvider()
     searchProvider.setFilters(initialSearchFilters)
 
-    const wrapper = mountWithProviders({ searchProvider })
+    const wrapper = await mountWithProviders({ searchProvider })
     const descriptionInput = wrapper.get('input[name="description"]')
     await descriptionInput.setValue('Updated description')
 

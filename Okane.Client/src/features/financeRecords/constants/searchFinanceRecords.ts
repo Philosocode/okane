@@ -22,6 +22,8 @@ export const DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS: FinanceRecordsSearchFilters
   amountOperator: COMPARISON_OPERATOR.GTE,
   happenedAt1: startOfMonth(new Date(Date.now())),
   happenedAtOperator: COMPARISON_OPERATOR.GTE,
+
+  tags: [],
 }
 
 export const SEARCH_FINANCE_RECORDS_TYPE_OPTIONS: SelectOption[] = [

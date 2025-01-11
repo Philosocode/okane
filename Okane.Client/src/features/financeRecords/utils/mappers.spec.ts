@@ -12,6 +12,7 @@ import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/
 import * as utils from '@features/financeRecords/utils/mappers'
 import { mapDate } from '@shared/utils/dateTime'
 
+import { createTestTag } from '@tests/factories/tag'
 import {
   createTestFinanceRecord,
   createTestSaveFinanceRecordFormState,
@@ -89,6 +90,7 @@ describe('mapFinanceRecordsSearchFilters', () => {
         'happenedBefore',
         'minAmount',
         'maxAmount',
+        'tagId',
         'type',
       ]
 
@@ -101,6 +103,13 @@ describe('mapFinanceRecordsSearchFilters', () => {
       const filters = { description: 'Cool description' }
       const params = getParams(filters)
       expect(params.get('description')).toBe(filters.description)
+    })
+
+    test('tags', () => {
+      const tags = [createTestTag({ id: 1 }), createTestTag({ id: 2 })]
+      const filters = { tags }
+      const params = getParams(filters)
+      expect(params.getAll('tagId')).toEqual(['1', '2'])
     })
 
     test('type', () => {
@@ -173,7 +182,7 @@ describe('mapFinanceRecordsSearchFilters', () => {
       })
     })
 
-    describe('Happened at', () => {
+    describe('happened at', () => {
       const date1 = new Date('2024-01-01')
       const date2 = new Date('2025-01-01')
 

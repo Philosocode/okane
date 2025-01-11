@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/vue-query'
 // Internal
 import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
 
-import { type PreCreationFinanceRecord } from '@features/financeRecords/types/saveFinanceRecord'
+import { type CreateFinanceRecordRequest } from '@features/financeRecords/types/saveFinanceRecord'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
@@ -15,7 +15,7 @@ import {
   type SearchFinanceRecordsProvider,
 } from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
-function postFinanceRecord(financeRecord: PreCreationFinanceRecord) {
+function postFinanceRecord(financeRecord: CreateFinanceRecordRequest) {
   return apiClient.post(financeRecordAPIRoutes.postFinanceRecord(), financeRecord)
 }
 
@@ -24,7 +24,7 @@ export function useCreateFinanceRecordMutation() {
   const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
 
   return useMutation({
-    mutationFn: (financeRecord: PreCreationFinanceRecord) => postFinanceRecord(financeRecord),
+    mutationFn: (financeRecord: CreateFinanceRecordRequest) => postFinanceRecord(financeRecord),
     onSuccess() {
       void queryClient.invalidateQueries({
         queryKey: financeRecordQueryKeys.listByFilters({ filters: searchProvider.filters }),

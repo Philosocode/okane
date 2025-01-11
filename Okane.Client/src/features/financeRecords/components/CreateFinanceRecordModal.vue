@@ -41,7 +41,7 @@ function handleClose() {
 }
 
 function handleSubmit() {
-  const financeRecord = mapSaveFinanceRecordFormState.to.preCreationFinanceRecord(formState.value)
+  const financeRecord = mapSaveFinanceRecordFormState.to.createFinanceRecordRequest(formState.value)
 
   formErrors.value = { ...initialFormErrors }
 

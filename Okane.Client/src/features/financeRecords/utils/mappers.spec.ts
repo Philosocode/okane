@@ -29,9 +29,9 @@ describe('mapFinanceRecord', () => {
 })
 
 describe('mapSaveFinanceRecordFormState', () => {
-  test('preCreationFinanceRecord', () => {
+  test('createFinanceRecordRequest', () => {
     const formState = createTestSaveFinanceRecordFormState()
-    const result = utils.mapSaveFinanceRecordFormState.to.preCreationFinanceRecord(formState)
+    const result = utils.mapSaveFinanceRecordFormState.to.createFinanceRecordRequest(formState)
     expect(result).toEqual({
       ...result,
       happenedAt: new Date(formState.happenedAt),

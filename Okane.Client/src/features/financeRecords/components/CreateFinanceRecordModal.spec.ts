@@ -104,7 +104,7 @@ describe('with a successful request to create a finance record', () => {
     helpers.setFormState(wrapper, formState)
     await helpers.submitForm(wrapper)
 
-    const financeRecord = mapSaveFinanceRecordFormState.to.preCreationFinanceRecord(formState)
+    const financeRecord = mapSaveFinanceRecordFormState.to.createFinanceRecordRequest(formState)
     expect(postSpy).toHaveBeenCalledOnce()
     expect(postSpy).toHaveBeenCalledWith(financeRecordAPIRoutes.postFinanceRecord(), financeRecord)
 

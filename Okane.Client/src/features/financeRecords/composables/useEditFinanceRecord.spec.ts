@@ -8,7 +8,7 @@ import { financeRecordQueryKeys } from '@features/financeRecords/constants/query
 
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
 
-import { useEditFinanceRecordMutation } from '@features/financeRecords/composables/useEditFinanceRecordMutation'
+import { useEditFinanceRecord } from '@features/financeRecords/composables/useEditFinanceRecord'
 
 import {
   SEARCH_FINANCE_RECORDS_SYMBOL,
@@ -38,7 +38,7 @@ const TestComponent = defineComponent({
     shouldPassSearchFilters: Boolean,
   },
   setup() {
-    const mutation = useEditFinanceRecordMutation()
+    const mutation = useEditFinanceRecord()
     mutation.mutate({ changes, id })
   },
   template: '<div />',

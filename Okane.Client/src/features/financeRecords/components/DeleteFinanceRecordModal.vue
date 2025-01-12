@@ -9,7 +9,7 @@ import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
-import { useDeleteFinanceRecordMutation } from '@features/financeRecords/composables/useDeleteFinanceRecordMutation'
+import { useDeleteFinanceRecord } from '@features/financeRecords/composables/useDeleteFinanceRecord'
 
 import {
   DELETE_FINANCE_RECORD_ID_SYMBOL,
@@ -19,7 +19,7 @@ import {
 const deleteProvider = inject(DELETE_FINANCE_RECORD_ID_SYMBOL) as DeleteFinanceRecordIdProvider
 
 const modalHeadingId = 'delete-finance-record-modal-heading'
-const deleteMutation = useDeleteFinanceRecordMutation()
+const deleteMutation = useDeleteFinanceRecord()
 
 function handleClose() {
   deleteProvider.setId(undefined)

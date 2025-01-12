@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // Internal
+import FinanceUserTagCombobox from '@features/financeUserTags/components/FinanceUserTagCombobox.vue'
 import FormInput from '@shared/components/form/FormInput.vue'
 import FormSelect from '@shared/components/form/FormSelect.vue'
 
@@ -46,7 +47,7 @@ const emit = defineEmits<{
     <FormSelect
       :label="FINANCES_COPY.PROPERTIES.TYPE"
       :model-value="formState.type"
-      @update:model-value="emit('change', { type: $event })"
+      @update:model-value="emit('change', { tags: [], type: $event })"
       :options="FINANCE_RECORD_TYPE_OPTIONS"
       name="type"
       required
@@ -70,6 +71,14 @@ const emit = defineEmits<{
     :type="INPUT_TYPE.DATETIME_LOCAL"
     :model-value="formState.happenedAt"
     @update:model-value="emit('change', { happenedAt: $event })"
+  />
+  <FinanceUserTagCombobox
+    :created-tag-type="formState.type"
+    id="save-finance-record-form-tag-combobox"
+    :selected-tags="formState.tags"
+    :tag-types="[formState.type]"
+    @change="(tags) => emit('change', { tags })"
+    @create-tag="(tag) => emit('change', { tags: props.formState.tags.concat(tag) })"
   />
 </template>
 

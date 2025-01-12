@@ -2,10 +2,14 @@
 import { endOfDay } from 'date-fns'
 
 // Internal
-import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
 import { type MinMax } from '@shared/types/search'
+import {
+  type CreateFinanceRecordRequest,
+  type EditFinanceRecordRequest,
+  type SaveFinanceRecordFormState,
+} from '@features/financeRecords/types/saveFinanceRecord'
 
 import { convertValueAndOperatorToMinMax } from '@shared/utils/search'
 import { createMappers } from '@shared/utils/mappers'
@@ -21,14 +25,21 @@ export const mapFinanceRecord = createMappers({
 })
 
 export const mapSaveFinanceRecordFormState = createMappers({
-  createFinanceRecordRequest(formState: SaveFinanceRecordFormState) {
-    return { ...formState, happenedAt: new Date(formState.happenedAt) }
+  createFinanceRecordRequest(formState: SaveFinanceRecordFormState): CreateFinanceRecordRequest {
+    return {
+      ...formState,
+      happenedAt: new Date(formState.happenedAt),
+      tagIds: formState.tags.map((tag) => tag.id),
+    }
   },
-  partialFinanceRecord(formState: Partial<SaveFinanceRecordFormState>): Partial<FinanceRecord> {
-    const { happenedAt, ...rest } = formState
+  editFinanceRecordRequest(
+    formState: Partial<SaveFinanceRecordFormState>,
+  ): EditFinanceRecordRequest {
+    const { happenedAt, tags, ...rest } = formState
     return {
       ...rest,
       ...(happenedAt && { happenedAt: new Date(happenedAt) }),
+      ...(tags && { tagIds: tags.map((tag) => tag.id) }),
     }
   },
 })

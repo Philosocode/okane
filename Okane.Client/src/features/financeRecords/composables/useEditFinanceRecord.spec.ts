@@ -6,7 +6,7 @@ import { flushPromises } from '@vue/test-utils'
 import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 
-import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
+import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
 import { useEditFinanceRecord } from '@features/financeRecords/composables/useEditFinanceRecord'
 
@@ -20,6 +20,7 @@ import { apiClient } from '@shared/services/apiClient/apiClient'
 
 import { testQueryClient } from '@tests/queryClient/testQueryClient'
 import { wrapInAPIResponse } from '@tests/utils/apiResponse'
+import { mapSaveFinanceRecordFormState } from '@features/financeRecords/utils/mappers'
 
 const spyOn = {
   patch() {
@@ -30,7 +31,8 @@ const spyOn = {
   },
 }
 
-const changes: Partial<FinanceRecord> = { amount: 99 }
+const changes: Partial<SaveFinanceRecordFormState> = { amount: 99 }
+const request = mapSaveFinanceRecordFormState.to.editFinanceRecordRequest(changes)
 const id = 540
 
 const TestComponent = defineComponent({
@@ -39,7 +41,7 @@ const TestComponent = defineComponent({
   },
   setup() {
     const mutation = useEditFinanceRecord()
-    mutation.mutate({ changes, id })
+    mutation.mutate({ id, request })
   },
   template: '<div />',
 })

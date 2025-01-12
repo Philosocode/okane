@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 
-import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
+import { type EditFinanceRecordRequest } from '@features/financeRecords/types/saveFinanceRecord'
 
 import {
   SEARCH_FINANCE_RECORDS_SYMBOL,
@@ -15,13 +15,13 @@ import {
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
-function patchFinanceRecord(id: number, changes: Partial<FinanceRecord>) {
-  return apiClient.patch(financeRecordAPIRoutes.patchFinanceRecord({ id }), changes)
+function patchFinanceRecord(id: number, request: EditFinanceRecordRequest) {
+  return apiClient.patch(financeRecordAPIRoutes.patchFinanceRecord({ id }), request)
 }
 
 type MutationArgs = {
-  changes: Partial<FinanceRecord>
   id: number
+  request: EditFinanceRecordRequest
 }
 
 export function useEditFinanceRecord() {
@@ -29,7 +29,7 @@ export function useEditFinanceRecord() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (args: MutationArgs) => patchFinanceRecord(args.id, args.changes),
+    mutationFn: (args: MutationArgs) => patchFinanceRecord(args.id, args.request),
     onSuccess() {
       void queryClient.invalidateQueries({
         queryKey: financeRecordQueryKeys.listByFilters({ filters: searchProvider.filters }),

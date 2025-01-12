@@ -13,14 +13,14 @@ import { SHARED_COPY } from '@shared/constants/copy'
 import { type FormErrors } from '@shared/types/form'
 import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
-type Props = {
+export type SaveFinanceRecordModalProps = {
   formState: SaveFinanceRecordFormState
   formErrors: FormErrors<SaveFinanceRecordFormState>
   isShowing: boolean
   title: string
 }
 
-const { formState, isShowing, title } = defineProps<Props>()
+const { formState, isShowing, title } = defineProps<SaveFinanceRecordModalProps>()
 
 const emit = defineEmits<{
   (event: 'change', updates: Partial<SaveFinanceRecordFormState>): void

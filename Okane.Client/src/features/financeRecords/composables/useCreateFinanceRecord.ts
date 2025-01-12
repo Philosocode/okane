@@ -24,7 +24,7 @@ export function useCreateFinanceRecord() {
   const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
 
   return useMutation({
-    mutationFn: (financeRecord: CreateFinanceRecordRequest) => postFinanceRecord(financeRecord),
+    mutationFn: postFinanceRecord,
     onSuccess() {
       void queryClient.invalidateQueries({
         queryKey: financeRecordQueryKeys.listByFilters({ filters: searchProvider.filters }),

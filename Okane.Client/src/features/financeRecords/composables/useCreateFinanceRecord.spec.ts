@@ -6,7 +6,7 @@ import { defineComponent } from 'vue'
 import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 
-import { useCreateFinanceRecordMutation } from '@features/financeRecords/composables/useCreateFinanceRecordMutation'
+import { useCreateFinanceRecord } from '@features/financeRecords/composables/useCreateFinanceRecord'
 
 import {
   SEARCH_FINANCE_RECORDS_SYMBOL,
@@ -36,7 +36,7 @@ const TestComponent = defineComponent({
     shouldPassSearchFilters: Boolean,
   },
   setup() {
-    const mutation = useCreateFinanceRecordMutation()
+    const mutation = useCreateFinanceRecord()
     mutation.mutate(financeRecord)
   },
   template: '<div />',

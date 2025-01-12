@@ -19,7 +19,7 @@ function postFinanceRecord(financeRecord: CreateFinanceRecordRequest) {
   return apiClient.post(financeRecordAPIRoutes.postFinanceRecord(), financeRecord)
 }
 
-export function useCreateFinanceRecordMutation() {
+export function useCreateFinanceRecord() {
   const queryClient = useQueryClient()
   const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
 

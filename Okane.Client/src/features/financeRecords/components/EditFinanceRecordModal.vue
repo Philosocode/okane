@@ -9,7 +9,7 @@ import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
 import type { SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
-import { useEditFinanceRecordMutation } from '@features/financeRecords/composables/useEditFinanceRecordMutation'
+import { useEditFinanceRecord } from '@features/financeRecords/composables/useEditFinanceRecord'
 
 import {
   SAVE_FINANCE_RECORD_SYMBOL,
@@ -29,7 +29,7 @@ import {
 } from '@features/financeRecords/utils/mappers'
 
 const saveProvider = inject(SAVE_FINANCE_RECORD_SYMBOL) as SaveFinanceRecordProvider
-const editMutation = useEditFinanceRecordMutation()
+const editMutation = useEditFinanceRecord()
 
 const initialFormState = computed(() => {
   if (!saveProvider.editingFinanceRecord) return getInitialSaveFinanceRecordFormState()

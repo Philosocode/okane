@@ -24,7 +24,7 @@ type MutationArgs = {
   id: number
 }
 
-export function useEditFinanceRecordMutation() {
+export function useEditFinanceRecord() {
   const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
   const queryClient = useQueryClient()
 

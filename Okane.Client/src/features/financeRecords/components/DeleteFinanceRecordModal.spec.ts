@@ -20,7 +20,7 @@ import {
   useSearchFinanceRecordsProvider,
 } from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
-import * as deleteMutation from '@features/financeRecords/composables/useDeleteFinanceRecordMutation'
+import * as deleteMutation from '@features/financeRecords/composables/useDeleteFinanceRecord'
 
 import { commonAsserts } from '@tests/utils/commonAsserts'
 import { financeRecordHandlers } from '@tests/msw/handlers/financeRecord'
@@ -114,8 +114,8 @@ describe('when clicking the delete button', () => {
     return { deleteProvider, wrapper }
   }
 
-  test('calls useDeleteFinanceRecordMutation', async () => {
-    const deleteSpy = vi.spyOn(deleteMutation, 'useDeleteFinanceRecordMutation')
+  test('calls useDeleteFinanceRecord', async () => {
+    const deleteSpy = vi.spyOn(deleteMutation, 'useDeleteFinanceRecord')
     await setUp()
 
     expect(deleteSpy).toHaveBeenCalledOnce()

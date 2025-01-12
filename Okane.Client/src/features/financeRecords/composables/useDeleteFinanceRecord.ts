@@ -17,7 +17,7 @@ function deleteFinanceRecord(id: number) {
   return apiClient.delete(financeRecordAPIRoutes.deleteFinanceRecord({ id }))
 }
 
-export function useDeleteFinanceRecordMutation() {
+export function useDeleteFinanceRecord() {
   const queryClient = useQueryClient()
   const searchProvider = useSearchFinanceRecordsProvider()
 

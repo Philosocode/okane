@@ -6,7 +6,7 @@ import { flushPromises } from '@vue/test-utils'
 import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 
-import { useDeleteFinanceRecordMutation } from '@features/financeRecords/composables/useDeleteFinanceRecordMutation'
+import { useDeleteFinanceRecord } from '@features/financeRecords/composables/useDeleteFinanceRecord'
 
 import {
   SEARCH_FINANCE_RECORDS_SYMBOL,
@@ -35,7 +35,7 @@ const TestComponent = defineComponent({
     shouldPassSearchFilters: Boolean,
   },
   setup() {
-    const mutation = useDeleteFinanceRecordMutation()
+    const mutation = useDeleteFinanceRecord()
     mutation.mutate(financeRecordId)
   },
   template: '<div />',

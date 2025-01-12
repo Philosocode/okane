@@ -14,13 +14,16 @@ import {
   useSearchFinanceRecordsProvider,
 } from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
+import { mapSaveFinanceRecordFormState } from '@features/financeRecords/utils/mappers'
+
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
-import { createTestFinanceRecord } from '@tests/factories/financeRecord'
+import { createTestSaveFinanceRecordFormState } from '@tests/factories/financeRecord'
 import { testQueryClient } from '@tests/queryClient/testQueryClient'
 import { wrapInAPIResponse } from '@tests/utils/apiResponse'
 
-const financeRecord = createTestFinanceRecord()
+const formState = createTestSaveFinanceRecordFormState()
+const request = mapSaveFinanceRecordFormState.to.createFinanceRecordRequest(formState)
 
 const spyOn = {
   post() {
@@ -37,7 +40,7 @@ const TestComponent = defineComponent({
   },
   setup() {
     const mutation = useCreateFinanceRecord()
-    mutation.mutate(financeRecord)
+    mutation.mutate(request)
   },
   template: '<div />',
 })
@@ -63,7 +66,7 @@ test('makes a POST request to the expected endpoint', async () => {
 
   await flushPromises()
 
-  expect(postSpy).toHaveBeenCalledWith(financeRecordAPIRoutes.postFinanceRecord(), financeRecord)
+  expect(postSpy).toHaveBeenCalledWith(financeRecordAPIRoutes.postFinanceRecord(), request)
 })
 
 test('invalidates the expected query keys', async () => {

@@ -36,16 +36,17 @@ describe('mapSaveFinanceRecordFormState', () => {
     expect(result).toEqual({
       ...result,
       happenedAt: new Date(formState.happenedAt),
+      tagIds: formState.tags.map((tag) => tag.id),
     })
   })
 
-  describe('partialFinanceRecord', () => {
+  describe('editFinanceRecordRequest', () => {
     test('ignores happenedAt if undefined', () => {
       const changes: Partial<SaveFinanceRecordFormState> = {
         amount: 0,
         type: FINANCE_RECORD_TYPE.EXPENSE,
       }
-      const result = utils.mapSaveFinanceRecordFormState.to.partialFinanceRecord(changes)
+      const result = utils.mapSaveFinanceRecordFormState.to.editFinanceRecordRequest(changes)
       expect(result).toEqual(changes)
     })
 
@@ -55,12 +56,25 @@ describe('mapSaveFinanceRecordFormState', () => {
         happenedAt: '2018-06-12T19:30',
         type: FINANCE_RECORD_TYPE.EXPENSE,
       }
-      const result = utils.mapSaveFinanceRecordFormState.to.partialFinanceRecord(changes)
+      const result = utils.mapSaveFinanceRecordFormState.to.editFinanceRecordRequest(changes)
       expect(result).toEqual({
         amount: changes.amount,
         happenedAt: new Date(changes.happenedAt ?? 0),
         type: changes.type,
       })
+    })
+
+    test('ignores tags if undefined', () => {
+      const changes: Partial<SaveFinanceRecordFormState> = { tags: undefined }
+      const result = utils.mapSaveFinanceRecordFormState.to.editFinanceRecordRequest(changes)
+      expect(result).toEqual(changes)
+    })
+
+    test('maps tagIds if tags is defined', () => {
+      const tag = createTestTag()
+      const changes: Partial<SaveFinanceRecordFormState> = { tags: [tag] }
+      const result = utils.mapSaveFinanceRecordFormState.to.editFinanceRecordRequest(changes)
+      expect(result).toEqual({ tagIds: [tag.id] })
     })
   })
 })

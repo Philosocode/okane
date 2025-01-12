@@ -7,7 +7,7 @@ import SaveFinanceRecordModal from '@features/financeRecords/components/SaveFina
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
-import type { SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
+import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
 import { useCreateFinanceRecord } from '@features/financeRecords/composables/useCreateFinanceRecord'
 
@@ -41,11 +41,11 @@ function handleClose() {
 }
 
 function handleSubmit() {
-  const financeRecord = mapSaveFinanceRecordFormState.to.createFinanceRecordRequest(formState.value)
+  const request = mapSaveFinanceRecordFormState.to.createFinanceRecordRequest(formState.value)
 
   formErrors.value = { ...initialFormErrors }
 
-  createMutation.mutate(financeRecord, {
+  createMutation.mutate(request, {
     onSuccess() {
       formState.value = {
         ...formState.value,

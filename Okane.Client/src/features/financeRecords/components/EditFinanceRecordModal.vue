@@ -69,7 +69,7 @@ function handleSubmit() {
   formErrors.value = { ...initialFormErrors }
 
   editMutation.mutate(
-    { id, changes: mapSaveFinanceRecordFormState.to.partialFinanceRecord(changes) },
+    { id, request: mapSaveFinanceRecordFormState.to.editFinanceRecordRequest(changes) },
     {
       onSuccess() {
         handleClose()

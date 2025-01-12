@@ -31,6 +31,8 @@ import { apiClient } from '@shared/services/apiClient/apiClient'
 import { createTestAPIFormErrors } from '@tests/factories/formErrors'
 import { createTestFinanceRecord } from '@tests/factories/financeRecord'
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
+import { financeUserTagHandlers } from '@tests/msw/handlers/financeUserTag'
+import { testServer } from '@tests/msw/testServer'
 import { wrapInAPIResponse } from '@tests/utils/apiResponse'
 
 const editingFinanceRecord = createTestFinanceRecord()
@@ -55,6 +57,7 @@ const helpers = {
 }
 
 function mountWithProviders(args: { saveProvider?: SaveFinanceRecordProvider } = {}) {
+  testServer.use(financeUserTagHandlers.getAllSuccess({ userTags: [] }))
   const saveProvider = args.saveProvider ?? helpers.getEditingSaveProvider()
 
   return getMountComponent(EditFinanceRecordModal, {
@@ -140,7 +143,7 @@ describe('with a successful request to edit a finance record', () => {
     helpers.setFormState(wrapper, updates)
     await helpers.submitForm(wrapper)
 
-    const financeRecord = mapSaveFinanceRecordFormState.to.partialFinanceRecord(updates)
+    const financeRecord = mapSaveFinanceRecordFormState.to.editFinanceRecordRequest(updates)
     expect(patchSpy).toHaveBeenCalledOnce()
     expect(patchSpy).toHaveBeenCalledWith(
       financeRecordAPIRoutes.patchFinanceRecord({ id: editingFinanceRecord.id }),

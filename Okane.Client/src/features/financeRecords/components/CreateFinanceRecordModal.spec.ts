@@ -28,6 +28,8 @@ import {
 import { createTestAPIFormErrors } from '@tests/factories/formErrors'
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { createTestSaveFinanceRecordFormState } from '@tests/factories/financeRecord'
+import { financeUserTagHandlers } from '@tests/msw/handlers/financeUserTag'
+import { testServer } from '@tests/msw/testServer'
 import { wrapInAPIResponse } from '@tests/utils/apiResponse'
 
 const mountComponent = getMountComponent(CreateFinanceRecordModal, {
@@ -40,6 +42,7 @@ const mountComponent = getMountComponent(CreateFinanceRecordModal, {
 })
 
 function mountWithProviders(args: { saveProvider: SaveFinanceRecordProvider }) {
+  testServer.use(financeUserTagHandlers.getAllSuccess({ userTags: [] }))
   return mountComponent({
     global: {
       provide: {

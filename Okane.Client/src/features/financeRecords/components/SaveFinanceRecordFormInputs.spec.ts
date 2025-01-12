@@ -1,4 +1,5 @@
 // Internal
+import FinanceUserTagCombobox from '@features/financeUserTags/components/FinanceUserTagCombobox.vue'
 import SaveFinanceRecordFormInputs from '@features/financeRecords/components/SaveFinanceRecordFormInputs.vue'
 
 import { INPUT_TYPE } from '@shared/constants/form'
@@ -16,9 +17,17 @@ import { type FormErrors } from '@shared/types/form'
 import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
 import { createTestSaveFinanceRecordFormState } from '@tests/factories/financeRecord'
+import { createTestTag } from '@tests/factories/tag'
 import { getInitialFormErrors } from '@shared/utils/form'
 
-const mountComponent = getMountComponent(SaveFinanceRecordFormInputs)
+const mountComponent = getMountComponent(SaveFinanceRecordFormInputs, {
+  withQueryClient: true,
+  global: {
+    stubs: {
+      FinanceUserTagCombobox: true,
+    },
+  },
+})
 
 const formState = createTestSaveFinanceRecordFormState()
 const formErrors = getInitialFormErrors(formState)
@@ -195,7 +204,7 @@ describe('Type select', () => {
   sharedTests.emitsAChangeEvent({
     selector: 'select',
     value: FINANCE_RECORD_TYPE.REVENUE,
-    emittedData: { type: FINANCE_RECORD_TYPE.REVENUE },
+    emittedData: { tags: [], type: FINANCE_RECORD_TYPE.REVENUE },
   })
 })
 
@@ -271,5 +280,33 @@ describe('Happened at input', () => {
   sharedTests.rendersAnErrorLabel({
     selector: elementSelectors.happenedAtInput,
     errors: { happenedAt: 'Bad happenedAt' },
+  })
+})
+
+describe('Tag combobox', () => {
+  test('renders a combobox', () => {
+    const wrapper = mountComponent({ props })
+    const combobox = wrapper.findComponent(FinanceUserTagCombobox)
+    expect(combobox.exists()).toBe(true)
+  })
+
+  test('propagates a "change" event', () => {
+    const wrapper = mountComponent({ props })
+    const combobox = wrapper.findComponent(FinanceUserTagCombobox)
+    const tags = [createTestTag()]
+    combobox.vm.$emit('change', tags)
+
+    const emitted = wrapper.emitted<Partial<SaveFinanceRecordFormState>[]>('change')
+    expect(emitted?.[0][0].tags).toEqual(tags)
+  })
+
+  test('propagates a "create-tag" event', () => {
+    const wrapper = mountComponent({ props })
+    const combobox = wrapper.findComponent(FinanceUserTagCombobox)
+    const tag = createTestTag()
+    combobox.vm.$emit('create-tag', tag)
+
+    const emitted = wrapper.emitted<Partial<SaveFinanceRecordFormState>[]>('change')
+    expect(emitted?.[0][0].tags).toEqual(formState.tags.concat(tag))
   })
 })

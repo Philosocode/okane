@@ -4,6 +4,7 @@ import { computed, inject } from 'vue'
 import { formatDate } from 'date-fns'
 
 // Internal
+import TagPill from '@shared/components/TagPill.vue'
 import ToggleMenu from '@shared/components/ToggleMenu.vue'
 
 import { FINANCE_RECORD_TIMESTAMP_FORMAT } from '@features/financeRecords/constants/financeRecordList'
@@ -64,6 +65,10 @@ const menuActions = [
       </div>
       <div class="amount">${{ financeRecord.amount.toFixed(2) }}</div>
       <div>{{ financeRecord.description }}</div>
+
+      <div class="tags">
+        <TagPill :key="tag.id" v-for="tag in financeRecord.tags" :tag-name="tag.name" />
+      </div>
     </div>
 
     <div class="menu-container">
@@ -78,6 +83,8 @@ const menuActions = [
 }
 
 .content {
+  display: flex;
+  flex-direction: column;
   gap: var(--space-2xs);
   padding: var(--space-md);
 }
@@ -86,6 +93,11 @@ const menuActions = [
   border: pxToRem(1) solid var(--color-gray-500);
   display: flex;
   justify-content: space-between;
+}
+
+.tags {
+  display: flex;
+  gap: var(--space-xs);
 }
 
 .top-row {

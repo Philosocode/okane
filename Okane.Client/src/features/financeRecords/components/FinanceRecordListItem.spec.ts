@@ -24,8 +24,10 @@ import {
 } from '@features/financeRecords/providers/saveFinanceRecordProvider'
 
 import { createTestFinanceRecord } from '@tests/factories/financeRecord'
+import { createTestTag } from '@tests/factories/tag'
 
-const financeRecord = createTestFinanceRecord()
+const tags = [createTestTag({ id: 1, name: 'Tag 1' }), createTestTag({ id: 2, name: 'Tag 2' })]
+const financeRecord = createTestFinanceRecord({ tags })
 const mountComponent = getMountComponent(FinanceRecordListItem, {
   props: { financeRecord },
   global: {
@@ -59,6 +61,13 @@ test('renders the description', () => {
   const wrapper = mountComponent()
   const description = wrapper.findByText('div', financeRecord.description.toString())
   expect(description.exists()).toBe(true)
+})
+
+test('renders each tag', () => {
+  const wrapper = mountComponent()
+  tags.forEach((tag) => {
+    expect(wrapper.findByText('div', tag.name)).toBeDefined()
+  })
 })
 
 test('renders a menu', async () => {

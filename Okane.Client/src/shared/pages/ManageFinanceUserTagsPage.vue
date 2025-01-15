@@ -3,6 +3,7 @@
 import { provide } from 'vue'
 
 // Internal
+import FinanceUserTagGrid from '@features/financeUserTags/components/FinanceUserTagGrid.vue'
 import Heading from '@shared/components/Heading.vue'
 import Loader from '@shared/components/loader/Loader.vue'
 import PageLayout from '@shared/layouts/PageLayout.vue'
@@ -36,6 +37,8 @@ const {
       <div class="tag-select">
         <TagTypeSelect />
       </div>
+
+      <FinanceUserTagGrid :user-tag-map="userTagMap" />
     </template>
 
     <p v-if="errorFetchingUserTags">{{ FINANCE_USER_TAGS_COPY.MANAGE_PAGE.FETCH_TAGS_ERROR }}</p>

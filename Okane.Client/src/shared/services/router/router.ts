@@ -6,6 +6,7 @@ import AccountPage from '@shared/pages/AccountPage.vue'
 import AccountDeletedPage from '@shared/pages/AccountDeletedPage.vue'
 import FinancesPage from '@shared/pages/FinancesPage.vue'
 import LoginPage from '@shared/pages/LoginPage.vue'
+import ManageFinanceUserTagsPage from '@shared/pages/ManageFinanceUserTagsPage.vue'
 import RegisterPage from '@shared/pages/RegisterPage.vue'
 import ResetPasswordPage from '@shared/pages/ResetPasswordPage.vue'
 import SendResetPasswordEmail from '@shared/pages/SendResetPasswordEmailPage.vue'
@@ -20,6 +21,7 @@ export enum ROUTE_NAME {
   ACCOUNT_DELETED = 'accountDeleted',
   FINANCES = 'finances',
   LOGIN = 'login',
+  MANAGE_FINANCE_TAGS = 'manageFinanceTags',
   REGISTER = 'register',
   RESET_PASSWORD = 'resetPassword',
   SEND_RESET_PASSWORD_EMAIL = 'sendResetPasswordEmail',
@@ -55,6 +57,12 @@ export const appRoutes: Record<ROUTE_NAME, Route> = {
     name: ROUTE_NAME.LOGIN,
     component: LoginPage,
     meta: { isPublic: true, isPublicOnly: true },
+  },
+  [ROUTE_NAME.MANAGE_FINANCE_TAGS]: {
+    path: '/manage-finance-tags',
+    buildPath: () => '/manage-finance-tags',
+    name: ROUTE_NAME.MANAGE_FINANCE_TAGS,
+    component: ManageFinanceUserTagsPage,
   },
   [ROUTE_NAME.REGISTER]: {
     path: '/register',

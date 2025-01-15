@@ -1,5 +1,11 @@
 // External
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faEllipsisVertical, faPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
+import {
+  faEllipsisVertical,
+  faPenToSquare,
+  faPlus,
+  faTrash,
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons'
 
-library.add(faEllipsisVertical, faPlus, faXmark)
+library.add(faEllipsisVertical, faPenToSquare, faPlus, faTrash, faXmark)

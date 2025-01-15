@@ -7,6 +7,7 @@ import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFina
 import { type HttpHandler } from 'msw'
 
 // Internal
+import FinanceUserTagGrid from '@features/financeUserTags/components/FinanceUserTagGrid.vue'
 import Loader from '@shared/components/loader/Loader.vue'
 import ManageFinanceUserTagsPage from '@shared/pages/ManageFinanceUserTagsPage.vue'
 import TagTypeSelect from '@features/financeUserTags/components/TagTypeSelect.vue'
@@ -40,6 +41,19 @@ function mountComponent(
     },
     withQueryClient: true,
   })(args.mountingOptions)
+}
+
+const sharedAsserts = {
+  conditionallyRendersPageContent(args: { wrapper: VueWrapper; shouldExist: boolean }) {
+    const elements = [
+      args.wrapper.findComponent(FinanceUserTagGrid),
+      args.wrapper.findComponent(TagTypeSelect),
+    ]
+
+    elements.forEach((element) => {
+      expect(element.exists()).toBe(args.shouldExist)
+    })
+  },
 }
 
 test('renders a heading', () => {
@@ -101,7 +115,7 @@ describe('after successfully fetching user tags', () => {
 
   test('renders the page content', () => {
     const wrapper = mountComponent()
-    expect(wrapper.findComponent(TagTypeSelect).exists()).toBe(true)
+    sharedAsserts.conditionallyRendersPageContent({ wrapper, shouldExist: true })
   })
 
   test('does not render an error', () => {
@@ -125,7 +139,7 @@ describe('with an error fetching user tags', () => {
 
   test('does not render the page content', () => {
     const wrapper = mountComponent()
-    expect(wrapper.findComponent(TagTypeSelect).exists()).toBe(false)
+    sharedAsserts.conditionallyRendersPageContent({ wrapper, shouldExist: false })
   })
 
   test('renders an error', () => {

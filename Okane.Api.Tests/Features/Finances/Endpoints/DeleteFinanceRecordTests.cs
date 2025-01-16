@@ -43,7 +43,7 @@ public class DeleteFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseT
     public async Task DoesNotDeleteFinanceRecordsForOtherUsers()
     {
         var otherUserEmail = await UserUtils.RegisterUserAsync(_client);
-        var otherUser = await UserUtils.GetByEmail(Db, otherUserEmail);
+        var otherUser = await UserUtils.GetByEmailAsync(Db, otherUserEmail);
         var otherFinanceRecord = FinanceRecordStubFactory.Create(otherUser.Id);
         await Db.AddAsync(otherFinanceRecord);
 

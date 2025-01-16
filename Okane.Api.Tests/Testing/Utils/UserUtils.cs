@@ -19,7 +19,7 @@ public static class UserUtils
         return apiUser;
     }
 
-    public static async Task<ApiUser> GetByEmail(ApiDbContext db, string email)
+    public static async Task<ApiUser> GetByEmailAsync(ApiDbContext db, string email)
     {
         return await db.Users.SingleAsync(u => u.Email == email);
     }

@@ -22,7 +22,7 @@ public class DeleteSelfTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFa
             otherUserEmail,
             TestUser.Password
         ));
-        var otherUser = await UserUtils.GetByEmail(Db, otherUserEmail);
+        var otherUser = await UserUtils.GetByEmailAsync(Db, otherUserEmail);
 
         var authResponse = await _client.RegisterAndLogInTestUserAsync();
 

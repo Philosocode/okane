@@ -190,7 +190,7 @@ public class GetFinanceRecordsStatsTests(PostgresApiFactory apiFactory) : Databa
     public async Task ExcludesRecordsCreatedByOtherUsers()
     {
         var otherUserEmail = await UserUtils.RegisterUserAsync(_client);
-        var otherUser = await UserUtils.GetByEmail(Db, otherUserEmail);
+        var otherUser = await UserUtils.GetByEmailAsync(Db, otherUserEmail);
         var otherRecord = CreateRecordWithAmountAndType(1, FinanceRecordType.Revenue, otherUser.Id);
 
         var loginResponse = await _client.RegisterAndLogInTestUserAsync();

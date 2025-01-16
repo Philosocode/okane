@@ -15,3 +15,8 @@ export type CreateFinanceUserTagRequest = {
   name: string
   type: FINANCE_RECORD_TYPE
 }
+
+export type RenameFinanceUserTagRequest = {
+  id: number
+  name: string
+}

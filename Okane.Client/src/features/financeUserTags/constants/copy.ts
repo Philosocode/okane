@@ -20,4 +20,10 @@ export const FINANCE_USER_TAGS_COPY = {
     TAG_TYPE: 'Tag type',
     TYPE: 'Type',
   },
+
+  RENAME_MODAL: {
+    ERROR: 'Error renaming finance tag. Please refresh the page and try again.',
+    HEADING: 'Rename Finance Tag',
+    UPDATED_NAME: 'Updated name',
+  },
 }

@@ -143,7 +143,7 @@ public class RotateRefreshTokenTests(PostgresApiFactory apiFactory) : DatabaseTe
             TestUser.Password
         ));
 
-        var otherUser = await UserUtils.GetByEmail(Db, otherUserEmail);
+        var otherUser = await UserUtils.GetByEmailAsync(Db, otherUserEmail);
 
         for (var i = 0; i < refreshTokensPerUser; i++)
         {

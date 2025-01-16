@@ -57,7 +57,7 @@ public class PatchFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTe
     public async Task DoesNotUpdateOtherFinanceRecords()
     {
         var otherUserEmail = await UserUtils.RegisterUserAsync(_client);
-        var otherUser = await UserUtils.GetByEmail(Db, otherUserEmail);
+        var otherUser = await UserUtils.GetByEmailAsync(Db, otherUserEmail);
         var otherRecord = FinanceRecordStubFactory.Create(otherUser.Id);
         await Db.AddAsync(otherRecord);
 
@@ -141,7 +141,7 @@ public class PatchFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTe
     public async Task ReturnsA404_WhenEditingFinanceRecordForOtherUser()
     {
         var otherUserEmail = await UserUtils.RegisterUserAsync(_client);
-        var otherUser = await UserUtils.GetByEmail(Db, otherUserEmail);
+        var otherUser = await UserUtils.GetByEmailAsync(Db, otherUserEmail);
         var financeRecord = FinanceRecordStubFactory.Create(otherUser.Id);
 
         await Db.AddAsync(financeRecord);

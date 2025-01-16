@@ -7,6 +7,7 @@ import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFina
 import { type HttpHandler } from 'msw'
 
 // Internal
+import DeleteFinanceUserTagModal from '@features/financeUserTags/components/DeleteFinanceUserTagModal.vue'
 import FinanceUserTagGrid from '@features/financeUserTags/components/FinanceUserTagGrid.vue'
 import Loader from '@shared/components/loader/Loader.vue'
 import ManageFinanceUserTagsPage from '@shared/pages/ManageFinanceUserTagsPage.vue'
@@ -46,6 +47,7 @@ function mountComponent(
 const sharedAsserts = {
   conditionallyRendersPageContent(args: { wrapper: VueWrapper; shouldExist: boolean }) {
     const elements = [
+      args.wrapper.findComponent(DeleteFinanceUserTagModal),
       args.wrapper.findComponent(FinanceUserTagGrid),
       args.wrapper.findComponent(TagTypeSelect),
     ]

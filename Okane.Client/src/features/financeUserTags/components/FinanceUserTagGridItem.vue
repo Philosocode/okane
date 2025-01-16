@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// External
+import { inject } from 'vue'
+
 // Internal
 import IconButton from '@shared/components/IconButton.vue'
 
@@ -6,11 +9,17 @@ import { FINANCE_USER_TAGS_COPY } from '@features/financeUserTags/constants/copy
 
 import { type FinanceUserTag } from '@features/financeUserTags/types/financeUserTag'
 
+import {
+  MANAGE_FINANCE_USER_TAGS_PROVIDER_SYMBOL,
+  type ManageFinanceUserTagsProvider,
+} from '@features/financeUserTags/providers/manageFinanceUserTagsProvider'
+
 export type FinanceUserTagGridItemProps = {
   userTag: FinanceUserTag
 }
 
 const props = defineProps<FinanceUserTagGridItemProps>()
+const provider = inject(MANAGE_FINANCE_USER_TAGS_PROVIDER_SYMBOL) as ManageFinanceUserTagsProvider
 </script>
 
 <template>
@@ -25,6 +34,7 @@ const props = defineProps<FinanceUserTagGridItemProps>()
       <IconButton
         icon="fa-solid fa-trash"
         :title="FINANCE_USER_TAGS_COPY.MANAGE_PAGE.DELETE_FINANCE_TAG"
+        @click="provider.setUserTagToDelete(props.userTag)"
       />
     </div>
   </div>

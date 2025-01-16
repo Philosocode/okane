@@ -13,7 +13,7 @@ using Okane.Api.Tests.Testing.Constants;
 using Okane.Api.Tests.Testing.Integration;
 using Okane.Api.Tests.Testing.Utils;
 
-namespace Okane.Api.Tests.Features.FinanceRecords.Endpoints;
+namespace Okane.Api.Tests.Features.Finances.Endpoints;
 
 public class PostFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFactory), IAsyncLifetime
 {

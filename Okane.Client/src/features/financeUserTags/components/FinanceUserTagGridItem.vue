@@ -30,6 +30,7 @@ const provider = inject(MANAGE_FINANCE_USER_TAGS_PROVIDER_SYMBOL) as ManageFinan
       <IconButton
         icon="fa-solid fa-pen-to-square"
         :title="FINANCE_USER_TAGS_COPY.MANAGE_PAGE.RENAME_FINANCE_TAG"
+        @click="provider.setUserTagToRename(props.userTag)"
       />
       <IconButton
         icon="fa-solid fa-trash"

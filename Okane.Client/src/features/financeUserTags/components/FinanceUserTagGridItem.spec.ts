@@ -11,32 +11,39 @@ import {
 import { createTestFinanceUserTag } from '@tests/factories/financeUserTag'
 import { flushPromises } from '@vue/test-utils'
 
-const mountComponent = getMountComponent(FinanceUserTagGridItem)
-
-const userTag = createTestFinanceUserTag()
-
-test('renders the tag name', () => {
-  const wrapper = mountComponent({ props: { userTag } })
-  const name = wrapper.findByText('p', userTag.tag.name)
-  expect(name).toBeDefined()
-})
-
-test('renders a rename button', () => {
-  const wrapper = mountComponent({ props: { userTag } })
-  const icon = wrapper.findByText('title', FINANCE_USER_TAGS_COPY.MANAGE_PAGE.RENAME_FINANCE_TAG)
-  expect(icon).toBeDefined()
-})
-
-test('renders a delete button', async () => {
+function mountWithProvider() {
   const provider = useManageFinanceUserTagsProvider()
-  const wrapper = mountComponent({
+
+  const wrapper = getMountComponent(FinanceUserTagGridItem, {
     global: {
       provide: {
         [MANAGE_FINANCE_USER_TAGS_PROVIDER_SYMBOL]: provider,
       },
     },
     props: { userTag },
-  })
+  })()
+
+  return { provider, wrapper }
+}
+
+const userTag = createTestFinanceUserTag()
+
+test('renders the tag name', () => {
+  const { wrapper } = mountWithProvider()
+  const name = wrapper.findByText('p', userTag.tag.name)
+  expect(name).toBeDefined()
+})
+
+test('renders a rename button', async () => {
+  const { provider, wrapper } = mountWithProvider()
+  const icon = wrapper.findByText('title', FINANCE_USER_TAGS_COPY.MANAGE_PAGE.RENAME_FINANCE_TAG)
+  await icon.trigger('click')
+  await flushPromises()
+  expect(provider.userTagToRename).toEqual(userTag)
+})
+
+test('renders a delete button', async () => {
+  const { provider, wrapper } = mountWithProvider()
   const icon = wrapper.findByText('title', FINANCE_USER_TAGS_COPY.MANAGE_PAGE.DELETE_FINANCE_TAG)
   await icon.trigger('click')
   await flushPromises()

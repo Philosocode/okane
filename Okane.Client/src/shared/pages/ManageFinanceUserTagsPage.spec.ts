@@ -11,6 +11,7 @@ import DeleteFinanceUserTagModal from '@features/financeUserTags/components/Dele
 import FinanceUserTagGrid from '@features/financeUserTags/components/FinanceUserTagGrid.vue'
 import Loader from '@shared/components/loader/Loader.vue'
 import ManageFinanceUserTagsPage from '@shared/pages/ManageFinanceUserTagsPage.vue'
+import RenameFinanceUserTagModal from '@features/financeUserTags/components/RenameFinanceUserTagModal.vue'
 import TagTypeSelect from '@features/financeUserTags/components/TagTypeSelect.vue'
 
 import { FINANCE_USER_TAGS_COPY } from '@features/financeUserTags/constants/copy'
@@ -49,6 +50,7 @@ const sharedAsserts = {
     const elements = [
       args.wrapper.findComponent(DeleteFinanceUserTagModal),
       args.wrapper.findComponent(FinanceUserTagGrid),
+      args.wrapper.findComponent(RenameFinanceUserTagModal),
       args.wrapper.findComponent(TagTypeSelect),
     ]
 

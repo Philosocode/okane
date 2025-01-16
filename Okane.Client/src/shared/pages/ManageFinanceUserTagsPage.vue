@@ -4,6 +4,7 @@ import { provide } from 'vue'
 
 // Internal
 import DeleteFinanceUserTagModal from '@features/financeUserTags/components/DeleteFinanceUserTagModal.vue'
+import RenameFinanceUserTagModal from '@features/financeUserTags/components/RenameFinanceUserTagModal.vue'
 import FinanceUserTagGrid from '@features/financeUserTags/components/FinanceUserTagGrid.vue'
 import Heading from '@shared/components/Heading.vue'
 import Loader from '@shared/components/loader/Loader.vue'
@@ -41,6 +42,7 @@ const {
 
       <FinanceUserTagGrid :user-tag-map="userTagMap" />
       <DeleteFinanceUserTagModal />
+      <RenameFinanceUserTagModal />
     </template>
 
     <p v-if="errorFetchingUserTags">{{ FINANCE_USER_TAGS_COPY.MANAGE_PAGE.FETCH_TAGS_ERROR }}</p>

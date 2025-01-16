@@ -3,6 +3,7 @@ export const SHARED_COPY = {
     CANCEL: 'Cancel',
     DELETE: 'Delete',
     EDIT: 'Edit',
+    RENAME: 'Rename',
     RESET: 'Reset',
     SAVE: 'Save',
   },

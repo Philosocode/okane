@@ -3,7 +3,13 @@ import FinanceUserTagGridItem from '@features/financeUserTags/components/Finance
 
 import { FINANCE_USER_TAGS_COPY } from '@features/financeUserTags/constants/copy'
 
+import {
+  MANAGE_FINANCE_USER_TAGS_PROVIDER_SYMBOL,
+  useManageFinanceUserTagsProvider,
+} from '@features/financeUserTags/providers/manageFinanceUserTagsProvider'
+
 import { createTestFinanceUserTag } from '@tests/factories/financeUserTag'
+import { flushPromises } from '@vue/test-utils'
 
 const mountComponent = getMountComponent(FinanceUserTagGridItem)
 
@@ -21,8 +27,18 @@ test('renders a rename button', () => {
   expect(icon).toBeDefined()
 })
 
-test('renders a delete button', () => {
-  const wrapper = mountComponent({ props: { userTag } })
+test('renders a delete button', async () => {
+  const provider = useManageFinanceUserTagsProvider()
+  const wrapper = mountComponent({
+    global: {
+      provide: {
+        [MANAGE_FINANCE_USER_TAGS_PROVIDER_SYMBOL]: provider,
+      },
+    },
+    props: { userTag },
+  })
   const icon = wrapper.findByText('title', FINANCE_USER_TAGS_COPY.MANAGE_PAGE.DELETE_FINANCE_TAG)
-  expect(icon).toBeDefined()
+  await icon.trigger('click')
+  await flushPromises()
+  expect(provider.userTagToDelete).toEqual(userTag)
 })

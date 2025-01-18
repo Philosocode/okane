@@ -49,7 +49,7 @@ public static class Endpoints
             .MapEndpoint<GetFinanceUserTag>()
             .MapEndpoint<GetFinanceUserTags>()
             .MapEndpoint<PostFinanceUserTag>()
-            .MapEndpoint<PostRenameFinanceUserTag>()
+            .MapEndpoint<PutRenameFinanceUserTag>()
             .MapEndpoint<DeleteFinanceUserTag>();
     }
 

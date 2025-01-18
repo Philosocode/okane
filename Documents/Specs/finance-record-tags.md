@@ -136,8 +136,8 @@ And we shouldn't remove the "gift" tag from any finance records of type "revenue
 3. Insert finance user tags that are in the request tags and not associated with the finance record
 4. Delete finance user tags that are associated with the finance record and not in the request tags
 
-### POST rename finance tag
-A POST endpoint should be created to support renaming a finance tag. For example, the client
+### PUT rename finance tag
+A PUT endpoint should be created to support renaming a finance tag. For example, the client
 may want to rename "revenue gift" to "revenue contribution" (or whatever).
 
 Request:
@@ -157,15 +157,16 @@ Request:
 6. Delete `finance_record_tags` with the current tag
 7. Delete the current finance tag
 
-#### Q: Why a POST endpoint?
-I didn't think PATCH was appropriate because we're not partially updating the finance user tag.
-This endpoint removes the finance user tag indicated by the URL parameter and returns a different
-(potentially newly-created) finance user tag.
+#### Q: Why a PUT endpoint? Why not POST or PATCH?
+I struggled with deciding on which verb to use. PATCH doesn't seem appropriate because we're not
+partially updating the finance tag. So that leaves POST vs PUT.
 
-PUT doesn't feel appropriate either. The user isn't passing in all the fields for a finance user tag
-(only the updated tag name). This endpoint also deletes the finance user tag being renamed. After
-renaming, if make a GET request to `/finance-user-tags/:renamed-id`, you would get a 404 because the
-finance user tag was deleted.
+I opted for PUT for a couple of reasons:
+- renaming a finance tag completely replaces it. The current finance tag is deleted and a new
+  one takes it place. This seemed more in-line with what you'd expect from a PUT
+- this endpoint is idempotent. As far as the server state is concerned, calling the endpoint
+  multiple times has the same effect as calling it once. (subsequent calls will fail because the
+  original finance tag will no longer exist)
 
 
 ## Referenced resources 🔗

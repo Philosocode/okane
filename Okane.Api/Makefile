@@ -3,7 +3,6 @@
 run:
 	dotnet run
 
-
 .PHONY: watch
 watch:
 	dotnet watch
@@ -15,4 +14,4 @@ build:
 
 .PHONY: test
 test:
-	dotnet test
+	dotnet test ../Okane.Api.Tests

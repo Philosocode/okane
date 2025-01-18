@@ -8,12 +8,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Emails.Services;
 using Okane.Api.Tests.Testing.Extensions;
 using Okane.Api.Tests.Testing.Mocks.Wrappers;
 using Respawn;
+using Serilog;
+using Serilog.AspNetCore;
+using Serilog.Events;
 using Testcontainers.PostgreSql;
 using ILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
 
@@ -86,7 +90,10 @@ public class PostgresApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifet
             services.AddScoped<ISmtpClientGenerator, TestingSmtpClientGenerator>();
 
             services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
+
             services.RemoveAll<IHostedService>();
         });
+
+        base.ConfigureWebHost(builder);
     }
 }

@@ -11,13 +11,17 @@ public static class ConfigureApp
 {
     public static async Task ConfigureAsync(this WebApplication app)
     {
-        app.UseSerilogRequestLogging();
-
         if (app.Environment.IsDevelopment())
         {
+            app.UseHttpLogging();
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI();
+        }
+
+        if (app.Environment.IsProduction())
+        {
+            app.UseSerilogRequestLogging();
         }
 
         app.UseStatusCodePages();

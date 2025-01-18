@@ -30,6 +30,7 @@ public static class ConfigureServices
         if (builder.Environment.IsDevelopment())
         {
             builder.Configuration.AddUserSecrets<Program>();
+            builder.Services.AddHttpLogging(_ => { });
         }
 
         builder.Host.UseSerilog((context, config) =>

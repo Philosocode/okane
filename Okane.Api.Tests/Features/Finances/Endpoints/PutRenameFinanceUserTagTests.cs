@@ -13,11 +13,11 @@ using Okane.Api.Tests.Testing.Utils;
 
 namespace Okane.Api.Tests.Features.Finances.Endpoints;
 
-public class PostRenameFinanceUserTagTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFactory)
+public class PutRenameFinanceUserTagTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFactory)
 {
     private readonly HttpClient _client = apiFactory.CreateClient();
 
-    private static readonly PostRenameFinanceUserTag.Request s_validRequest = new("updated-name");
+    private static readonly PutRenameFinanceUserTag.Request s_validRequest = new("updated-name");
 
     [Fact]
     public async Task ReplacesTheUserTagAndCreatesANewTag()
@@ -28,7 +28,7 @@ public class PostRenameFinanceUserTagTests(PostgresApiFactory apiFactory) : Data
         Db.Add(userTag);
         await Db.SaveChangesAsync();
 
-        var response = await _client.PostAsJsonAsync(
+        var response = await _client.PutAsJsonAsync(
             $"finance-user-tags/{userTag.Id}/rename",
             s_validRequest
         );
@@ -61,7 +61,7 @@ public class PostRenameFinanceUserTagTests(PostgresApiFactory apiFactory) : Data
         Db.Add(userTag);
         await Db.SaveChangesAsync();
 
-        var response = await _client.PostAsJsonAsync(
+        var response = await _client.PutAsJsonAsync(
             $"finance-user-tags/{userTag.Id}/rename",
             s_validRequest
         );
@@ -82,7 +82,7 @@ public class PostRenameFinanceUserTagTests(PostgresApiFactory apiFactory) : Data
         Db.AddRange(userTags);
         await Db.SaveChangesAsync();
 
-        var response = await _client.PostAsJsonAsync(
+        var response = await _client.PutAsJsonAsync(
             $"finance-user-tags/{userTags[0].Id}/rename",
             s_validRequest
         );
@@ -116,7 +116,7 @@ public class PostRenameFinanceUserTagTests(PostgresApiFactory apiFactory) : Data
         Db.AddRange(financeRecords);
         await Db.SaveChangesAsync();
 
-        var response = await _client.PostAsJsonAsync(
+        var response = await _client.PutAsJsonAsync(
             $"finance-user-tags/{userTags[0].Id}/rename",
             s_validRequest
         );
@@ -154,7 +154,7 @@ public class PostRenameFinanceUserTagTests(PostgresApiFactory apiFactory) : Data
         Db.AddRange(financeRecordDifferentType, financeRecordDifferentTags);
         await Db.SaveChangesAsync();
 
-        var response = await _client.PostAsJsonAsync(
+        var response = await _client.PutAsJsonAsync(
             $"finance-user-tags/{userTags[0].Id}/rename",
             s_validRequest
         );
@@ -198,7 +198,7 @@ public class PostRenameFinanceUserTagTests(PostgresApiFactory apiFactory) : Data
         Db.AddRange(otherFinanceRecord);
         await Db.SaveChangesAsync();
 
-        var response = await _client.PostAsJsonAsync(
+        var response = await _client.PutAsJsonAsync(
             $"finance-user-tags/{ownUserTags[0].Id}/rename",
             s_validRequest
         );
@@ -237,7 +237,7 @@ public class PostRenameFinanceUserTagTests(PostgresApiFactory apiFactory) : Data
         Db.Add(userTag);
         await Db.SaveChangesAsync();
 
-        var response = await _client.PostAsJsonAsync(
+        var response = await _client.PutAsJsonAsync(
             $"finance-user-tags/{userTag.Id}/rename",
             s_validRequest
         );
@@ -249,7 +249,7 @@ public class PostRenameFinanceUserTagTests(PostgresApiFactory apiFactory) : Data
     public async Task ReturnsNotFound_WhenUserTagToRenameDoesNotExist()
     {
         await _client.RegisterAndLogInTestUserAsync();
-        var response = await _client.PostAsJsonAsync("finance-user-tags/1/rename", s_validRequest);
+        var response = await _client.PutAsJsonAsync("finance-user-tags/1/rename", s_validRequest);
         response.Should().HaveStatusCode(HttpStatusCode.NotFound);
     }
 
@@ -266,7 +266,7 @@ public class PostRenameFinanceUserTagTests(PostgresApiFactory apiFactory) : Data
 
         await _client.RegisterAndLogInTestUserAsync();
 
-        var response = await _client.PostAsJsonAsync(
+        var response = await _client.PutAsJsonAsync(
             $"finance-user-tags/{userTags[0].Id}/rename",
             s_validRequest
         );

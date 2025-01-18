@@ -15,13 +15,13 @@ using Okane.Api.Shared.Exceptions;
 
 namespace Okane.Api.Features.Finances.Endpoints;
 
-public class PostRenameFinanceUserTag : IEndpoint
+public class PutRenameFinanceUserTag : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder builder)
     {
         builder
-            .MapPost("/{financeUserTagId:int}/rename", HandleAsync)
-            .WithName(FinanceRecordEndpointNames.PostRenameFinanceUserTag)
+            .MapPut("/{financeUserTagId:int}/rename", HandleAsync)
+            .WithName(FinanceRecordEndpointNames.PutRenameFinanceUserTag)
             .WithSummary("Rename a finance user tag.");
     }
 

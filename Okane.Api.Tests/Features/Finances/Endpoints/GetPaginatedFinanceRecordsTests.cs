@@ -1,8 +1,10 @@
+using System.Globalization;
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Okane.Api.Features.Finances.Constants;
 using Okane.Api.Features.Finances.Dtos;
 using Okane.Api.Features.Finances.Entities;
@@ -12,6 +14,7 @@ using Okane.Api.Shared.Dtos.ApiResponses;
 using Okane.Api.Tests.Testing.Constants;
 using Okane.Api.Tests.Testing.Integration;
 using Okane.Api.Tests.Testing.StubFactories;
+using Okane.Api.Tests.Testing.TestData;
 using Okane.Api.Tests.Testing.Utils;
 
 namespace Okane.Api.Tests.Features.Finances.Endpoints;
@@ -19,6 +22,27 @@ namespace Okane.Api.Tests.Features.Finances.Endpoints;
 public class GetPaginatedFinanceRecordsTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFactory), IAsyncLifetime
 {
     private readonly HttpClient _client = apiFactory.CreateClient();
+
+    private string GetCursorQueryString(FinanceRecord financeRecord, int pageSize, string sortField, string sortDirection)
+    {
+        var dict = new Dictionary<string, string?>
+        {
+            { "cursorId", financeRecord.Id.ToString() }
+        };
+
+        if (sortField == FinanceRecordSortFields.Amount)
+        {
+            dict.Add("cursorAmount", financeRecord.Amount.ToString(CultureInfo.CurrentCulture));
+        }
+        else
+        {
+            dict.Add("cursorHappenedAt", financeRecord.HappenedAt.ToString(CultureInfo.CurrentCulture));
+        }
+
+        dict.Add("sortDirection", sortDirection);
+
+        return QueryHelpers.AddQueryString("", dict);
+    }
 
     [Fact]
     public async Task ReturnsAPaginatedListOfFinanceRecords()
@@ -29,53 +53,56 @@ public class GetPaginatedFinanceRecordsTests(PostgresApiFactory apiFactory) : Da
         const int totalItems = pageSize + 1;
         for (var i = 0; i < totalItems; i++)
         {
-            financeRecords.Add(FinanceRecordStubFactory.Create(loginResponse.User.Id));
+            var financeRecord = FinanceRecordStubFactory.Create(loginResponse.User.Id);
+            financeRecord.Amount = i + 1;
+            financeRecords.Add(financeRecord);
         }
 
         await Db.AddRangeAsync(financeRecords);
         await Db.SaveChangesAsync();
 
-        var page1Response = await _client.GetAsync($"/finance-records?pageSize={pageSize}");
+        var queryString = $"pageSize={pageSize}&sortField=amount&sortDirection=asc";
+        var page1Response = await _client.GetAsync($"/finance-records?{queryString}");
         page1Response.Should().HaveStatusCode(HttpStatusCode.OK);
 
         var page1 = await page1Response
             .Content
             .ReadFromJsonAsync<ApiPaginatedResponse<FinanceRecordResponse>>();
 
-        page1?.TotalItems.Should().Be(totalItems);
-        page1?.HasPreviousPage.Should().BeFalse();
         page1?.HasNextPage.Should().BeTrue();
         page1?.Items.Should().BeEquivalentTo(new List<FinanceRecordResponse>
         {
-            financeRecords[2].ToFinanceRecordResponse(),
+            financeRecords[0].ToFinanceRecordResponse(),
             financeRecords[1].ToFinanceRecordResponse()
         });
 
-        var page2Response = await _client.GetAsync($"/finance-records?page=2&pageSize={pageSize}");
+        queryString = GetCursorQueryString(
+            financeRecords[1], pageSize, FinanceRecordSortFields.Amount, SortDirections.Asc
+        );
+        var page2Response = await _client.GetAsync($"/finance-records{queryString}");
         page2Response.Should().HaveStatusCode(HttpStatusCode.OK);
 
         var page2 = await page2Response
             .Content
             .ReadFromJsonAsync<ApiPaginatedResponse<FinanceRecordResponse>>();
 
-        page2?.TotalItems.Should().Be(totalItems);
-        page2?.HasPreviousPage.Should().BeTrue();
         page2?.HasNextPage.Should().BeFalse();
         page2?.Items.Should().BeEquivalentTo(new List<FinanceRecordResponse>
         {
-            financeRecords[0].ToFinanceRecordResponse()
+            financeRecords[2].ToFinanceRecordResponse()
         });
 
-        var page3Response = await _client.GetAsync($"/finance-records?page=3&pageSize={pageSize}");
+        queryString = GetCursorQueryString(
+            financeRecords[2], pageSize, FinanceRecordSortFields.Amount, SortDirections.Asc
+        );
+        var page3Response = await _client.GetAsync($"/finance-records{queryString}");
         page3Response.Should().HaveStatusCode(HttpStatusCode.OK);
 
         var page3 = await page3Response
             .Content
             .ReadFromJsonAsync<ApiPaginatedResponse<FinanceRecordResponse>>();
 
-        page3?.HasPreviousPage.Should().BeTrue();
         page3?.HasNextPage.Should().BeFalse();
-        page3?.TotalItems.Should().Be(totalItems);
         page3?.Items.Should().BeEmpty();
     }
 
@@ -130,35 +157,20 @@ public class GetPaginatedFinanceRecordsTests(PostgresApiFactory apiFactory) : Da
             .Content
             .ReadFromJsonAsync<ApiPaginatedResponse<FinanceRecordResponse>>();
 
-        financeRecords?.HasPreviousPage.Should().BeFalse();
+        // financeRecords?.HasPreviousPage.Should().BeFalse();
         financeRecords?.HasNextPage.Should().BeFalse();
-        financeRecords?.TotalItems.Should().Be(1);
+        // financeRecords?.TotalItems.Should().Be(1);
         financeRecords?.Items.Should().ContainSingle(
             r => r.Id == ownFinanceRecord.Id
         );
     }
 
     // Validate query parameters.
-    public static TheoryData<string, Dictionary<string, string[]>> InvalidSortQueryParameters => new()
-    {
-        {
-            "sortField=blah",
-            new Dictionary<string, string[]>
-            {
-                { "SortField", [FinanceRecordSortFields.AllowedFieldsMessage] }
-            }
-        },
-        {
-            "sortDirection=blah",
-            new Dictionary<string, string[]>
-            {
-                { "SortDirection", [SortDirections.AllowedOptionsValidationMessage] }
-            }
-        }
-    };
-
     [Theory]
-    [MemberData(nameof(InvalidSortQueryParameters))]
+    [ClassData(typeof(GetFinanceRecordsInvalidCursorQueryParameters))]
+    [ClassData(typeof(GetFinanceRecordsInvalidFilterQueryParameters))]
+    [ClassData(typeof(GetFinanceRecordsInvalidSortQueryParameters))]
+    [ClassData(typeof(InvalidPageQueryParameters))]
     public async Task ReturnsAValidationError_WhenAQueryParameterIsInvalid(
         string queryString,
         Dictionary<string, string[]> expectedErrors)
@@ -607,7 +619,7 @@ public class GetPaginatedFinanceRecordsTests(PostgresApiFactory apiFactory) : Da
     public async Task ReturnsAListOfFinanceRecords_FilteredByMultipleFields()
     {
         await AssertFinanceRecordsAreSortedAndFiltered(
-            "happenedAfter=2024-10-10T10:10:10.000Z&happenedBefore=2024-10-11T10:10:10.000Z&type=Revenue",
+            "happenedAfter=2024-10-10T10:10:10.000Z&happenedBefore=2024-10-11T10:10:10.000Z&type=Revenue&sortDirection=desc",
             userId =>
             {
                 var financeRecords = new List<FinanceRecord>
@@ -618,22 +630,22 @@ public class GetPaginatedFinanceRecordsTests(PostgresApiFactory apiFactory) : Da
                     FinanceRecordStubFactory.Create(userId),
                 };
 
-                var happenedAAfter = new DateTime(2024, 10, 10, 10, 10, 10, DateTimeKind.Utc);
+                var happenedAfter = new DateTime(2024, 10, 10, 10, 10, 10, DateTimeKind.Utc);
 
                 // Ignored due to type.
-                financeRecords[0].HappenedAt = happenedAAfter;
+                financeRecords[0].HappenedAt = happenedAfter;
                 financeRecords[0].Type = FinanceRecordType.Expense;
 
                 // Selected.
-                financeRecords[1].HappenedAt = happenedAAfter.AddHours(1);
+                financeRecords[1].HappenedAt = happenedAfter.AddHours(1);
                 financeRecords[1].Type = FinanceRecordType.Revenue;
 
                 // Ignored due to happenedAfter.
-                financeRecords[2].HappenedAt = happenedAAfter.AddMilliseconds(-1);
+                financeRecords[2].HappenedAt = happenedAfter.AddMilliseconds(-1);
                 financeRecords[2].Type = FinanceRecordType.Revenue;
 
                 // Selected.
-                financeRecords[3].HappenedAt = happenedAAfter.AddHours(1);
+                financeRecords[3].HappenedAt = happenedAfter.AddHours(1);
                 financeRecords[3].Type = FinanceRecordType.Revenue;
 
                 return financeRecords;

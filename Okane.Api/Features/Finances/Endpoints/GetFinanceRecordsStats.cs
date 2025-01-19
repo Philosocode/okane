@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Okane.Api.Features.Auth.Extensions;
@@ -24,14 +25,22 @@ public class GetFinanceRecordsStats : IEndpoint
 
     private record StatsByType(FinanceRecordType Type, int Count, decimal Sum);
 
-    private static async Task<Ok<ApiResponse<FinanceRecordsStats>>> HandleAsync(
+    private static async Task<Results<Ok<ApiResponse<FinanceRecordsStats>>, ValidationProblem>>
+        HandleAsync(
         ClaimsPrincipal claimsPrincipal,
         HttpContext context,
         ApiDbContext db,
         IFinanceRecordService financeRecordService,
         [AsParameters] FinanceRecordFilterQueryParameters filterParameters,
+        IValidator<FinanceRecordFilterQueryParameters> filterParametersValidator,
         CancellationToken cancellationToken)
     {
+        var validationResult = await filterParametersValidator.ValidateAsync(filterParameters, cancellationToken);
+        if (!validationResult.IsValid)
+        {
+            return TypedResults.ValidationProblem(validationResult.ToDictionary());
+        }
+
         var userId = claimsPrincipal.GetUserId();
         var query = financeRecordService.FilterQueryableFinanceRecords(
             db.FinanceRecords.AsNoTracking(),

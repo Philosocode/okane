@@ -46,43 +46,4 @@ public class FinanceRecordServiceTests
             filteredFinanceRecords.Should().BeEquivalentTo([financeRecords[1]]);
         }
     }
-
-    // Tested thoroughly in GetPaginatedFinanceRecordsTests.
-    public class SortQueryableFinanceRecords : DatabaseTest
-    {
-        private readonly HttpClient _client;
-        private readonly IFinanceRecordService _financeRecordService;
-
-        public SortQueryableFinanceRecords(PostgresApiFactory apiFactory) : base(apiFactory)
-        {
-            _client = apiFactory.CreateClient();
-            _financeRecordService = new FinanceRecordService(Db);
-        }
-
-        [Fact]
-        public async Task SortsFinanceRecords()
-        {
-            var authResponse = await _client.RegisterAndLogInTestUserAsync();
-
-            var financeRecords = new List<FinanceRecord>();
-            financeRecords.Add(FinanceRecordStubFactory.Create(authResponse.User.Id));
-            financeRecords.Add(FinanceRecordStubFactory.Create(authResponse.User.Id));
-
-            financeRecords[0].Amount = 3;
-            financeRecords[1].Amount = 1;
-
-            Db.AddRange(financeRecords);
-            await Db.SaveChangesAsync();
-
-            var query = _financeRecordService.SortQueryableFinanceRecords(
-                Db.FinanceRecords,
-                new FinanceRecordSortQueryParameters { SortField = "amount" }
-            );
-            var filteredFinanceRecords = await query.ToListAsync();
-            filteredFinanceRecords.Select(fr => fr.Id).Should().BeEquivalentTo([
-                financeRecords[1].Id,
-                financeRecords[0].Id
-            ]);
-        }
-    }
 }

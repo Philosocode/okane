@@ -1,6 +1,5 @@
 using FluentAssertions;
 using Okane.Api.Features.Finances.Entities;
-using Okane.Api.Infrastructure.Database;
 using Okane.Api.Shared.Dtos.ApiResponses;
 using Okane.Api.Shared.Dtos.QueryParameters;
 using Okane.Api.Tests.Testing.Integration;
@@ -13,7 +12,7 @@ public class ApiPaginatedResponseTests
 {
     public class CreateAsync(PostgresApiFactory apiFactory) : DatabaseTest(apiFactory)
     {
-        private async Task SetUp(int n = PageQueryParameters.DefaultPageSize)
+        private async Task SetUp(int n)
         {
             var user = UserUtils.AddApiUser(Db);
 
@@ -28,108 +27,40 @@ public class ApiPaginatedResponseTests
         }
 
         [Fact]
-        public async Task ReturnsTheTotalNumberOfItems()
+        public async Task HasNextPage_IsTrueIfThereAreMoreItems()
         {
-            var n = 5;
-            await SetUp(n);
+            var pageSize = 2;
+            await SetUp(pageSize + 1);
 
             var response = await ApiPaginatedResponse<FinanceRecord>.CreateAsync(
-                Db.FinanceRecords,
-                new PageQueryParameters()
+                Db.FinanceRecords, pageSize
             );
-
-            response.TotalItems.Should().Be(n);
-        }
-
-        [Fact]
-        public async Task HasNextPage_ReturnsIfThereAreMoreItems()
-        {
-            var n = 2;
-            await SetUp(n);
-
-            var response = await ApiPaginatedResponse<FinanceRecord>.CreateAsync(
-                Db.FinanceRecords,
-                new PageQueryParameters { PageSize = 1 }
-            );
-
             response.HasNextPage.Should().BeTrue();
+            response.Items.Should().HaveCount(pageSize);
 
+            var lastId = response.Items.Last().Id;
             response = await ApiPaginatedResponse<FinanceRecord>.CreateAsync(
-                Db.FinanceRecords,
-                new PageQueryParameters { Page = 2, PageSize = 1 }
+                Db.FinanceRecords.Where(fr => fr.Id > lastId), pageSize
             );
-
             response.HasNextPage.Should().BeFalse();
-        }
-
-        [Fact]
-        public async Task HasPreviousPage_ReturnsIfTheresAPreviousPage()
-        {
-            await SetUp();
-
-            var response = await ApiPaginatedResponse<FinanceRecord>.CreateAsync(
-                Db.FinanceRecords,
-                new PageQueryParameters { Page = PageQueryParameters.InitialPage }
-            );
-
-            response.HasPreviousPage.Should().BeFalse();
-
-            response = await ApiPaginatedResponse<FinanceRecord>.CreateAsync(
-                Db.FinanceRecords,
-                new PageQueryParameters { Page = PageQueryParameters.InitialPage + 1 }
-            );
-
-            response.HasPreviousPage.Should().BeTrue();
-        }
-
-        [Fact]
-        public async Task ReplacesNullQueryParametersWithDefaultValues()
-        {
-            await SetUp();
-
-            var query = Db.FinanceRecords;
-            var response = await ApiPaginatedResponse<FinanceRecord>.CreateAsync(
-                query,
-                new PageQueryParameters()
-            );
-
-            response.CurrentPage.Should().Be(PageQueryParameters.InitialPage);
-            response.PageSize.Should().Be(PageQueryParameters.DefaultPageSize);
+            response.Items.Should().HaveCount(pageSize - 1);
         }
 
         [Fact]
         public async Task ReplacesInvalidPagesWithADefaultValue()
         {
-            await SetUp();
+            await SetUp(PageQueryParameters.MinPageSize);
 
             var query = Db.FinanceRecords;
-            var response = await ApiPaginatedResponse<FinanceRecord>.CreateAsync(
-                query,
-                new PageQueryParameters { Page = -1 }
-            );
 
-            response.CurrentPage.Should().Be(PageQueryParameters.InitialPage);
-
-            response = await ApiPaginatedResponse<FinanceRecord>.CreateAsync(
-                query,
-                new PageQueryParameters { Page = 0 }
-            );
-
-            response.CurrentPage.Should().Be(PageQueryParameters.InitialPage);
-        }
-
-        [Fact]
-        public async Task ReplacesInvalidPageSizesWithADefaultValue()
-        {
-            await SetUp();
-
-            var query = Db.FinanceRecords;
-            var response = await ApiPaginatedResponse<FinanceRecord>.CreateAsync(
-                query,
-                new PageQueryParameters { PageSize = 0 }
-            );
-
-            response.PageSize.Should().Be(PageQueryParameters.MinPageSize);
+            int?[] invalidPageSizes = [null, 0, -1];
+            foreach (var invalidPageSize in invalidPageSizes)
+            {
+                var response = await ApiPaginatedResponse<FinanceRecord>.CreateAsync(
+                    Db.FinanceRecords, invalidPageSize
+                );
+                response.Items.Should().HaveCount(PageQueryParameters.MinPageSize);
+            }
         }
     }
 }

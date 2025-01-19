@@ -1,11 +1,15 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Okane.Api.Features.Finances.Dtos;
 using Okane.Api.Features.Finances.Entities;
 using Okane.Api.Shared.Dtos.ApiResponses;
+using Okane.Api.Tests.Testing.Constants;
 using Okane.Api.Tests.Testing.Integration;
 using Okane.Api.Tests.Testing.StubFactories;
+using Okane.Api.Tests.Testing.TestData;
 using Okane.Api.Tests.Testing.Utils;
 
 namespace Okane.Api.Tests.Features.Finances.Endpoints;
@@ -205,5 +209,21 @@ public class GetFinanceRecordsStatsTests(PostgresApiFactory apiFactory) : Databa
             ExpenseRecords = 1,
             TotalExpenses = ownRecord.Amount
         });
+    }
+
+    [Theory]
+    [ClassData(typeof(GetFinanceRecordsInvalidFilterQueryParameters))]
+    public async Task ReturnsAValidationError_WhenQueryStringIsInvalid(
+        string queryString,
+        Dictionary<string, string[]> expectedErrors)
+    {
+        await _client.RegisterAndLogInTestUserAsync();
+        var response = await _client.GetAsync($"/finance-records/stats?{queryString}");
+        response.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+        var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+        problemDetails?.Status.Should().Be(StatusCodes.Status400BadRequest);
+        problemDetails?.Title.Should().Be(ValidationConstants.ValidationErrorTitle);
+        problemDetails?.Errors.Should().BeEquivalentTo(expectedErrors);
     }
 }

@@ -6,44 +6,29 @@ namespace Okane.Api.Shared.Dtos.ApiResponses;
 
 public record ApiPaginatedResponse<TItem> : ApiResponse<TItem>
 {
-    public required int CurrentPage { get; init; }
-    public required int PageSize { get; init; }
-
-    public required int TotalItems { get; init; }
-    public bool HasNextPage => TotalItems > CurrentPage * PageSize;
-    public bool HasPreviousPage => CurrentPage > PageQueryParameters.InitialPage;
+    public required bool HasNextPage { get; init; }
 
     public static async Task<ApiPaginatedResponse<TItem>> CreateAsync(
         IQueryable<TItem> query,
-        PageQueryParameters queryParameters)
+        int? pageSize)
     {
-        var page = queryParameters.Page ?? PageQueryParameters.InitialPage;
+        var size = pageSize ?? PageQueryParameters.DefaultPageSize;
+        size = int.Max(PageQueryParameters.MinPageSize, size);
 
-        // Prevent a user from passing an invalid page number.
-        page = int.Max(page, PageQueryParameters.InitialPage);
+        // By fetching one extra item, we can check that there are more items available.
+        var items = await query.Take(size + 1).ToListAsync();
+        var hasNextPage = items.Count >= size;
 
-        var pageSize = queryParameters.PageSize ?? PageQueryParameters.DefaultPageSize;
-
-        // Prevent a user from passing an invalid page size.
-        pageSize = int.Max(PageQueryParameters.MinPageSize, pageSize);
-
-        return await CreateAsync(query, page, pageSize);
-    }
-
-    private static async Task<ApiPaginatedResponse<TItem>> CreateAsync(
-        IQueryable<TItem> query,
-        int page,
-        int pageSize)
-    {
-        var totalItems = await query.CountAsync();
-        var pageIndex = page - 1;
-        var items = await query.Skip(pageIndex * pageSize).Take(pageSize).ToListAsync();
+        // Extra item was fetched to check if there's a next page, but we don't want to include it
+        // in the response.
+        if (items.Count > size)
+        {
+            items.RemoveAt(items.Count - 1);
+        }
 
         return new ApiPaginatedResponse<TItem>
         {
-            CurrentPage = page,
-            PageSize = pageSize,
-            TotalItems = totalItems,
+            HasNextPage = hasNextPage,
             Items = items,
             Status = HttpStatusCode.OK
         };

@@ -6,11 +6,13 @@ import { type QueryFunctionContext, useInfiniteQuery } from '@tanstack/vue-query
 // Internal
 import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
-import { INITIAL_PAGE } from '@shared/constants/request'
 
 import { type APIPaginatedResponse } from '@shared/services/apiClient/types'
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
-import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
+import {
+  type FinanceRecordsSearchCursor,
+  type FinanceRecordsSearchFilters,
+} from '@features/financeRecords/types/searchFinanceRecords'
 
 import { useCleanUpInfiniteQuery } from '@shared/composables/useCleanUpInfiniteQuery'
 
@@ -21,16 +23,17 @@ import {
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
+import { getFinanceRecordsSearchCursor } from '@features/financeRecords/utils/searchFinanceRecords'
+
 export function fetchPaginatedFinanceRecords({
   pageParam,
   queryKey,
   signal,
 }: QueryFunctionContext): Promise<APIPaginatedResponse<FinanceRecord>> {
   const searchFilters = queryKey[queryKey.length - 1] as FinanceRecordsSearchFilters
-  const url = financeRecordAPIRoutes.getPaginatedList({
-    page: pageParam,
-    searchFilters,
-  })
+  const cursor = pageParam as FinanceRecordsSearchCursor
+  const url = financeRecordAPIRoutes.getPaginatedList({ cursor, searchFilters })
+
   return apiClient.get(url, { signal })
 }
 
@@ -45,9 +48,10 @@ export function useInfiniteQueryFinanceRecords() {
   return useInfiniteQuery({
     queryKey,
     queryFn: fetchPaginatedFinanceRecords,
-    initialPageParam: INITIAL_PAGE,
-    getNextPageParam: (lastPage, _, lastPageParam) => {
-      return lastPage.hasNextPage ? lastPageParam + 1 : undefined
+    initialPageParam: {} as FinanceRecordsSearchCursor,
+    getNextPageParam: (lastPage, _) => {
+      if (!lastPage.hasNextPage) return null
+      return getFinanceRecordsSearchCursor(searchProvider.filters, lastPage.items[0])
     },
   })
 }

@@ -1,8 +1,8 @@
 // External
-import type { InfiniteData } from '@tanstack/vue-query'
+import { type InfiniteData } from '@tanstack/vue-query'
 
 // Internal
-import type { APIPaginatedResponse } from '@shared/services/apiClient/types'
+import { type APIPaginatedResponse } from '@shared/services/apiClient/types'
 
 export function flattenPages<T>(pages?: APIPaginatedResponse<T>[]) {
   return pages?.flatMap((page) => page.items) ?? []
@@ -23,14 +23,9 @@ export function removeItemFromPages<TItem>(
   return {
     ...data,
     pages: data.pages.map((page) => {
-      let totalItems = page.totalItems
-      const filteredItems = page.items.filter(shouldIncludeItem)
-      if (filteredItems.length != page.items.length) totalItems--
-
       return {
         ...page,
-        totalItems,
-        items: filteredItems,
+        items: page.items.filter(shouldIncludeItem),
       }
     }),
   }

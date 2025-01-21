@@ -6,22 +6,22 @@ import { DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS } from '@features/financeRecords
 import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 
-import type { FinanceRecord } from '@features/financeRecords/types/financeRecord'
-import type { FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
+import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
+import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
 
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { getMSWURL } from '@tests/utils/url'
 import { wrapInAPIPaginatedResponse, wrapInAPIResponse } from '@tests/utils/apiResponse'
 
 export const financeRecordHandlers = {
-  deleteFinanceRecordSuccess({ id }: { id: number }) {
-    const url = getMSWURL(financeRecordAPIRoutes.deleteFinanceRecord({ id }))
+  deleteFinanceRecordSuccess(args: { id: number }) {
+    const url = getMSWURL(financeRecordAPIRoutes.deleteFinanceRecord({ id: args.id }))
     return http.delete(url, () => {
       return new HttpResponse(null, { status: HTTP_STATUS_CODE.NO_CONTENT_204 })
     })
   },
-  deleteFinanceRecordError({ id }: { id: number }) {
-    const url = getMSWURL(financeRecordAPIRoutes.deleteFinanceRecord({ id }))
+  deleteFinanceRecordError(args: { id: number }) {
+    const url = getMSWURL(financeRecordAPIRoutes.deleteFinanceRecord({ id: args.id }))
     const status = HTTP_STATUS_CODE.BAD_REQUEST_400
 
     return http.delete(url, () => {
@@ -37,7 +37,12 @@ export const financeRecordHandlers = {
     searchFilters: FinanceRecordsSearchFilters
     hasNextPage?: boolean
   }) {
-    const url = getMSWURL(financeRecordAPIRoutes.getPaginatedList({ page: 0, searchFilters }))
+    const url = getMSWURL(
+      financeRecordAPIRoutes.getPaginatedList({
+        cursor: {},
+        searchFilters,
+      }),
+    )
     return http.get(url, () => {
       return HttpResponse.json({
         ...wrapInAPIPaginatedResponse(wrapInAPIResponse(financeRecords)),
@@ -45,17 +50,22 @@ export const financeRecordHandlers = {
       })
     })
   },
-  getPaginatedFinanceRecordsError({ detail }: { detail?: string }) {
+  getPaginatedFinanceRecordsError(args: { detail?: string }) {
     const url = getMSWURL(
       financeRecordAPIRoutes.getPaginatedList({
-        page: 0,
+        cursor: {},
         searchFilters: DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,
       }),
     )
     return http.get(url, () => {
-      return HttpResponse.json(createTestProblemDetails({ detail }), {
-        status: HTTP_STATUS_CODE.BAD_REQUEST_400,
-      })
+      return HttpResponse.json(
+        createTestProblemDetails({
+          detail: args.detail,
+        }),
+        {
+          status: HTTP_STATUS_CODE.BAD_REQUEST_400,
+        },
+      )
     })
   },
 } as const

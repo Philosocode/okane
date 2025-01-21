@@ -1,7 +1,7 @@
 // Internal
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 
-import type { APIPaginatedResponse, APIResponse } from '@shared/services/apiClient/types'
+import { type APIPaginatedResponse, type APIResponse } from '@shared/services/apiClient/types'
 
 export function wrapInAPIResponse<TData>(
   data: TData | TData[],
@@ -17,13 +17,8 @@ export function wrapInAPIPaginatedResponse<TData>(
   response: APIResponse<TData>,
   overrides?: Partial<APIPaginatedResponse<TData>>,
 ): APIPaginatedResponse<TData> {
-  const pageSize = response.items.length
-
   return {
     hasNextPage: true,
-    pageSize,
-    currentPage: 1,
-    totalItems: pageSize * 10,
     ...response,
     ...overrides,
   }

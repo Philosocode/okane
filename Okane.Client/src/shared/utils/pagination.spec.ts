@@ -11,7 +11,7 @@ describe('flattenPages', () => {
   test('returns a flattened array of items', () => {
     const pages = [
       wrapInAPIPaginatedResponse(wrapInAPIResponse([1, 2, 3])),
-      wrapInAPIPaginatedResponse(wrapInAPIResponse([4, 5]), { currentPage: 2, pageSize: 3 }),
+      wrapInAPIPaginatedResponse(wrapInAPIResponse([4, 5])),
     ]
     const result = utils.flattenPages(pages)
 
@@ -43,7 +43,6 @@ describe('removeItemFromPages', () => {
         {
           ...data.pages[0],
           items: [],
-          totalItems: data.pages[0].totalItems - 1,
         },
         data.pages[1],
         data.pages[2],

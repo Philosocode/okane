@@ -1,23 +1,34 @@
 // Internal
-import { DEFAULT_PAGE_SIZE, INITIAL_PAGE } from '@shared/constants/request'
+import { DEFAULT_PAGE_SIZE } from '@shared/constants/request'
 
-import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
+import {
+  type FinanceRecordsSearchCursor,
+  type FinanceRecordsSearchFilters,
+} from '@features/financeRecords/types/searchFinanceRecords'
 
 import { mapFinanceRecordsSearchFilters } from '@features/financeRecords/utils/mappers'
 
 const basePath = '/finance-records'
 
 export const financeRecordAPIRoutes = {
-  getPaginatedList({
-    page = INITIAL_PAGE,
-    searchFilters,
-  }: {
-    page: unknown
+  getPaginatedList(args: {
+    cursor: FinanceRecordsSearchCursor
     searchFilters: FinanceRecordsSearchFilters
   }) {
+    const { cursor, searchFilters } = args
     const searchParams = mapFinanceRecordsSearchFilters.to.URLSearchParams(searchFilters)
-    searchParams.append('page', `${page}`)
     searchParams.append('pageSize', DEFAULT_PAGE_SIZE.toString())
+
+    if (cursor.id) {
+      searchParams.append('cursorId', cursor.id.toString())
+      searchParams.delete('sortField')
+
+      if (cursor.amount) {
+        searchParams.append('cursorAmount', cursor.amount.toString())
+      } else if (cursor.happenedAt) {
+        searchParams.append('cursorHappenedAt', cursor.happenedAt.toString())
+      }
+    }
 
     return `${basePath}?${searchParams.toString()}`
   },

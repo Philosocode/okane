@@ -7,8 +7,8 @@ import { financeRecordQueryKeys } from '@features/financeRecords/constants/query
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
-import type { APIPaginatedResponse } from '@shared/services/apiClient/types'
-import type { FinanceRecord } from '@features/financeRecords/types/financeRecord'
+import { type APIPaginatedResponse } from '@shared/services/apiClient/types'
+import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
 
 import { removeItemFromPages } from '@shared/utils/pagination'
 import { useSearchFinanceRecordsProvider } from '@features/financeRecords/providers/searchFinanceRecordsProvider'

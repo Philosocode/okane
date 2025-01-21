@@ -21,3 +21,11 @@ export type FinanceRecordsSearchFilters = {
 
   tags: Tag[]
 }
+
+export type FinanceRecordsSearchCursor = {
+  id?: number
+
+  // Only one of these two fields should be set.
+  amount?: number
+  happenedAt?: Date
+}

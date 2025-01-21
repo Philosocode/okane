@@ -1,13 +1,14 @@
 <script setup lang="ts">
 // External
 import { computed } from 'vue'
-import type { InfiniteData, UseInfiniteQueryReturnType } from '@tanstack/vue-query'
+
+import { type InfiniteData, type UseInfiniteQueryReturnType } from '@tanstack/vue-query'
 
 // Internal
 import Loader from '@shared/components/loader/Loader.vue'
 import Observer from '@shared/components/Observer.vue'
 
-import type { APIPaginatedResponse } from '@shared/services/apiClient/types'
+import { type APIPaginatedResponse } from '@shared/services/apiClient/types'
 
 type Props = {
   items: unknown[]

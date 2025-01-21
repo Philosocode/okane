@@ -1,6 +1,6 @@
 // External
 import { flushPromises } from '@vue/test-utils'
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, watchEffect } from 'vue'
 import { http, HttpResponse } from 'msw'
 
 // Internal
@@ -46,6 +46,10 @@ function getTestComponent(errorTemplate?: string) {
     setup() {
       const queryResult = useInfiniteQueryFinanceRecords()
       const items = computed(() => flattenPages(queryResult?.data?.value?.pages ?? []))
+
+      watchEffect(() => {
+        console.log('items', items.value)
+      })
 
       return { queryResult, items }
     },
@@ -103,10 +107,6 @@ function mountComponent(errorTemplate?: string) {
   })()
 }
 
-const financeRecords = getRange({ end: DEFAULT_PAGE_SIZE * 2 + 1 }).map((_) =>
-  createTestFinanceRecord({}),
-)
-
 beforeAll(() => {
   vi.stubGlobal('IntersectionObserver', setUpIntersectionObserverMock({ isIntersecting: true }))
 })
@@ -114,6 +114,10 @@ beforeAll(() => {
 afterAll(() => {
   vi.unstubAllGlobals()
 })
+
+const financeRecords = getRange({ end: DEFAULT_PAGE_SIZE * 2 + 1 }).map((i) =>
+  createTestFinanceRecord({ id: i }),
+)
 
 test('renders a loader while fetching items', async () => {
   testServer.use(
@@ -243,28 +247,43 @@ describe('when the response contains an error', () => {
 })
 
 describe(`when there are more pages to fetch page`, () => {
-  const page2FinanceRecord = createTestFinanceRecord({ description: 'page2FinanceRecord' })
-  const page3FinanceRecord = createTestFinanceRecord({ description: 'page3FinanceRecord' })
+  const page1FinanceRecord = createTestFinanceRecord({
+    id: 1,
+    description: 'page1FinanceRecord',
+  })
+  const page2FinanceRecord = createTestFinanceRecord({
+    id: 2,
+    description: 'page2FinanceRecord',
+  })
+  const page3FinanceRecord = createTestFinanceRecord({
+    id: 3,
+    description: 'page3FinanceRecord',
+  })
 
   beforeEach(() => {
-    const apiRoute = getMSWURL(financeRecordAPIRoutes.getPaginatedList({ page: 0, searchFilters }))
+    const apiRoute = getMSWURL(
+      financeRecordAPIRoutes.getPaginatedList({
+        cursor: {},
+        searchFilters,
+      }),
+    )
 
     testServer.use(
       http.get(
         apiRoute,
         withSearchParams(
-          (searchParams) => searchParams.get('page') === '1',
+          (searchParams) => !searchParams.has('cursorId'),
           () => {
-            return HttpResponse.json(wrapInAPIPaginatedResponse(wrapInAPIResponse(financeRecords)))
+            return HttpResponse.json(
+              wrapInAPIPaginatedResponse(wrapInAPIResponse([page1FinanceRecord])),
+            )
           },
         ),
       ),
       http.get(
         apiRoute,
         withSearchParams(
-          (searchParams) => {
-            return searchParams.get('page') === '2'
-          },
+          (searchParams) => searchParams.get('cursorId') === page1FinanceRecord.id.toString(),
           () => {
             return HttpResponse.json(
               wrapInAPIPaginatedResponse(wrapInAPIResponse([page2FinanceRecord])),
@@ -275,7 +294,9 @@ describe(`when there are more pages to fetch page`, () => {
       http.get(
         apiRoute,
         withSearchParams(
-          (searchParams) => searchParams.get('page') === '3',
+          (searchParams) => {
+            return searchParams.get('cursorId') === page2FinanceRecord.id.toString()
+          },
           () => {
             return HttpResponse.json(
               wrapInAPIPaginatedResponse(wrapInAPIResponse([page3FinanceRecord]), {
@@ -303,17 +324,17 @@ describe(`when there are more pages to fetch page`, () => {
 
   test(`fetches subsequent pages while there's a next page`, async () => {
     const wrapper = mountComponent()
-
     await flushPromises()
 
+    const page1FinanceRecordDescription = wrapper.findByText('div', page1FinanceRecord.description)
     let page2FinanceRecordDescription = wrapper.findByText('div', page2FinanceRecord.description)
     let page3FinanceRecordDescription = wrapper.findByText('div', page3FinanceRecord.description)
 
+    expect(page1FinanceRecordDescription).toBeDefined()
     expect(page2FinanceRecordDescription).toBeUndefined()
     expect(page3FinanceRecordDescription).toBeUndefined()
 
     let loadMoreButton = wrapper.get(`button[data-testid="${testIds.loadMoreButton}"]`)
-
     await loadMoreButton.trigger('click')
     await flushPromises()
 
@@ -327,10 +348,7 @@ describe(`when there are more pages to fetch page`, () => {
     await loadMoreButton.trigger('click')
     await flushPromises()
 
-    page2FinanceRecordDescription = wrapper.findByText('div', page2FinanceRecord.description)
     page3FinanceRecordDescription = wrapper.findByText('div', page3FinanceRecord.description)
-
-    expect(page2FinanceRecordDescription).toBeDefined()
     expect(page3FinanceRecordDescription).toBeDefined()
   })
 })

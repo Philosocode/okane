@@ -4,10 +4,7 @@ export interface APIResponse<TItem = unknown> {
 }
 
 export interface APIPaginatedResponse<TItem = unknown> extends APIResponse<TItem> {
-  currentPage: number
   hasNextPage: boolean
-  pageSize: number
-  totalItems: number
 }
 
 // See: https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.problemdetails?view=aspnetcore-8.0#properties

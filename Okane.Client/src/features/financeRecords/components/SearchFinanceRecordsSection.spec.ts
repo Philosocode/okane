@@ -30,6 +30,9 @@ function mountComponent(
       provide: {
         [SEARCH_FINANCE_RECORDS_SYMBOL]: args.searchProvider ?? useSearchFinanceRecordsProvider(),
       },
+      stubs: {
+        teleport: true,
+      },
     },
     withQueryClient: true,
     withRouter: args.router ?? true,

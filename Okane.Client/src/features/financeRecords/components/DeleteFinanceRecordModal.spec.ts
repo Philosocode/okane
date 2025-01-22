@@ -73,10 +73,10 @@ test('renders the modal heading', () => {
   expect(heading.text()).toBe(FINANCES_COPY.DELETE_FINANCE_RECORD_MODAL.DELETE_FINANCE_RECORD)
 })
 
-test('renders an accessible dialog', () => {
+test('renders an accessible modal', () => {
   const deleteProvider = helpers.getDeleteProviderWithIdSet()
   const wrapper = mountComponentWithDeleteProvider(deleteProvider)
-  commonAsserts.rendersAnAccessibleDialog({ dialog: wrapper.get('dialog') })
+  commonAsserts.rendersAnAccessibleModal({ wrapper })
 })
 
 test('renders the confirmation text', () => {

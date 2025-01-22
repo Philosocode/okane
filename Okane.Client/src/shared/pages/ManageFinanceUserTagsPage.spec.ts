@@ -40,6 +40,9 @@ function mountComponent(
       provide: {
         [MANAGE_FINANCE_USER_TAGS_PROVIDER_SYMBOL]: useManageFinanceUserTagsProvider(),
       },
+      stubs: {
+        teleport: true,
+      },
     },
     withQueryClient: true,
   })(args.mountingOptions)

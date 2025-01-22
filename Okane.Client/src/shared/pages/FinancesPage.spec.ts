@@ -46,6 +46,7 @@ const mountComponent = getMountComponent(FinancesPage, {
       SearchFiltersSection: {
         template: `<div data-testid="${testIds.SearchFiltersSection}" />`,
       },
+      teleport: true,
       TotalRevenueAndExpenses: {
         template: `<div data-testid="${testIds.TotalRevenueAndExpenses}" />`,
       },

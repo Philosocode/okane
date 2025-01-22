@@ -16,7 +16,15 @@ import { testServer } from '@tests/msw/testServer'
 function mountComponent() {
   testServer.use(authHandlers.getPasswordRequirementsSuccess())
 
-  return getMountComponent(AccountPage, { withQueryClient: true, withRouter: true })()
+  return getMountComponent(AccountPage, {
+    global: {
+      stubs: {
+        teleport: true,
+      },
+    },
+    withQueryClient: true,
+    withRouter: true,
+  })()
 }
 
 test('renders a heading', async () => {

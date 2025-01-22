@@ -92,7 +92,7 @@ function handleClick(callback: MenuAction['onClick']) {
   overflow: hidden;
   position: absolute;
   transform: translate(-0.5rem, 3.25rem);
-  z-index: 1;
+  z-index: var(--z-index-toggle-menu);
 }
 
 .menu-item {

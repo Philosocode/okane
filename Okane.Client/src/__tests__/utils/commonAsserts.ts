@@ -5,13 +5,21 @@ import { type DOMWrapper, type VueWrapper } from '@vue/test-utils'
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 
 import { ARIA_ATTRIBUTES } from '@shared/constants/aria'
+import { TEST_IDS } from '@shared/constants/testIds'
 
 import { type SelectOption } from '@shared/components/form/FormSelect.vue'
 
 export const commonAsserts = {
-  rendersAnAccessibleDialog(args: { dialog: Omit<DOMWrapper<Element>, 'exists'> }) {
-    const dialogLabelledBy = args.dialog.attributes(ARIA_ATTRIBUTES.LABELLED_BY)
-    const heading = args.dialog.getComponent(ModalHeading)
+  rendersAnAccessibleModal({
+    wrapper,
+    selector = `[data-testid="${TEST_IDS.MODAL}"]`,
+  }: {
+    wrapper: VueWrapper
+    selector?: string
+  }) {
+    const modal = wrapper.get(selector)
+    const dialogLabelledBy = modal.attributes(ARIA_ATTRIBUTES.LABELLED_BY)
+    const heading = modal.getComponent(ModalHeading)
     expect(heading.attributes('id')).toBe(dialogLabelledBy)
   },
   rendersExpectedSelectOptions(args: {

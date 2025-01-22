@@ -5,6 +5,7 @@ import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
 
 // Internal
 import NavBar from '@shared/components/NavBar.vue'
+import Toaster from '@shared/components/toast/Toaster.vue'
 </script>
 
 <template>
@@ -12,5 +13,6 @@ import NavBar from '@shared/components/NavBar.vue'
     <NavBar />
   </header>
   <RouterView />
+  <Toaster />
   <VueQueryDevtools buttonPosition="bottom-left" />
 </template>

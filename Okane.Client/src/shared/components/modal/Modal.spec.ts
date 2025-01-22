@@ -1,9 +1,13 @@
+// External
+import { type VueWrapper } from '@vue/test-utils'
+
 // Internal
 import Modal from '@shared/components/modal/Modal.vue'
 
 import { ARIA_ATTRIBUTES } from '@shared/constants/aria'
 import { DATA_ATTRIBUTES } from '@shared/constants/dataAttributes'
 import { SHARED_COPY } from '@shared/constants/copy'
+import { TEST_IDS } from '@shared/constants/testIds'
 
 const props = {
   isShowing: true,
@@ -18,30 +22,41 @@ const mountComponent = getMountComponent(Modal, {
   },
 })
 
-// TODO: Expand on these tests.
-// These tests are a bit bare-bones because, at the moment, jsdom doesn't properly support
-// HTMLDialogElement (e.g. show, showModal, close). See: https://github.com/jsdom/jsdom/issues/3294
-test('renders a dialog', () => {
+const elements = {
+  backdrop(wrapper: VueWrapper) {
+    return wrapper.find(`[data-testid="${TEST_IDS.MODAL_BACKDROP}"]`)
+  },
+  modal(wrapper: VueWrapper) {
+    return wrapper.find(`[data-testid="${TEST_IDS.MODAL}"]`)
+  },
+}
+
+test('renders a backdrop', () => {
   const wrapper = mountComponent({ props })
-  const dialog = wrapper.get('dialog')
-  expect(dialog.attributes(ARIA_ATTRIBUTES.MODAL)).toBe('true')
-  expect(dialog.attributes(ARIA_ATTRIBUTES.LABELLED_BY)).toBe(props.modalHeadingId)
-  expect(dialog.attributes(DATA_ATTRIBUTES.DISABLE_DOCUMENT_SCROLL)).toBe('true')
+  expect(elements.backdrop(wrapper).exists()).toBe(true)
 })
 
-test('does not render the modal content when the modal is hidden', () => {
+test('renders a modal', () => {
+  const wrapper = mountComponent({ props })
+  const modal = elements.modal(wrapper)
+  expect(modal.attributes(ARIA_ATTRIBUTES.MODAL)).toBe('true')
+  expect(modal.attributes(ARIA_ATTRIBUTES.LABELLED_BY)).toBe(props.modalHeadingId)
+  expect(modal.attributes(DATA_ATTRIBUTES.DISABLE_DOCUMENT_SCROLL)).toBe('true')
+})
+
+test('does not render the modal or backdrop when the modal is hidden', () => {
   const wrapper = mountComponent({
     props: { ...props, isShowing: false },
   })
 
-  const dialog = wrapper.get('dialog')
-  expect(dialog.attributes(DATA_ATTRIBUTES.DISABLE_DOCUMENT_SCROLL)).toBe('false')
+  const backdrop = elements.backdrop(wrapper)
+  expect(backdrop.exists()).toBe(false)
 
-  const button = wrapper.find('button')
-  expect(button.exists()).toBe(false)
+  const modal = elements.modal(wrapper)
+  expect(modal.exists()).toBe(false)
 })
 
-test('renders a close button that closes the modal', async () => {
+test('renders a button to close the modal', async () => {
   const wrapper = mountComponent({ props })
   const closeButton = wrapper.get('button')
   const title = closeButton.get('title')
@@ -66,6 +81,17 @@ test('passes extra attributes', () => {
   const wrapper = mountComponent({
     props: { ...props, id },
   })
-  const dialog = wrapper.find(`#${id}`)
-  expect(dialog.exists()).toBe(true)
+  const modal = wrapper.find(`#${id}`)
+  expect(modal.exists()).toBe(true)
+})
+
+test('closes the modal when clicking the backdrop', async () => {
+  const wrapper = mountComponent({
+    attachTo: document.body,
+    props,
+  })
+  const backdrop = elements.backdrop(wrapper)
+  expect(wrapper.emitted('close')).toBeUndefined()
+  await backdrop.trigger('click')
+  expect(wrapper.emitted('close')).toBeDefined()
 })

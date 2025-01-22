@@ -2,6 +2,7 @@ export const SHARED_COPY = {
   ACTIONS: {
     CANCEL: 'Cancel',
     DELETE: 'Delete',
+    DISMISS: 'Dismiss',
     EDIT: 'Edit',
     RENAME: 'Rename',
     RESET: 'Reset',

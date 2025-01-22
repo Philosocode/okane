@@ -56,7 +56,7 @@ test('renders the modal heading', () => {
 
 test('renders an accessible dialog', () => {
   const wrapper = mountComponent()
-  commonAsserts.rendersAnAccessibleDialog({ dialog: wrapper.get('dialog') })
+  commonAsserts.rendersAnAccessibleModal({ wrapper })
 })
 
 test('renders the form inputs', () => {

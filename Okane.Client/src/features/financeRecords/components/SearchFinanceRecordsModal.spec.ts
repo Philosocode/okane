@@ -49,9 +49,9 @@ test('renders the modal heading', () => {
   expect(modalHeading.text()).toBe(FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.EDIT_SEARCH_FILTERS)
 })
 
-test('renders an accessible dialog', () => {
+test('renders an accessible modal', () => {
   const wrapper = mountWithProviders()
-  commonAsserts.rendersAnAccessibleDialog({ dialog: wrapper.get('dialog') })
+  commonAsserts.rendersAnAccessibleModal({ wrapper })
 })
 
 test('renders a form to edit finance records search filters', () => {

@@ -1,6 +1,6 @@
 // External
 import { flushPromises } from '@vue/test-utils'
-import { computed, defineComponent, watchEffect } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { http, HttpResponse } from 'msw'
 
 // Internal
@@ -46,10 +46,6 @@ function getTestComponent(errorTemplate?: string) {
     setup() {
       const queryResult = useInfiniteQueryFinanceRecords()
       const items = computed(() => flattenPages(queryResult?.data?.value?.pages ?? []))
-
-      watchEffect(() => {
-        console.log('items', items.value)
-      })
 
       return { queryResult, items }
     },

@@ -26,7 +26,9 @@ export const FINANCES_COPY = {
 
   SAVE_FINANCE_RECORD_MODAL: {
     CREATE_FINANCE_RECORD: 'Create Finance Record',
+    CREATE_SUCCESS_TOAST: 'Successfully created finance record.',
     EDIT_FINANCE_RECORD: 'Edit Finance Record',
+    EDIT_SUCCESS_TOAST: 'Successfully saved finance record.',
     SHOW_MODAL: 'Show save finance record modal.',
   },
 

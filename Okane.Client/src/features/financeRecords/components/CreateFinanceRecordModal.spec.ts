@@ -1,5 +1,5 @@
 // External
-import { flushPromises, VueWrapper } from '@vue/test-utils'
+import { flushPromises, type VueWrapper } from '@vue/test-utils'
 
 // Internal
 import CreateFinanceRecordModal from '@features/financeRecords/components/CreateFinanceRecordModal.vue'
@@ -11,6 +11,8 @@ import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFina
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
 import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
+
+import { useToastStore } from '@shared/composables/useToastStore'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 import { mapSaveFinanceRecordFormState } from '@features/financeRecords/utils/mappers'
@@ -30,6 +32,7 @@ import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { createTestSaveFinanceRecordFormState } from '@tests/factories/financeRecord'
 import { financeUserTagHandlers } from '@tests/msw/handlers/financeUserTag'
 import { testServer } from '@tests/msw/testServer'
+import { useMockedStore } from '@tests/composables/useMockedStore'
 import { wrapInAPIResponse } from '@tests/utils/apiResponse'
 
 const mountComponent = getMountComponent(CreateFinanceRecordModal, {
@@ -111,6 +114,25 @@ describe('with a successful request to create a finance record', () => {
     expect(postSpy).toHaveBeenCalledOnce()
     expect(postSpy).toHaveBeenCalledWith(financeRecordAPIRoutes.postFinanceRecord(), financeRecord)
 
+    postSpy.mockRestore()
+  })
+
+  test('creates a toast', async () => {
+    const toastStore = useMockedStore(useToastStore)
+    const createToastSpy = vi.spyOn(toastStore, 'createToast')
+    const postSpy = vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInAPIResponse(null))
+    const saveProvider = helpers.getCreatingSaveProvider()
+    const wrapper = mountWithProviders({ saveProvider })
+
+    helpers.setFormState(wrapper, formState)
+    expect(createToastSpy).not.toHaveBeenCalled()
+    await helpers.submitForm(wrapper)
+    expect(createToastSpy).toHaveBeenCalledOnce()
+    expect(createToastSpy).toHaveBeenCalledWith(
+      FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.CREATE_SUCCESS_TOAST,
+    )
+
+    createToastSpy.mockRestore()
     postSpy.mockRestore()
   })
 

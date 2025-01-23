@@ -7,9 +7,10 @@ import SaveFinanceRecordModal from '@features/financeRecords/components/SaveFina
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
-import type { SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
+import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
 import { useEditFinanceRecord } from '@features/financeRecords/composables/useEditFinanceRecord'
+import { useToastStore } from '@shared/composables/useToastStore'
 
 import {
   SAVE_FINANCE_RECORD_SYMBOL,
@@ -39,6 +40,8 @@ const initialFormState = computed(() => {
 const formState = ref<SaveFinanceRecordFormState>(getInitialSaveFinanceRecordFormState())
 const initialFormErrors = getInitialFormErrors(formState.value)
 const formErrors = ref({ ...initialFormErrors })
+
+const { createToast } = useToastStore()
 
 // When the editing finance record changes, reset the form state.
 watchEffect(() => {
@@ -72,6 +75,7 @@ function handleSubmit() {
     { id, request: mapSaveFinanceRecordFormState.to.editFinanceRecordRequest(changes) },
     {
       onSuccess() {
+        createToast(FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.EDIT_SUCCESS_TOAST)
         handleClose()
       },
       onError(err) {

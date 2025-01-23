@@ -11,6 +11,8 @@ import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
 import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
+import { useToastStore } from '@shared/composables/useToastStore'
+
 import {
   mapFinanceRecord,
   mapSaveFinanceRecordFormState,
@@ -32,6 +34,7 @@ import { createTestAPIFormErrors } from '@tests/factories/formErrors'
 import { createTestFinanceRecord } from '@tests/factories/financeRecord'
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { financeUserTagHandlers } from '@tests/msw/handlers/financeUserTag'
+import { useMockedStore } from '@tests/composables/useMockedStore'
 import { testServer } from '@tests/msw/testServer'
 import { wrapInAPIResponse } from '@tests/utils/apiResponse'
 
@@ -150,6 +153,25 @@ describe('with a successful request to edit a finance record', () => {
       financeRecord,
     )
 
+    patchSpy.mockRestore()
+  })
+
+  test('creates a toast', async () => {
+    const toastStore = useMockedStore(useToastStore)
+    const createToastSpy = vi.spyOn(toastStore, 'createToast')
+    const patchSpy = vi.spyOn(apiClient, 'patch').mockResolvedValue(wrapInAPIResponse(null))
+    const saveProvider = helpers.getEditingSaveProvider()
+    const wrapper = mountWithProviders({ saveProvider })
+
+    helpers.setFormState(wrapper, updates)
+    expect(createToastSpy).not.toHaveBeenCalled()
+    await helpers.submitForm(wrapper)
+    expect(createToastSpy).toHaveBeenCalledOnce()
+    expect(createToastSpy).toHaveBeenCalledWith(
+      FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.EDIT_SUCCESS_TOAST,
+    )
+
+    createToastSpy.mockRestore()
     patchSpy.mockRestore()
   })
 

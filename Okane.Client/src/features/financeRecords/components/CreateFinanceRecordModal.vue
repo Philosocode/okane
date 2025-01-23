@@ -10,6 +10,7 @@ import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
 import { useCreateFinanceRecord } from '@features/financeRecords/composables/useCreateFinanceRecord'
+import { useToastStore } from '@shared/composables/useToastStore'
 
 import {
   SAVE_FINANCE_RECORD_SYMBOL,
@@ -28,6 +29,8 @@ const saveProvider = inject(SAVE_FINANCE_RECORD_SYMBOL) as SaveFinanceRecordProv
 const formState = ref<SaveFinanceRecordFormState>(getInitialSaveFinanceRecordFormState())
 const initialFormErrors = getInitialFormErrors(formState.value)
 const formErrors = ref({ ...initialFormErrors })
+
+const { createToast } = useToastStore()
 
 function handleChange(updates: Partial<SaveFinanceRecordFormState>) {
   formState.value = {
@@ -52,6 +55,8 @@ function handleSubmit() {
         amount: 0,
         description: '',
       }
+
+      createToast(FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.CREATE_SUCCESS_TOAST)
     },
     onError(err) {
       if (isObjectType(err)) {

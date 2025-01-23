@@ -63,7 +63,7 @@ export const AUTH_COPY = {
     ENTER_YOUR_EMAIL: 'Enter your email to reset your password.',
     RESET_PASSWORD: 'Reset Password',
     SUCCESS: {
-      HEADING: 'Sent email!',
+      HEADING: 'Sent password reset email!',
       BODY: 'In a few minutes, you should receive an email to reset your password.',
     },
   },

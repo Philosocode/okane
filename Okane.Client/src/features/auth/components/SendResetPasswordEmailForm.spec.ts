@@ -99,7 +99,6 @@ describe('when submitting the form', () => {
       await setUp()
 
       expect(spy).not.toHaveBeenCalled()
-      spy.mockRestore()
     })
 
     sharedTests.doesNotRenderAnError()
@@ -116,10 +115,6 @@ describe('when submitting the form', () => {
         HttpResponse.json(problemDetails, { status: HTTP_STATUS_CODE.BAD_REQUEST_400 }),
       )
       testServer.use(handler)
-    })
-
-    afterEach(() => {
-      consoleSpy.mockRestore()
     })
 
     test('does not emit a success event', async () => {

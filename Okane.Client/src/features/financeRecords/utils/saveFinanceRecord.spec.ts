@@ -19,8 +19,6 @@ describe('getInitialSaveFinanceRecordFormState', () => {
       tags: [],
       type: FINANCE_RECORD_TYPE.EXPENSE,
     })
-
-    spy.mockRestore()
   })
 })
 

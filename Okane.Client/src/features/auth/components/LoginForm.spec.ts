@@ -108,10 +108,6 @@ describe('when successfully logging in', () => {
     await flushPromises()
   })
 
-  afterEach(() => {
-    loginSpy.mockRestore()
-  })
-
   test('makes a request to login', () => {
     expect(loginSpy).toHaveBeenCalledOnce()
     expect(loginSpy).toHaveBeenCalledWith(constants.email, constants.password)
@@ -141,11 +137,6 @@ describe('with an error logging in', () => {
     await submitButton.trigger('submit')
 
     await flushPromises()
-  })
-
-  afterEach(() => {
-    consoleSpy.mockRestore()
-    loginSpy.mockRestore()
   })
 
   test('makes a request to login', () => {

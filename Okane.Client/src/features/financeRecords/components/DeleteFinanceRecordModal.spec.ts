@@ -119,8 +119,6 @@ describe('when clicking the delete button', () => {
     await setUp()
 
     expect(deleteSpy).toHaveBeenCalledOnce()
-
-    deleteSpy.mockRestore()
   })
 
   test('closes the modal when the DELETE request is successful', async () => {

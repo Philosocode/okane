@@ -19,12 +19,8 @@ const formControlId = '1'
 const mountComponent = getMountComponent(FormInput)
 
 // Hooks.
-beforeAll(() => {
+beforeEach(() => {
   vitest.spyOn(formUtils, 'getUniqueFormControlId').mockReturnValue(formControlId)
-})
-
-afterAll(() => {
-  vitest.spyOn(formUtils, 'getUniqueFormControlId').mockRestore()
 })
 
 // Tests.

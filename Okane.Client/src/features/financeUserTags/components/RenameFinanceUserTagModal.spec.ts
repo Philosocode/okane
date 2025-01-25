@@ -132,10 +132,6 @@ describe('when submitting the form', () => {
     putSpy = spyOn.put().mockResolvedValue(wrapInAPIResponse(userTagToRename))
   })
 
-  afterEach(() => {
-    putSpy.mockRestore()
-  })
-
   async function submitForm(wrapper: VueWrapper) {
     const input = wrapper.get('input')
     await input.setValue(renamedUserTag.tag.name)

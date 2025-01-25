@@ -132,8 +132,6 @@ test("does not make a request when the form state hasn't changed", async () => {
 
   await helpers.submitForm(wrapper)
   expect(patchSpy).not.toHaveBeenCalled()
-
-  patchSpy.mockRestore()
 })
 
 describe('with a successful request to edit a finance record', () => {
@@ -152,8 +150,6 @@ describe('with a successful request to edit a finance record', () => {
       financeRecordAPIRoutes.patchFinanceRecord({ id: editingFinanceRecord.id }),
       financeRecord,
     )
-
-    patchSpy.mockRestore()
   })
 
   test('creates a toast', async () => {
@@ -170,9 +166,6 @@ describe('with a successful request to edit a finance record', () => {
     expect(createToastSpy).toHaveBeenCalledWith(
       FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.EDIT_SUCCESS_TOAST,
     )
-
-    createToastSpy.mockRestore()
-    patchSpy.mockRestore()
   })
 
   test('closes the form', async () => {
@@ -184,8 +177,6 @@ describe('with a successful request to edit a finance record', () => {
     await helpers.submitForm(wrapper)
 
     expect(saveProvider.editingFinanceRecord).toBeUndefined()
-
-    patchSpy.mockRestore()
   })
 
   test('resets the form errors', async () => {
@@ -206,8 +197,6 @@ describe('with a successful request to edit a finance record', () => {
     await helpers.submitForm(wrapper)
     amountError = wrapper.findByText('p', apiErrors.Amount[0])
     expect(amountError).toBeUndefined()
-
-    patchSpy.mockRestore()
   })
 })
 
@@ -229,7 +218,5 @@ describe('with an error updating a finance record', () => {
       const errorLabel = wrapper.findByText('p', error)
       expect(errorLabel).toBeDefined()
     })
-
-    patchSpy.mockRestore()
   })
 })

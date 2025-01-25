@@ -9,6 +9,7 @@ beforeAll(() => {
 afterEach(() => {
   testQueryClient.clear()
   testServer.resetHandlers()
+  vi.restoreAllMocks()
 })
 
 afterAll(() => {

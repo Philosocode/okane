@@ -3,6 +3,8 @@
 import { RouterLink } from 'vue-router'
 
 // Internal
+import ColorModeToggle from '@shared/components/ColorModeToggle.vue'
+
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
@@ -27,12 +29,14 @@ const authStore = useAuthStore()
         AUTH_COPY.AUTH_FORM.REGISTER
       }}</RouterLink>
     </template>
+    <ColorModeToggle />
   </nav>
 </template>
 
 <style scoped lang="scss">
 .nav {
   display: flex;
+  align-items: center;
   justify-content: center;
   gap: 1rem;
   padding: 1rem;

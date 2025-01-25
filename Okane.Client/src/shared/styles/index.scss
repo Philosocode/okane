@@ -1,11 +1,11 @@
-@import 'variables/colors';
-@import 'variables/spacing';
-@import 'variables/typography';
-@import 'variables/zIndex';
+@import 'variables';
 @import 'themes/default';
 
 @import 'functions';
-@import 'mixins/respond';
+@import 'mixins';
+@import 'utils';
 
 @import 'reset';
 @import 'base';
+
+@import 'components';

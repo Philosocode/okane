@@ -31,12 +31,12 @@ const stats = computed(() => data.value?.items[0])
 
 <style scoped lang="scss">
 .root {
-  border: pxToRem(1) solid var(--color-gray-500);
+  border: pxToRem(1) solid var(--color-card-border);
   display: flex;
 }
 
 .divider {
-  background-color: var(--color-gray-500);
+  background-color: var(--color-card-border);
   width: pxToRem(1);
 }
 </style>

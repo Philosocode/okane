@@ -85,10 +85,9 @@ onClickOutside(dialogRef, (event) => {
 }
 
 .modal {
-  background-color: var(--color-gray-50);
-  border: none;
+  background-color: var(--color-bg-dim);
+  border: 1px solid var(--color-card-border);
   border-radius: 0.5rem;
-  color: var(--color-gray-900);
   padding: 0;
 
   height: 100%;

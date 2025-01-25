@@ -70,7 +70,7 @@ function handleClick(callback: MenuAction['onClick']) {
   border-style: solid;
   border-width: pxToRem(1);
   border-radius: 100%;
-  color: var(--color-gray-50);
+  color: var(--color-text);
   display: grid;
   place-items: center center;
   padding: 1rem;
@@ -80,12 +80,12 @@ function handleClick(callback: MenuAction['onClick']) {
   &:hover,
   &:active,
   &:focus {
-    border-color: var(--color-gray-400);
+    border-color: var(--color-card-border);
   }
 }
 
 .menu {
-  background: var(--color-gray-50);
+  border: 1px solid var(--color-card-border);
   border-radius: pxToRem(4);
   font-size: var(--font-size-sm);
   min-width: 5rem;
@@ -96,14 +96,15 @@ function handleClick(callback: MenuAction['onClick']) {
 }
 
 .menu-item {
-  background: none;
+  background-color: var(--color-site-bg);
   border: none;
+  color: var(--color-text);
   padding: var(--space-xs);
   width: 100%;
 
   &:hover,
   &:focus {
-    background: var(--color-gray-200);
+    background-color: var(--color-bg-dim);
   }
 }
 </style>

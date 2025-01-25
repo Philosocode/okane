@@ -43,10 +43,6 @@ const emit = defineEmits<{
 
 .submit-button {
   margin-top: var(--space-sm);
-
-  &:disabled {
-    color: var(--color-gray-300);
-  }
 }
 
 .submit-error {
@@ -54,6 +50,6 @@ const emit = defineEmits<{
 }
 
 .submit-success {
-  color: var(--color-green-400);
+  color: var(--color-success);
 }
 </style>

@@ -1,6 +1,6 @@
 :root {
-  background: var(--color-global-bg);
-  color: var(--color-global-text);
+  background: var(--color-site-bg);
+  color: var(--color-text);
   font-family: var(--font-primary);
   font-size: var(--font-size-md);
   line-height: var(--leading-base);
@@ -31,15 +31,21 @@ body:has([data-disable-document-scroll="true"]) {
 }
 
 a {
-  color: var(--color-green-200);
+  color: var(--color-link);
 
   &:hover {
-    color: var(--color-green-400);
+    color: var(--color-link-active);
+  }
+}
+
+button {
+  &:disabled {
+    color: var(--color-text-disabled);
   }
 }
 
 .active-link {
-  color: var(--color-green-400);
+  color: var(--color-link-active);
   font-weight: bold;
 }
 

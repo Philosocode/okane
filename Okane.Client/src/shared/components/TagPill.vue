@@ -12,7 +12,7 @@ const props = defineProps<Props>()
 
 <style scoped>
 .tag {
-  border: 1px solid var(--color-gray-100);
+  border: 1px solid var(--color-card-border);
   border-radius: 4px;
   display: inline-block;
   font-size: var(--font-size-sm);

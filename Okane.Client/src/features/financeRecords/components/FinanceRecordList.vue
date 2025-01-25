@@ -49,7 +49,6 @@ const financeRecords = computed(() => flattenPages(queryResult.data.value?.pages
 }
 
 .no-more-items {
-  color: var(--color-gray-300);
   margin-block: var(--space-xl);
   text-align: center;
 }

@@ -63,13 +63,13 @@ onUnmounted(() => {
 }
 
 .toast {
-  background-color: var(--color-gray-700);
+  background-color: var(--color-bg-dim);
   border-radius: 4px;
   padding: var(--space-sm) var(--space-md);
   position: relative;
 }
 
 .is-error {
-  background-color: var(--color-red-700);
+  background-color: var(--color-error-dim);
 }
 </style>

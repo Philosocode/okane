@@ -44,7 +44,7 @@ const provider = inject(MANAGE_FINANCE_USER_TAGS_PROVIDER_SYMBOL) as ManageFinan
 <style scoped>
 .root {
   align-items: center;
-  border: 1px solid var(--color-gray-100);
+  border: 1px solid var(--color-card-border);
   display: flex;
   justify-content: space-between;
   min-width: 10rem;

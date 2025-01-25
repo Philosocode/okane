@@ -25,7 +25,7 @@ const props = withDefaults(defineProps<Props>(), { title: 'Loading...' })
 
 <style scoped>
 .root {
-  stroke: var(--color-green-500);
+  stroke: var(--color-loader);
   width: 3rem;
   height: 3rem;
 }

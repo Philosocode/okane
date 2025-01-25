@@ -87,7 +87,7 @@ const happenedAtCriteria = computed(() => {
 
 <style scoped lang="scss">
 .root {
-  border: pxToRem(1) solid var(--color-gray-500);
+  border: pxToRem(1) solid var(--color-card-border);
   border-radius: 0.25rem;
   padding: var(--space-md);
 }

@@ -90,7 +90,7 @@ const menuActions = [
 }
 
 .item {
-  border: pxToRem(1) solid var(--color-gray-500);
+  border: pxToRem(1) solid var(--color-card-border);
   display: flex;
   justify-content: space-between;
 }

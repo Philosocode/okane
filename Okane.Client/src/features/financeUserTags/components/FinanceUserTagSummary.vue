@@ -20,7 +20,7 @@ const props = defineProps<FinanceUserTagSummaryProps>()
 
 <style scoped>
 .tag {
-  border: 1px solid var(--color-gray-400);
+  border: 1px solid var(--color-card-border);
   padding: var(--space-sm);
 }
 </style>

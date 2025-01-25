@@ -1,11 +1,29 @@
 :root {
+  --color-bg-dim: var(--color-gray-200);
+  --color-card-border: var(--color-gray-500);
   --color-error: var(--color-red-400);
-  --color-global-bg: var(--color-gray-200);
-  --color-global-text: var(--color-gray-50);
+  --color-error-dim: var(--color-red-300);
+  --color-link: var(--color-green-500);
+  --color-link-active: var(--color-green-700);
+  --color-loader: var(--color-green-400);
+  --color-site-bg: var(--color-gray-50);
+  --color-success: var(--color-green-500);
+  --color-text: var(--color-gray-900);
+  --color-text-disabled: var(--color-gray-400);
+  --color-text-inverse: var(--color-gray-50);
 }
 
 :root.dark {
+  --color-bg-dim: var(--color-gray-700);
+  --color-card-border: var(--color-gray-500);
   --color-error: var(--color-red-400);
-  --color-global-bg: var(--color-gray-900);
-  --color-global-text: var(--color-gray-50);
+  --color-error-dim: var(--color-red-700);
+  --color-link: var(--color-green-200);
+  --color-link-active: var(--color-green-400);
+  --color-loader: var(--color-green-400);
+  --color-site-bg: var(--color-gray-900);
+  --color-success: var(--color-green-500);
+  --color-text: var(--color-gray-50);
+  --color-text-disabled: var(--color-gray-300);
+  --color-text-inverse: var(--color-gray-900);
 }

@@ -64,17 +64,17 @@ function handleDelete() {
 
 <style scoped lang="scss">
 .delete-button {
-  background-color: var(--color-red-300);
+  background-color: var(--color-error);
   border: none;
   border-radius: pxToRem(4);
   padding: var(--space-2xs);
 
   &:hover {
-    background-color: var(--color-red-400);
+    background-color: var(--color-error-dim);
   }
 
   &:active {
-    background-color: var(--color-red-500);
+    background-color: var(--color-error-dim);
   }
 }
 

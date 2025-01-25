@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// Internal
 import type { HeadingTag } from '@shared/types/html'
 
 type Props = {

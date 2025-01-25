@@ -66,8 +66,6 @@ test('makes a PATCH request to the expected endpoint', async () => {
   mountWithProviders()
   await flushPromises()
   expect(patchSpy).toHaveBeenCalledWith(financeRecordAPIRoutes.patchFinanceRecord({ id }), changes)
-
-  patchSpy.mockRestore()
 })
 
 test('invalidates the expected query keys', async () => {
@@ -85,7 +83,4 @@ test('invalidates the expected query keys', async () => {
   expect(invalidateSpy).toHaveBeenCalledWith({
     queryKey: financeRecordQueryKeys.stats({ filters: searchProvider.filters }),
   })
-
-  patchSpy.mockRestore()
-  invalidateSpy.mockRestore()
 })

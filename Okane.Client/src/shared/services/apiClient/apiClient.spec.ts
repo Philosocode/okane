@@ -170,8 +170,6 @@ describe('when logged in', () => {
         expect(authStore.jwtToken).toBeUndefined()
         expect(location.pathname).toBe(appRoutes.login.buildPath())
         expect(testQueryClient.getQueryData(queryKey)).toBeUndefined()
-      } finally {
-        queryClientSpy.mockRestore()
       }
     },
   )

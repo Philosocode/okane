@@ -147,10 +147,6 @@ describe('when successfully registering', () => {
     await flushPromises()
   })
 
-  afterEach(() => {
-    registerSpy.mockRestore()
-  })
-
   test('makes a request to register', () => {
     expect(registerSpy).toHaveBeenCalledOnce()
     expect(registerSpy).toHaveBeenCalledWith(constants.email, constants.name, constants.password)
@@ -178,11 +174,6 @@ describe('with an error registering', () => {
     await submitButton.trigger('submit')
 
     await flushPromises()
-  })
-
-  afterEach(() => {
-    consoleSpy.mockRestore()
-    registerSpy.mockRestore()
   })
 
   test('makes a request to register', () => {

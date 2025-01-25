@@ -113,8 +113,6 @@ describe('with a successful request to create a finance record', () => {
     const financeRecord = mapSaveFinanceRecordFormState.to.createFinanceRecordRequest(formState)
     expect(postSpy).toHaveBeenCalledOnce()
     expect(postSpy).toHaveBeenCalledWith(financeRecordAPIRoutes.postFinanceRecord(), financeRecord)
-
-    postSpy.mockRestore()
   })
 
   test('creates a toast', async () => {
@@ -131,9 +129,6 @@ describe('with a successful request to create a finance record', () => {
     expect(createToastSpy).toHaveBeenCalledWith(
       FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.CREATE_SUCCESS_TOAST,
     )
-
-    createToastSpy.mockRestore()
-    postSpy.mockRestore()
   })
 
   test('resets the amount and description', async () => {
@@ -155,8 +150,6 @@ describe('with a successful request to create a finance record', () => {
 
     const typeSelect = wrapper.get('select').element as HTMLSelectElement
     expect(typeSelect.value).toBe(formState.type)
-
-    postSpy.mockRestore()
   })
 
   test('resets the form errors', async () => {
@@ -177,8 +170,6 @@ describe('with a successful request to create a finance record', () => {
     await helpers.submitForm(wrapper)
     amountError = wrapper.findByText('p', apiErrors.Amount[0])
     expect(amountError).toBeUndefined()
-
-    postSpy.mockRestore()
   })
 })
 
@@ -203,7 +194,5 @@ describe('with an error creating a finance record', () => {
       const errorLabel = wrapper.findByText('p', error)
       expect(errorLabel).toBeDefined()
     })
-
-    postSpy.mockRestore()
   })
 })

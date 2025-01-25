@@ -23,12 +23,8 @@ const formControlId = '1'
 
 const mountComponent = getMountComponent(FormSelect)
 
-beforeAll(() => {
+beforeEach(() => {
   vitest.spyOn(formUtils, 'getUniqueFormControlId').mockReturnValue(formControlId)
-})
-
-afterAll(() => {
-  vitest.spyOn(formUtils, 'getUniqueFormControlId').mockRestore()
 })
 
 test('renders a select with the expected attributes', () => {

@@ -135,8 +135,6 @@ test('provides delete finance record state', () => {
   })
 
   expect(wrapper.get('#providerId').text()).toBe(fakeId.toString())
-
-  providerSpy.mockRestore()
 })
 
 test('provides save finance record state', () => {
@@ -175,8 +173,6 @@ test('provides save finance record state', () => {
 
   expect(wrapper.get('#providerIsCreating').text()).toBe(isCreating.toString())
   expect(wrapper.get('#providerFinanceRecordId').text()).toBe(financeRecord.id.toString())
-
-  providerSpy.mockRestore()
 })
 
 test('provides search finance records state', () => {
@@ -217,6 +213,4 @@ test('provides search finance records state', () => {
 
   expect(wrapper.get('#providerFilters').text()).toBe(description)
   expect(wrapper.get('#providerModalIsShowing').text()).toBe(`${modalIsShowing}`)
-
-  providerSpy.mockRestore()
 })

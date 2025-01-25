@@ -60,10 +60,6 @@ describe('when successfully re-sending the verification email', () => {
     await flushPromises()
   })
 
-  afterEach(() => {
-    postSpy.mockRestore()
-  })
-
   test('renders the "email sent successfully" text', () => {
     const text = wrapper.findByText('p', AUTH_COPY.VERIFY_EMAIL.SEND_VERIFICATION_EMAIL.SUCCESS)
     expect(text).toBeDefined()
@@ -103,11 +99,6 @@ describe('with an error re-sending the verification email', () => {
     await button.trigger('click')
 
     await flushPromises()
-  })
-
-  afterEach(() => {
-    consoleSpy.mockRestore()
-    postSpy.mockRestore()
   })
 
   test('renders the error text', () => {

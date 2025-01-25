@@ -94,8 +94,6 @@ test('renders a button to delete the user tag', async () => {
   await button.trigger('click')
   await flushPromises()
   expect(provider.userTagToDelete).toBeUndefined()
-
-  spy.mockRestore()
 })
 
 test('renders an error when deleting fails', async () => {
@@ -109,6 +107,4 @@ test('renders an error when deleting fails', async () => {
 
   const error = wrapper.findByText('p', FINANCE_USER_TAGS_COPY.DELETE_MODAL.ERROR)
   expect(error).toBeDefined()
-
-  spy.mockRestore()
 })

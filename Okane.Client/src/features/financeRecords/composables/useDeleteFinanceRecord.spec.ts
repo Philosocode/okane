@@ -105,6 +105,4 @@ test('invalidates the stats key', async () => {
   expect(invalidateSpy).toHaveBeenCalledWith({
     queryKey: financeRecordQueryKeys.stats({ filters: searchProvider.filters }),
   })
-
-  invalidateSpy.mockRestore()
 })

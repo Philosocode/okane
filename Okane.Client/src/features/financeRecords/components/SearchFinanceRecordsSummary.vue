@@ -92,6 +92,11 @@ const happenedAtCriteria = computed(() => {
   padding: var(--space-md);
 }
 
+.bulleted-list {
+  list-style-type: disc;
+  padding-left: var(--space-md);
+}
+
 .heading {
   margin-block: 0;
 }

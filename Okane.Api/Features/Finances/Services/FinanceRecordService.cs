@@ -1,10 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Okane.Api.Features.Finances.Constants;
 using Okane.Api.Features.Finances.Dtos;
 using Okane.Api.Features.Finances.Entities;
 using Okane.Api.Infrastructure.Database;
-using Okane.Api.Shared.Constants;
-using Okane.Api.Shared.Extensions;
 
 namespace Okane.Api.Features.Finances.Services;
 
@@ -31,14 +28,7 @@ public class FinanceRecordService(ApiDbContext db) : IFinanceRecordService
 
         if (parameters.Description is not null)
         {
-            query = query.Where(
-                fr => fr.SearchVector.Matches(
-                    // Referenced: https://github.com/npgsql/efcore.pg/issues/1724#issuecomment-1013649670
-                    EF.Functions.ToTsQuery(
-                        (string)(object)EF.Functions.PlainToTsQuery(parameters.Description) + ":*"
-                    )
-                )
-            );
+            query = query.Where(fr => fr.SearchVector.Matches(parameters.Description));
         }
 
         if (parameters.HappenedBefore is not null)

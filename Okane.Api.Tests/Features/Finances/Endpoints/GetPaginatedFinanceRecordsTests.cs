@@ -388,9 +388,7 @@ public class GetPaginatedFinanceRecordsTests(PostgresApiFactory apiFactory) : Da
             financeRecords =>
             [
                 financeRecords[0],
-                financeRecords[1],
                 financeRecords[2],
-                financeRecords[3],
             ]
         );
     }

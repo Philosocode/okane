@@ -3,6 +3,7 @@
 import { computed, inject, ref } from 'vue'
 
 // Internal
+import Button from '@shared/components/Button.vue'
 import FinanceUserTagSummary from '@features/financeUserTags/components/FinanceUserTagSummary.vue'
 import FormInput from '@shared/components/form/FormInput.vue'
 import Modal from '@shared/components/modal/Modal.vue'
@@ -68,6 +69,7 @@ function handleSubmit() {
 
       <form ref="form" @submit.prevent="handleSubmit" class="form">
         <FormInput
+          focus-on-mount
           :label="FINANCE_USER_TAGS_COPY.RENAME_MODAL.UPDATED_NAME"
           name="name"
           v-model="name"
@@ -79,8 +81,10 @@ function handleSubmit() {
         </p>
 
         <ModalActions>
-          <button type="submit" :disabled="submitDisabled">{{ SHARED_COPY.ACTIONS.RENAME }}</button>
-          <button @click="closeModal" type="button">{{ SHARED_COPY.ACTIONS.CANCEL }}</button>
+          <Button type="submit" :disabled="submitDisabled" variant="callToAction">{{
+            SHARED_COPY.ACTIONS.RENAME
+          }}</Button>
+          <Button @click="closeModal" type="button">{{ SHARED_COPY.ACTIONS.CANCEL }}</Button>
         </ModalActions>
       </form>
     </template>

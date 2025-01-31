@@ -65,6 +65,12 @@ test('does not render an error message', () => {
   expect(error).toBeUndefined()
 })
 
+test('renders a "forgot password" link', () => {
+  const wrapper = mountComponent()
+  const link = wrapper.findByText('a', AUTH_COPY.FORGOT_PASSWORD)
+  expect(link.attributes('href')).toBe(appRoutes.sendResetPasswordEmail.buildPath())
+})
+
 test('disables the submit button until all inputs are filled out', async () => {
   const wrapper = mountComponent()
   const submitButton = elements.submitButton(wrapper)

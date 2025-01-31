@@ -2,7 +2,6 @@
 // Internal
 import Button from '@shared/components/Button.vue'
 import Card from '@shared/components/wrappers/Card.vue'
-import CardHeading from '@shared/components/typography/CardHeading.vue'
 
 export type AuthFormProps = {
   submitButtonText: string
@@ -20,7 +19,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <Card>
+  <Card class="card">
     <form class="form" @submit.prevent="emit('submit')">
       <fieldset class="fieldset">
         <slot />
@@ -36,6 +35,8 @@ const emit = defineEmits<{
 
         <p v-if="props.submitError" class="submit-error">{{ props.submitError }}</p>
         <p v-else-if="props.submitSuccess" class="submit-success">{{ props.submitSuccess }}</p>
+
+        <slot name="footer" />
       </fieldset>
     </form>
   </Card>
@@ -43,14 +44,15 @@ const emit = defineEmits<{
 
 <style scoped lang="scss">
 .fieldset {
+  border: none;
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
-  padding: var(--space-lg);
-}
+  padding: var(--space-sm);
 
-.form {
-  max-width: 22rem;
+  @include respond(sm) {
+    padding: var(--space-lg);
+  }
 }
 
 .submit-button {
@@ -62,6 +64,6 @@ const emit = defineEmits<{
 }
 
 .submit-success {
-  color: var(--color-success);
+  color: var(--color-accent-dim);
 }
 </style>

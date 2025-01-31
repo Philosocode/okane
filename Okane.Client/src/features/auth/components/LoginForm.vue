@@ -7,6 +7,7 @@ import { computed, ref } from 'vue'
 import AuthForm from '@features/auth/components/AuthForm.vue'
 import FormInput from '@shared/components/form/FormInput.vue'
 import Heading from '@shared/components/Heading.vue'
+import Link from '@shared/components/Link.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
 import { INPUT_TYPE } from '@shared/constants/form'
@@ -44,18 +45,33 @@ async function handleSubmit() {
     :submit-error="submitFailed ? AUTH_COPY.AUTH_FORM.LOGIN_ERROR : ''"
     @submit="handleSubmit"
   >
-    <FormInput
-      :label="AUTH_COPY.AUTH_FORM.EMAIL"
-      name="email"
-      :type="INPUT_TYPE.EMAIL"
-      v-model="formState.email"
-    />
+    <template #default>
+      <FormInput
+        :label="AUTH_COPY.AUTH_FORM.EMAIL"
+        name="email"
+        :type="INPUT_TYPE.EMAIL"
+        v-model="formState.email"
+      />
 
-    <FormInput
-      :label="AUTH_COPY.AUTH_FORM.PASSWORD"
-      name="password"
-      :type="INPUT_TYPE.PASSWORD"
-      v-model="formState.password"
-    />
+      <FormInput
+        :label="AUTH_COPY.AUTH_FORM.PASSWORD"
+        name="password"
+        :type="INPUT_TYPE.PASSWORD"
+        v-model="formState.password"
+      />
+    </template>
+
+    <template #footer>
+      <Link class="forgot-password" :to="{ name: ROUTE_NAME.SEND_RESET_PASSWORD_EMAIL }">{{
+        AUTH_COPY.FORGOT_PASSWORD
+      }}</Link>
+    </template>
   </AuthForm>
 </template>
+
+<style scoped>
+.forgot-password {
+  margin-inline: auto;
+  margin-block-start: var(--space-md);
+}
+</style>

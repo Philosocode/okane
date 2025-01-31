@@ -20,12 +20,24 @@ test('renders a submit button', () => {
   expect(submitButton.text()).toBe(props.submitButtonText)
 })
 
-test('renders the slot content', () => {
+test('renders the default slot content', () => {
   const slotText = 'Hello slot 1234'
   const wrapper = mountComponent({
     props,
     slots: {
       default: () => h('p', slotText),
+    },
+  })
+  const text = wrapper.findByText('p', slotText)
+  expect(text).toBeDefined()
+})
+
+test('renders the footer slot content', () => {
+  const slotText = 'Hello slot 1234'
+  const wrapper = mountComponent({
+    props,
+    slots: {
+      footer: () => h('p', slotText),
     },
   })
   const text = wrapper.findByText('p', slotText)

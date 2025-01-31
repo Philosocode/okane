@@ -1,13 +1,8 @@
 <script setup lang="ts">
-import Heading from '@shared/components/Heading.vue'
+// Internal
+import CardHeading from '@shared/components/typography/CardHeading.vue'
 </script>
 
 <template>
-  <Heading class="heading" tag="h3" v-bind="$attrs"><slot /></Heading>
+  <CardHeading tag="h3" v-bind="$attrs"><slot /></CardHeading>
 </template>
-
-<style scoped>
-.heading {
-  margin-block: 0;
-}
-</style>

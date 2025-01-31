@@ -2,7 +2,7 @@
 import { type DOMWrapper, type VueWrapper } from '@vue/test-utils'
 
 // Internal
-import ModalHeading from '@shared/components/modal/ModalHeading.vue'
+import CardHeading from '@shared/components/typography/CardHeading.vue'
 
 import { ARIA_ATTRIBUTES } from '@shared/constants/aria'
 import { TEST_IDS } from '@shared/constants/testIds'
@@ -19,7 +19,7 @@ export const commonAsserts = {
   }) {
     const modal = wrapper.get(selector)
     const dialogLabelledBy = modal.attributes(ARIA_ATTRIBUTES.LABELLED_BY)
-    const heading = modal.getComponent(ModalHeading)
+    const heading = modal.getComponent(CardHeading)
     expect(heading.attributes('id')).toBe(dialogLabelledBy)
   },
   rendersExpectedSelectOptions(args: {

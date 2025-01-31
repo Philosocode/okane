@@ -1,6 +1,8 @@
 <script setup lang="ts">
 // Internal
 import Button from '@shared/components/Button.vue'
+import Card from '@shared/components/wrappers/Card.vue'
+import CardHeading from '@shared/components/typography/CardHeading.vue'
 
 export type AuthFormProps = {
   submitButtonText: string
@@ -18,23 +20,25 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <form class="form" @submit.prevent="emit('submit')">
-    <fieldset class="fieldset">
-      <slot />
+  <Card>
+    <form class="form" @submit.prevent="emit('submit')">
+      <fieldset class="fieldset">
+        <slot />
 
-      <Button
-        class="submit-button"
-        :disabled="props.submitButtonIsDisabled"
-        type="submit"
-        variant="callToAction"
-      >
-        {{ submitButtonText }}
-      </Button>
+        <Button
+          class="submit-button"
+          :disabled="props.submitButtonIsDisabled"
+          type="submit"
+          variant="callToAction"
+        >
+          {{ submitButtonText }}
+        </Button>
 
-      <p v-if="props.submitError" class="submit-error">{{ props.submitError }}</p>
-      <p v-else-if="props.submitSuccess" class="submit-success">{{ props.submitSuccess }}</p>
-    </fieldset>
-  </form>
+        <p v-if="props.submitError" class="submit-error">{{ props.submitError }}</p>
+        <p v-else-if="props.submitSuccess" class="submit-success">{{ props.submitSuccess }}</p>
+      </fieldset>
+    </form>
+  </Card>
 </template>
 
 <style scoped lang="scss">

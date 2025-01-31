@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // Internal
 import FormSelect from '@shared/components/form/FormSelect.vue'
+import Kicker from '@shared/components/typography/Kicker.vue'
 
 import { SHARED_COPY } from '@shared/constants/copy'
 import { ALL_COMPARISON_OPERATOR_OPTIONS, COMPARISON_OPERATOR } from '@shared/constants/search'
@@ -41,7 +42,7 @@ function toggleRange() {
 
 <template>
   <fieldset class="fieldset">
-    <legend class="legend">{{ props.label }}</legend>
+    <Kicker class="legend" tag="legend">{{ props.label }}</Kicker>
 
     <div class="column">
       <div class="row">
@@ -60,9 +61,9 @@ function toggleRange() {
       </div>
 
       <template v-if="isShowingRange">
-        <p class="and">
+        <Kicker class="and">
           {{ SHARED_COPY.CONJUNCTIONS.AND }}
-        </p>
+        </Kicker>
 
         <div class="row">
           <span>{{ COMPARISON_OPERATOR.LTE }}</span>

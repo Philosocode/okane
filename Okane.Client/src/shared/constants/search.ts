@@ -3,8 +3,8 @@ import { type SelectOption } from '@shared/components/form/FormSelect.vue'
 
 export enum COMPARISON_OPERATOR {
   EQUAL = '=',
-  GTE = '>=',
-  LTE = '<=',
+  GTE = '≥',
+  LTE = '≤',
 }
 
 export const COMPARISON_OPERATOR_OPTION_MAP = {

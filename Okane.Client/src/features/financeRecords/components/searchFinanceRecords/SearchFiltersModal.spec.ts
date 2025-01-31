@@ -1,7 +1,7 @@
 // Internal
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
-import SearchFinanceRecordsForm from '@features/financeRecords/components/SearchFinanceRecordsForm.vue'
-import SearchFinanceRecordsModal from '@features/financeRecords/components/SearchFinanceRecordsModal.vue'
+import SearchFiltersForm from '@features/financeRecords/components/searchFinanceRecords/SearchFiltersForm.vue'
+import SearchFiltersModal from '@features/financeRecords/components/searchFinanceRecords/SearchFiltersModal.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
@@ -20,7 +20,7 @@ function mountWithProviders(args?: { searchProvider: SearchFinanceRecordsProvide
     searchProvider.setModalIsShowing(true)
   }
 
-  return getMountComponent(SearchFinanceRecordsModal, {
+  return getMountComponent(SearchFiltersModal, {
     global: {
       provide: {
         [SEARCH_FINANCE_RECORDS_SYMBOL]: searchProvider,
@@ -56,6 +56,6 @@ test('renders an accessible modal', () => {
 
 test('renders a form to edit finance records search filters', () => {
   const wrapper = mountWithProviders()
-  const form = wrapper.findComponent(SearchFinanceRecordsForm)
+  const form = wrapper.findComponent(SearchFiltersForm)
   expect(form.exists()).toBe(true)
 })

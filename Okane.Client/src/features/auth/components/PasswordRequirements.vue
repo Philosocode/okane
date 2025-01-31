@@ -5,6 +5,7 @@ import CardHeading from '@shared/components/typography/CardHeading.vue'
 import { AUTH_COPY } from '@features/auth/constants/copy'
 
 import { type PasswordChecks } from '@features/auth/types/authForm'
+import BulletedList from '@shared/components/BulletedList.vue'
 
 const copy = AUTH_COPY.AUTH_FORM.PASSWORD_REQUIREMENTS
 
@@ -19,7 +20,7 @@ const props = defineProps<Props>()
 <template>
   <div>
     <CardHeading class="heading">{{ copy.HEADING }}</CardHeading>
-    <ul class="list">
+    <BulletedList>
       <li v-if="props.checks.insufficientLength">{{ copy.MIN_LENGTH(props.minPasswordLength) }}</li>
       <li v-if="props.checks.missingUppercase">
         {{ copy.UPPERCASE_LETTER }}
@@ -36,7 +37,7 @@ const props = defineProps<Props>()
       <li v-if="props.checks.invalidPasswordConfirm">
         {{ copy.MATCHING_PASSWORDS }}
       </li>
-    </ul>
+    </BulletedList>
   </div>
 </template>
 
@@ -44,12 +45,5 @@ const props = defineProps<Props>()
 .heading {
   font-size: var(--font-size-md);
   margin-block: 0;
-}
-
-.list {
-  list-style-type: disc;
-
-  /* TODO: Add consistent list spacing. */
-  padding-left: var(--space-md);
 }
 </style>

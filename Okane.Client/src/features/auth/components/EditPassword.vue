@@ -4,6 +4,7 @@ import { computed, ref, watch } from 'vue'
 
 // Internal
 import AuthForm from '@features/auth/components/AuthForm.vue'
+import CardHeading from '@shared/components/typography/CardHeading.vue'
 import FormInput from '@shared/components/form/FormInput.vue'
 import Heading from '@shared/components/Heading.vue'
 import PasswordRequirements from '@features/auth/components/PasswordRequirements.vue'
@@ -82,7 +83,7 @@ watch(combinedInputValues, () => {
 </script>
 
 <template>
-  <Heading tag="h2">{{ AUTH_COPY.ACCOUNT_PAGE.EDIT_PASSWORD }}</Heading>
+  <CardHeading tag="h2">{{ AUTH_COPY.ACCOUNT_PAGE.EDIT_PASSWORD }}</CardHeading>
   <AuthForm
     :submit-button-text="SHARED_COPY.ACTIONS.SAVE"
     :submit-button-is-disabled="submitButtonDisabled"

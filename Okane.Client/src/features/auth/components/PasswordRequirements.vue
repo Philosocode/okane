@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Internal
-import Heading from '@shared/components/Heading.vue'
+import CardHeading from '@shared/components/typography/CardHeading.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
 
@@ -18,7 +18,7 @@ const props = defineProps<Props>()
 
 <template>
   <div>
-    <Heading tag="h3" class="heading">{{ copy.HEADING }}</Heading>
+    <CardHeading class="heading">{{ copy.HEADING }}</CardHeading>
     <ul class="list">
       <li v-if="props.checks.insufficientLength">{{ copy.MIN_LENGTH(props.minPasswordLength) }}</li>
       <li v-if="props.checks.missingUppercase">

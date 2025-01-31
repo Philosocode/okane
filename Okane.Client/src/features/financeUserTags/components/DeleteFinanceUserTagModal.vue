@@ -6,8 +6,8 @@ import { inject } from 'vue'
 import Button from '@shared/components/Button.vue'
 import FinanceUserTagSummary from '@features/financeUserTags/components/FinanceUserTagSummary.vue'
 import Modal from '@shared/components/modal/Modal.vue'
-import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 import ModalActions from '@shared/components/modal/ModalActions.vue'
+import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 
 import { useDeleteFinanceUserTag } from '@features/financeUserTags/composables/useDeleteFinanceUserTag'
 

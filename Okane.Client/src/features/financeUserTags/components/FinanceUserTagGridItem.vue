@@ -3,6 +3,7 @@
 import { inject } from 'vue'
 
 // Internal
+import Card from '@shared/components/wrappers/Card.vue'
 import IconButton from '@shared/components/IconButton.vue'
 
 import { FINANCE_USER_TAGS_COPY } from '@features/financeUserTags/constants/copy'
@@ -23,7 +24,7 @@ const provider = inject(MANAGE_FINANCE_USER_TAGS_PROVIDER_SYMBOL) as ManageFinan
 </script>
 
 <template>
-  <div class="root">
+  <Card class="root">
     <p>{{ props.userTag.tag.name }}</p>
 
     <div class="actions">
@@ -38,7 +39,7 @@ const provider = inject(MANAGE_FINANCE_USER_TAGS_PROVIDER_SYMBOL) as ManageFinan
         @click="provider.setUserTagToDelete(props.userTag)"
       />
     </div>
-  </div>
+  </Card>
 </template>
 
 <style scoped>

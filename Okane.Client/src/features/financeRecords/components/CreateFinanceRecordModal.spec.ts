@@ -2,8 +2,8 @@
 import { flushPromises, type VueWrapper } from '@vue/test-utils'
 
 // Internal
+import CardHeading from '@shared/components/typography/CardHeading.vue'
 import CreateFinanceRecordModal from '@features/financeRecords/components/CreateFinanceRecordModal.vue'
-import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 import SaveFinanceRecordModal from '@features/financeRecords/components/SaveFinanceRecordModal.vue'
 
 import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
@@ -77,7 +77,7 @@ const helpers = {
 
 test('does not render the modal content when not creating a finance record', () => {
   const wrapper = mountWithProviders({ saveProvider: useSaveFinanceRecordProvider() })
-  const heading = wrapper.findComponent(ModalHeading)
+  const heading = wrapper.findComponent(CardHeading)
   expect(heading.exists()).toBe(false)
 })
 
@@ -85,7 +85,7 @@ test('renders the modal heading', () => {
   const saveProvider = helpers.getCreatingSaveProvider()
   const wrapper = mountWithProviders({ saveProvider })
 
-  const heading = wrapper.getComponent(ModalHeading)
+  const heading = wrapper.getComponent(CardHeading)
   expect(heading.text()).toBe(FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.CREATE_FINANCE_RECORD)
 })
 
@@ -118,7 +118,8 @@ describe('with a successful request to create a finance record', () => {
   test('creates a toast', async () => {
     const toastStore = useMockedStore(useToastStore)
     const createToastSpy = vi.spyOn(toastStore, 'createToast')
-    const postSpy = vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInAPIResponse(null))
+    vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInAPIResponse(null))
+
     const saveProvider = helpers.getCreatingSaveProvider()
     const wrapper = mountWithProviders({ saveProvider })
 
@@ -132,7 +133,7 @@ describe('with a successful request to create a finance record', () => {
   })
 
   test('resets the amount and description', async () => {
-    const postSpy = vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInAPIResponse(null))
+    vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInAPIResponse(null))
     const saveProvider = helpers.getCreatingSaveProvider()
     const wrapper = mountWithProviders({ saveProvider })
 
@@ -154,8 +155,7 @@ describe('with a successful request to create a finance record', () => {
 
   test('resets the form errors', async () => {
     const apiErrors = createTestAPIFormErrors(formState)
-    const postSpy = vi
-      .spyOn(apiClient, 'post')
+    vi.spyOn(apiClient, 'post')
       .mockRejectedValueOnce(createTestProblemDetails(apiErrors))
       .mockResolvedValueOnce(wrapInAPIResponse(null))
 
@@ -182,7 +182,7 @@ describe('with an error creating a finance record', () => {
       description: '',
       happenedAt: '',
     })
-    const postSpy = vi.spyOn(apiClient, 'post').mockRejectedValue(apiErrors)
+    vi.spyOn(apiClient, 'post').mockRejectedValue(apiErrors)
     const saveProvider = helpers.getCreatingSaveProvider()
     const wrapper = mountWithProviders({ saveProvider })
 

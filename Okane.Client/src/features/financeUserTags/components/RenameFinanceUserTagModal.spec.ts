@@ -42,6 +42,7 @@ function mountWithProvider() {
   provider.setUserTagToRename(userTagToRename)
 
   const wrapper = getMountComponent(RenameFinanceUserTagModal, {
+    attachTo: document.body,
     global: {
       provide: {
         [MANAGE_FINANCE_USER_TAGS_PROVIDER_SYMBOL]: provider,
@@ -91,10 +92,11 @@ test('renders a button to close the modal', async () => {
   expect(provider.userTagToRename).toBeUndefined()
 })
 
-test('renders an input to rename the user tag', async () => {
+test('renders a focused input to rename the user tag', async () => {
   const { wrapper } = mountWithProvider()
   const input = wrapper.getComponent(FormInput)
   expect(input).toBeDefined()
+  expect(input.get('input').element).toBe(document.activeElement)
 
   const label = input.get('label')
   expect(label.text()).toBe(FINANCE_USER_TAGS_COPY.RENAME_MODAL.UPDATED_NAME)

@@ -3,6 +3,7 @@
 import { inject } from 'vue'
 
 // Internal
+import Button from '@shared/components/Button.vue'
 import FinanceUserTagSummary from '@features/financeUserTags/components/FinanceUserTagSummary.vue'
 import Modal from '@shared/components/modal/Modal.vue'
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
@@ -59,8 +60,10 @@ function handleDelete() {
       </p>
 
       <ModalActions>
-        <button @click="handleDelete">{{ SHARED_COPY.ACTIONS.DELETE }}</button>
-        <button @click="closeModal">{{ SHARED_COPY.ACTIONS.CANCEL }}</button>
+        <Button @click="handleDelete" focus-on-mount variant="warning">{{
+          SHARED_COPY.ACTIONS.DELETE
+        }}</Button>
+        <Button @click="closeModal">{{ SHARED_COPY.ACTIONS.CANCEL }}</Button>
       </ModalActions>
     </template>
   </Modal>

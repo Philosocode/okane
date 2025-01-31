@@ -1,9 +1,9 @@
 <script setup lang="ts">
 // External
 import { useRouter } from 'vue-router'
-import { useTemplateRef, watchEffect } from 'vue'
 
 // Internal
+import Button from '@shared/components/Button.vue'
 import Modal from '@shared/components/modal/Modal.vue'
 import ModalActions from '@shared/components/modal/ModalActions.vue'
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
@@ -19,15 +19,8 @@ const { modalIsShowing, showModal, closeModal } = useModal()
 const modalHeadingId = 'delete-account-modal-heading'
 
 const deleteMutation = useDeleteAccount()
-const deleteButtonRef = useTemplateRef<HTMLButtonElement>('deleteButtonRef')
 
 const router = useRouter()
-
-watchEffect(() => {
-  if (modalIsShowing) {
-    deleteButtonRef.value?.focus()
-  }
-})
 
 function handleDelete() {
   deleteMutation.mutate(undefined, {
@@ -39,21 +32,21 @@ function handleDelete() {
 </script>
 
 <template>
-  <button class="delete-button" @click="showModal">
+  <Button @click="showModal" variant="warning">
     {{ AUTH_COPY.ACCOUNT_PAGE.DELETE_ACCOUNT }}
-  </button>
+  </Button>
 
   <Modal :is-showing="modalIsShowing" :modal-heading-id="modalHeadingId" @close="closeModal">
     <ModalHeading :id="modalHeadingId">{{ AUTH_COPY.ACCOUNT_PAGE.DELETE_ACCOUNT }}</ModalHeading>
     <p class="confirmation">{{ AUTH_COPY.ACCOUNT_PAGE.DELETE_ACCOUNT_CONFIRMATION }}</p>
 
     <ModalActions>
-      <button class="delete-button" ref="deleteButtonRef" @click.prevent="handleDelete">
+      <Button class="button error" focus-on-mount variant="warning" @click.prevent="handleDelete">
         {{ SHARED_COPY.ACTIONS.DELETE }}
-      </button>
-      <button @click="closeModal">
+      </Button>
+      <Button @click="closeModal">
         {{ SHARED_COPY.ACTIONS.CANCEL }}
-      </button>
+      </Button>
     </ModalActions>
 
     <p v-if="deleteMutation.isError.value" class="error-text">
@@ -63,21 +56,6 @@ function handleDelete() {
 </template>
 
 <style scoped lang="scss">
-.delete-button {
-  background-color: var(--color-error);
-  border: none;
-  border-radius: pxToRem(4);
-  padding: var(--space-2xs);
-
-  &:hover {
-    background-color: var(--color-error-dim);
-  }
-
-  &:active {
-    background-color: var(--color-error-dim);
-  }
-}
-
 .error-text {
   color: var(--color-error);
 }

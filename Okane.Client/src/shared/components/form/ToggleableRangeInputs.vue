@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // Internal
+import Button from '@shared/components/Button.vue'
 import FormSelect from '@shared/components/form/FormSelect.vue'
 import Kicker from '@shared/components/typography/Kicker.vue'
 
@@ -73,9 +74,9 @@ function toggleRange() {
       </template>
     </div>
 
-    <button class="range-toggle" @click="toggleRange" type="button">
+    <Button class="range-toggle" @click="toggleRange" type="button">
       {{ props.isShowingRange ? SHARED_COPY.SEARCH.USE_SINGLE : SHARED_COPY.SEARCH.USE_RANGE }}
-    </button>
+    </Button>
   </fieldset>
 </template>
 

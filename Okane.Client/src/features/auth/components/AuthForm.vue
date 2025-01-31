@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// Internal
+import Button from '@shared/components/Button.vue'
+
 export type AuthFormProps = {
   submitButtonText: string
 
@@ -19,9 +22,14 @@ const emit = defineEmits<{
     <fieldset class="fieldset">
       <slot />
 
-      <button class="submit-button" :disabled="props.submitButtonIsDisabled" type="submit">
+      <Button
+        class="submit-button"
+        :disabled="props.submitButtonIsDisabled"
+        type="submit"
+        variant="callToAction"
+      >
         {{ submitButtonText }}
-      </button>
+      </Button>
 
       <p v-if="props.submitError" class="submit-error">{{ props.submitError }}</p>
       <p v-else-if="props.submitSuccess" class="submit-success">{{ props.submitSuccess }}</p>

@@ -1,5 +1,9 @@
 <script setup lang="ts">
+// External
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+// Internal
+import Button from '@shared/components/Button.vue'
 
 export type IconButtonProps = {
   icon: string
@@ -10,9 +14,9 @@ const props = defineProps<IconButtonProps>()
 </script>
 
 <template>
-  <button class="button" v-bind="$attrs">
+  <Button class="button" v-bind="$attrs">
     <FontAwesomeIcon :icon="props.icon" :title="props.title" />
-  </button>
+  </Button>
 </template>
 
 <style scoped></style>

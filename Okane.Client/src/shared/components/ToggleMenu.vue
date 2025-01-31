@@ -5,6 +5,9 @@ import { onClickOutside } from '@vueuse/core'
 import { ref, useTemplateRef } from 'vue'
 
 // Internal
+import Button from '@shared/components/Button.vue'
+import IconButton from '@shared/components/IconButton.vue'
+
 import { SHARED_COPY } from '@shared/constants/copy'
 
 type MenuAction = {
@@ -33,21 +36,21 @@ function handleClick(callback: MenuAction['onClick']) {
 
 <template>
   <div class="root" ref="rootRef">
-    <button
+    <IconButton
       aria-haspopup="true"
       :aria-controls="props.menuId"
       :aria-expanded="menuIsShowing"
       class="menu-toggle"
+      icon="fa-solid fa-ellipsis-vertical"
+      :title="SHARED_COPY.MENU.TOGGLE_MENU"
       @click="menuIsShowing = !menuIsShowing"
-    >
-      <FontAwesomeIcon icon="fa-solid fa-ellipsis-vertical" :title="SHARED_COPY.MENU.TOGGLE_MENU" />
-    </button>
+    />
 
     <ul v-if="menuIsShowing" class="menu" :id="props.menuId" role="menu">
       <li v-for="action in props.actions" :key="action.text" role="presentation">
-        <button class="menu-item" role="menuitem" @click="handleClick(action.onClick)">
+        <Button class="menu-item" role="menuitem" @click="handleClick(action.onClick)">
           {{ action.text }}
-        </button>
+        </Button>
       </li>
     </ul>
   </div>

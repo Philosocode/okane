@@ -31,6 +31,7 @@ function mountWithProvider() {
   provider.setUserTagToDelete(userTagToDelete)
 
   const wrapper = getMountComponent(DeleteFinanceUserTagModal, {
+    attachTo: document.body,
     global: {
       provide: {
         [MANAGE_FINANCE_USER_TAGS_PROVIDER_SYMBOL]: provider,
@@ -86,10 +87,11 @@ test('renders a button to close the modal', async () => {
   expect(provider.userTagToDelete).toBeUndefined()
 })
 
-test('renders a button to delete the user tag', async () => {
-  const spy = spyOn.delete().mockResolvedValue()
+test('renders a focused button to delete the user tag', async () => {
+  spyOn.delete().mockResolvedValue()
   const { provider, wrapper } = mountWithProvider()
   const button = wrapper.findByText('button', SHARED_COPY.ACTIONS.DELETE)
+  expect(button.element).toBe(document.activeElement)
 
   await button.trigger('click')
   await flushPromises()
@@ -97,7 +99,7 @@ test('renders a button to delete the user tag', async () => {
 })
 
 test('renders an error when deleting fails', async () => {
-  const spy = spyOn.delete().mockRejectedValue(createTestProblemDetails())
+  spyOn.delete().mockRejectedValue(createTestProblemDetails())
   const { provider, wrapper } = mountWithProvider()
   const button = wrapper.findByText('button', SHARED_COPY.ACTIONS.DELETE)
 

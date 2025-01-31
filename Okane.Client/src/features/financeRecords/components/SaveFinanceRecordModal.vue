@@ -3,6 +3,7 @@
 import { useTemplateRef } from 'vue'
 
 // Internal
+import Button from '@shared/components/Button.vue'
 import Modal from '@shared/components/modal/Modal.vue'
 import ModalActions from '@shared/components/modal/ModalActions.vue'
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
@@ -20,7 +21,7 @@ export type SaveFinanceRecordModalProps = {
   title: string
 }
 
-const { formState, isShowing, title } = defineProps<SaveFinanceRecordModalProps>()
+const { formErrors, formState, isShowing, title } = defineProps<SaveFinanceRecordModalProps>()
 
 const emit = defineEmits<{
   (event: 'change', updates: Partial<SaveFinanceRecordFormState>): void
@@ -58,8 +59,10 @@ function handleSave() {
       />
 
       <ModalActions>
-        <button @click="handleSave" type="submit">{{ SHARED_COPY.ACTIONS.SAVE }}</button>
-        <button @click="handleClose" type="button">{{ SHARED_COPY.ACTIONS.CANCEL }}</button>
+        <Button @click="handleSave" type="submit" variant="callToAction">{{
+          SHARED_COPY.ACTIONS.SAVE
+        }}</Button>
+        <Button @click="handleClose" type="button">{{ SHARED_COPY.ACTIONS.CANCEL }}</Button>
       </ModalActions>
     </form>
   </Modal>

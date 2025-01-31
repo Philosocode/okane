@@ -6,6 +6,7 @@ import FinanceRecordAmountFilter, {
 
 import { COMPARISON_OPERATOR } from '@shared/constants/search'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
+import { FINANCE_RECORD_MIN_AMOUNT } from '@features/financeRecords/constants/saveFinanceRecord'
 
 const mountComponent = getMountComponent(FinanceRecordAmountFilter)
 const props: FinanceRecordAmountFilterProps = {
@@ -32,6 +33,7 @@ test('renders a required amount1 input', () => {
   const wrapper = mountComponent({ props })
   const input = wrapper.get('input[name="amount1"]')
   expect(input.attributes('required')).toBeDefined()
+  expect(input.attributes('step')).toBe(FINANCE_RECORD_MIN_AMOUNT.toString())
   expect((input.element as HTMLInputElement).value).toEqual(props.amount1?.toString())
 
   const label = wrapper.findByText('label', FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.MIN_AMOUNT)
@@ -49,6 +51,7 @@ test('renders an amount2 input', () => {
   const wrapper = mountComponent({ props })
   const input = wrapper.find('input[name="amount2"]')
   expect(input.exists()).toBe(true)
+  expect(input.attributes('step')).toBe(FINANCE_RECORD_MIN_AMOUNT.toString())
   expect((input.element as HTMLInputElement).value).toEqual(props.amount2?.toString())
 
   const label = wrapper.findByText('label', FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.MAX_AMOUNT)

@@ -10,6 +10,7 @@ import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { INPUT_TYPE } from '@shared/constants/form'
 
 import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
+import { FINANCE_RECORD_MIN_AMOUNT } from '@features/financeRecords/constants/saveFinanceRecord'
 
 export type FinanceRecordAmountFilterProps = Pick<
   FinanceRecordsSearchFilters,
@@ -42,6 +43,7 @@ const emit = defineEmits<{
             : FINANCES_COPY.PROPERTIES.AMOUNT
         "
         :required="isShowingRange"
+        :step="FINANCE_RECORD_MIN_AMOUNT"
         :type="INPUT_TYPE.NUMBER"
         with-hidden-label
       />
@@ -54,6 +56,7 @@ const emit = defineEmits<{
         name="amount2"
         :label="FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.MAX_AMOUNT"
         required
+        :step="FINANCE_RECORD_MIN_AMOUNT"
         :type="INPUT_TYPE.NUMBER"
         with-hidden-label
       />

@@ -45,10 +45,11 @@ function toggleRange() {
   <fieldset class="fieldset">
     <Kicker class="legend" tag="legend">{{ props.label }}</Kicker>
 
-    <div class="column">
+    <div class="inputs row">
       <div class="row">
         <FormSelect
           v-if="!isShowingRange"
+          class="operator"
           :model-value="props.operator"
           @update:model-value="emitChange"
           :label="SHARED_COPY.SEARCH.OPERATOR"
@@ -56,7 +57,7 @@ function toggleRange() {
           :options="ALL_COMPARISON_OPERATOR_OPTIONS"
           with-hidden-label
         />
-        <span v-else>{{ COMPARISON_OPERATOR.GTE }}</span>
+        <span v-else class="operator">{{ COMPARISON_OPERATOR.GTE }}</span>
 
         <slot name="input1" />
       </div>
@@ -67,7 +68,7 @@ function toggleRange() {
         </Kicker>
 
         <div class="row">
-          <span>{{ COMPARISON_OPERATOR.LTE }}</span>
+          <span class="operator">{{ COMPARISON_OPERATOR.LTE }}</span>
 
           <slot name="input2" />
         </div>
@@ -80,19 +81,11 @@ function toggleRange() {
   </fieldset>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .and {
   font-size: var(--font-size-sm);
+  margin: 0 var(--space-xs);
   text-align: center;
-  text-transform: uppercase;
-}
-
-.column {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  gap: var(--space-2xs);
-  width: max-content;
 }
 
 .fieldset {
@@ -101,6 +94,7 @@ function toggleRange() {
 }
 
 .legend {
+  font-size: var(--font-size-sm);
   margin-bottom: var(--space-2xs);
 }
 
@@ -108,9 +102,26 @@ function toggleRange() {
   margin-top: var(--space-xs);
 }
 
+.operator {
+  font-size: var(--font-size-lg);
+  margin-right: var(--space-xs);
+}
+
 .row {
   display: flex;
-  flex-direction: row;
-  gap: var(--space-sm);
+  align-items: center;
+  width: fit-content;
+}
+
+// On very narrow screens, both inputs won't fit on the same row, so we need to
+// move them onto separate rows.
+@media only screen and (max-width: 30em) {
+  .and {
+    margin-block: var(--space-2xs);
+  }
+
+  .inputs {
+    display: block;
+  }
 }
 </style>

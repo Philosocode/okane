@@ -102,7 +102,7 @@ test('renders a modal to delete a finance record', () => {
   })
 })
 
-test('renders a modal to search finance records', () => {
+test('renders a modal to filter finance records', () => {
   commonAsserts.rendersElementWithTestId({
     testId: testIds.SearchFiltersSection,
     wrapper: mountComponent(),
@@ -111,12 +111,10 @@ test('renders a modal to search finance records', () => {
 
 test('provides delete finance record state', () => {
   const fakeId = 123
-  const providerSpy = vi
-    .spyOn(deleteFinanceRecordIdProvider, 'useDeleteFinanceRecordId')
-    .mockReturnValue({
-      id: fakeId,
-      setId: vi.fn(),
-    })
+  vi.spyOn(deleteFinanceRecordIdProvider, 'useDeleteFinanceRecordId').mockReturnValue({
+    id: fakeId,
+    setId: vi.fn(),
+  })
 
   const ListStub = defineComponent({
     setup() {
@@ -141,14 +139,12 @@ test('provides save finance record state', () => {
   const isCreating = true
   const financeRecord = createTestFinanceRecord()
 
-  const providerSpy = vi
-    .spyOn(saveFinanceRecordProvider, 'useSaveFinanceRecordProvider')
-    .mockReturnValue({
-      isCreating,
-      editingFinanceRecord: financeRecord,
-      setIsCreating: vi.fn(),
-      setEditingFinanceRecord: vi.fn(),
-    })
+  vi.spyOn(saveFinanceRecordProvider, 'useSaveFinanceRecordProvider').mockReturnValue({
+    isCreating,
+    editingFinanceRecord: financeRecord,
+    setIsCreating: vi.fn(),
+    setEditingFinanceRecord: vi.fn(),
+  })
 
   const ListStub = defineComponent({
     setup() {
@@ -178,17 +174,15 @@ test('provides save finance record state', () => {
 test('provides search finance records state', () => {
   const description = 'Cool description'
   const modalIsShowing = true
-  const providerSpy = vi
-    .spyOn(searchFinanceRecordsProvider, 'useSearchFinanceRecordsProvider')
-    .mockReturnValue({
-      filters: {
-        ...DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,
-        description,
-      },
-      modalIsShowing,
-      setFilters: vi.fn(),
-      setModalIsShowing: vi.fn(),
-    })
+  vi.spyOn(searchFinanceRecordsProvider, 'useSearchFinanceRecordsProvider').mockReturnValue({
+    filters: {
+      ...DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,
+      description,
+    },
+    modalIsShowing,
+    setFilters: vi.fn(),
+    setModalIsShowing: vi.fn(),
+  })
 
   const ListStub = defineComponent({
     setup() {

@@ -5,7 +5,7 @@ import { inject, ref } from 'vue'
 // Internal
 import Modal from '@shared/components/modal/Modal.vue'
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
-import SearchFinanceRecordsForm from '@features/financeRecords/components/SearchFinanceRecordsForm.vue'
+import SearchFinanceRecordsForm from '@features/financeRecords/components/searchFinanceRecords/SearchFiltersForm.vue'
 
 import { DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'

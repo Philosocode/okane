@@ -4,7 +4,7 @@ import { flushPromises, type VueWrapper } from '@vue/test-utils'
 // Internal
 import FinanceRecordAmountFilter from '@features/financeRecords/components/FinanceRecordAmountFilter.vue'
 import FinanceRecordHappenedAtFilter from '@features/financeRecords/components/FinanceRecordHappenedAtFilter.vue'
-import SearchFinanceRecordsForm from '@features/financeRecords/components/SearchFinanceRecordsForm.vue'
+import SearchFiltersForm from '@features/financeRecords/components/searchFinanceRecords/SearchFiltersForm.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
@@ -61,7 +61,7 @@ async function mountWithProviders(args: { searchProvider?: SearchFinanceRecordsP
 
   testServer.use(financeUserTagHandlers.getAllSuccess({ userTags }))
 
-  const wrapper = getMountComponent(SearchFinanceRecordsForm, {
+  const wrapper = getMountComponent(SearchFiltersForm, {
     attachTo: document.body,
     global: {
       provide: {

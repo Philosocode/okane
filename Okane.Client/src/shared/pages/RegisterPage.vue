@@ -3,7 +3,7 @@
 import { ref } from 'vue'
 
 // Internal
-import PageLayout from '@shared/layouts/PageLayout.vue'
+import PageLayout from '@shared/components/wrappers/PageLayout.vue'
 import RegisterForm from '@features/auth/components/RegisterForm.vue'
 import SuccessfullyRegistered from '@features/auth/components/SuccessfullyRegistered.vue'
 
@@ -19,7 +19,7 @@ function setRegistrationSucceeded() {
 </script>
 
 <template>
-  <PageLayout>
+  <PageLayout is-narrow>
     <RegisterForm
       v-if="!registrationSucceeded && passwordRequirements"
       :password-requirements="passwordRequirements"

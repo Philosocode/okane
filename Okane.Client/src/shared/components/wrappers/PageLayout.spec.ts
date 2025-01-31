@@ -2,7 +2,7 @@
 import { defineComponent, h } from 'vue'
 
 // Internal
-import PageLayout from '@shared/layouts/PageLayout.vue'
+import PageLayout from '@shared/components/wrappers/PageLayout.vue'
 
 const mountComponent = getMountComponent(PageLayout)
 

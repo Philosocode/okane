@@ -4,7 +4,7 @@ import { ref } from 'vue'
 
 // Internal
 import Heading from '@shared/components/Heading.vue'
-import PageLayout from '@shared/layouts/PageLayout.vue'
+import PageLayout from '@shared/components/wrappers/PageLayout.vue'
 import SendResetPasswordEmailForm from '@features/auth/components/SendResetPasswordEmailForm.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
@@ -13,7 +13,7 @@ const sendSucceeded = ref(false)
 </script>
 
 <template>
-  <PageLayout>
+  <PageLayout is-narrow>
     <SendResetPasswordEmailForm v-if="!sendSucceeded" @success="sendSucceeded = true" />
 
     <template v-else>

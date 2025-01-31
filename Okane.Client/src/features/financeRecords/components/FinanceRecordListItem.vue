@@ -4,7 +4,7 @@ import { computed, inject } from 'vue'
 import { formatDate } from 'date-fns'
 
 // Internal
-import TagPill from '@shared/components/TagPill.vue'
+import TagPill from '@shared/components/Pill.vue'
 import ToggleMenu from '@shared/components/ToggleMenu.vue'
 
 import { FINANCE_RECORD_TIMESTAMP_FORMAT } from '@features/financeRecords/constants/financeRecordList'
@@ -21,6 +21,7 @@ import {
   DELETE_FINANCE_RECORD_ID_SYMBOL,
   type DeleteFinanceRecordIdProvider,
 } from '@features/financeRecords/providers/deleteFinanceRecordIdProvider'
+import Pill from '@shared/components/Pill.vue'
 
 type Props = {
   financeRecord: FinanceRecord
@@ -67,7 +68,9 @@ const menuActions = [
       <div>{{ financeRecord.description }}</div>
 
       <div class="tags">
-        <TagPill :key="tag.id" v-for="tag in financeRecord.tags" :tag-name="tag.name" />
+        <Pill :key="tag.id" v-for="tag in financeRecord.tags" class="tag">
+          {{ tag.name }}
+        </Pill>
       </div>
     </div>
 
@@ -98,6 +101,10 @@ const menuActions = [
 .tags {
   display: flex;
   gap: var(--space-xs);
+}
+
+.tag {
+  min-width: 3rem;
 }
 
 .top-row {

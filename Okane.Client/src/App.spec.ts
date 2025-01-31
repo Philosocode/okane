@@ -1,5 +1,6 @@
 // Internal
 import App from './App.vue'
+import Footer from '@shared/components/Footer.vue'
 import NavBar from '@shared/components/NavBar.vue'
 import Toaster from '@shared/components/toast/Toaster.vue'
 
@@ -21,7 +22,12 @@ test('renders a nav bar', () => {
   expect(wrapper.findComponent(NavBar).exists()).toBe(true)
 })
 
-test('renders a toast', () => {
+test('renders a toaster', () => {
   const wrapper = mountComponent()
   expect(wrapper.findComponent(Toaster).exists()).toBe(true)
+})
+
+test('renders a footer', () => {
+  const wrapper = mountComponent()
+  expect(wrapper.findComponent(Footer).exists()).toBe(true)
 })

@@ -2,8 +2,8 @@
 import { flushPromises, VueWrapper } from '@vue/test-utils'
 
 // Internal
+import CardHeading from '@shared/components/typography/CardHeading.vue'
 import EditFinanceRecordModal from '@features/financeRecords/components/EditFinanceRecordModal.vue'
-import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 import SaveFinanceRecordModal from '@features/financeRecords/components/SaveFinanceRecordModal.vue'
 
 import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
@@ -82,13 +82,13 @@ test('does not render the modal content when not editing a finance record', () =
   saveProvider.setEditingFinanceRecord(undefined)
 
   const wrapper = mountWithProviders({ saveProvider })
-  const heading = wrapper.findComponent(ModalHeading)
+  const heading = wrapper.findComponent(CardHeading)
   expect(heading.exists()).toBe(false)
 })
 
 test('renders the modal heading', () => {
   const wrapper = mountWithProviders()
-  const heading = wrapper.getComponent(ModalHeading)
+  const heading = wrapper.getComponent(CardHeading)
   expect(heading.text()).toBe(FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.EDIT_FINANCE_RECORD)
 })
 
@@ -126,12 +126,16 @@ test('updates the form state when the initial form state changes', async () => {
   expect(amountInput.value).toBe(updates.amount.toString())
 })
 
-test("does not make a request when the form state hasn't changed", async () => {
+test('closes the modal without making a request when the form state is unchanged', async () => {
+  const saveProvider = useSaveFinanceRecordProvider()
+  saveProvider.setEditingFinanceRecord(editingFinanceRecord)
+
   const patchSpy = vi.spyOn(apiClient, 'patch')
-  const wrapper = mountWithProviders()
+  const wrapper = mountWithProviders({ saveProvider })
 
   await helpers.submitForm(wrapper)
   expect(patchSpy).not.toHaveBeenCalled()
+  expect(saveProvider.editingFinanceRecord).toBeUndefined()
 })
 
 describe('with a successful request to edit a finance record', () => {
@@ -155,7 +159,7 @@ describe('with a successful request to edit a finance record', () => {
   test('creates a toast', async () => {
     const toastStore = useMockedStore(useToastStore)
     const createToastSpy = vi.spyOn(toastStore, 'createToast')
-    const patchSpy = vi.spyOn(apiClient, 'patch').mockResolvedValue(wrapInAPIResponse(null))
+    vi.spyOn(apiClient, 'patch').mockResolvedValue(wrapInAPIResponse(null))
     const saveProvider = helpers.getEditingSaveProvider()
     const wrapper = mountWithProviders({ saveProvider })
 
@@ -169,7 +173,7 @@ describe('with a successful request to edit a finance record', () => {
   })
 
   test('closes the form', async () => {
-    const patchSpy = vi.spyOn(apiClient, 'patch').mockResolvedValue(wrapInAPIResponse(null))
+    vi.spyOn(apiClient, 'patch').mockResolvedValue(wrapInAPIResponse(null))
     const saveProvider = helpers.getEditingSaveProvider()
     const wrapper = mountWithProviders({ saveProvider })
 
@@ -181,8 +185,7 @@ describe('with a successful request to edit a finance record', () => {
 
   test('resets the form errors', async () => {
     const apiErrors = createTestAPIFormErrors(initialFormState)
-    const patchSpy = vi
-      .spyOn(apiClient, 'patch')
+    vi.spyOn(apiClient, 'patch')
       .mockRejectedValueOnce(createTestProblemDetails(apiErrors))
       .mockResolvedValueOnce(wrapInAPIResponse(null))
 
@@ -207,7 +210,7 @@ describe('with an error updating a finance record', () => {
       description: '',
       happenedAt: '',
     })
-    const patchSpy = vi.spyOn(apiClient, 'patch').mockRejectedValue(apiErrors)
+    vi.spyOn(apiClient, 'patch').mockRejectedValue(apiErrors)
     const wrapper = mountWithProviders()
 
     helpers.setFormState(wrapper, { amount: 10_000 })

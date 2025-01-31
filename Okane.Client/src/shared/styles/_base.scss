@@ -1,9 +1,14 @@
 :root {
-  background: var(--color-site-bg);
+  background-color: var(--color-site-bg);
   color: var(--color-text);
   font-family: var(--font-primary);
   font-size: var(--font-size-md);
+  font-weight: 500;
   line-height: var(--leading-base);
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-block-end: var(--space-md);
+  position: relative;
 }
 
 h1 {
@@ -24,23 +29,23 @@ h4 {
 
 button {
   cursor: pointer;
-
-  &:disabled {
-    color: var(--color-text-disabled);
-  }
 }
 
-a {
-  color: var(--color-link);
+:focus {
+  --color-focus-outline: var(--color-accent);
 
-  &:hover {
-    color: var(--color-link-active);
-  }
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-focus-outline);
 }
 
 // Prevent scroll when modal is open.
 body:has([data-disable-document-scroll="true"]) {
   overflow: hidden;
+}
+
+// From: https://piccalil.li/blog/my-favourite-3-lines-of-css/
+.flow > * + * {
+  margin-block-start: var(--flow-space, var(--space-md));
 }
 
 @media (prefers-reduced-motion: reduce) {

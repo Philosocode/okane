@@ -1,20 +1,17 @@
-// Colours. See: https://tailwindcss.com/docs/customizing-colors#default-color-palette
 :root {
-  --color-black: #030712;
-  --color-white: #ffffff;
+  --color-black: #121212;
+  --color-white: #F8F8F8;
 
-  --color-gray-50: #f9fafb;
-  --color-gray-100: #f3f4f6;
-  --color-gray-200: #e5e7eb;
-  --color-gray-300: #d1d5db;
-  --color-gray-400: #9ca3af;
-  --color-gray-500: #6b7280;
-  --color-gray-600: #4b5563;
-  --color-gray-700: #374151;
-  --color-gray-800: #1f2937;
-  --color-gray-900: #111827;
+  --color-gray-100: #E7E7E7;
+  --color-gray-200: #D1D1D1;
+  --color-gray-300: #B0B0B0;
+  --color-gray-400: #888888;
+  --color-gray-500: #6D6D6D;
+  --color-gray-600: #5D5D5D;
+  --color-gray-700: #4F4F4F;
+  --color-gray-800: #454545;
+  --color-gray-900: #343434;
 
-  --color-green-50: #ebfef5;
   --color-green-100: #d0fbe6;
   --color-green-200: #a4f6d1;
   --color-green-300: #6aebba;
@@ -25,14 +22,13 @@
   --color-green-800: #036248;
   --color-green-900: #04503d;
 
-  --color-red-50: #fef2f2;
-  --color-red-100: #fee2e2;
-  --color-red-200: #fecaca;
-  --color-red-300: #fca5a5;
-  --color-red-400: #f87171;
-  --color-red-500: #ef4444;
-  --color-red-600: #dc2626;
-  --color-red-700: #b91c1c;
-  --color-red-800: #991b1b;
-  --color-red-900: #7f1d1d;
+  --color-red-100: #fecdd3;
+  --color-red-200: #fda4af;
+  --color-red-300: #fb7185;
+  --color-red-400: #f43f5e;
+  --color-red-500: #e11d48;
+  --color-red-600: #be123c;
+  --color-red-700: #9f1239;
+  --color-red-800: #881337;
+  --color-red-900: #460809;
 }

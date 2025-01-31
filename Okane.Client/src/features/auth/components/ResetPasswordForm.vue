@@ -7,6 +7,7 @@ import { computed, ref } from 'vue'
 import AuthForm from '@features/auth/components/AuthForm.vue'
 import FormInput from '@shared/components/form/FormInput.vue'
 import Heading from '@shared/components/Heading.vue'
+import Link from '@shared/components/Link.vue'
 import PasswordRequirements from '@features/auth/components/PasswordRequirements.vue'
 
 import { appRoutes } from '@shared/services/router/router'
@@ -96,9 +97,9 @@ function handleReset() {
 
   <p v-if="resetSucceeded">
     {{ AUTH_COPY.RESET_PASSWORD.RESET_SUCCEEDED.SUCCESS }}
-    <RouterLink :to="appRoutes.login.buildPath()">{{
+    <Link :to="appRoutes.login.buildPath()">{{
       AUTH_COPY.RESET_PASSWORD.RESET_SUCCEEDED.CLICK_HERE
-    }}</RouterLink>
+    }}</Link>
   </p>
 
   <p v-if="!validURL" class="error">{{ AUTH_COPY.RESET_PASSWORD.INVALID_URL }}</p>

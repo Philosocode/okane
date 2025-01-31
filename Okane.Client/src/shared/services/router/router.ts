@@ -97,7 +97,6 @@ export const appRoutes: Record<ROUTE_NAME, Route> = {
 export function createAppRouter() {
   return createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
-    linkExactActiveClass: 'active-link',
     routes: Object.values(appRoutes),
   })
 }

@@ -67,7 +67,10 @@ function handleSubmit() {
     initialFormState.value,
     formState.value,
   )
-  if (!hasChanges) return
+  if (!hasChanges) {
+    handleClose()
+    return
+  }
 
   formErrors.value = { ...initialFormErrors }
 

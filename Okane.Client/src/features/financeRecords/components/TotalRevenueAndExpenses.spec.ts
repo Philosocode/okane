@@ -3,12 +3,13 @@ import { flushPromises, VueWrapper } from '@vue/test-utils'
 import { http, HttpResponse } from 'msw'
 
 // Internal
-import Heading from '@shared/components/Heading.vue'
+import CardHeading from '@shared/components/typography/CardHeading.vue'
 import TotalAmountCell from '@features/financeRecords/components/TotalAmountCell.vue'
 import TotalRevenueAndExpenses from '@features/financeRecords/components/TotalRevenueAndExpenses.vue'
+import VerticalDivider from '@shared/components/VerticalDivider.vue'
 
 import { DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
-import { HTML_ROLE } from '@shared/constants/html'
+import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
 
@@ -50,6 +51,7 @@ const sharedTests = {
     getCell: (cells: VueWrapper[]) => VueWrapper
     headingText: string
     stats: FinanceRecordsStats
+    type: FINANCE_RECORD_TYPE
   }) {
     useStatsHandler(args.stats)
     const wrapper = mountComponent()
@@ -57,10 +59,16 @@ const sharedTests = {
 
     const cells = wrapper.findAllComponents(TotalAmountCell)
     const cell = args.getCell(cells)
-    const heading = cell.findComponent(Heading)
+    const heading = cell.findComponent(CardHeading)
     expect(heading.text()).toBe(args.headingText)
 
-    const amount = cell.findByText('p', `$${args.amount.toFixed(2)}`)
+    const amount = cell.findByText(
+      'p',
+      FINANCES_COPY.STATS.TOTAL_AMOUNT({
+        amount: args.amount,
+        type: args.type,
+      }),
+    )
     expect(amount).toBeDefined()
 
     const countText = pluralize({
@@ -85,7 +93,7 @@ test('renders a divider', () => {
   useStatsHandler(defaultStats)
 
   const wrapper = mountComponent()
-  expect(wrapper.find(`div[role="${HTML_ROLE.SEPARATOR}"]`).exists()).toBe(true)
+  expect(wrapper.findComponent(VerticalDivider).exists()).toBe(true)
 })
 
 test('renders revenue stats', async () => {
@@ -95,6 +103,7 @@ test('renders revenue stats', async () => {
     stats: defaultStats,
     headingText: FINANCES_COPY.RECORD_TYPES.REVENUE,
     getCell: (cells) => cells[0],
+    type: FINANCE_RECORD_TYPE.REVENUE,
   })
 })
 
@@ -105,6 +114,7 @@ test('renders expense stats', async () => {
     stats: defaultStats,
     headingText: FINANCES_COPY.STATS.EXPENSES,
     getCell: (cells) => cells[1],
+    type: FINANCE_RECORD_TYPE.EXPENSE,
   })
 })
 

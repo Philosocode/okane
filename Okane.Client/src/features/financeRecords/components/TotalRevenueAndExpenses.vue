@@ -4,8 +4,10 @@ import { computed } from 'vue'
 
 // Internal
 import TotalAmountCell from '@features/financeRecords/components/TotalAmountCell.vue'
+import VerticalDivider from '@shared/components/VerticalDivider.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
+import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 
 import { useQueryFinanceRecordsStats } from '@features/financeRecords/composables/useQueryFinanceRecordsStats'
 
@@ -17,26 +19,42 @@ const stats = computed(() => data.value?.items[0])
   <section class="root">
     <TotalAmountCell
       :amount="stats?.totalRevenue ?? 0"
+      :class="{ revenue: true, empty: !stats?.totalRevenue }"
       :count="stats?.revenueRecords ?? 0"
       :heading-text="FINANCES_COPY.RECORD_TYPES.REVENUE"
+      :type="FINANCE_RECORD_TYPE.REVENUE"
     />
-    <div class="divider" role="separator" />
+    <VerticalDivider />
     <TotalAmountCell
       :amount="stats?.totalExpenses ?? 0"
+      :class="{ expenses: true, empty: !stats?.totalExpenses }"
       :count="stats?.expenseRecords ?? 0"
       :heading-text="FINANCES_COPY.STATS.EXPENSES"
+      :type="FINANCE_RECORD_TYPE.EXPENSE"
     />
   </section>
 </template>
 
 <style scoped lang="scss">
 .root {
-  border: pxToRem(1) solid var(--color-card-border);
+  border-bottom: var(--border-main);
   display: flex;
 }
 
 .divider {
-  background-color: var(--color-card-border);
-  width: pxToRem(1);
+  background-color: var(--color-border);
+  width: var(--border-width);
+}
+
+.revenue {
+  color: var(--color-accent-dim);
+}
+
+.expenses {
+  color: var(--color-error-deep);
+}
+
+.empty {
+  color: var(--color-text-dim);
 }
 </style>

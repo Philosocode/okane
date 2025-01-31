@@ -1,25 +1,30 @@
 <script setup lang="ts">
 // Internal
-import Heading from '@shared/components/Heading.vue'
+import CardHeading from '@shared/components/typography/CardHeading.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
+import { type FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
+
 import { pluralize } from '@shared/utils/string'
 
-type Props = {
+export type TotalAmountCellProps = {
   amount: number
   count: number
   headingText: string
+  type: FINANCE_RECORD_TYPE
 }
 
-const props = defineProps<Props>()
+const props = defineProps<TotalAmountCellProps>()
 </script>
 
 <template>
-  <div class="cell">
-    <Heading class="heading" tag="h4">{{ props.headingText }}</Heading>
-    <p class="amount">${{ props.amount.toFixed(2) }}</p>
-    <p class="count">
+  <div class="cell flow">
+    <CardHeading tag="h3">{{ props.headingText }}</CardHeading>
+    <p class="amount">
+      {{ FINANCES_COPY.STATS.TOTAL_AMOUNT({ amount: props.amount, type: props.type }) }}
+    </p>
+    <p>
       {{ props.count }}
       {{ pluralize({ text: FINANCES_COPY.STATS.RECORD, count: props.count, suffix: 's' }) }}
     </p>
@@ -29,23 +34,15 @@ const props = defineProps<Props>()
 <style scoped lang="scss">
 .cell {
   flex-grow: 1;
-  padding-block: var(--space-lg);
+  padding: var(--space-lg) var(--space-2xs);
   text-align: center;
 
-  & > * + * {
-    margin-top: var(--space-xs);
-  }
+  --flow-space: var(--space-xs);
 }
 
 .amount {
-  font-size: var(--font-size-md);
-}
-
-.heading {
-  margin-block: 0;
-}
-
-.count {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xl);
+  font-weight: bold;
+  word-break: break-all;
 }
 </style>

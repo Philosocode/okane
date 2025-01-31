@@ -3,6 +3,7 @@
 import { computed, inject } from 'vue'
 
 // Internal
+import BulletedList from '@shared/components/BulletedList.vue'
 import Heading from '@shared/components/Heading.vue'
 
 import { COMPARISON_OPERATOR } from '@shared/constants/search'
@@ -65,7 +66,7 @@ const happenedAtCriteria = computed(() => {
     <Heading class="heading" tag="h4">{{
       FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.APPLIED_SEARCH_FILTERS
     }}</Heading>
-    <ul class="bulleted-list">
+    <BulletedList>
       <li>
         {{ FINANCES_COPY.PROPERTIES.TYPE }}:
         {{ searchProvider.filters.type || capitalize(SHARED_COPY.COMMON.ALL) }}
@@ -81,7 +82,7 @@ const happenedAtCriteria = computed(() => {
         {{ SHARED_COPY.SEARCH.SORT_BY }}: {{ searchProvider.filters.sortField }},
         {{ searchProvider.filters.sortDirection }}
       </li>
-    </ul>
+    </BulletedList>
   </section>
 </template>
 
@@ -90,11 +91,6 @@ const happenedAtCriteria = computed(() => {
   border: pxToRem(1) solid var(--color-card-border);
   border-radius: 0.25rem;
   padding: var(--space-md);
-}
-
-.bulleted-list {
-  list-style-type: disc;
-  padding-left: var(--space-md);
 }
 
 .heading {

@@ -1,4 +1,5 @@
 // External
+import { inject } from 'vue'
 import { useMutation, useQueryClient, type InfiniteData } from '@tanstack/vue-query'
 
 // Internal
@@ -11,7 +12,10 @@ import { type APIPaginatedResponse } from '@shared/services/apiClient/types'
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
 
 import { removeItemFromPages } from '@shared/utils/pagination'
-import { useSearchFinanceRecordsProvider } from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+import {
+  SEARCH_FINANCE_RECORDS_SYMBOL,
+  type SearchFinanceRecordsProvider,
+} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
 function deleteFinanceRecord(id: number) {
   return apiClient.delete(financeRecordAPIRoutes.deleteFinanceRecord({ id }))
@@ -19,7 +23,7 @@ function deleteFinanceRecord(id: number) {
 
 export function useDeleteFinanceRecord() {
   const queryClient = useQueryClient()
-  const searchProvider = useSearchFinanceRecordsProvider()
+  const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
 
   return useMutation({
     mutationFn: (id: number) => deleteFinanceRecord(id),

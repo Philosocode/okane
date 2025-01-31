@@ -1,18 +1,15 @@
 :root {
-  // See: https://type-scale.com/
-  --font-size-multiplier: 1.2;
+  --font-primary: 'Avenir Next', Avenir, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --leading-base: 1.6;
 
-  --font-size-2xs: calc(var(--font-size-xs) / var(--font-size-multiplier));
-  --font-size-xs: calc(var(--font-size-sm) / var(--font-size-multiplier));
-  --font-size-sm: calc(var(--font-size-md) / var(--font-size-multiplier));
-  --font-size-md: 1.125rem;
-  --font-size-lg: calc(var(--font-size-md) * var(--font-size-multiplier));
-  --font-size-xl: calc(var(--font-size-lg) * var(--font-size-multiplier));
-  --font-size-2xl: calc(var(--font-size-xl) * var(--font-size-multiplier));
-  --font-size-3xl: calc(var(--font-size-2xl) * var(--font-size-multiplier));
-  --font-size-4xl: calc(var(--font-size-3xl) * var(--font-size-multiplier));
+  --font-size-multiplier: 1.25;
 
-  --font-primary: Avenir, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-
-  --leading-base: 1.5;
+  /* @link https://utopia.fyi/type/calculator?c=320,16,1.2,1240,16,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12 */
+  --font-size-xs: clamp(0.64rem, 0.7134rem + -0.0947vw, 0.6944rem);
+  --font-size-sm: clamp(0.8rem, 0.8449rem + -0.058vw, 0.8333rem);
+  --font-size-md: 1rem;
+  --font-size-lg: clamp(1.2rem, 1.1826rem + 0.087vw, 1.25rem);
+  --font-size-xl: clamp(1.44rem, 1.3974rem + 0.213vw, 1.5625rem);
+  --font-size-2xl: clamp(1.728rem, 1.6497rem + 0.3915vw, 1.9531rem);
+  --font-size-3xl: clamp(2.0736rem, 1.9457rem + 0.6397vw, 2.4414rem);
 }

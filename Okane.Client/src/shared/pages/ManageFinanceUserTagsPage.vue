@@ -8,7 +8,7 @@ import RenameFinanceUserTagModal from '@features/financeUserTags/components/Rena
 import FinanceUserTagGrid from '@features/financeUserTags/components/FinanceUserTagGrid.vue'
 import Heading from '@shared/components/Heading.vue'
 import Loader from '@shared/components/loader/Loader.vue'
-import PageLayout from '@shared/layouts/PageLayout.vue'
+import PageLayout from '@shared/components/wrappers/PageLayout.vue'
 import TagTypeSelect from '@features/financeUserTags/components/TagTypeSelect.vue'
 
 import { FINANCE_USER_TAGS_COPY } from '@features/financeUserTags/constants/copy'

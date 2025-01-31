@@ -9,7 +9,7 @@ import DeleteFinanceRecordModal from '@features/financeRecords/components/Delete
 import EditFinanceRecordModal from '@features/financeRecords/components/EditFinanceRecordModal.vue'
 import FinanceRecordList from '@features/financeRecords/components/FinanceRecordList.vue'
 import Heading from '@shared/components/Heading.vue'
-import PageLayout from '@shared/layouts/PageLayout.vue'
+import PageLayout from '@shared/components/wrappers/PageLayout.vue'
 import SearchFiltersSection from '@features/financeRecords/components/SearchFinanceRecordsSection.vue'
 import TotalRevenueAndExpenses from '@features/financeRecords/components/TotalRevenueAndExpenses.vue'
 

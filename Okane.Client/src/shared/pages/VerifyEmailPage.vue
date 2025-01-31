@@ -6,7 +6,7 @@ import { computed, onMounted, ref } from 'vue'
 // Internal
 import Heading from '@shared/components/Heading.vue'
 import Loader from '@shared/components/loader/Loader.vue'
-import PageLayout from '@shared/layouts/PageLayout.vue'
+import PageLayout from '@shared/components/wrappers/PageLayout.vue'
 import VerifyEmailFailed from '@features/auth/components/VerifyEmailFailed.vue'
 import VerifyEmailSucceeded from '@features/auth/components/VerifyEmailSucceeded.vue'
 
@@ -54,7 +54,7 @@ function verifyEmail() {
 </script>
 
 <template>
-  <PageLayout>
+  <PageLayout is-narrow>
     <Heading tag="h1">{{ AUTH_COPY.VERIFY_EMAIL.VERIFYING_YOUR_EMAIL }}</Heading>
 
     <template v-if="!doneInitialLoad">

@@ -4,7 +4,7 @@ import DeleteAccountModal from '@features/auth/components/DeleteAccountModal.vue
 import EditName from '@features/auth/components/EditName.vue'
 import EditPassword from '@features/auth/components/EditPassword.vue'
 import Heading from '@shared/components/Heading.vue'
-import PageLayout from '@shared/layouts/PageLayout.vue'
+import PageLayout from '@shared/components/wrappers/PageLayout.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
 

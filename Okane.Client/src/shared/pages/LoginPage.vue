@@ -1,11 +1,11 @@
 <script setup lang="ts">
 // Internal
 import LoginForm from '@features/auth/components/LoginForm.vue'
-import PageLayout from '@shared/layouts/PageLayout.vue'
+import PageLayout from '@shared/components/wrappers/PageLayout.vue'
 </script>
 
 <template>
-  <PageLayout>
+  <PageLayout is-narrow>
     <LoginForm />
   </PageLayout>
 </template>

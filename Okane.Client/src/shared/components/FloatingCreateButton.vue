@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // External
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import IconButton from '@shared/components/IconButton.vue'
 
 type Props = {
   title: string
@@ -14,23 +14,33 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <button class="button" @click="emit('click')">
-    <FontAwesomeIcon icon="fa-solid fa-plus" :title="props.title" />
-  </button>
+  <IconButton
+    class="icon-button"
+    icon="fa-solid fa-plus"
+    :title="props.title"
+    @click="emit('click')"
+  />
 </template>
 
 <style scoped>
-.button {
-  --button-size: clamp(2rem, 2rem + 2.5vw, 3rem);
+.icon-button {
+  --button-size: clamp(2rem, 2rem + 2.5vw, 3.5rem);
   --offset: clamp(0.5rem, 0.5rem + 0.5vw, 1rem);
 
-  border: none;
-  border-radius: 50%;
-  font-size: 1.25rem;
+  background-color: var(--color-accent-deep);
+  border: var(--border-main);
+  border-color: var(--color-accent-dim);
+  border-radius: 10rem;
   position: fixed;
+  font-size: 1.25rem;
   bottom: var(--offset);
   right: var(--offset);
   height: var(--button-size);
   width: var(--button-size);
+  z-index: var(--z-index-floating-create-button);
+
+  &:hover {
+    background-color: var(--color-accent);
+  }
 }
 </style>

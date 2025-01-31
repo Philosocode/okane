@@ -48,6 +48,8 @@ export const SHARED_COPY = {
     PLACEHOLDER: 'Select tags...',
   },
 
+  TAGS: 'Tags',
+
   SEARCH: {
     OPERATOR: 'Operator',
     SORT_BY: 'Sort By',

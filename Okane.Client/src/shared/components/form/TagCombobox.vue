@@ -3,6 +3,8 @@
 import Multiselect from '@vueform/multiselect'
 
 // Internal
+import FormLabel from '@shared/components/form/FormLabel.vue'
+
 import { SHARED_COPY } from '@shared/constants/copy'
 
 import { type Tag } from '@shared/types/tag'
@@ -26,9 +28,10 @@ const emit = defineEmits<{
 
 <template>
   <div>
-    <label class="label" :for="props.id">{{ SHARED_COPY.TAG_COMBOBOX.LABEL }}</label>
+    <FormLabel :for="props.id">{{ SHARED_COPY.TAG_COMBOBOX.LABEL }}</FormLabel>
     <Multiselect
       :append-new-option="false"
+      class="multiselect"
       :create-option="!!props.onCreate"
       :disabled="props.disabled"
       :id="props.id"
@@ -50,9 +53,37 @@ const emit = defineEmits<{
   </div>
 </template>
 
-<style scoped>
-.label {
-  display: inline-block;
-  margin-bottom: var(--space-2xs);
+<style scoped lang="scss">
+.multiselect {
+  --ms-bg: var(--color-site-bg);
+  --ms-border-color: var(--color-border);
+  --ms-border-width: var(--border-width);
+  --ms-caret-color: var(--color-text);
+  --ms-clear-color: var(--color-text);
+  --ms-clear-color-hover: var(--color-text);
+  --ms-dropdown-bg: var(--color-site-bg);
+  --ms-dropdown-border-color: var(--border-main-color);
+  --ms-empty-color: var(--color-text);
+  --ms-option-bg-pointed: var(--color-main-gray-deep);
+  --ms-option-color-pointed: var(--color-text);
+  --ms-placeholder-color: var(--color-text);
+  --ms-radius: 0;
+  --ms-ring-color: var(--color-focus-outline);
+  --ms-ring-width: 0;
+  --ms-spinner-color: var(--color-accent);
+  --ms-tag-bg: var(--color-accent);
+  --ms-tag-color: var(--color-text);
+  --ms-tag-font-size: var(--font-size-md);
+  --ms-tag-font-weight: 600;
+  --ms-tag-radius: 0;
+  --ms-tag-remove-radius: 0;
+}
+</style>
+
+<style lang="scss">
+// Controls the background and text colour of the inner part of the combobox.
+.multiselect .multiselect-tags-search {
+  background-color: var(--color-main-gray-deep) !important;
+  color: var(--color-text) !important;
 }
 </style>

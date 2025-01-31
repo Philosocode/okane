@@ -1,5 +1,7 @@
 <script setup lang="ts">
 // Internal
+import FormLabel from '@shared/components/form/FormLabel.vue'
+
 import { VISUALLY_HIDDEN_CLASS } from '@shared/constants/styles'
 
 import { getUniqueFormControlId } from '@shared/utils/form'
@@ -26,10 +28,16 @@ const props = defineProps<FormSelectProps>()
 
 <template>
   <div class="root">
-    <label :class="{ label: true, [VISUALLY_HIDDEN_CLASS]: withHiddenLabel }" :for="controlId">
+    <FormLabel :class="{ [VISUALLY_HIDDEN_CLASS]: withHiddenLabel }" :for="controlId">
       {{ props.label }}
-    </label>
-    <select class="select" :id="controlId" :name="props.name" v-model="model" v-bind="$attrs">
+    </FormLabel>
+    <select
+      class="form-input select"
+      :id="controlId"
+      :name="props.name"
+      v-model="model"
+      v-bind="$attrs"
+    >
       <option
         v-for="option in options"
         :key="option.value"
@@ -43,16 +51,10 @@ const props = defineProps<FormSelectProps>()
 </template>
 
 <style scoped lang="scss">
-.root {
-  display: flex;
-  flex-direction: column;
-}
-
-.label {
-  display: block;
-}
-
 .select {
-  flex-grow: 1;
+  background-color: transparent;
+  border: var(--border-main);
+  color: var(--color-text);
+  display: block;
 }
 </style>

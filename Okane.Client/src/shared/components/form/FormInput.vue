@@ -3,6 +3,8 @@
 import { type InputHTMLAttributes, onMounted, useTemplateRef } from 'vue'
 
 // Internal
+import FormLabel from '@shared/components/form/FormLabel.vue'
+
 import { ARIA_LIVE } from '@shared/constants/aria'
 import { VISUALLY_HIDDEN_CLASS } from '@shared/constants/styles'
 
@@ -32,13 +34,11 @@ onMounted(() => {
 
 <template>
   <div>
-    <label
-      :class="{ label: true, [VISUALLY_HIDDEN_CLASS]: props.withHiddenLabel }"
-      :for="controlId"
-      >{{ label }}</label
-    >
+    <FormLabel :class="{ [VISUALLY_HIDDEN_CLASS]: props.withHiddenLabel }" :for="controlId">{{
+      label
+    }}</FormLabel>
     <input
-      class="input"
+      class="input form-input"
       ref="inputRef"
       v-bind="$attrs"
       v-model="model"
@@ -61,12 +61,11 @@ onMounted(() => {
 }
 
 .input {
+  background-color: transparent;
+  border: var(--border-main);
+  border-radius: var(--border-radius);
+  color: var(--color-text);
   display: block;
   width: 100%;
-}
-
-.label {
-  display: inline-block;
-  margin-bottom: var(--space-2xs);
 }
 </style>

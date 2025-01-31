@@ -1,10 +1,12 @@
 <script setup lang="ts">
 // External
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { onClickOutside } from '@vueuse/core'
 import { useTemplateRef } from 'vue'
+import { onClickOutside, onKeyStroke } from '@vueuse/core'
 
 // Internal
+import Card from '@shared/components/wrappers/Card.vue'
+import IconButton from '@shared/components/IconButton.vue'
+
 import { SHARED_COPY } from '@shared/constants/copy'
 import { TEST_IDS } from '@shared/constants/testIds'
 
@@ -30,6 +32,10 @@ function emitModalClose() {
 onClickOutside(dialogRef, (event) => {
   if (event.target === backdropRef.value) emitModalClose()
 })
+
+onKeyStroke('Escape', () => {
+  emitModalClose()
+})
 </script>
 
 <template>
@@ -40,7 +46,7 @@ onClickOutside(dialogRef, (event) => {
       ref="backdropRef"
       :data-testid="TEST_IDS.MODAL_BACKDROP"
     >
-      <div
+      <Card
         aria-modal="true"
         :aria-labelledby="props.modalHeadingId"
         class="modal"
@@ -51,19 +57,23 @@ onClickOutside(dialogRef, (event) => {
         @close="emitModalClose"
       >
         <div class="modal-content">
-          <button class="close-button" @click="emitModalClose">
-            <FontAwesomeIcon icon="fa-solid fa-xmark" :title="SHARED_COPY.MODAL.CLOSE_MODAL" />
-          </button>
+          <IconButton
+            class="close-button"
+            icon="fa-solid fa-xmark"
+            :title="SHARED_COPY.MODAL.CLOSE_MODAL"
+            @click="emitModalClose"
+          />
+
           <slot />
         </div>
-      </div>
+      </Card>
     </div>
   </Teleport>
 </template>
 
 <style scoped lang="scss">
 .backdrop {
-  background-color: rgba(0, 0, 0, 35%);
+  background-color: rgba(0, 0, 0, 60%);
   position: fixed;
   bottom: 0;
   left: 0;
@@ -73,9 +83,6 @@ onClickOutside(dialogRef, (event) => {
 }
 
 .close-button {
-  border: none;
-  border-radius: 100%;
-
   height: 2rem;
   width: 2rem;
 
@@ -85,10 +92,12 @@ onClickOutside(dialogRef, (event) => {
 }
 
 .modal {
-  background-color: var(--color-bg-dim);
-  border: 1px solid var(--color-card-border);
+  background-color: var(--color-site-bg);
+  border: none;
   border-radius: 0.5rem;
+  overflow-y: auto;
   padding: 0;
+  position: relative;
 
   height: 100%;
   max-height: 100%;
@@ -96,6 +105,7 @@ onClickOutside(dialogRef, (event) => {
   max-width: 100%;
 
   @include respond(sm) {
+    border: var(--border-main);
     position: absolute;
     left: 0;
     top: 0;
@@ -103,15 +113,15 @@ onClickOutside(dialogRef, (event) => {
     bottom: 0;
     margin: auto;
     height: max-content;
-    max-width: pxToRem(400);
+    max-width: pxToRem(450);
   }
 }
 
 .modal-content {
-  padding: 1rem;
+  padding: var(--space-md);
 
   & > * + * {
-    margin-top: var(--space-sm);
+    margin-top: var(--space-md);
   }
 }
 </style>

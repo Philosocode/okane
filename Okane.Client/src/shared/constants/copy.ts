@@ -30,6 +30,7 @@ export const SHARED_COPY = {
   CONJUNCTIONS: {
     AND: 'and',
   },
+  COPYRIGHT: `© Tam Le ${new Date(Date.now()).getFullYear()}`,
   INFINITE_SCROLLER: {
     REACHED_THE_BOTTOM: "You've reached the bottom.",
   },

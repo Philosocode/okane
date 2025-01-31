@@ -1,14 +1,18 @@
 // Internal
-import TotalAmountCell from '@features/financeRecords/components/TotalAmountCell.vue'
+import TotalAmountCell, {
+  type TotalAmountCellProps,
+} from '@features/financeRecords/components/TotalAmountCell.vue'
 
+import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
 const mountComponent = getMountComponent(TotalAmountCell)
 
-const props = {
+const props: TotalAmountCellProps = {
   amount: 1000,
   count: 5,
   headingText: 'Revenue',
+  type: FINANCE_RECORD_TYPE.REVENUE,
 }
 
 test('renders the heading', () => {
@@ -18,7 +22,8 @@ test('renders the heading', () => {
 
 test('renders the amount', () => {
   const wrapper = mountComponent({ props })
-  expect(wrapper.findByText('p', `$${props.amount}.00`)).toBeDefined()
+  const expectedText = FINANCES_COPY.STATS.TOTAL_AMOUNT({ amount: props.amount, type: props.type })
+  expect(wrapper.findByText('p', expectedText)).toBeDefined()
 })
 
 test('renders the records count', () => {

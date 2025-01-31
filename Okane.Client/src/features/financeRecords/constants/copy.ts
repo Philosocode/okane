@@ -1,3 +1,5 @@
+import type { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
+
 export const FINANCES_COPY = {
   DELETE_FINANCE_RECORD_MODAL: {
     ARE_YOU_SURE: 'Are you sure you want to delete this finance record?',
@@ -44,5 +46,12 @@ export const FINANCES_COPY = {
   STATS: {
     EXPENSES: 'Expenses',
     RECORD: 'record',
+    TOTAL_AMOUNT(args: { amount: number; type: FINANCE_RECORD_TYPE }) {
+      let symbol = ''
+      if (args.amount > 0 && args.type === 'Revenue') symbol = '+'
+      if (args.amount > 0 && args.type === 'Expense') symbol = '-'
+
+      return `${symbol}$${args.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}`
+    },
   },
 } as const

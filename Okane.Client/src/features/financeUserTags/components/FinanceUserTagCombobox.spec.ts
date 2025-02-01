@@ -27,33 +27,33 @@ import { testServer } from '@tests/msw/testServer'
 
 const allUserTags: FinanceUserTag[] = [
   createTestFinanceUserTag({
-    id: 1,
+    id: 11,
     tag: createTestTag({ id: 1, name: '1' }),
     type: FINANCE_RECORD_TYPE.EXPENSE,
   }),
   createTestFinanceUserTag({
-    id: 2,
+    id: 22,
     tag: createTestTag({ id: 2, name: '2' }),
     type: FINANCE_RECORD_TYPE.EXPENSE,
   }),
   createTestFinanceUserTag({
-    id: 3,
+    id: 33,
     tag: createTestTag({ id: 3, name: '3' }),
     type: FINANCE_RECORD_TYPE.EXPENSE,
   }),
 
   createTestFinanceUserTag({
-    id: 4,
+    id: 44,
     tag: createTestTag({ id: 3, name: '3' }),
     type: FINANCE_RECORD_TYPE.REVENUE,
   }),
   createTestFinanceUserTag({
-    id: 5,
+    id: 55,
     tag: createTestTag({ id: 4, name: '4' }),
     type: FINANCE_RECORD_TYPE.REVENUE,
   }),
   createTestFinanceUserTag({
-    id: 6,
+    id: 66,
     tag: createTestTag({ id: 5, name: '5' }),
     type: FINANCE_RECORD_TYPE.REVENUE,
   }),

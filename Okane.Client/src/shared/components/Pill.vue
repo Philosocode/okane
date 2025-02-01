@@ -10,6 +10,7 @@
   justify-content: center;
   font-size: var(--font-size-sm);
   font-weight: 600;
+  width: fit-content;
 
   @include respond(sm) {
     font-size: var(--font-size-md);

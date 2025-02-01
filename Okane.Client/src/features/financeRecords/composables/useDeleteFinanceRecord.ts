@@ -5,17 +5,20 @@ import { useMutation, useQueryClient, type InfiniteData } from '@tanstack/vue-qu
 // Internal
 import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
+import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 
-import { apiClient } from '@shared/services/apiClient/apiClient'
-
-import { type APIPaginatedResponse } from '@shared/services/apiClient/types'
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
+import { type FinanceRecordsStats } from '@features/financeRecords/types/financeRecordsStats'
+import { type APIPaginatedResponse, type APIResponse } from '@shared/services/apiClient/types'
 
-import { removeItemFromPages } from '@shared/utils/pagination'
 import {
   SEARCH_FINANCE_RECORDS_SYMBOL,
   type SearchFinanceRecordsProvider,
 } from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+
+import { apiClient } from '@shared/services/apiClient/apiClient'
+
+import { removeItemFromPages } from '@shared/utils/pagination'
 
 function deleteFinanceRecord(id: number) {
   return apiClient.delete(financeRecordAPIRoutes.deleteFinanceRecord({ id }))
@@ -26,19 +29,36 @@ export function useDeleteFinanceRecord() {
   const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
 
   return useMutation({
-    mutationFn: (id: number) => deleteFinanceRecord(id),
-    onSuccess(_, id) {
+    mutationFn: (financeRecord: FinanceRecord) => deleteFinanceRecord(financeRecord.id),
+    onSuccess(_, deletedFinanceRecord) {
       queryClient.setQueryData<InfiniteData<APIPaginatedResponse<FinanceRecord>>>(
         financeRecordQueryKeys.listByFilters({ filters: searchProvider.filters }),
         (data) => {
           if (!data) return data
-          return removeItemFromPages(data, (item) => item.id !== id)
+          return removeItemFromPages(data, (item) => item.id !== deletedFinanceRecord.id)
         },
       )
 
-      void queryClient.invalidateQueries({
-        queryKey: financeRecordQueryKeys.stats({ filters: searchProvider.filters }),
-      })
+      queryClient.setQueryData<APIResponse<FinanceRecordsStats>>(
+        financeRecordQueryKeys.stats({ filters: searchProvider.filters }),
+        (data) => {
+          if (!data) return data
+
+          const updatedStats = { ...data.items[0] }
+          if (deletedFinanceRecord.type === FINANCE_RECORD_TYPE.EXPENSE) {
+            updatedStats.totalExpenses -= deletedFinanceRecord.amount
+            updatedStats.expenseRecords--
+          } else {
+            updatedStats.totalRevenue -= deletedFinanceRecord.amount
+            updatedStats.revenueRecords--
+          }
+
+          return {
+            ...data,
+            items: [updatedStats],
+          }
+        },
+      )
     },
   })
 }

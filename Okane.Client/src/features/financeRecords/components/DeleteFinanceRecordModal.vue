@@ -26,9 +26,9 @@ function handleClose() {
 }
 
 function handleDelete() {
-  const id = deleteProvider.financeRecordToDelete?.id
-  if (id) {
-    deleteMutation.mutate(id, {
+  const financeRecord = deleteProvider.financeRecordToDelete
+  if (financeRecord) {
+    deleteMutation.mutate(financeRecord, {
       onSuccess() {
         handleClose()
       },

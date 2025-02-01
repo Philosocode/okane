@@ -17,9 +17,9 @@ import TotalRevenueAndExpenses from '@features/financeRecords/components/TotalRe
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
 import {
-  DELETE_FINANCE_RECORD_ID_SYMBOL,
-  useDeleteFinanceRecordId,
-} from '@features/financeRecords/providers/deleteFinanceRecordIdProvider'
+  DELETE_FINANCE_RECORD_SYMBOL,
+  useDeleteFinanceRecordProvider,
+} from '@features/financeRecords/providers/deleteFinanceRecordProvider'
 import {
   SAVE_FINANCE_RECORD_SYMBOL,
   useSaveFinanceRecordProvider,
@@ -29,7 +29,7 @@ import {
   useSearchFinanceRecordsProvider,
 } from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
-provide(DELETE_FINANCE_RECORD_ID_SYMBOL, useDeleteFinanceRecordId())
+provide(DELETE_FINANCE_RECORD_SYMBOL, useDeleteFinanceRecordProvider())
 provide(SAVE_FINANCE_RECORD_SYMBOL, useSaveFinanceRecordProvider())
 provide(SEARCH_FINANCE_RECORDS_SYMBOL, useSearchFinanceRecordsProvider())
 </script>

@@ -4,9 +4,11 @@ import { format } from 'date-fns'
 import { inject } from 'vue'
 
 // Internal
-import FinanceRecordListItemTags from '@features/financeRecords/components/financeRecordList/FinanceRecordListItemTags.vue'
+import FinanceRecordTags from '@features/financeRecords/components/financeRecordList/FinanceRecordTags.vue'
+import FinanceRecordTypePill from '@features/financeRecords/components/financeRecordList/FinanceRecordTypePill.vue'
 import Kicker from '@shared/components/typography/Kicker.vue'
 import ToggleMenu from '@shared/components/ToggleMenu.vue'
+import VerticalDivider from '@shared/components/VerticalDivider.vue'
 
 import { COMMON_DATE_TIME_FORMAT } from '@shared/constants/dateTime'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
@@ -20,17 +22,17 @@ import {
 } from '@features/financeRecords/providers/saveFinanceRecordProvider'
 
 import {
-  DELETE_FINANCE_RECORD_ID_SYMBOL,
-  type DeleteFinanceRecordIdProvider,
-} from '@features/financeRecords/providers/deleteFinanceRecordIdProvider'
+  DELETE_FINANCE_RECORD_SYMBOL,
+  type DeleteFinanceRecordProvider,
+} from '@features/financeRecords/providers/deleteFinanceRecordProvider'
 
-type Props = {
+export type FinanceRecordListItemProps = {
   financeRecord: FinanceRecord
 }
 
-const { financeRecord } = defineProps<Props>()
+const { financeRecord } = defineProps<FinanceRecordListItemProps>()
 
-const deleteProvider = inject(DELETE_FINANCE_RECORD_ID_SYMBOL) as DeleteFinanceRecordIdProvider
+const deleteProvider = inject(DELETE_FINANCE_RECORD_SYMBOL) as DeleteFinanceRecordProvider
 const saveProvider = inject(SAVE_FINANCE_RECORD_SYMBOL) as SaveFinanceRecordProvider
 
 const menuActions = [
@@ -49,7 +51,7 @@ function handleEdit() {
 }
 
 function handleDelete() {
-  deleteProvider.setId(financeRecord.id)
+  deleteProvider.setFinanceRecordToDelete(financeRecord)
 }
 </script>
 
@@ -71,7 +73,11 @@ function handleDelete() {
     </div>
     <p class="description">{{ financeRecord.description }}</p>
 
-    <FinanceRecordListItemTags :tags="financeRecord.tags" :type="financeRecord.type" />
+    <div class="tags">
+      <FinanceRecordTypePill :type="financeRecord.type" />
+      <VerticalDivider v-if="financeRecord.tags.length > 0" />
+      <FinanceRecordTags :tags="financeRecord.tags" />
+    </div>
   </li>
 </template>
 
@@ -117,6 +123,16 @@ function handleDelete() {
   @include truncate(2);
   @include respond(sm) {
     grid-column: auto;
+  }
+}
+
+.tags {
+  display: flex;
+  gap: var(--space-md);
+  grid-column: 1 / -1;
+
+  @include respond(sm) {
+    margin-block-start: 0;
   }
 }
 

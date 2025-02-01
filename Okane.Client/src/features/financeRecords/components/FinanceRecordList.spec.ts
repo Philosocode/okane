@@ -10,9 +10,9 @@ import { financeRecordHandlers } from '@tests/msw/handlers/financeRecord'
 import { SHARED_COPY } from '@shared/constants/copy'
 
 import {
-  DELETE_FINANCE_RECORD_ID_SYMBOL,
-  useDeleteFinanceRecordId,
-} from '@features/financeRecords/providers/deleteFinanceRecordIdProvider'
+  DELETE_FINANCE_RECORD_SYMBOL,
+  useDeleteFinanceRecordProvider,
+} from '@features/financeRecords/providers/deleteFinanceRecordProvider'
 import {
   SAVE_FINANCE_RECORD_SYMBOL,
   useSaveFinanceRecordProvider,
@@ -40,7 +40,7 @@ const mountComponent = getMountComponent(FinanceRecordList, {
       [SEARCH_FINANCE_RECORDS_SYMBOL]: useSearchFinanceRecordsProvider(),
 
       // Needed for FinanceRecordListItem.
-      [DELETE_FINANCE_RECORD_ID_SYMBOL]: useDeleteFinanceRecordId(),
+      [DELETE_FINANCE_RECORD_SYMBOL]: useDeleteFinanceRecordProvider(),
       [SAVE_FINANCE_RECORD_SYMBOL]: useSaveFinanceRecordProvider(),
     },
     stubs: {

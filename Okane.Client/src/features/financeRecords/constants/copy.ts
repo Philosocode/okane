@@ -12,7 +12,7 @@ import { COMMON_DATE_FORMAT } from '@shared/constants/dateTime'
 
 export const FINANCES_COPY = {
   DELETE_FINANCE_RECORD_MODAL: {
-    ARE_YOU_SURE: 'Are you sure you want to delete this finance record?',
+    CONFIRMATION_TEXT: 'You are about to delete the following finance record:',
     DELETE_FINANCE_RECORD: 'Delete Finance Record',
   },
 
@@ -37,6 +37,7 @@ export const FINANCES_COPY = {
     AMOUNT: 'Amount',
     DESCRIPTION: 'Description',
     HAPPENED_AT: 'Happened At',
+    TAGS: 'Tags',
     TYPE: 'Type',
   },
 

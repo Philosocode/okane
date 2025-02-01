@@ -7,7 +7,7 @@ import FinancesPage from '@shared/pages/FinancesPage.vue'
 import { DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
-import * as deleteFinanceRecordIdProvider from '@features/financeRecords/providers/deleteFinanceRecordIdProvider'
+import * as deleteFinanceRecordProvider from '@features/financeRecords/providers/deleteFinanceRecordProvider'
 import * as saveFinanceRecordProvider from '@features/financeRecords/providers/saveFinanceRecordProvider'
 import * as searchFinanceRecordsProvider from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
@@ -109,19 +109,20 @@ test('renders a modal to filter finance records', () => {
   })
 })
 
-test('provides delete finance record state', () => {
-  const fakeId = 123
-  vi.spyOn(deleteFinanceRecordIdProvider, 'useDeleteFinanceRecordId').mockReturnValue({
-    id: fakeId,
-    setId: vi.fn(),
+test('provides the delete finance record state', () => {
+  const financeRecord = createTestFinanceRecord()
+
+  vi.spyOn(deleteFinanceRecordProvider, 'useDeleteFinanceRecordProvider').mockReturnValue({
+    financeRecordToDelete: financeRecord,
+    setFinanceRecordToDelete: vi.fn(),
   })
 
   const ListStub = defineComponent({
     setup() {
-      const provider = inject(deleteFinanceRecordIdProvider.DELETE_FINANCE_RECORD_ID_SYMBOL)
+      const provider = inject(deleteFinanceRecordProvider.DELETE_FINANCE_RECORD_SYMBOL)
       return { provider }
     },
-    template: `<span id="providerId">{{ provider.id }}</span>`,
+    template: `<span id="financeRecordId">{{ provider.financeRecordToDelete.id }}</span>`,
   })
 
   const wrapper = mountComponent({
@@ -132,7 +133,7 @@ test('provides delete finance record state', () => {
     },
   })
 
-  expect(wrapper.get('#providerId').text()).toBe(fakeId.toString())
+  expect(wrapper.get('#financeRecordId').text()).toBe(financeRecord.id.toString())
 })
 
 test('provides save finance record state', () => {

@@ -1,4 +1,6 @@
 // External
+import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component'
+
 import { type VueWrapper } from '@vue/test-utils'
 
 // Internal
@@ -36,6 +38,11 @@ const elements = {
 test('renders a backdrop', () => {
   const wrapper = mountComponent({ props })
   expect(elements.backdrop(wrapper).exists()).toBe(true)
+})
+
+test('traps focus', () => {
+  const wrapper = mountComponent({ props })
+  expect(wrapper.findComponent(UseFocusTrap).exists()).toBe(true)
 })
 
 test('renders a modal', () => {

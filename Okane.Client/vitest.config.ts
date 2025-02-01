@@ -21,6 +21,7 @@ export default defineConfig((configEnv) =>
           './src/__tests__/setup/customMatchers.ts',
           './src/__tests__/setup/vueTestUtilExtensions.ts',
           './src/__tests__/setup/testHooks.ts',
+          './src/__tests__/setup/globalStubs.ts',
           './src/__tests__/setup/getMountComponent.ts',
         ],
         watch: false,

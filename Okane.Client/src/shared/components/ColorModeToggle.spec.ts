@@ -18,8 +18,6 @@ test('renders a button to switch color modes', async () => {
   expect(button.text()).toBe(SHARED_COPY.ACTIONS.SWITCH_TO_LIGHT_MODE)
   expect(button.find(moonIconClass).exists()).toBe(true)
 
-  console.log(wrapper.html())
-
   await button.trigger('click')
   expect(button.text()).toBe(SHARED_COPY.ACTIONS.SWITCH_TO_DARK_MODE)
   expect(button.find(sunIconClass).exists()).toBe(true)

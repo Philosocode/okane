@@ -19,7 +19,7 @@ export const FINANCES_COPY = {
   FINANCES: 'Finances',
 
   INFINITE_LIST: {
-    NO_FINANCE_RECORDS: "No finance records. Why don't you create one?",
+    NO_FINANCE_RECORDS: 'No matching finance records.',
   },
 
   MANAGE_TAGS: 'Manage Tags',

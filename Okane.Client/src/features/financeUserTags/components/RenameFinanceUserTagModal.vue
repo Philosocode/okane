@@ -8,7 +8,6 @@ import FinanceUserTagSummary from '@features/financeUserTags/components/FinanceU
 import FormInput from '@shared/components/form/FormInput.vue'
 import Modal from '@shared/components/modal/Modal.vue'
 import ModalActions from '@shared/components/modal/ModalActions.vue'
-import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 
 import { FINANCE_USER_TAGS_COPY } from '@features/financeUserTags/constants/copy'
 import { SHARED_COPY } from '@shared/constants/copy'
@@ -56,15 +55,12 @@ function handleSubmit() {
 
 <template>
   <Modal
+    :heading-text="FINANCE_USER_TAGS_COPY.RENAME_MODAL.HEADING"
     :is-showing="!!provider.userTagToRename"
     :modal-heading-id="modalHeadingId"
     @close="closeModal"
   >
     <template v-if="provider.userTagToRename">
-      <ModalHeading :id="modalHeadingId">{{
-        FINANCE_USER_TAGS_COPY.RENAME_MODAL.HEADING
-      }}</ModalHeading>
-
       <FinanceUserTagSummary :user-tag="provider.userTagToRename" />
 
       <form ref="form" @submit.prevent="handleSubmit" class="form">

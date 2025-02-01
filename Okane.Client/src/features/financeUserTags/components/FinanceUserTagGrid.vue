@@ -40,8 +40,8 @@ const provider = inject(MANAGE_FINANCE_USER_TAGS_PROVIDER_SYMBOL) as ManageFinan
 <style scoped>
 .grid {
   display: flex;
-  gap: var(--space-sm);
+  gap: var(--space-md);
   flex-wrap: wrap;
-  margin-top: var(--space-sm);
+  margin-block-start: var(--space-md);
 }
 </style>

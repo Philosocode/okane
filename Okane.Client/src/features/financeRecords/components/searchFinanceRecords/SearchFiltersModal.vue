@@ -4,7 +4,6 @@ import { inject, ref } from 'vue'
 
 // Internal
 import Modal from '@shared/components/modal/Modal.vue'
-import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 import SearchFinanceRecordsForm from '@features/financeRecords/components/searchFinanceRecords/SearchFiltersForm.vue'
 
 import { DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
@@ -27,13 +26,11 @@ function handleClose() {
 
 <template>
   <Modal
+    :heading-text="FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.EDIT_SEARCH_FILTERS"
     :is-showing="searchProvider.modalIsShowing"
     :modal-heading-id="modalHeadingId"
     @close="handleClose"
   >
-    <ModalHeading :id="modalHeadingId">{{
-      FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.EDIT_SEARCH_FILTERS
-    }}</ModalHeading>
     <SearchFinanceRecordsForm :form-state="formState" />
   </Modal>
 </template>

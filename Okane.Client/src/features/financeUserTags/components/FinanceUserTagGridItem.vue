@@ -25,7 +25,7 @@ const provider = inject(MANAGE_FINANCE_USER_TAGS_PROVIDER_SYMBOL) as ManageFinan
 
 <template>
   <Card class="root">
-    <p>{{ props.userTag.tag.name }}</p>
+    <p class="tag-name">{{ props.userTag.tag.name }}</p>
 
     <div class="actions">
       <IconButton
@@ -42,19 +42,29 @@ const provider = inject(MANAGE_FINANCE_USER_TAGS_PROVIDER_SYMBOL) as ManageFinan
   </Card>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .root {
   align-items: center;
-  border: 1px solid var(--color-card-border);
   display: flex;
+  gap: var(--space-md);
   justify-content: space-between;
-  min-width: 10rem;
-  padding: 0.5rem 1rem;
+  padding: var(--space-2xs) var(--space-xs);
+
+  @include respond(sm) {
+    gap: var(--space-xl);
+  }
 }
 
 .actions {
   display: flex;
   align-items: center;
-  gap: var(--space-xs);
+}
+
+.tag-name {
+  padding-inline-start: var(--space-2xs);
+
+  @include respond(sm) {
+    padding-inline-start: var(--space-xs);
+  }
 }
 </style>

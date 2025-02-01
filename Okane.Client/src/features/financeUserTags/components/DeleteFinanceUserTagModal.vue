@@ -7,7 +7,6 @@ import Button from '@shared/components/Button.vue'
 import FinanceUserTagSummary from '@features/financeUserTags/components/FinanceUserTagSummary.vue'
 import Modal from '@shared/components/modal/Modal.vue'
 import ModalActions from '@shared/components/modal/ModalActions.vue'
-import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 
 import { useDeleteFinanceUserTag } from '@features/financeUserTags/composables/useDeleteFinanceUserTag'
 
@@ -43,15 +42,12 @@ function handleDelete() {
 
 <template>
   <Modal
+    :heading-text="FINANCE_USER_TAGS_COPY.DELETE_MODAL.HEADING"
     :is-showing="!!provider.userTagToDelete"
     :modal-heading-id="modalHeadingId"
     @close="closeModal"
   >
     <template v-if="provider.userTagToDelete">
-      <ModalHeading :id="modalHeadingId">{{
-        FINANCE_USER_TAGS_COPY.DELETE_MODAL.HEADING
-      }}</ModalHeading>
-
       <p>{{ FINANCE_USER_TAGS_COPY.DELETE_MODAL.CONFIRMATION }}</p>
       <FinanceUserTagSummary :user-tag="provider.userTagToDelete" />
 

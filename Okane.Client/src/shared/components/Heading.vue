@@ -17,7 +17,10 @@ const props = defineProps<Props>()
 
 <style scoped>
 .heading {
+  font-weight: bold;
+  line-height: 1.1;
   margin-top: 0.75em;
   margin-bottom: 0.75em;
+  text-wrap: balance;
 }
 </style>

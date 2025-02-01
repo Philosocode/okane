@@ -14,9 +14,19 @@ const props = defineProps<IconButtonProps>()
 </script>
 
 <template>
-  <Button class="button" v-bind="$attrs">
+  <Button class="icon-button" v-bind="$attrs">
     <FontAwesomeIcon :icon="props.icon" :title="props.title" />
   </Button>
 </template>
 
-<style scoped></style>
+<style scoped>
+.icon-button {
+  background-color: transparent;
+  border: none;
+  display: grid;
+  place-items: center;
+  min-height: 2rem;
+  min-width: 2rem;
+  padding: var(--space-2xs) var(--space-xs);
+}
+</style>

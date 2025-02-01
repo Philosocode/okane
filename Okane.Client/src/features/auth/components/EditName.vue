@@ -6,7 +6,6 @@ import { ref, watch } from 'vue'
 import AuthForm from '@features/auth/components/AuthForm.vue'
 import CardHeading from '@shared/components/typography/CardHeading.vue'
 import FormInput from '@shared/components/form/FormInput.vue'
-import Heading from '@shared/components/Heading.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
 import { INPUT_TYPE } from '@shared/constants/form'
@@ -38,7 +37,6 @@ watch(name, () => {
 </script>
 
 <template>
-  <CardHeading tag="h2">{{ AUTH_COPY.ACCOUNT_PAGE.EDIT_NAME }}</CardHeading>
   <AuthForm
     :submit-button-text="SHARED_COPY.ACTIONS.SAVE"
     :submit-error="editMutation.isError.value ? AUTH_COPY.ACCOUNT_PAGE.EDIT_NAME_ERROR : ''"
@@ -46,6 +44,7 @@ watch(name, () => {
     :submit-success="editSucceeded ? AUTH_COPY.ACCOUNT_PAGE.EDIT_NAME_SUCCESS : ''"
     @submit="handleSubmit"
   >
+    <CardHeading tag="h2">{{ AUTH_COPY.ACCOUNT_PAGE.EDIT_NAME }}</CardHeading>
     <FormInput
       :label="AUTH_COPY.AUTH_FORM.NAME"
       name="name"

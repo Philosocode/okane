@@ -16,7 +16,7 @@ export const AUTH_COPY = {
     EDIT_PASSWORD_ERROR_GENERAL: 'Error editing password. Please try again later.',
     EDIT_PASSWORD_ERROR_CURRENT_PASSWORD_INVALID: 'Current password is invalid.',
     EDIT_PASSWORD_SUCCESS: 'Successfully edited password.',
-    HEADING: 'Account Page',
+    HEADING: 'Account',
     LINK: 'Account',
     NEW_PASSWORD: 'New password',
     NEW_PASSWORD_CONFIRM: 'Confirm new password',
@@ -63,7 +63,7 @@ export const AUTH_COPY = {
     ENTER_YOUR_EMAIL: 'Enter your email to reset your password.',
     RESET_PASSWORD: 'Reset Password',
     SUCCESS: {
-      HEADING: 'Sent password reset email!',
+      HEADING: 'Sent email!',
       BODY: 'In a few minutes, you should receive an email to reset your password.',
     },
   },

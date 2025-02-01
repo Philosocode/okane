@@ -1,5 +1,7 @@
 <script setup lang="ts">
 // Internal
+import Card from '@shared/components/wrappers/Card.vue'
+
 import { FINANCE_USER_TAGS_COPY } from '@features/financeUserTags/constants/copy'
 
 import { type FinanceUserTag } from '@features/financeUserTags/types/financeUserTag'
@@ -12,15 +14,14 @@ const props = defineProps<FinanceUserTagSummaryProps>()
 </script>
 
 <template>
-  <div class="tag">
+  <Card class="tag">
     <p>{{ FINANCE_USER_TAGS_COPY.MANAGE_PAGE.TYPE }}: {{ props.userTag.type }}</p>
     <p>{{ FINANCE_USER_TAGS_COPY.MANAGE_PAGE.NAME }}: {{ props.userTag.tag.name }}</p>
-  </div>
+  </Card>
 </template>
 
 <style scoped>
 .tag {
-  border: 1px solid var(--color-card-border);
   padding: var(--space-sm);
 }
 </style>

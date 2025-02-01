@@ -6,17 +6,18 @@ import { onClickOutside, onKeyStroke } from '@vueuse/core'
 // Internal
 import Card from '@shared/components/wrappers/Card.vue'
 import IconButton from '@shared/components/IconButton.vue'
+import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 
 import { SHARED_COPY } from '@shared/constants/copy'
 import { TEST_IDS } from '@shared/constants/testIds'
 
-// Internal
-type Props = {
+export type ModalProps = {
+  headingText: string
   isShowing: boolean
   modalHeadingId: string
 }
 
-const props = defineProps<Props>()
+const props = defineProps<ModalProps>()
 
 const emit = defineEmits<{
   (event: 'close'): void
@@ -57,12 +58,15 @@ onKeyStroke('Escape', () => {
         @close="emitModalClose"
       >
         <div class="modal-content">
-          <IconButton
-            class="close-button"
-            icon="fa-solid fa-xmark"
-            :title="SHARED_COPY.MODAL.CLOSE_MODAL"
-            @click="emitModalClose"
-          />
+          <div class="top-row">
+            <ModalHeading :id="props.modalHeadingId">{{ props.headingText }}</ModalHeading>
+            <IconButton
+              class="close-button"
+              icon="fa-solid fa-xmark"
+              :title="SHARED_COPY.MODAL.CLOSE_MODAL"
+              @click="emitModalClose"
+            />
+          </div>
 
           <slot />
         </div>
@@ -85,10 +89,7 @@ onKeyStroke('Escape', () => {
 .close-button {
   height: 2rem;
   width: 2rem;
-
-  position: absolute;
-  right: 0.25rem;
-  top: 0.25rem;
+  font-size: var(--font-size-lg);
 }
 
 .modal {
@@ -123,5 +124,11 @@ onKeyStroke('Escape', () => {
   & > * + * {
     margin-top: var(--space-md);
   }
+}
+
+.top-row {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
 }
 </style>

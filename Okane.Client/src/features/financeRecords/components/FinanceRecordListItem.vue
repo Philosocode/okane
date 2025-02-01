@@ -1,13 +1,15 @@
 <script setup lang="ts">
 // External
-import { computed, inject } from 'vue'
-import { formatDate } from 'date-fns'
+import { format } from 'date-fns'
+import { inject } from 'vue'
 
 // Internal
-import TagPill from '@shared/components/Pill.vue'
+import FinanceRecordListItemTags from '@features/financeRecords/components/financeRecordList/FinanceRecordListItemTags.vue'
+import Kicker from '@shared/components/typography/Kicker.vue'
 import ToggleMenu from '@shared/components/ToggleMenu.vue'
 
-import { FINANCE_RECORD_TIMESTAMP_FORMAT } from '@features/financeRecords/constants/financeRecordList'
+import { COMMON_DATE_TIME_FORMAT } from '@shared/constants/dateTime'
+import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { SHARED_COPY } from '@shared/constants/copy'
 
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
@@ -21,7 +23,6 @@ import {
   DELETE_FINANCE_RECORD_ID_SYMBOL,
   type DeleteFinanceRecordIdProvider,
 } from '@features/financeRecords/providers/deleteFinanceRecordIdProvider'
-import Pill from '@shared/components/Pill.vue'
 
 type Props = {
   financeRecord: FinanceRecord
@@ -29,20 +30,8 @@ type Props = {
 
 const { financeRecord } = defineProps<Props>()
 
-const dateTime = computed(() =>
-  formatDate(financeRecord.happenedAt, FINANCE_RECORD_TIMESTAMP_FORMAT),
-)
-
 const deleteProvider = inject(DELETE_FINANCE_RECORD_ID_SYMBOL) as DeleteFinanceRecordIdProvider
 const saveProvider = inject(SAVE_FINANCE_RECORD_SYMBOL) as SaveFinanceRecordProvider
-
-function handleEdit() {
-  saveProvider.setEditingFinanceRecord({ ...financeRecord })
-}
-
-function handleDelete() {
-  deleteProvider.setId(financeRecord.id)
-}
 
 const menuActions = [
   {
@@ -54,64 +43,86 @@ const menuActions = [
     text: SHARED_COPY.ACTIONS.DELETE,
   },
 ]
+
+function handleEdit() {
+  saveProvider.setEditingFinanceRecord({ ...financeRecord })
+}
+
+function handleDelete() {
+  deleteProvider.setId(financeRecord.id)
+}
 </script>
 
 <template>
-  <div class="item">
-    <div class="content">
-      <div class="top-row">
-        <span class="type">{{ financeRecord.type }}</span>
-        -
-        <span>{{ dateTime }} </span>
-      </div>
-      <div class="amount">${{ financeRecord.amount.toFixed(2) }}</div>
-      <div>{{ financeRecord.description }}</div>
+  <li class="grid">
+    <Kicker class="dateTime">{{
+      format(financeRecord.happenedAt, COMMON_DATE_TIME_FORMAT)
+    }}</Kicker>
 
-      <div class="tags">
-        <Pill :key="tag.id" v-for="tag in financeRecord.tags" class="tag">
-          {{ tag.name }}
-        </Pill>
-      </div>
-    </div>
+    <ToggleMenu
+      :actions="menuActions"
+      class="toggle-menu"
+      :menu-id="`toggle-menu-${financeRecord.id}`"
+      is-showing
+    />
 
-    <div class="menu-container">
-      <ToggleMenu :actions="menuActions" :menu-id="`toggle-menu-${financeRecord.id}`" is-showing />
+    <div class="amount">
+      {{ FINANCES_COPY.MONEY({ amount: financeRecord.amount, type: financeRecord.type }) }}
     </div>
-  </div>
+    <p class="description">{{ financeRecord.description }}</p>
+
+    <FinanceRecordListItemTags :tags="financeRecord.tags" :type="financeRecord.type" />
+  </li>
 </template>
 
 <style scoped lang="scss">
+.grid {
+  align-items: center;
+  column-gap: var(--space-sm);
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  padding: var(--space-2xs) var(--space-xs);
+  position: relative;
+  row-gap: var(--space-xs);
+
+  &:not(:first-child) {
+    border-top: var(--border-main);
+  }
+
+  @include respond(sm) {
+    padding: var(--space-xs) var(--space-md);
+    row-gap: var(--space-sm);
+  }
+}
+
 .amount {
+  grid-column: 1 / -1;
   font-size: var(--font-size-xl);
+  position: relative;
+
+  @include respond(sm) {
+    grid-column: auto;
+  }
 }
 
-.content {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2xs);
-  padding: var(--space-md);
+.dateTime {
+  font-size: var(--font-size-sm);
+  grid-column: 1 / -1;
 }
 
-.item {
-  border: pxToRem(1) solid var(--color-card-border);
-  display: flex;
-  justify-content: space-between;
+.description {
+  font-size: var(--font-size-md);
+  grid-column: 1 / -1;
+
+  @include truncate(2);
+  @include respond(sm) {
+    grid-column: auto;
+  }
 }
 
-.tags {
-  display: flex;
-  gap: var(--space-xs);
-}
-
-.tag {
-  min-width: 3rem;
-}
-
-.top-row {
-  font-size: var(--font-size-xs);
-}
-
-.type {
-  text-transform: uppercase;
+.toggle-menu {
+  position: absolute;
+  top: var(--space-2xs);
+  right: var(--space-2xs);
 }
 </style>

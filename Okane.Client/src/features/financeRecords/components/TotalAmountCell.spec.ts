@@ -12,6 +12,7 @@ const props: TotalAmountCellProps = {
   amount: 1000,
   count: 5,
   headingText: 'Revenue',
+  loading: false,
   type: FINANCE_RECORD_TYPE.REVENUE,
 }
 

@@ -19,17 +19,19 @@ const stats = computed(() => data.value?.items[0])
   <section class="root">
     <TotalAmountCell
       :amount="stats?.totalRevenue ?? 0"
-      :class="{ revenue: true, empty: !stats?.totalRevenue }"
+      :class="{ revenue: true, empty: !stats?.totalRevenue, hidden: !stats }"
       :count="stats?.revenueRecords ?? 0"
       :heading-text="FINANCES_COPY.RECORD_TYPES.REVENUE"
+      :loading="!stats"
       :type="FINANCE_RECORD_TYPE.REVENUE"
     />
     <VerticalDivider />
     <TotalAmountCell
       :amount="stats?.totalExpenses ?? 0"
-      :class="{ expenses: true, empty: !stats?.totalExpenses }"
+      :class="{ expenses: true, empty: !stats?.totalExpenses, hidden: !stats }"
       :count="stats?.expenseRecords ?? 0"
       :heading-text="FINANCES_COPY.STATS.EXPENSES"
+      :loading="!stats"
       :type="FINANCE_RECORD_TYPE.EXPENSE"
     />
   </section>
@@ -54,6 +56,7 @@ const stats = computed(() => data.value?.items[0])
   color: var(--color-error-deep);
 }
 
+// Empty must go after revenue / expenses so that it overrides them.
 .empty {
   color: var(--color-text-dim);
 }

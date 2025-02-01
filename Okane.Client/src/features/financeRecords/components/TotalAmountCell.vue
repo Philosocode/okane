@@ -12,6 +12,7 @@ export type TotalAmountCellProps = {
   amount: number
   count: number
   headingText: string
+  loading: boolean
   type: FINANCE_RECORD_TYPE
 }
 
@@ -21,7 +22,7 @@ const props = defineProps<TotalAmountCellProps>()
 <template>
   <div class="cell flow">
     <CardHeading tag="h3">{{ props.headingText }}</CardHeading>
-    <p class="amount">
+    <p class="amount" :class="{ hidden: props.loading }">
       {{ FINANCES_COPY.STATS.TOTAL_AMOUNT({ amount: props.amount, type: props.type }) }}
     </p>
     <p>
@@ -44,5 +45,9 @@ const props = defineProps<TotalAmountCellProps>()
   font-size: var(--font-size-xl);
   font-weight: bold;
   word-break: break-all;
+}
+
+.hidden {
+  visibility: hidden;
 }
 </style>

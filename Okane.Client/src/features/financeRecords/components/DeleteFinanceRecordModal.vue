@@ -5,7 +5,6 @@ import { inject } from 'vue'
 // Internal
 import DeleteFinanceRecordModalActions from '@features/financeRecords/components/DeleteFinanceRecordModalActions.vue'
 import Modal from '@shared/components/modal/Modal.vue'
-import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
@@ -38,11 +37,12 @@ function handleDelete() {
 </script>
 
 <template>
-  <Modal :is-showing="!!deleteProvider.id" :modal-heading-id="modalHeadingId" @close="handleClose">
-    <ModalHeading :id="modalHeadingId">{{
-      FINANCES_COPY.DELETE_FINANCE_RECORD_MODAL.DELETE_FINANCE_RECORD
-    }}</ModalHeading>
-
+  <Modal
+    :is-showing="!!deleteProvider.id"
+    :heading-text="FINANCES_COPY.DELETE_FINANCE_RECORD_MODAL.DELETE_FINANCE_RECORD"
+    :modal-heading-id="modalHeadingId"
+    @close="handleClose"
+  >
     <p class="confirmation">{{ FINANCES_COPY.DELETE_FINANCE_RECORD_MODAL.ARE_YOU_SURE }}</p>
 
     <DeleteFinanceRecordModalActions :handle-close="handleClose" :handle-delete="handleDelete" />

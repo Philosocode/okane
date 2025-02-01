@@ -2,7 +2,7 @@
 import { type VueWrapper } from '@vue/test-utils'
 
 // Internal
-import Heading from '@shared/components/Heading.vue'
+import CardHeading from '@shared/components/typography/CardHeading.vue'
 import PasswordRequirements from '@features/auth/components/PasswordRequirements.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
@@ -35,7 +35,7 @@ test('renders the heading', () => {
   const wrapper = mountComponent({
     props: { checks, minPasswordLength },
   })
-  const heading = wrapper.getComponent(Heading)
+  const heading = wrapper.getComponent(CardHeading)
   expect(heading.text()).toBe(AUTH_COPY.AUTH_FORM.PASSWORD_REQUIREMENTS.HEADING)
 })
 

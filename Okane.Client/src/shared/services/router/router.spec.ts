@@ -1,6 +1,3 @@
-// External
-import { type MockInstance } from 'vitest'
-
 // Internal
 import { useAuthenticatedAuthStore } from '@tests/composables/useAuthenticatedAuthStore'
 
@@ -17,11 +14,10 @@ test('allows access to public routes', async () => {
 
 describe('as an unauthenticated user trying to access a protected route', () => {
   const queryKey = ['key']
-  let queryClientSpy: MockInstance
 
   beforeEach(async () => {
     testQueryClient.setQueryData(queryKey, 'value')
-    queryClientSpy = vi.spyOn(appQueryClient, 'getQueryClient').mockReturnValue(testQueryClient)
+    vi.spyOn(appQueryClient, 'getQueryClient').mockReturnValue(testQueryClient)
 
     const router = getRouter()
     await router.push(appRoutes.finances.buildPath())

@@ -69,7 +69,7 @@ test('makes a PATCH request to the expected endpoint', async () => {
 })
 
 test('invalidates the expected query keys', async () => {
-  const patchSpy = spyOn.patch()
+  spyOn.patch()
   const invalidateSpy = spyOn.invalidateQueries()
   const searchProvider = useSearchFinanceRecordsProvider()
 

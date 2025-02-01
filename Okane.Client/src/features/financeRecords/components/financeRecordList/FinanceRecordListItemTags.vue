@@ -13,7 +13,7 @@ export type FinanceRecordListItemTagsProps = Pick<FinanceRecord, 'tags' | 'type'
 
 const props = defineProps<FinanceRecordListItemTagsProps>()
 
-const typeClasses = computed(() => ['pill', 'type', props.type.toLowerCase()])
+const typeClasses = computed(() => ['type', props.type.toLowerCase()])
 </script>
 
 <template>
@@ -30,7 +30,7 @@ const typeClasses = computed(() => ['pill', 'type', props.type.toLowerCase()])
 
 <style scoped lang="scss">
 .pill {
-  padding-inline: var(--space-xs);
+  padding-inline: var(--space-sm);
 }
 
 .tags {
@@ -48,11 +48,12 @@ const typeClasses = computed(() => ['pill', 'type', props.type.toLowerCase()])
 }
 
 .type {
-  font-size: var(--font-size-xs);
   font-weight: 600;
+  padding-block: 0.1em;
+  padding-inline: var(--space-2xs);
 
   @include respond(sm) {
-    font-size: var(--font-size-sm);
+    font-size: var(--space-sm);
   }
 
   &.expense {

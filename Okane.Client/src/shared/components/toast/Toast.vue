@@ -3,6 +3,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 // Internal
+import Card from '@shared/components/wrappers/Card.vue'
 import IconButton from '@shared/components/IconButton.vue'
 
 import { SHARED_COPY } from '@shared/constants/copy'
@@ -43,7 +44,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="toast" v-bind="toastAttributes">
+  <Card class="toast" v-bind="toastAttributes">
     <p>{{ props.toast.text }}</p>
 
     <IconButton
@@ -52,24 +53,22 @@ onUnmounted(() => {
       icon="fa-solid fa-xmark"
       @click="removeToast(props.toast.id)"
     />
-  </div>
+  </Card>
 </template>
 
 <style scoped>
-.dismiss-button {
-  right: 0;
-  top: 0;
-  position: absolute;
-}
-
 .toast {
-  background-color: var(--color-bg-dim);
-  border-radius: 4px;
+  background-color: var(--color-site-bg);
   padding: var(--space-sm) var(--space-md);
   position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .is-error {
-  background-color: var(--color-error-dim);
+  background-color: var(--color-error-deep);
+  border-color: var(--color-error);
 }
 </style>

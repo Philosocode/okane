@@ -10,8 +10,7 @@ import { createTestTag } from '@tests/factories/tag'
 
 describe('getInitialSaveFinanceRecordFormState', () => {
   test('returns the initial form state', () => {
-    const spy = vi.spyOn(Date, 'now').mockReturnValue(540)
-
+    vi.spyOn(Date, 'now').mockReturnValue(540)
     expect(utils.getInitialSaveFinanceRecordFormState()).toEqual({
       amount: 0,
       description: '',

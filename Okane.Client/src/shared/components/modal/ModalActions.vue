@@ -9,6 +9,6 @@
 <style scoped>
 .root {
   display: flex;
-  gap: var(--space-sm);
+  gap: var(--space-md);
 }
 </style>

@@ -33,7 +33,7 @@ const props = defineProps<TotalAmountCellProps>()
 
 <style scoped lang="scss">
 .cell {
-  flex-grow: 1;
+  flex: 1;
   padding: var(--space-lg) var(--space-2xs);
   text-align: center;
 

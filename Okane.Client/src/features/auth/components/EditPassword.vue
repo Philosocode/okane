@@ -6,7 +6,6 @@ import { computed, ref, watch } from 'vue'
 import AuthForm from '@features/auth/components/AuthForm.vue'
 import CardHeading from '@shared/components/typography/CardHeading.vue'
 import FormInput from '@shared/components/form/FormInput.vue'
-import Heading from '@shared/components/Heading.vue'
 import PasswordRequirements from '@features/auth/components/PasswordRequirements.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
@@ -83,7 +82,6 @@ watch(combinedInputValues, () => {
 </script>
 
 <template>
-  <CardHeading tag="h2">{{ AUTH_COPY.ACCOUNT_PAGE.EDIT_PASSWORD }}</CardHeading>
   <AuthForm
     :submit-button-text="SHARED_COPY.ACTIONS.SAVE"
     :submit-button-is-disabled="submitButtonDisabled"
@@ -91,6 +89,7 @@ watch(combinedInputValues, () => {
     :submit-success="editSucceeded ? AUTH_COPY.ACCOUNT_PAGE.EDIT_PASSWORD_SUCCESS : ''"
     @submit="handleSubmit"
   >
+    <CardHeading tag="h2">{{ AUTH_COPY.ACCOUNT_PAGE.EDIT_PASSWORD }}</CardHeading>
     <FormInput
       :label="AUTH_COPY.ACCOUNT_PAGE.CURRENT_PASSWORD"
       name="currentPassword"

@@ -158,9 +158,7 @@ describe('when logged in', () => {
 
       const queryKey = ['key']
       testQueryClient.setQueryData(queryKey, 'value')
-      const queryClientSpy = vi
-        .spyOn(appQueryClient, 'getQueryClient')
-        .mockReturnValue(testQueryClient)
+      vi.spyOn(appQueryClient, 'getQueryClient').mockReturnValue(testQueryClient)
 
       try {
         await apiClient.get('/ping')

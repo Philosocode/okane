@@ -2,14 +2,16 @@
 import { type VueWrapper } from '@vue/test-utils'
 
 // Internal
-import Modal from '@shared/components/modal/Modal.vue'
+import CardHeading from '@shared/components/typography/CardHeading.vue'
+import Modal, { type ModalProps } from '@shared/components/modal/Modal.vue'
 
 import { ARIA_ATTRIBUTES } from '@shared/constants/aria'
 import { DATA_ATTRIBUTES } from '@shared/constants/dataAttributes'
 import { SHARED_COPY } from '@shared/constants/copy'
 import { TEST_IDS } from '@shared/constants/testIds'
 
-const props = {
+const props: ModalProps = {
+  headingText: 'Cool heading',
   isShowing: true,
   modalHeadingId: 'cool-heading-id',
 }
@@ -54,6 +56,13 @@ test('does not render the modal or backdrop when the modal is hidden', () => {
 
   const modal = elements.modal(wrapper)
   expect(modal.exists()).toBe(false)
+})
+
+test('renders a heading', () => {
+  const wrapper = mountComponent({ props })
+  const heading = wrapper.getComponent(CardHeading)
+  expect(heading.attributes('id')).toBe(props.modalHeadingId)
+  expect(heading.text()).toBe(props.headingText)
 })
 
 test('renders a button to close the modal', async () => {

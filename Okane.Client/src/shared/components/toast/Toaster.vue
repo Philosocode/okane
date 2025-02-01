@@ -25,7 +25,7 @@ const { toasts } = useToastStore()
   bottom: 25px;
   left: 0;
   right: 0;
-  width: 20rem;
+  width: max-content;
   z-index: var(--z-index-toaster);
 }
 

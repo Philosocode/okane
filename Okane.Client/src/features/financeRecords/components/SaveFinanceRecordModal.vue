@@ -6,7 +6,6 @@ import { useTemplateRef } from 'vue'
 import Button from '@shared/components/Button.vue'
 import Modal from '@shared/components/modal/Modal.vue'
 import ModalActions from '@shared/components/modal/ModalActions.vue'
-import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 import SaveFinanceRecordFormInputs from '@features/financeRecords/components/SaveFinanceRecordFormInputs.vue'
 
 import { SHARED_COPY } from '@shared/constants/copy'
@@ -48,9 +47,12 @@ function handleSave() {
 </script>
 
 <template>
-  <Modal :is-showing="isShowing" :modal-heading-id="modalHeadingId" @close="handleClose">
-    <ModalHeading :id="modalHeadingId">{{ title }}</ModalHeading>
-
+  <Modal
+    :is-showing="isShowing"
+    :heading-text="title"
+    :modal-heading-id="modalHeadingId"
+    @close="handleClose"
+  >
     <form ref="form" @submit.prevent class="form">
       <SaveFinanceRecordFormInputs
         :form-state="formState"

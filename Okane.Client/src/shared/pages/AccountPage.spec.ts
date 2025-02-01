@@ -51,7 +51,7 @@ test('renders an EditPassword', async () => {
 test('renders a divider', async () => {
   const wrapper = mountComponent()
   await flushPromises()
-  const divider = wrapper.find(`hr[role="${HTML_ROLE.SEPARATOR}"]`)
+  const divider = wrapper.find(`div[role="${HTML_ROLE.SEPARATOR}"]`)
   expect(divider.exists()).toBe(true)
 })
 

@@ -17,7 +17,7 @@ const props: TotalAmountCellProps = {
 
 test('renders the heading', () => {
   const wrapper = mountComponent({ props })
-  expect(wrapper.findByText('h4', props.headingText)).toBeDefined()
+  expect(wrapper.findByText('h3', props.headingText)).toBeDefined()
 })
 
 test('renders the amount', () => {

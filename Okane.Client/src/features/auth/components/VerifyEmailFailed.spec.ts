@@ -48,11 +48,10 @@ test('does not render the error text', () => {
 
 describe('when successfully re-sending the verification email', () => {
   let wrapper: VueWrapper
-  let postSpy: MockInstance
 
   beforeEach(async () => {
     wrapper = mountComponent()
-    postSpy = vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInAPIResponse('success'))
+    vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInAPIResponse('success'))
 
     const button = wrapper.find('button')
     await button.trigger('click')
@@ -87,12 +86,11 @@ describe('when successfully re-sending the verification email', () => {
 
 describe('with an error re-sending the verification email', () => {
   let wrapper: VueWrapper
-  let postSpy: MockInstance
   let consoleSpy: MockInstance
 
   beforeEach(async () => {
     consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
-    postSpy = vi.spyOn(apiClient, 'post').mockRejectedValue(createTestProblemDetails())
+    vi.spyOn(apiClient, 'post').mockRejectedValue(createTestProblemDetails())
     wrapper = mountComponent()
 
     const button = wrapper.find('button')

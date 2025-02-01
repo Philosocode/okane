@@ -81,7 +81,7 @@ function handleClick(callback: MenuAction['onClick']) {
 
 .menu {
   border: var(--border-main);
-  min-width: 5rem;
+  min-width: 6rem;
   overflow: hidden;
   position: absolute;
   bottom: 0;

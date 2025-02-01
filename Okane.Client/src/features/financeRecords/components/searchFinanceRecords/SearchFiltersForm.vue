@@ -148,6 +148,7 @@ function handleSubmit() {
 
 .sort-controls {
   display: flex;
-  gap: var(--space-sm);
+  height: 3.5rem;
+  gap: var(--space-md);
 }
 </style>

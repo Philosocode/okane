@@ -6,7 +6,6 @@ import { useRouter } from 'vue-router'
 import Button from '@shared/components/Button.vue'
 import Modal from '@shared/components/modal/Modal.vue'
 import ModalActions from '@shared/components/modal/ModalActions.vue'
-import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
 import { ROUTE_NAME } from '@shared/services/router/router'
@@ -36,10 +35,13 @@ function handleDelete() {
     {{ AUTH_COPY.ACCOUNT_PAGE.DELETE_ACCOUNT }}
   </Button>
 
-  <Modal :is-showing="modalIsShowing" :modal-heading-id="modalHeadingId" @close="closeModal">
-    <ModalHeading :id="modalHeadingId">{{ AUTH_COPY.ACCOUNT_PAGE.DELETE_ACCOUNT }}</ModalHeading>
+  <Modal
+    :is-showing="modalIsShowing"
+    :heading-text="AUTH_COPY.ACCOUNT_PAGE.DELETE_ACCOUNT"
+    :modal-heading-id="modalHeadingId"
+    @close="closeModal"
+  >
     <p class="confirmation">{{ AUTH_COPY.ACCOUNT_PAGE.DELETE_ACCOUNT_CONFIRMATION }}</p>
-
     <ModalActions>
       <Button class="button error" focus-on-mount variant="warning" @click.prevent="handleDelete">
         {{ SHARED_COPY.ACTIONS.DELETE }}

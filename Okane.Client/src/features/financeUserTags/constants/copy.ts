@@ -17,7 +17,7 @@ export const FINANCE_USER_TAGS_COPY = {
     NAME: 'Name',
     NO_FINANCE_TAGS_TO_DISPLAY: `No finance tags to display. To create a tag, click the bottom in the bottom-right corner of the screen.`,
     RENAME_FINANCE_TAG: 'Rename finance tag.',
-    TAG_TYPE: 'Tag type',
+    TAG_TYPE: 'Tag Type',
     TYPE: 'Type',
   },
 

@@ -15,6 +15,7 @@ module.exports = {
   },
   rules: {
     'vue/multi-word-component-names': 'off',
+    'no-console': ['warn', { allow: ['error', 'info', 'warn'] }],
     "@typescript-eslint/no-unused-vars": [
       "warn",
       {

@@ -18,38 +18,34 @@ const financeRecords = computed(() => flattenPages(queryResult.data.value?.pages
 </script>
 
 <template>
-  <div class="root">
-    <InfiniteScroller :items="financeRecords" :query-result="queryResult">
-      <ul class="finance-record-list">
-        <li v-for="financeRecord in financeRecords" :key="financeRecord.id">
-          <FinanceRecordListItem :finance-record="financeRecord" />
-        </li>
-      </ul>
+  <InfiniteScroller :items="financeRecords" :query-result="queryResult">
+    <ul class="card finance-record-list">
+      <FinanceRecordListItem
+        v-for="financeRecord in financeRecords"
+        :key="financeRecord.id"
+        :finance-record="financeRecord"
+      />
+    </ul>
 
-      <template #noItems>
-        <p>{{ FINANCES_COPY.INFINITE_LIST.NO_FINANCE_RECORDS }}</p>
-      </template>
+    <template #noItems>
+      <p class="no-items">{{ FINANCES_COPY.INFINITE_LIST.NO_FINANCE_RECORDS }}</p>
+    </template>
 
-      <template #noMoreItems>
-        <p class="no-more-items">{{ SHARED_COPY.INFINITE_SCROLLER.REACHED_THE_BOTTOM }}</p>
-      </template>
-    </InfiniteScroller>
-  </div>
+    <template #noMoreItems>
+      <p class="no-items">{{ SHARED_COPY.INFINITE_SCROLLER.REACHED_THE_BOTTOM }}</p>
+    </template>
+  </InfiniteScroller>
 </template>
 
 <style scoped>
-.root {
-  margin-top: var(--space-lg);
-}
-
 .finance-record-list {
+  border: var(--border-main);
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
 }
 
-.no-more-items {
-  margin-block: var(--space-xl);
+.no-items {
+  margin-top: var(--space-xl);
   text-align: center;
 }
 </style>

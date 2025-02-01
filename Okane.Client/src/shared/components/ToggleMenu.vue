@@ -1,6 +1,5 @@
 <script setup lang="ts">
 // External
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { onClickOutside } from '@vueuse/core'
 import { ref, useTemplateRef } from 'vue'
 
@@ -47,7 +46,12 @@ function handleClick(callback: MenuAction['onClick']) {
     />
 
     <ul v-if="menuIsShowing" class="menu" :id="props.menuId" role="menu">
-      <li v-for="action in props.actions" :key="action.text" role="presentation">
+      <li
+        v-for="action in props.actions"
+        :key="action.text"
+        class="button-wrapper"
+        role="presentation"
+      >
         <Button class="menu-item" role="menuitem" @click="handleClick(action.onClick)">
           {{ action.text }}
         </Button>
@@ -62,52 +66,38 @@ function handleClick(callback: MenuAction['onClick']) {
   flex-direction: column;
   align-items: center;
   position: relative;
-}
 
-.menu-toggle {
-  --button-size: 3rem;
-
-  align-self: flex-end;
-  background: none;
-  border-color: transparent;
-  border-style: solid;
-  border-width: pxToRem(1);
-  border-radius: 100%;
-  color: var(--color-text);
-  display: grid;
-  place-items: center center;
-  padding: 1rem;
-  height: var(--button-size);
-  width: var(--button-size);
-
-  &:hover,
-  &:active,
-  &:focus {
-    border-color: var(--color-card-border);
+  &:last-child {
+    border-top: var(--border-main);
   }
 }
 
+.menu-toggle {
+  align-self: flex-end;
+  background: none;
+  display: grid;
+  place-items: center center;
+}
+
 .menu {
-  border: 1px solid var(--color-card-border);
-  border-radius: pxToRem(4);
-  font-size: var(--font-size-sm);
+  border: var(--border-main);
   min-width: 5rem;
   overflow: hidden;
   position: absolute;
-  transform: translate(-0.5rem, 3.25rem);
+  bottom: 0;
+  right: 0;
+  transform: translate(0.15rem, 6rem);
   z-index: var(--z-index-toggle-menu);
+}
+
+.button-wrapper:not(:last-child) {
+  border-bottom: var(--border-main);
 }
 
 .menu-item {
   background-color: var(--color-site-bg);
   border: none;
-  color: var(--color-text);
   padding: var(--space-xs);
   width: 100%;
-
-  &:hover,
-  &:focus {
-    background-color: var(--color-bg-dim);
-  }
 }
 </style>

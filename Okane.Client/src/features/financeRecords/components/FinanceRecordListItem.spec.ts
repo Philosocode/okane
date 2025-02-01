@@ -1,14 +1,15 @@
 // External
-import { formatDate } from 'date-fns'
+import { format } from 'date-fns'
 
 import { type VueWrapper } from '@vue/test-utils'
 
 // Internal
 import FinanceRecordListItem from '@features/financeRecords/components/FinanceRecordListItem.vue'
+import FinanceRecordListItemTags from '@features/financeRecords/components/financeRecordList/FinanceRecordListItemTags.vue'
 import ToggleMenu from '@shared/components/ToggleMenu.vue'
 
 import { ARIA_ATTRIBUTES } from '@shared/constants/aria'
-import { FINANCE_RECORD_TIMESTAMP_FORMAT } from '@features/financeRecords/constants/financeRecordList'
+import { COMMON_DATE_TIME_FORMAT } from '@shared/constants/dateTime'
 import { SHARED_COPY } from '@shared/constants/copy'
 
 import {
@@ -38,36 +39,30 @@ const mountComponent = getMountComponent(FinanceRecordListItem, {
   },
 })
 
-test('renders the type', () => {
-  const wrapper = mountComponent()
-  const type = wrapper.findByText('span', financeRecord.type)
-  expect(type.exists()).toBe(true)
-})
-
 test('renders the amount', () => {
   const wrapper = mountComponent()
   const amount = wrapper.findByText('div', financeRecord.amount.toString())
   expect(amount.exists()).toBe(true)
 })
 
-test('renders the type and timestamp', () => {
-  const expectedTimestamp = formatDate(financeRecord.happenedAt, FINANCE_RECORD_TIMESTAMP_FORMAT)
+test('renders the timestamp', () => {
   const wrapper = mountComponent()
-  const topRow = wrapper.get('.top-row')
-  expect(topRow.text()).toBe(`${financeRecord.type} - ${expectedTimestamp}`)
+  const timestamp = wrapper.findByText(
+    'p',
+    format(financeRecord.happenedAt, COMMON_DATE_TIME_FORMAT),
+  )
+  expect(timestamp).toBeDefined()
 })
 
 test('renders the description', () => {
   const wrapper = mountComponent()
-  const description = wrapper.findByText('div', financeRecord.description.toString())
+  const description = wrapper.findByText('p', financeRecord.description.toString())
   expect(description.exists()).toBe(true)
 })
 
-test('renders each tag', () => {
+test('renders the tags', () => {
   const wrapper = mountComponent()
-  tags.forEach((tag) => {
-    expect(wrapper.findByText('div', tag.name)).toBeDefined()
-  })
+  expect(wrapper.findComponent(FinanceRecordListItemTags).exists()).toBe(true)
 })
 
 test('renders a menu', async () => {

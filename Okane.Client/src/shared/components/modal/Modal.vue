@@ -1,10 +1,10 @@
 <script setup lang="ts">
 // External
-import { useTemplateRef } from 'vue'
 import { onClickOutside, onKeyStroke } from '@vueuse/core'
+import { useTemplateRef } from 'vue'
+import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component'
 
 // Internal
-import Card from '@shared/components/wrappers/Card.vue'
 import IconButton from '@shared/components/IconButton.vue'
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 
@@ -24,13 +24,22 @@ const emit = defineEmits<{
 }>()
 
 const backdropRef = useTemplateRef<HTMLDivElement>('backdropRef')
-const dialogRef = useTemplateRef<HTMLDialogElement>('dialogRef')
+const modalRef = useTemplateRef<HTMLDivElement>('modalRef')
+<<<<<<< HEAD
+const { activate, deactivate } = useFocusTrap(modalRef)
+||||||| parent of e2e0b7a (fixup! 117-FE: Add modal focus trapping)
+const triggerStore = useModalTriggerStore()
+const { activate, deactivate } = useFocusTrap(modalRef)
+=======
+const triggerStore = useModalTriggerStore()
+// const { activate, deactivate } = useFocusTrap(modalRef)
+>>>>>>> e2e0b7a (fixup! 117-FE: Add modal focus trapping)
 
 function emitModalClose() {
   emit('close')
 }
 
-onClickOutside(dialogRef, (event) => {
+onClickOutside(modalRef, (event) => {
   if (event.target === backdropRef.value) emitModalClose()
 })
 
@@ -47,30 +56,32 @@ onKeyStroke('Escape', () => {
       ref="backdropRef"
       :data-testid="TEST_IDS.MODAL_BACKDROP"
     >
-      <Card
+      <div
         aria-modal="true"
         :aria-labelledby="props.modalHeadingId"
         class="modal"
         :data-disable-document-scroll="props.isShowing"
-        ref="dialogRef"
+        ref="modalRef"
         :data-testid="TEST_IDS.MODAL"
         v-bind="$attrs"
         @close="emitModalClose"
       >
-        <div class="modal-content">
-          <div class="top-row">
-            <ModalHeading :id="props.modalHeadingId">{{ props.headingText }}</ModalHeading>
-            <IconButton
-              class="close-button"
-              icon="fa-solid fa-xmark"
-              :title="SHARED_COPY.MODAL.CLOSE_MODAL"
-              @click="emitModalClose"
-            />
-          </div>
+        <UseFocusTrap>
+          <div class="modal-content flow">
+            <div class="top-row">
+              <ModalHeading :id="props.modalHeadingId">{{ props.headingText }}</ModalHeading>
+              <IconButton
+                class="close-button"
+                icon="fa-solid fa-xmark"
+                :title="SHARED_COPY.MODAL.CLOSE_MODAL"
+                @click="emitModalClose"
+              />
+            </div>
 
-          <slot />
-        </div>
-      </Card>
+            <slot />
+          </div>
+        </UseFocusTrap>
+      </div>
     </div>
   </Teleport>
 </template>
@@ -95,15 +106,12 @@ onKeyStroke('Escape', () => {
 .modal {
   background-color: var(--color-site-bg);
   border: none;
-  border-radius: 0.5rem;
   overflow-y: auto;
   padding: 0;
   position: relative;
 
   height: 100%;
-  max-height: 100%;
   width: 100%;
-  max-width: 100%;
 
   @include respond(sm) {
     border: var(--border-main);
@@ -120,10 +128,6 @@ onKeyStroke('Escape', () => {
 
 .modal-content {
   padding: var(--space-md);
-
-  & > * + * {
-    margin-top: var(--space-md);
-  }
 }
 
 .top-row {

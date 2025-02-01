@@ -9,6 +9,7 @@ import { mapDate } from '@shared/utils/dateTime'
 
 import { baseTestObjectFactory } from '@tests/factories/base'
 import { createTestTag } from '@tests/factories/tag'
+import type { FinanceRecordsStats } from '@features/financeRecords/types/financeRecordsStats'
 
 const defaultFinanceRecord: FinanceRecord = {
   id: 1,
@@ -38,4 +39,18 @@ export const createTestSaveFinanceRecordFormState: TestObjectFactoryFunction<
   SaveFinanceRecordFormState
 > = (overrides, options) => {
   return baseTestObjectFactory(defaultSaveFinanceRecordFormState, overrides, options)
+}
+
+const defaultFinanceRecordsStats: FinanceRecordsStats = {
+  expenseRecords: 25,
+  revenueRecords: 50,
+  totalExpenses: 1000,
+  totalRevenue: 2000,
+}
+
+export const createTestFinanceRecordsStats: TestObjectFactoryFunction<FinanceRecordsStats> = (
+  overrides,
+  options,
+) => {
+  return baseTestObjectFactory(defaultFinanceRecordsStats, overrides, options)
 }

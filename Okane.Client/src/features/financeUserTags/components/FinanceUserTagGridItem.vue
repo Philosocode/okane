@@ -4,7 +4,7 @@ import { inject } from 'vue'
 
 // Internal
 import Card from '@shared/components/wrappers/Card.vue'
-import IconButton from '@shared/components/IconButton.vue'
+import ModalTrigger from '@shared/components/modal/ModalTrigger.vue'
 
 import { FINANCE_USER_TAGS_COPY } from '@features/financeUserTags/constants/copy'
 
@@ -28,13 +28,15 @@ const provider = inject(MANAGE_FINANCE_USER_TAGS_PROVIDER_SYMBOL) as ManageFinan
     <p class="tag-name">{{ props.userTag.tag.name }}</p>
 
     <div class="actions">
-      <IconButton
+      <ModalTrigger
         icon="fa-solid fa-pen-to-square"
+        is-icon
         :title="FINANCE_USER_TAGS_COPY.MANAGE_PAGE.RENAME_FINANCE_TAG"
         @click="provider.setUserTagToRename(props.userTag)"
       />
-      <IconButton
+      <ModalTrigger
         icon="fa-solid fa-trash"
+        is-icon
         :title="FINANCE_USER_TAGS_COPY.MANAGE_PAGE.DELETE_FINANCE_TAG"
         @click="provider.setUserTagToDelete(props.userTag)"
       />

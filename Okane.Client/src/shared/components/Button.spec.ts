@@ -1,6 +1,14 @@
 // External
 import Button from '@shared/components/Button.vue'
 
+import { defineComponent, useTemplateRef, watchEffect } from 'vue'
+import { flushPromises } from '@vue/test-utils'
+
+/* eslint-disable vue/no-reserved-component-names */
+export default defineComponent({
+  components: { Button },
+})
+
 const mountComponent = getMountComponent(Button)
 
 test('renders a button with the passed attributes', () => {
@@ -47,4 +55,27 @@ test('focuses the button when focusOnMount is true', () => {
   })
   const button = wrapper.get('button')
   expect(document.activeElement).toBe(button.element)
+})
+
+test('exposes a buttonRef', async () => {
+  const TestComponent = defineComponent({
+    components: { Button },
+    setup() {
+      const buttonRef = useTemplateRef<InstanceType<typeof Button>>('buttonRef')
+
+      watchEffect(() => {
+        buttonRef.value?.buttonRef?.focus()
+      })
+
+      return { buttonRef }
+    },
+    template: `<Button ref="buttonRef" />`,
+  })
+
+  const wrapper = getMountComponent(TestComponent)({
+    attachTo: document.body,
+  })
+  const button = wrapper.get('button')
+  await flushPromises()
+  expect(button.element).toEqual(document.activeElement)
 })

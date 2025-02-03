@@ -1,5 +1,7 @@
 // External
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { flushPromises } from '@vue/test-utils'
+import { defineComponent, useTemplateRef, watchEffect } from 'vue'
 
 // Internal
 import IconButton, { type IconButtonProps } from '@shared/components/IconButton.vue'
@@ -22,4 +24,27 @@ test('renders an icon', () => {
   const icon = wrapper.getComponent(FontAwesomeIcon)
   const title = icon.findByText('title', props.title)
   expect(title).toBeDefined()
+})
+
+test('exposes a buttonRef', async () => {
+  const TestComponent = defineComponent({
+    components: { IconButton },
+    setup() {
+      const buttonRef = useTemplateRef<InstanceType<typeof IconButton>>('buttonRef')
+
+      watchEffect(() => {
+        buttonRef.value?.buttonRef?.focus()
+      })
+
+      return { buttonRef }
+    },
+    template: `<IconButton icon="fa-solid fa-sun" ref="buttonRef" title="Test" />`,
+  })
+
+  const wrapper = getMountComponent(TestComponent)({
+    attachTo: document.body,
+  })
+  const button = wrapper.get('button')
+  await flushPromises()
+  expect(button.element).toEqual(document.activeElement)
 })

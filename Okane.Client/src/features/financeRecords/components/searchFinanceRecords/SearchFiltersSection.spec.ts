@@ -1,6 +1,7 @@
 // Internal
 import AppliedSearchFilters from '@features/financeRecords/components/searchFinanceRecords/AppliedSearchFilters.vue'
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
+import ModalTrigger from '@shared/components/modal/ModalTrigger.vue'
 import SearchFiltersSection from '@features/financeRecords/components/searchFinanceRecords/SearchFiltersSection.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
@@ -33,7 +34,7 @@ test('renders the applied search filters', () => {
   expect(wrapper.findComponent(AppliedSearchFilters).exists()).toBe(true)
 })
 
-test('renders a button to show the search modal', async () => {
+test('renders a modal trigger to show the search modal', async () => {
   const provider = useSearchFinanceRecordsProvider()
   const wrapper = mountComponent({
     global: {
@@ -46,10 +47,8 @@ test('renders a button to show the search modal', async () => {
   let modalHeading = wrapper.findComponent(ModalHeading)
   expect(modalHeading.exists()).toBe(false)
 
-  const button = wrapper.findByText(
-    'button',
-    FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.EDIT_SEARCH_FILTERS,
-  )
+  const button = wrapper.getComponent(ModalTrigger)
+  expect(button.text()).toBe(FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.EDIT_SEARCH_FILTERS)
   await button.trigger('click')
   modalHeading = wrapper.findComponent(ModalHeading)
   expect(modalHeading.exists()).toBe(true)

@@ -6,6 +6,7 @@ import { useRouter } from 'vue-router'
 import Button from '@shared/components/Button.vue'
 import Modal from '@shared/components/modal/Modal.vue'
 import ModalActions from '@shared/components/modal/ModalActions.vue'
+import ModalTrigger from '@shared/components/modal/ModalTrigger.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
 import { ROUTE_NAME } from '@shared/services/router/router'
@@ -31,9 +32,9 @@ function handleDelete() {
 </script>
 
 <template>
-  <Button @click="showModal" variant="warning">
+  <ModalTrigger @click="showModal" variant="warning">
     {{ AUTH_COPY.ACCOUNT_PAGE.DELETE_ACCOUNT }}
-  </Button>
+  </ModalTrigger>
 
   <Modal
     :is-showing="modalIsShowing"

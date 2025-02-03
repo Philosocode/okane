@@ -1,5 +1,7 @@
 // External
 import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component'
+import { useModalTriggerStore } from '@shared/composables/useModalTriggerStore'
+import { defineComponent, useTemplateRef } from 'vue'
 
 import { type VueWrapper } from '@vue/test-utils'
 
@@ -53,6 +55,13 @@ test('renders a modal', () => {
   expect(modal.attributes(DATA_ATTRIBUTES.DISABLE_DOCUMENT_SCROLL)).toBe('true')
 })
 
+test('renders a button to close the modal', () => {
+  const wrapper = mountComponent({ props })
+  const closeButton = wrapper.get('button')
+  const title = closeButton.get('title')
+  expect(title.text()).toBe(SHARED_COPY.MODAL.CLOSE_MODAL)
+})
+
 test('does not render the modal or backdrop when the modal is hidden', () => {
   const wrapper = mountComponent({
     props: { ...props, isShowing: false },
@@ -70,16 +79,6 @@ test('renders a heading', () => {
   const heading = wrapper.getComponent(CardHeading)
   expect(heading.attributes('id')).toBe(props.modalHeadingId)
   expect(heading.text()).toBe(props.headingText)
-})
-
-test('renders a button to close the modal', async () => {
-  const wrapper = mountComponent({ props })
-  const closeButton = wrapper.get('button')
-  const title = closeButton.get('title')
-  expect(title.text()).toBe(SHARED_COPY.MODAL.CLOSE_MODAL)
-
-  await closeButton.trigger('click')
-  expect(wrapper.emitted()).toHaveProperty('close')
 })
 
 test('renders the slot content', () => {
@@ -101,13 +100,47 @@ test('passes extra attributes', () => {
   expect(modal.exists()).toBe(true)
 })
 
-test('closes the modal when clicking the backdrop', async () => {
-  const wrapper = mountComponent({
-    attachTo: document.body,
-    props,
+describe('closes the modal', () => {
+  test('when clicking the backdrop', async () => {
+    const wrapper = mountComponent({
+      attachTo: document.body,
+      props,
+    })
+    const backdrop = elements.backdrop(wrapper)
+    expect(wrapper.emitted('close')).toBeUndefined()
+    await backdrop.trigger('click')
+    expect(wrapper.emitted('close')).toBeDefined()
   })
-  const backdrop = elements.backdrop(wrapper)
-  expect(wrapper.emitted('close')).toBeUndefined()
-  await backdrop.trigger('click')
-  expect(wrapper.emitted('close')).toBeDefined()
+
+  test('when clicking the close button', async () => {
+    const wrapper = mountComponent({ props })
+    const closeButton = wrapper.get('button')
+    const title = closeButton.get('title')
+    expect(title.text()).toBe(SHARED_COPY.MODAL.CLOSE_MODAL)
+    await closeButton.trigger('click')
+    expect(wrapper.emitted()).toHaveProperty('close')
+  })
+
+  test('and resets the modal trigger state', async () => {
+    const TestComponent = defineComponent({
+      setup() {
+        const triggerRef = useTemplateRef('triggerRef')
+        const triggerStore = useModalTriggerStore()
+        return { triggerRef, triggerStore }
+      },
+      template: `<button id="modal-trigger" ref="triggerRef" @click="triggerStore.setModalTrigger(triggerRef)" />`,
+    })
+    const triggerStore = useModalTriggerStore()
+    const wrapper = mountComponent({
+      props,
+      slots: { default: TestComponent },
+    })
+    const trigger = wrapper.get('button#modal-trigger')
+    await trigger.trigger('click')
+    expect(triggerStore.modalTrigger).toEqual(trigger.element)
+
+    const closeButton = wrapper.get('button')
+    await closeButton.trigger('click')
+    expect(triggerStore.modalTrigger).toBeNull()
+  })
 })

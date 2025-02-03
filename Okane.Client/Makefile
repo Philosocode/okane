@@ -1,24 +1,24 @@
 .PHONY: run
 run:
-	npm run dev
+	pnpm dev
 
 .PHONY: install
 install:
 	asdf install
-	npm install
+	pnpm install
 
 .PHONY: build
 build:
-	npm run build
+	pnpm build
 
 .PHONY: lint
 lint:
-	npm run lint
+	pnpm lint
 
 .PHONY: test
 test:
-	npm run test
+	pnpm test
 
 .PHONY: test-watch
 test-watch:
-	npm run test watch
+	pnpm test watch

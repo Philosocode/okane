@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // External
-import IconButton from '@shared/components/IconButton.vue'
+import ModalTrigger from '@shared/components/modal/ModalTrigger.vue'
 
 type Props = {
   title: string
@@ -14,8 +14,9 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <IconButton
+  <ModalTrigger
     class="icon-button"
+    is-icon
     icon="fa-solid fa-plus"
     :title="props.title"
     @click="emit('click')"

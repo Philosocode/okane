@@ -8,9 +8,11 @@ export type ButtonProps = {
   variant?: 'callToAction' | 'warning'
 }
 
-const buttonRef = useTemplateRef<HTMLButtonElement>('buttonRef')
-
 const props = defineProps<ButtonProps>()
+
+const buttonRef = useTemplateRef<HTMLButtonElement>('buttonRef')
+defineExpose({ buttonRef })
+
 const classes = computed(() => ({
   base: true,
   'call-to-action': !props.disabled && props.variant === 'callToAction',

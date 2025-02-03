@@ -4,7 +4,7 @@ import { inject } from 'vue'
 
 // Internal
 import AppliedSearchFilters from '@features/financeRecords/components/searchFinanceRecords/AppliedSearchFilters.vue'
-import Button from '@shared/components/Button.vue'
+import ModalTrigger from '@shared/components/modal/ModalTrigger.vue'
 import SearchFiltersModal from '@features/financeRecords/components/searchFinanceRecords/SearchFiltersModal.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
@@ -20,15 +20,15 @@ const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRec
 <template>
   <section class="section">
     <AppliedSearchFilters />
-    <Button class="modal-trigger" @click="searchProvider.setModalIsShowing(true)">
+    <ModalTrigger class="modal-trigger" @click="searchProvider.setModalIsShowing(true)">
       {{ FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.EDIT_SEARCH_FILTERS }}
-    </Button>
+    </ModalTrigger>
   </section>
 
   <SearchFiltersModal />
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .section {
   padding: var(--space-md);
 }

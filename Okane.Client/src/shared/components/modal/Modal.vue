@@ -11,6 +11,8 @@ import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 import { SHARED_COPY } from '@shared/constants/copy'
 import { TEST_IDS } from '@shared/constants/testIds'
 
+import { useModalTriggerStore } from '@shared/composables/useModalTriggerStore'
+
 export type ModalProps = {
   headingText: string
   isShowing: boolean
@@ -25,17 +27,12 @@ const emit = defineEmits<{
 
 const backdropRef = useTemplateRef<HTMLDivElement>('backdropRef')
 const modalRef = useTemplateRef<HTMLDivElement>('modalRef')
-<<<<<<< HEAD
-const { activate, deactivate } = useFocusTrap(modalRef)
-||||||| parent of e2e0b7a (fixup! 117-FE: Add modal focus trapping)
 const triggerStore = useModalTriggerStore()
-const { activate, deactivate } = useFocusTrap(modalRef)
-=======
-const triggerStore = useModalTriggerStore()
-// const { activate, deactivate } = useFocusTrap(modalRef)
->>>>>>> e2e0b7a (fixup! 117-FE: Add modal focus trapping)
 
 function emitModalClose() {
+  triggerStore.modalTrigger?.focus()
+  triggerStore.setModalTrigger(null)
+
   emit('close')
 }
 

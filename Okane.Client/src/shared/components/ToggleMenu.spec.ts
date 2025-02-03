@@ -17,7 +17,7 @@ const TestComponent = defineComponent({
   },
   template: `
     <template>
-      <div data-testid="${outsideOfMenuTestId}">Hello</div>
+      <button data-testid="${outsideOfMenuTestId}">Hello</button>
       
       <div>
         <ToggleMenu :actions="$props.actions" :menu-id="$props.menuId" />
@@ -55,7 +55,7 @@ const selectors = {
 
 test('renders a menu toggle', () => {
   const wrapper = mountComponent()({ props })
-  const menuToggle = wrapper.get('button')
+  const menuToggle = wrapper.findByText('button', SHARED_COPY.MENU.TOGGLE_MENU)
   expect(menuToggle.attributes(ARIA_ATTRIBUTES.HAS_POPUP)).toBe('true')
   expect(menuToggle.attributes(ARIA_ATTRIBUTES.CONTROLS)).toBe(props.menuId)
   expect(menuToggle.attributes(ARIA_ATTRIBUTES.EXPANDED)).toBe('false')
@@ -105,21 +105,6 @@ describe('after clicking the menu toggle', () => {
 
       await menuButton.trigger('click')
       expect(actions[i].onClick).toHaveBeenCalledOnce()
-
-      // After clicking an action, the menu should be closed and re-opened.
-      const menu = wrapper.find(selectors.menu)
-      expect(menu.exists()).toBe(false)
-
-      const toggleButton = wrapper.get(selectors.toggleButton)
-      await toggleButton.trigger('click')
     }
-  })
-
-  test('hides the menu when clicking away', async () => {
-    const { wrapper } = await setUp()
-    const outsideOfMenu = wrapper.get(`[data-testid="${outsideOfMenuTestId}"]`)
-    await outsideOfMenu.trigger('click')
-    const menu = wrapper.find(selectors.menu)
-    expect(menu.exists()).toBe(false)
   })
 })

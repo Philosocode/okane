@@ -1,11 +1,11 @@
 <script setup lang="ts">
 // External
-import { onClickOutside } from '@vueuse/core'
+import { onClickOutside, onKeyStroke } from '@vueuse/core'
 import { ref, useTemplateRef } from 'vue'
 
 // Internal
-import Button from '@shared/components/Button.vue'
 import IconButton from '@shared/components/IconButton.vue'
+import ModalTrigger from '@shared/components/modal/ModalTrigger.vue'
 
 import { SHARED_COPY } from '@shared/constants/copy'
 
@@ -27,9 +27,16 @@ onClickOutside(rootRef, () => {
   if (menuIsShowing.value) menuIsShowing.value = false
 })
 
+onKeyStroke(
+  'Escape',
+  () => {
+    menuIsShowing.value = false
+  },
+  { target: rootRef },
+)
+
 function handleClick(callback: MenuAction['onClick']) {
   callback()
-  menuIsShowing.value = false
 }
 </script>
 
@@ -52,9 +59,9 @@ function handleClick(callback: MenuAction['onClick']) {
         class="button-wrapper"
         role="presentation"
       >
-        <Button class="menu-item" role="menuitem" @click="handleClick(action.onClick)">
+        <ModalTrigger class="menu-item" role="menuitem" @click="handleClick(action.onClick)">
           {{ action.text }}
-        </Button>
+        </ModalTrigger>
       </li>
     </ul>
   </div>

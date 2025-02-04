@@ -24,8 +24,11 @@ const props = defineProps<Props>()
 const timeout = ref<number>()
 
 const { removeToast } = useToastStore()
+
+const isError = computed(() => props.toast.type === 'error')
+
 const toastAttributes = computed(() => {
-  if (props.toast.type === 'error') {
+  if (isError.value) {
     return { ...ERROR_TOAST_ATTRIBUTES, class: 'is-error' }
   }
 
@@ -48,7 +51,7 @@ onUnmounted(() => {
     <p>{{ props.toast.text }}</p>
 
     <IconButton
-      class="dismiss-button"
+      :class="{ 'dismiss-button--error': isError }"
       :title="SHARED_COPY.ACTIONS.DISMISS"
       icon="fa-solid fa-xmark"
       @click="removeToast(props.toast.id)"
@@ -65,6 +68,14 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.dismiss-button--error {
+  &:hover,
+  &:active,
+  &:focus {
+    background-color: var(--color-error);
+  }
 }
 
 .is-error {

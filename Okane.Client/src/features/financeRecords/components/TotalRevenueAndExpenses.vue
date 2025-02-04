@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // External
-import { computed } from 'vue'
+import { computed, watchEffect } from 'vue'
 
 // Internal
 import TotalAmountCell from '@features/financeRecords/components/TotalAmountCell.vue'
@@ -10,9 +10,17 @@ import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 
 import { useQueryFinanceRecordsStats } from '@features/financeRecords/composables/useQueryFinanceRecordsStats'
+import { useToastStore } from '@shared/composables/useToastStore'
 
-const { data } = useQueryFinanceRecordsStats()
+const toastStore = useToastStore()
+const { data, isError } = useQueryFinanceRecordsStats()
 const stats = computed(() => data.value?.items[0])
+
+watchEffect(() => {
+  if (isError.value) {
+    toastStore.createToast(FINANCES_COPY.STATS.FETCH_ERROR, 'error')
+  }
+})
 </script>
 
 <template>

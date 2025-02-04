@@ -46,6 +46,10 @@ export const AUTH_COPY = {
     },
   },
 
+  PASSWORD_REQUIREMENTS: {
+    FETCH_ERROR: 'Error fetching password requirements. Please refresh the page.',
+  },
+
   RESET_PASSWORD: {
     HEADING: 'Reset Password',
     INVALID_URL: 'Invalid URL. Please request a new reset password email and try again.',

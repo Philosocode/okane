@@ -2,7 +2,7 @@
 import { config, type DOMWrapper, type VueWrapper } from '@vue/test-utils'
 
 // Internal
-import type { HTMLElementTagName } from '@shared/types/html'
+import { type HTMLElementTagName } from '@shared/types/html'
 
 type FindByTextOptions = {
   isCaseInsensitive?: boolean

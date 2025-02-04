@@ -10,14 +10,15 @@ import PageLayout from '@shared/components/wrappers/PageLayout.vue'
 import { AUTH_COPY } from '@features/auth/constants/copy'
 
 import { useQueryPasswordRequirements } from '@features/auth/composables/useQueryPasswordRequirements'
+import ErrorMessage from '@shared/components/typography/ErrorMessage.vue'
 
-const { data: requirements } = useQueryPasswordRequirements()
+const { data: requirements, isError } = useQueryPasswordRequirements()
 </script>
 
 <template>
-  <PageLayout v-if="requirements">
+  <PageLayout>
     <Heading tag="h1">{{ AUTH_COPY.ACCOUNT_PAGE.HEADING }}</Heading>
-    <div class="column flow">
+    <div v-if="requirements" class="column flow">
       <section class="row">
         <EditPassword class="edit-password" :requirements="requirements" />
         <EditName class="edit-name" />
@@ -25,6 +26,7 @@ const { data: requirements } = useQueryPasswordRequirements()
       <HorizontalDivider />
       <DeleteAccountModal />
     </div>
+    <ErrorMessage v-if="isError">{{ AUTH_COPY.PASSWORD_REQUIREMENTS.FETCH_ERROR }}</ErrorMessage>
   </PageLayout>
 </template>
 

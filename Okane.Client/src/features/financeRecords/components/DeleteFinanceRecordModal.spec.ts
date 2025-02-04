@@ -1,10 +1,12 @@
 // External
-import { flushPromises } from '@vue/test-utils'
+import { flushPromises, type VueWrapper } from '@vue/test-utils'
 
 import { type HttpHandler } from 'msw'
 
 // Internal
 import DeleteFinanceRecordModal from '@features/financeRecords/components/DeleteFinanceRecordModal.vue'
+import ErrorMessage from '@shared/components/typography/ErrorMessage.vue'
+import FinanceRecordSummary from './FinanceRecordSummary.vue'
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
@@ -26,10 +28,10 @@ import { commonAsserts } from '@tests/utils/commonAsserts'
 import { createTestFinanceRecord } from '@tests/factories/financeRecord'
 import { financeRecordHandlers } from '@tests/msw/handlers/financeRecord'
 import { testServer } from '@tests/msw/testServer'
-import FinanceRecordSummary from './FinanceRecordSummary.vue'
 
 const financeRecord = createTestFinanceRecord()
 const mountComponent = getMountComponent(DeleteFinanceRecordModal, {
+  attachTo: document.body,
   global: {
     provide: {
       [DELETE_FINANCE_RECORD_SYMBOL]: useDeleteFinanceRecordProvider(),
@@ -95,6 +97,14 @@ test('renders a summary of the finance record to delete', () => {
   expect(summary.exists()).toBe(true)
 })
 
+test('renders a focused delete button', () => {
+  const deleteProvider = helpers.getPopulatedDeleteProvider()
+  const wrapper = mountComponentWithDeleteProvider(deleteProvider)
+  const deleteButton = wrapper.findByText('button', SHARED_COPY.ACTIONS.DELETE)
+  expect(deleteButton.element).toBe(document.activeElement)
+  expect(deleteButton.attributes('disabled')).toBeUndefined()
+})
+
 test('renders a cancel button to close the modal', async () => {
   const deleteProvider = helpers.getPopulatedDeleteProvider()
   const wrapper = mountComponentWithDeleteProvider(deleteProvider)
@@ -102,6 +112,12 @@ test('renders a cancel button to close the modal', async () => {
   const cancelButton = wrapper.findByText('button', SHARED_COPY.ACTIONS.CANCEL)
   await cancelButton.trigger('click')
   expect(deleteProvider.financeRecordToDelete).toBeUndefined()
+})
+
+test('does not render an error message', () => {
+  const deleteProvider = helpers.getPopulatedDeleteProvider()
+  const wrapper = mountComponentWithDeleteProvider(deleteProvider)
+  expect(wrapper.findComponent(ErrorMessage).exists()).toBe(false)
 })
 
 describe('when clicking the delete button', () => {
@@ -135,10 +151,31 @@ describe('when clicking the delete button', () => {
     expect(deleteProvider.financeRecordToDelete).toBeUndefined()
   })
 
-  test("does not close the modal when there's an error deleting the finance record", async () => {
-    const { deleteProvider } = await setUp(
-      financeRecordHandlers.deleteFinanceRecordError({ id: financeRecord.id }),
-    )
-    expect(deleteProvider.financeRecordToDelete).toEqual(financeRecord)
+  describe('with an error deleting the finance record', () => {
+    let deleteProvider: DeleteFinanceRecordProvider
+    let wrapper: VueWrapper
+
+    beforeEach(async () => {
+      const setUpResult = await setUp(
+        financeRecordHandlers.deleteFinanceRecordError({ id: financeRecord.id }),
+      )
+
+      deleteProvider = setUpResult.deleteProvider
+      wrapper = setUpResult.wrapper
+    })
+
+    test('does not close the modal', () => {
+      expect(deleteProvider.financeRecordToDelete).toEqual(financeRecord)
+    })
+
+    test('disables the delete button', () => {
+      const button = wrapper.findByText('button', SHARED_COPY.ACTIONS.DELETE)
+      expect(button.attributes('disabled')).toBeDefined()
+    })
+
+    test('renders an error message', () => {
+      const error = wrapper.getComponent(ErrorMessage)
+      expect(error.text()).toBe(FINANCES_COPY.DELETE_FINANCE_RECORD_MODAL.ERROR)
+    })
   })
 })

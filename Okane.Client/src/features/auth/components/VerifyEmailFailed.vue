@@ -25,9 +25,6 @@ function reSendVerificationEmail() {
       onSuccess() {
         sentEmailSuccessfully.value = true
       },
-      onError(err) {
-        console.error(err)
-      },
     },
   )
 }

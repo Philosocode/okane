@@ -3,11 +3,14 @@
 import { inject } from 'vue'
 
 // Internal
-import DeleteFinanceRecordModalActions from '@features/financeRecords/components/DeleteFinanceRecordModalActions.vue'
+import Button from '@shared/components/Button.vue'
+import ErrorMessage from '@shared/components/typography/ErrorMessage.vue'
 import FinanceRecordSummary from '@features/financeRecords/components/FinanceRecordSummary.vue'
 import Modal from '@shared/components/modal/Modal.vue'
+import ModalActions from '@shared/components/modal/ModalActions.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
+import { SHARED_COPY } from '@shared/constants/copy'
 
 import { useDeleteFinanceRecord } from '@features/financeRecords/composables/useDeleteFinanceRecord'
 
@@ -46,6 +49,20 @@ function handleDelete() {
   >
     <p class="confirmation">{{ FINANCES_COPY.DELETE_FINANCE_RECORD_MODAL.CONFIRMATION_TEXT }}</p>
     <FinanceRecordSummary :finance-record="deleteProvider.financeRecordToDelete!" />
-    <DeleteFinanceRecordModalActions :handle-close="handleClose" :handle-delete="handleDelete" />
+
+    <ModalActions>
+      <Button
+        focus-on-mount
+        variant="warning"
+        @click="handleDelete"
+        :disabled="deleteMutation.isError.value"
+      >
+        {{ SHARED_COPY.ACTIONS.DELETE }}
+      </Button>
+      <Button @click="handleClose">{{ SHARED_COPY.ACTIONS.CANCEL }}</Button>
+    </ModalActions>
+    <ErrorMessage v-if="deleteMutation.isError.value">{{
+      FINANCES_COPY.DELETE_FINANCE_RECORD_MODAL.ERROR
+    }}</ErrorMessage>
   </Modal>
 </template>

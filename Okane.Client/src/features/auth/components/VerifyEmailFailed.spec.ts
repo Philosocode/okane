@@ -1,7 +1,5 @@
 // External
-import { flushPromises, VueWrapper } from '@vue/test-utils'
-
-import { type MockInstance } from 'vitest'
+import { flushPromises, type VueWrapper } from '@vue/test-utils'
 
 // Internal
 import VerifyEmailFailed from '@features/auth/components/VerifyEmailFailed.vue'
@@ -86,10 +84,8 @@ describe('when successfully re-sending the verification email', () => {
 
 describe('with an error re-sending the verification email', () => {
   let wrapper: VueWrapper
-  let consoleSpy: MockInstance
 
   beforeEach(async () => {
-    consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     vi.spyOn(apiClient, 'post').mockRejectedValue(createTestProblemDetails())
     wrapper = mountComponent()
 
@@ -102,10 +98,6 @@ describe('with an error re-sending the verification email', () => {
   test('renders the error text', () => {
     const text = wrapper.findByText('p', AUTH_COPY.VERIFY_EMAIL.SEND_VERIFICATION_EMAIL.ERROR)
     expect(text).toBeDefined()
-  })
-
-  test('logs a console error', () => {
-    expect(consoleSpy).toHaveBeenCalledOnce()
   })
 
   test('does not render the "email sent successfully" text', () => {

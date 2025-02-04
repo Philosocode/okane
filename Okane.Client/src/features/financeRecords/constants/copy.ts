@@ -14,6 +14,7 @@ export const FINANCES_COPY = {
   DELETE_FINANCE_RECORD_MODAL: {
     CONFIRMATION_TEXT: 'You are about to delete the following finance record:',
     DELETE_FINANCE_RECORD: 'Delete Finance Record',
+    ERROR: 'Error deleting finance record. Please refresh the page and try again.',
   },
 
   FINANCES: 'Finances',

@@ -5,6 +5,7 @@ import { computed } from 'vue'
 import { type InfiniteData, type UseInfiniteQueryReturnType } from '@tanstack/vue-query'
 
 // Internal
+import ErrorMessage from '@shared/components/typography/ErrorMessage.vue'
 import Loader from '@shared/components/loader/Loader.vue'
 import Observer from '@shared/components/Observer.vue'
 
@@ -32,7 +33,7 @@ function handleObserverChange(isIntersecting: boolean) {
     <slot v-if="props.items.length > 0" name="default" />
 
     <slot v-if="props.queryResult.error.value" name="error">
-      <p class="error">{{ props.queryResult.error.value }}</p>
+      <ErrorMessage>{{ props.queryResult.error.value }}</ErrorMessage>
     </slot>
 
     <div v-if="props.queryResult.hasNextPage.value">

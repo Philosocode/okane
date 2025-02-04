@@ -4,6 +4,7 @@ import { inject } from 'vue'
 
 // Internal
 import Button from '@shared/components/Button.vue'
+import ErrorMessage from '@shared/components/typography/ErrorMessage.vue'
 import FinanceUserTagSummary from '@features/financeUserTags/components/FinanceUserTagSummary.vue'
 import Modal from '@shared/components/modal/Modal.vue'
 import ModalActions from '@shared/components/modal/ModalActions.vue'
@@ -51,9 +52,9 @@ function handleDelete() {
       <p>{{ FINANCE_USER_TAGS_COPY.DELETE_MODAL.CONFIRMATION }}</p>
       <FinanceUserTagSummary :user-tag="provider.userTagToDelete" />
 
-      <p v-if="deleteMutation.isError.value" class="error">
+      <ErrorMessage v-if="deleteMutation.isError.value">
         {{ FINANCE_USER_TAGS_COPY.DELETE_MODAL.ERROR }}
-      </p>
+      </ErrorMessage>
 
       <ModalActions>
         <Button @click="handleDelete" focus-on-mount variant="warning">{{
@@ -64,9 +65,3 @@ function handleDelete() {
     </template>
   </Modal>
 </template>
-
-<style scoped>
-.error {
-  color: var(--color-error);
-}
-</style>

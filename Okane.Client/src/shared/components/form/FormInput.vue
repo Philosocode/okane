@@ -3,6 +3,7 @@
 import { type InputHTMLAttributes, onMounted, useTemplateRef } from 'vue'
 
 // Internal
+import ErrorMessage from '@shared/components/typography/ErrorMessage.vue'
 import FormLabel from '@shared/components/form/FormLabel.vue'
 
 import { ARIA_LIVE } from '@shared/constants/aria'
@@ -48,16 +49,15 @@ onMounted(() => {
       :name="props.name"
       :type="props.type"
     />
-    <p :aria-live="ARIA_LIVE.ASSERTIVE" class="error" :id="errorLabelId" v-if="error">
+    <ErrorMessage v-if="error" :aria-live="ARIA_LIVE.ASSERTIVE" class="error" :id="errorLabelId">
       {{ error }}
-    </p>
+    </ErrorMessage>
   </div>
 </template>
 
 <style scoped lang="scss">
 .error {
-  color: var(--color-error);
-  margin-top: 0.5rem;
+  margin-top: var(--space-xs);
 }
 
 .input {

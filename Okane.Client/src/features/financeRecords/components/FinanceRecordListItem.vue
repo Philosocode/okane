@@ -87,7 +87,7 @@ function handleDelete() {
   column-gap: var(--space-sm);
   display: grid;
   grid-template-columns: max-content 1fr;
-  padding: var(--space-2xs) var(--space-xs);
+  padding: var(--space-xs) var(--space-xs);
   position: relative;
   row-gap: var(--space-xs);
 
@@ -96,7 +96,7 @@ function handleDelete() {
   }
 
   @include respond(sm) {
-    padding: var(--space-xs) var(--space-md);
+    padding: var(--space-sm) var(--space-md);
     row-gap: var(--space-sm);
   }
 }

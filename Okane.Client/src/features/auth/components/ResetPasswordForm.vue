@@ -5,6 +5,7 @@ import { computed, ref } from 'vue'
 
 // Internal
 import AuthForm from '@features/auth/components/AuthForm.vue'
+import ErrorMessage from '@shared/components/typography/ErrorMessage.vue'
 import FormInput from '@shared/components/form/FormInput.vue'
 import Heading from '@shared/components/Heading.vue'
 import Link from '@shared/components/Link.vue'
@@ -102,13 +103,16 @@ function handleReset() {
     }}</Link>
   </p>
 
-  <p v-if="!validURL" class="error">{{ AUTH_COPY.RESET_PASSWORD.INVALID_URL }}</p>
-  <p v-if="resetMutation.isError.value" class="error">{{ AUTH_COPY.RESET_PASSWORD.RESET_ERROR }}</p>
+  <ErrorMessage v-if="!validURL" class="error">
+    {{ AUTH_COPY.RESET_PASSWORD.INVALID_URL }}
+  </ErrorMessage>
+  <ErrorMessage v-if="resetMutation.isError.value" class="error">
+    {{ AUTH_COPY.RESET_PASSWORD.RESET_ERROR }}
+  </ErrorMessage>
 </template>
 
 <style scoped>
 .error {
-  color: var(--color-error);
   margin-top: var(--space-sm);
 }
 </style>

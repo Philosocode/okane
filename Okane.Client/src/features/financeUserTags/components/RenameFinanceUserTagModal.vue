@@ -4,6 +4,7 @@ import { computed, inject, ref } from 'vue'
 
 // Internal
 import Button from '@shared/components/Button.vue'
+import ErrorMessage from '@shared/components/typography/ErrorMessage.vue'
 import FinanceUserTagSummary from '@features/financeUserTags/components/FinanceUserTagSummary.vue'
 import FormInput from '@shared/components/form/FormInput.vue'
 import Modal from '@shared/components/modal/Modal.vue'
@@ -72,9 +73,9 @@ function handleSubmit() {
           required
         />
 
-        <p v-if="renameMutation.isError.value" class="error">
+        <ErrorMessage v-if="renameMutation.isError.value">
           {{ FINANCE_USER_TAGS_COPY.RENAME_MODAL.ERROR }}
-        </p>
+        </ErrorMessage>
 
         <ModalActions>
           <Button type="submit" :disabled="submitDisabled" variant="callToAction">{{
@@ -88,10 +89,6 @@ function handleSubmit() {
 </template>
 
 <style scoped>
-.error {
-  color: var(--color-error);
-}
-
 .form {
   display: flex;
   flex-direction: column;

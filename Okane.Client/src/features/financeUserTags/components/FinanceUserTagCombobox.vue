@@ -3,6 +3,7 @@
 import { computed } from 'vue'
 
 // Internal
+import ErrorMessage from '@shared/components/typography/ErrorMessage.vue'
 import TagCombobox, { type TagComboboxProps } from '@shared/components/form/TagCombobox.vue'
 
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
@@ -91,17 +92,11 @@ function handleCreateTag(tagToCreate: Tag): false {
     @change="(tags) => emit('change', tags)"
   />
 
-  <p v-if="queryUserTags.isError.value" class="error">
+  <ErrorMessage v-if="queryUserTags.isError.value">
     {{ FINANCE_USER_TAGS_COPY.COMBOBOX.FETCH_ERROR }}
-  </p>
+  </ErrorMessage>
 
-  <p v-if="createMutation.isError.value" class="error">
+  <ErrorMessage v-if="createMutation.isError.value">
     {{ FINANCE_USER_TAGS_COPY.COMBOBOX.CREATE_ERROR }}
-  </p>
+  </ErrorMessage>
 </template>
-
-<style scoped>
-.error {
-  color: var(--color-error);
-}
-</style>

@@ -36,11 +36,13 @@ const {
     <Loader v-if="isFetchingUserTags" />
 
     <template v-if="userTagMap">
-      <div class="tag-select">
-        <TagTypeSelect />
-      </div>
+      <section>
+        <div class="tag-select">
+          <TagTypeSelect />
+        </div>
 
-      <FinanceUserTagGrid :user-tag-map="userTagMap" />
+        <FinanceUserTagGrid :user-tag-map="userTagMap" />
+      </section>
       <DeleteFinanceUserTagModal />
       <RenameFinanceUserTagModal />
     </template>

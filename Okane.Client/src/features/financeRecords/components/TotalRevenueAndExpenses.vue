@@ -16,7 +16,7 @@ const stats = computed(() => data.value?.items[0])
 </script>
 
 <template>
-  <section class="root">
+  <div class="root">
     <TotalAmountCell
       :amount="stats?.totalRevenue ?? 0"
       :class="{ revenue: true, empty: !stats?.totalRevenue, hidden: !stats }"
@@ -34,7 +34,7 @@ const stats = computed(() => data.value?.items[0])
       :loading="!stats"
       :type="FINANCE_RECORD_TYPE.EXPENSE"
     />
-  </section>
+  </div>
 </template>
 
 <style scoped lang="scss">

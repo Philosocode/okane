@@ -37,12 +37,17 @@ provide(SEARCH_FINANCE_RECORDS_SYMBOL, useSearchFinanceRecordsProvider())
 <template>
   <PageLayout>
     <Heading tag="h1">{{ FINANCES_COPY.FINANCES }}</Heading>
-    <div class="column flow">
-      <Card>
-        <TotalRevenueAndExpenses />
-        <SearchFiltersSection />
-      </Card>
-      <FinanceRecordList />
+    <div class="flow">
+      <section>
+        <Card>
+          <TotalRevenueAndExpenses />
+          <SearchFiltersSection />
+        </Card>
+      </section>
+
+      <section>
+        <FinanceRecordList />
+      </section>
     </div>
 
     <CreateFinanceRecordButton />

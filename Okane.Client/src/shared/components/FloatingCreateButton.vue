@@ -31,7 +31,7 @@ const emit = defineEmits<{
   background-color: var(--color-accent-deep);
   border: var(--border-main);
   border-color: var(--color-accent-dim);
-  border-radius: 10rem;
+  border-radius: var(--border-roundest);
   position: fixed;
   font-size: 1.25rem;
   bottom: var(--offset);
@@ -40,7 +40,9 @@ const emit = defineEmits<{
   width: var(--button-size);
   z-index: var(--z-index-floating-create-button);
 
-  &:hover {
+  &:hover,
+  &:focus,
+  &:active {
     background-color: var(--color-accent);
   }
 }

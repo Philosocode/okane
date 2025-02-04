@@ -18,10 +18,10 @@ const { data: requirements } = useQueryPasswordRequirements()
   <PageLayout v-if="requirements">
     <Heading tag="h1">{{ AUTH_COPY.ACCOUNT_PAGE.HEADING }}</Heading>
     <div class="column flow">
-      <div class="row">
+      <section class="row">
         <EditPassword class="edit-password" :requirements="requirements" />
         <EditName class="edit-name" />
-      </div>
+      </section>
       <HorizontalDivider />
       <DeleteAccountModal />
     </div>

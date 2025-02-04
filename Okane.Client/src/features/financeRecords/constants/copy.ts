@@ -115,6 +115,7 @@ export const FINANCES_COPY = {
 
   STATS: {
     EXPENSES: 'Expenses',
+    FETCH_ERROR: 'Error fetching stats. Please try again.',
     RECORD: 'record',
     TOTAL_AMOUNT(args: { amount: number; type: FINANCE_RECORD_TYPE }) {
       let symbol = ''

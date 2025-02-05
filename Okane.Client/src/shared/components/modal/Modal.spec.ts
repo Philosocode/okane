@@ -59,7 +59,7 @@ test('renders a button to close the modal', () => {
   const wrapper = mountComponent({ props })
   const closeButton = wrapper.get('button')
   const title = closeButton.get('title')
-  expect(title.text()).toBe(SHARED_COPY.MODAL.CLOSE_MODAL)
+  expect(title.text()).toBe(SHARED_COPY.MODAL.CLOSE_BUTTON_TITLE)
 })
 
 test('does not render the modal or backdrop when the modal is hidden', () => {
@@ -116,7 +116,7 @@ describe('closes the modal', () => {
     const wrapper = mountComponent({ props })
     const closeButton = wrapper.get('button')
     const title = closeButton.get('title')
-    expect(title.text()).toBe(SHARED_COPY.MODAL.CLOSE_MODAL)
+    expect(title.text()).toBe(SHARED_COPY.MODAL.CLOSE_BUTTON_TITLE)
     await closeButton.trigger('click')
     expect(wrapper.emitted()).toHaveProperty('close')
   })

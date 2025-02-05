@@ -55,10 +55,10 @@ const submitError = computed(() => {
 
   const passwordMismatchErrorKey = 'PasswordMismatch'
   if (isObjectType(error) && error[passwordMismatchErrorKey]) {
-    return AUTH_COPY.ACCOUNT_PAGE.EDIT_PASSWORD_ERROR_CURRENT_PASSWORD_INVALID
+    return AUTH_COPY.EDIT_PASSWORD.ERRORS.INVALID_PASSWORD
   }
 
-  return AUTH_COPY.ACCOUNT_PAGE.EDIT_PASSWORD_ERROR_GENERAL
+  return AUTH_COPY.EDIT_PASSWORD.ERRORS.OTHER
 })
 
 function handleSubmit() {
@@ -86,24 +86,24 @@ watch(combinedInputValues, () => {
     :submit-button-text="SHARED_COPY.ACTIONS.SAVE"
     :submit-button-is-disabled="submitButtonDisabled"
     :submit-error="submitError"
-    :submit-success="editSucceeded ? AUTH_COPY.ACCOUNT_PAGE.EDIT_PASSWORD_SUCCESS : ''"
+    :submit-success="editSucceeded ? AUTH_COPY.EDIT_PASSWORD.SUCCESS : ''"
     @submit="handleSubmit"
   >
-    <CardHeading tag="h2">{{ AUTH_COPY.ACCOUNT_PAGE.EDIT_PASSWORD }}</CardHeading>
+    <CardHeading tag="h2">{{ AUTH_COPY.EDIT_PASSWORD.HEADING }}</CardHeading>
     <FormInput
-      :label="AUTH_COPY.ACCOUNT_PAGE.CURRENT_PASSWORD"
+      :label="AUTH_COPY.EDIT_PASSWORD.LABELS.CURRENT_PASSWORD"
       name="currentPassword"
       :type="INPUT_TYPE.PASSWORD"
       v-model="currentPassword"
     />
     <FormInput
-      :label="AUTH_COPY.ACCOUNT_PAGE.NEW_PASSWORD"
+      :label="AUTH_COPY.EDIT_PASSWORD.LABELS.NEW_PASSWORD"
       name="newPassword"
       :type="INPUT_TYPE.PASSWORD"
       v-model="newPassword"
     />
     <FormInput
-      :label="AUTH_COPY.ACCOUNT_PAGE.NEW_PASSWORD_CONFIRM"
+      :label="AUTH_COPY.EDIT_PASSWORD.LABELS.NEW_PASSWORD_CONFIRM"
       name="newPasswordConfirm"
       :type="INPUT_TYPE.PASSWORD"
       v-model="newPasswordConfirm"

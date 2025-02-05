@@ -54,7 +54,7 @@ function handleClick(callback: MenuAction['onClick']) {
       :aria-expanded="menuIsShowing"
       icon="fa-solid fa-ellipsis-vertical"
       ref="toggleRef"
-      :title="SHARED_COPY.MENU.TOGGLE_MENU"
+      :title="SHARED_COPY.TOGGLE_MENU.BUTTON_TITLE"
       @click="menuIsShowing = !menuIsShowing"
     />
 

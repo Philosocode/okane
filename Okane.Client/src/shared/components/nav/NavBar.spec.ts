@@ -8,6 +8,7 @@ import { authHandlers } from '@tests/msw/handlers/auth'
 import { AUTH_COPY } from '@features/auth/constants/copy'
 import { appRoutes } from '@shared/services/router/router'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
+import { SHARED_COPY } from '@shared/constants/copy'
 
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
 
@@ -52,8 +53,12 @@ test('does not render a finances link', () => {
   sharedAsserts.doesNotRenderLink({ text: FINANCES_COPY.FINANCES })
 })
 
+test('does not render a tags link', () => {
+  sharedAsserts.doesNotRenderLink({ text: SHARED_COPY.NOUNS.TAGS })
+})
+
 test('does not render an account link', () => {
-  sharedAsserts.doesNotRenderLink({ text: AUTH_COPY.ACCOUNT_PAGE.LINK })
+  sharedAsserts.doesNotRenderLink({ text: AUTH_COPY.ACCOUNT })
 })
 
 test('does not render a logout link', () => {
@@ -75,10 +80,17 @@ describe('when authenticated', () => {
     })
   })
 
+  test('does not render a tags link', () => {
+    sharedAsserts.rendersLink({
+      link: appRoutes.manageFinanceTags.buildPath(),
+      text: SHARED_COPY.NOUNS.TAGS,
+    })
+  })
+
   test('renders an account link', () => {
     sharedAsserts.rendersLink({
       link: appRoutes.account.buildPath(),
-      text: AUTH_COPY.ACCOUNT_PAGE.LINK,
+      text: AUTH_COPY.ACCOUNT,
     })
   })
 

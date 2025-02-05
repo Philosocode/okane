@@ -64,18 +64,15 @@ const asserts = {
     expect(requirements.exists()).toBe(false)
   },
   doesNotRenderSuccessMessage(wrapper: VueWrapper) {
-    const error = wrapper.findByText('p', AUTH_COPY.ACCOUNT_PAGE.EDIT_PASSWORD_SUCCESS)
+    const error = wrapper.findByText('p', AUTH_COPY.EDIT_PASSWORD.SUCCESS)
     expect(error).toBeUndefined()
   },
   doesNotRenderInvalidCurrentPasswordError(wrapper: VueWrapper) {
-    const error = wrapper.findByText(
-      'p',
-      AUTH_COPY.ACCOUNT_PAGE.EDIT_PASSWORD_ERROR_CURRENT_PASSWORD_INVALID,
-    )
+    const error = wrapper.findByText('p', AUTH_COPY.EDIT_PASSWORD.ERRORS.INVALID_PASSWORD)
     expect(error).toBeUndefined()
   },
   doesNotRenderGeneralSubmitError(wrapper: VueWrapper) {
-    const error = wrapper.findByText('p', AUTH_COPY.ACCOUNT_PAGE.EDIT_PASSWORD_ERROR_GENERAL)
+    const error = wrapper.findByText('p', AUTH_COPY.EDIT_PASSWORD.ERRORS.OTHER)
     expect(error).toBeUndefined()
   },
 }
@@ -113,7 +110,7 @@ const helpers = {
 
 test('renders a heading', () => {
   const wrapper = mountComponent()
-  const heading = wrapper.findByText('h2', AUTH_COPY.ACCOUNT_PAGE.EDIT_PASSWORD)
+  const heading = wrapper.findByText('h2', AUTH_COPY.EDIT_PASSWORD.HEADING)
   expect(heading).toBeDefined()
 })
 
@@ -122,17 +119,17 @@ test.each([
   {
     getInput: (wrapper: VueWrapper) => elements.currentPasswordInput(wrapper),
     inputName: 'current password',
-    label: AUTH_COPY.ACCOUNT_PAGE.CURRENT_PASSWORD,
+    label: AUTH_COPY.EDIT_PASSWORD.LABELS.CURRENT_PASSWORD,
   },
   {
     getInput: (wrapper: VueWrapper) => elements.newPasswordInput(wrapper),
     inputName: 'new password',
-    label: AUTH_COPY.ACCOUNT_PAGE.NEW_PASSWORD,
+    label: AUTH_COPY.EDIT_PASSWORD.LABELS.NEW_PASSWORD,
   },
   {
     getInput: (wrapper: VueWrapper) => elements.newPasswordConfirmInput(wrapper),
     inputName: 'new password confirm',
-    label: AUTH_COPY.ACCOUNT_PAGE.NEW_PASSWORD_CONFIRM,
+    label: AUTH_COPY.EDIT_PASSWORD.LABELS.NEW_PASSWORD_CONFIRM,
   },
 ])('renders a $inputName input', (args) => {
   const wrapper = mountComponent()
@@ -313,7 +310,7 @@ describe('when the patch request succeeds', () => {
   })
 
   test('renders a success message', () => {
-    const message = wrapper.findByText('p', AUTH_COPY.ACCOUNT_PAGE.EDIT_PASSWORD_SUCCESS)
+    const message = wrapper.findByText('p', AUTH_COPY.EDIT_PASSWORD.SUCCESS)
     expect(message).toBeDefined()
   })
 
@@ -371,10 +368,7 @@ describe('when current password is invalid', () => {
   })
 
   test('renders an invalid current password error', () => {
-    const error = wrapper.findByText(
-      'p',
-      AUTH_COPY.ACCOUNT_PAGE.EDIT_PASSWORD_ERROR_CURRENT_PASSWORD_INVALID,
-    )
+    const error = wrapper.findByText('p', AUTH_COPY.EDIT_PASSWORD.ERRORS.INVALID_PASSWORD)
     expect(error).toBeDefined()
   })
 
@@ -403,7 +397,7 @@ describe('when current password is valid but the patch request fails', () => {
   })
 
   test('renders an invalid general submit error', () => {
-    const error = wrapper.findByText('p', AUTH_COPY.ACCOUNT_PAGE.EDIT_PASSWORD_ERROR_GENERAL)
+    const error = wrapper.findByText('p', AUTH_COPY.EDIT_PASSWORD.ERRORS.OTHER)
     expect(error).toBeDefined()
   })
 

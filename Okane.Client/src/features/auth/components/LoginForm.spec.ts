@@ -61,7 +61,7 @@ test('renders a password input', () => {
 
 test('does not render an error message', () => {
   const wrapper = mountComponent()
-  const error = wrapper.findByText('p', AUTH_COPY.AUTH_FORM.LOGIN_ERROR)
+  const error = wrapper.findByText('p', AUTH_COPY.AUTH_FORM.ERRORS.LOGIN)
   expect(error).toBeUndefined()
 })
 
@@ -151,7 +151,7 @@ describe('with an error logging in', () => {
   })
 
   test('renders an error', () => {
-    const error = wrapper.findByText('p', AUTH_COPY.AUTH_FORM.LOGIN_ERROR)
+    const error = wrapper.findByText('p', AUTH_COPY.AUTH_FORM.ERRORS.LOGIN)
     expect(error).toBeDefined()
   })
 

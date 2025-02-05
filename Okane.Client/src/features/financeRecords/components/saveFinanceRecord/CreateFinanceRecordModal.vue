@@ -56,7 +56,7 @@ function handleSubmit() {
         description: '',
       }
 
-      createToast(FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.CREATE_SUCCESS_TOAST)
+      createToast(FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.TOASTS.CREATE_SUCCESS)
     },
     onError(err) {
       if (isObjectType(err)) {

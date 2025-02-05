@@ -70,7 +70,7 @@ onKeyStroke('Escape', () => {
               <IconButton
                 class="close-button"
                 icon="fa-solid fa-xmark"
-                :title="SHARED_COPY.MODAL.CLOSE_MODAL"
+                :title="SHARED_COPY.MODAL.CLOSE_BUTTON_TITLE"
                 @click="emitModalClose"
               />
             </div>

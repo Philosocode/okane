@@ -26,12 +26,12 @@ const authStore = useAuthStore()
         />
         <NavLink
           icon="fa-solid fa-tag"
-          :text="SHARED_COPY.TAGS"
+          :text="SHARED_COPY.NOUNS.TAGS"
           :to="{ name: ROUTE_NAME.MANAGE_FINANCE_TAGS }"
         />
         <NavLink
           icon="fa-regular fa-user"
-          :text="AUTH_COPY.ACCOUNT_PAGE.LINK"
+          :text="AUTH_COPY.ACCOUNT"
           :to="{ name: ROUTE_NAME.ACCOUNT }"
         />
       </div>

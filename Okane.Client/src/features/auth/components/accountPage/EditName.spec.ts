@@ -41,7 +41,7 @@ const spyOn = {
 
 test('renders a heading', () => {
   const wrapper = mountComponent()
-  const heading = wrapper.findByText('h2', AUTH_COPY.ACCOUNT_PAGE.EDIT_NAME)
+  const heading = wrapper.findByText('h2', AUTH_COPY.EDIT_NAME.HEADING)
   expect(heading).toBeDefined()
 })
 
@@ -69,13 +69,13 @@ test('renders a disabled save button', () => {
 
 test('does not render a submit error', () => {
   const wrapper = mountComponent()
-  const error = wrapper.findByText('p', AUTH_COPY.ACCOUNT_PAGE.EDIT_NAME_ERROR)
+  const error = wrapper.findByText('p', AUTH_COPY.EDIT_NAME.ERROR)
   expect(error).toBeUndefined()
 })
 
 test('does not render a success message', () => {
   const wrapper = mountComponent()
-  const message = wrapper.findByText('p', AUTH_COPY.ACCOUNT_PAGE.EDIT_NAME_SUCCESS)
+  const message = wrapper.findByText('p', AUTH_COPY.EDIT_NAME.SUCCESS)
   expect(message).toBeUndefined()
 })
 
@@ -133,12 +133,12 @@ describe('when patch request succeeds', () => {
   })
 
   test('renders a success message', () => {
-    const message = wrapper.findByText('p', AUTH_COPY.ACCOUNT_PAGE.EDIT_NAME_SUCCESS)
+    const message = wrapper.findByText('p', AUTH_COPY.EDIT_NAME.SUCCESS)
     expect(message).toBeDefined()
   })
 
   test('does not render a submit error', () => {
-    const error = wrapper.findByText('p', AUTH_COPY.ACCOUNT_PAGE.EDIT_NAME_ERROR)
+    const error = wrapper.findByText('p', AUTH_COPY.EDIT_NAME.ERROR)
     expect(error).toBeUndefined()
   })
 
@@ -146,7 +146,7 @@ describe('when patch request succeeds', () => {
     const nameInput = wrapper.get('input[name="name"]')
     await nameInput.setValue('a')
 
-    const message = wrapper.findByText('p', AUTH_COPY.ACCOUNT_PAGE.EDIT_NAME_SUCCESS)
+    const message = wrapper.findByText('p', AUTH_COPY.EDIT_NAME.SUCCESS)
     expect(message).toBeUndefined()
   })
 })
@@ -163,12 +163,12 @@ describe('when patch request fails', () => {
   })
 
   test('renders an error message', () => {
-    const error = wrapper.findByText('p', AUTH_COPY.ACCOUNT_PAGE.EDIT_NAME_ERROR)
+    const error = wrapper.findByText('p', AUTH_COPY.EDIT_NAME.ERROR)
     expect(error).toBeDefined()
   })
 
   test('does not render a success message', () => {
-    const message = wrapper.findByText('p', AUTH_COPY.ACCOUNT_PAGE.EDIT_NAME_SUCCESS)
+    const message = wrapper.findByText('p', AUTH_COPY.EDIT_NAME.SUCCESS)
     expect(message).toBeUndefined()
   })
 })

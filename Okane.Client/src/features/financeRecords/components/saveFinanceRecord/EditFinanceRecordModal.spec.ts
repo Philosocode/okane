@@ -168,7 +168,7 @@ describe('with a successful request to edit a finance record', () => {
     await helpers.submitForm(wrapper)
     expect(createToastSpy).toHaveBeenCalledOnce()
     expect(createToastSpy).toHaveBeenCalledWith(
-      FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.EDIT_SUCCESS_TOAST,
+      FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.TOASTS.EDIT_SUCCESS,
     )
   })
 

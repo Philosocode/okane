@@ -104,10 +104,10 @@ function handleReset() {
   </p>
 
   <ErrorMessage v-if="!urlIsValid" class="error">
-    {{ AUTH_COPY.RESET_PASSWORD.INVALID_URL }}
+    {{ AUTH_COPY.RESET_PASSWORD.ERRORS.INVALID_URL }}
   </ErrorMessage>
   <ErrorMessage v-if="resetMutation.isError.value" class="error">
-    {{ AUTH_COPY.RESET_PASSWORD.RESET_ERROR }}
+    {{ AUTH_COPY.RESET_PASSWORD.ERRORS.RESET }}
   </ErrorMessage>
 </template>
 

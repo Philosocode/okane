@@ -76,7 +76,7 @@ test('renders a password confirm input', () => {
 
 test('does not render an error message', () => {
   const wrapper = mountComponent()
-  const error = wrapper.findByText('p', AUTH_COPY.AUTH_FORM.REGISTER_ERROR)
+  const error = wrapper.findByText('p', AUTH_COPY.AUTH_FORM.ERRORS.REGISTER)
   expect(error).toBeUndefined()
 })
 
@@ -182,7 +182,7 @@ describe('with an error registering', () => {
   })
 
   test('renders an error', () => {
-    const error = wrapper.findByText('p', AUTH_COPY.AUTH_FORM.REGISTER_ERROR)
+    const error = wrapper.findByText('p', AUTH_COPY.AUTH_FORM.ERRORS.REGISTER)
     expect(error).toBeDefined()
   })
 

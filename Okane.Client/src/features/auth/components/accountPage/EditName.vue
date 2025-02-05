@@ -39,12 +39,12 @@ watch(name, () => {
 <template>
   <AuthForm
     :submit-button-text="SHARED_COPY.ACTIONS.SAVE"
-    :submit-error="editMutation.isError.value ? AUTH_COPY.ACCOUNT_PAGE.EDIT_NAME_ERROR : ''"
+    :submit-error="editMutation.isError.value ? AUTH_COPY.EDIT_NAME.ERROR : ''"
     :submit-button-is-disabled="!name || name === authStore.authUser?.name"
-    :submit-success="editSucceeded ? AUTH_COPY.ACCOUNT_PAGE.EDIT_NAME_SUCCESS : ''"
+    :submit-success="editSucceeded ? AUTH_COPY.EDIT_NAME.SUCCESS : ''"
     @submit="handleSubmit"
   >
-    <CardHeading tag="h2">{{ AUTH_COPY.ACCOUNT_PAGE.EDIT_NAME }}</CardHeading>
+    <CardHeading tag="h2">{{ AUTH_COPY.EDIT_NAME.HEADING }}</CardHeading>
     <FormInput
       :label="AUTH_COPY.AUTH_FORM.NAME"
       name="name"

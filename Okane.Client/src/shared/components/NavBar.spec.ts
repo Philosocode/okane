@@ -97,11 +97,11 @@ describe('when authenticated', () => {
     expect(globalThis.location.pathname).toBe(appRoutes.login.buildPath())
   })
 
-  test('does not render a login link', async () => {
+  test('does not render a login link', () => {
     sharedAsserts.doesNotRenderLink({ text: AUTH_COPY.AUTH_FORM.LOGIN })
   })
 
-  test('does not render a register link', async () => {
+  test('does not render a register link', () => {
     sharedAsserts.doesNotRenderLink({ text: AUTH_COPY.AUTH_FORM.REGISTER })
   })
 })

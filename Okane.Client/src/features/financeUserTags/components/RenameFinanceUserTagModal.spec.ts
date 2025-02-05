@@ -92,7 +92,7 @@ test('renders a button to close the modal', async () => {
   expect(provider.userTagToRename).toBeUndefined()
 })
 
-test('renders a focused input to rename the user tag', async () => {
+test('renders a focused input to rename the user tag', () => {
   const { wrapper } = mountWithProvider()
   const input = wrapper.getComponent(FormInput)
   expect(input).toBeDefined()

@@ -73,7 +73,7 @@ describe('when the modal is showing', () => {
     expect(text).toBeDefined()
   })
 
-  test('renders a focused delete button', async () => {
+  test('renders a focused delete button', () => {
     const button = elements.deleteButton(wrapper)
     expect(button.element).toBe(document.activeElement)
   })

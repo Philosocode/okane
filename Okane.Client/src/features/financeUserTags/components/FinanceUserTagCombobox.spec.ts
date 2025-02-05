@@ -261,7 +261,7 @@ describe('when successfully creating a new tag', () => {
     })
   })
 
-  test('renders a spinner while creating the tag', async () => {
+  test('renders a spinner while creating the tag', () => {
     expect(wrapper.find(`span.${TAG_COMBOBOX_SPINNER_CLASS}`).exists()).toBe(true)
   })
 })
@@ -287,17 +287,17 @@ describe('with an error creating a tag', () => {
     await flushPromises()
   })
 
-  test('renders a create error', async () => {
+  test('renders a create error', () => {
     const error = wrapper.findByText('p', FINANCE_USER_TAGS_COPY.COMBOBOX.CREATE_ERROR)
     expect(error).toBeDefined()
   })
 
-  test('does not render a fetch error', async () => {
+  test('does not render a fetch error', () => {
     const error = wrapper.findByText('p', FINANCE_USER_TAGS_COPY.COMBOBOX.FETCH_ERROR)
     expect(error).toBeUndefined()
   })
 
-  test('disables the combobox', async () => {
+  test('disables the combobox', () => {
     expect(wrapper.find(`div.${TAG_COMBOBOX_DISABLED_CLASS}`).exists()).toBe(true)
   })
 })

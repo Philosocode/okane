@@ -362,7 +362,7 @@ describe('Save button', () => {
   })
 })
 
-describe('Cancel button', async () => {
+describe('Cancel button', () => {
   test('closes the modal without saving changes', async () => {
     const searchProvider = useSearchFinanceRecordsProvider()
     searchProvider.setModalIsShowing(true)
@@ -379,7 +379,7 @@ describe('Cancel button', async () => {
   })
 })
 
-describe('Reset button', async () => {
+describe('Reset button', () => {
   test('resets the search filters state', async () => {
     const initialSearchFilters = {
       ...DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,

@@ -23,7 +23,7 @@ describe('as an unauthenticated user trying to access a protected route', () => 
     await router.push(appRoutes.finances.buildPath())
   })
 
-  test('redirects unauthenticated users to the login page', async () => {
+  test('redirects unauthenticated users to the login page', () => {
     expect(location.pathname).toBe(appRoutes.login.buildPath())
   })
 

@@ -115,7 +115,7 @@ const financeRecords = getRange({ end: DEFAULT_PAGE_SIZE * 2 + 1 }).map((i) =>
   createTestFinanceRecord({ id: i }),
 )
 
-test('renders a loader while fetching items', async () => {
+test('renders a loader while fetching items', () => {
   testServer.use(
     financeRecordHandlers.getPaginatedFinanceRecordsSuccess({
       financeRecords,

@@ -88,7 +88,7 @@ describe('with an error fetching password requirements', () => {
     await flushPromises()
   })
 
-  test('does not render the page content', async () => {
+  test('does not render the page content', () => {
     // Assuming that if the EditName form isn't rendered, nothing else should be.
     expect(wrapper.findComponent(EditName).exists()).toBe(false)
   })

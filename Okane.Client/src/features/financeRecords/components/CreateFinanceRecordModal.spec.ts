@@ -89,7 +89,7 @@ test('renders the modal heading', () => {
   expect(heading.text()).toBe(FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.CREATE_FINANCE_RECORD)
 })
 
-test('closes the modal', async () => {
+test('closes the modal', () => {
   const saveProvider = helpers.getCreatingSaveProvider()
   const wrapper = mountWithProviders({ saveProvider })
   const modal = wrapper.getComponent(SaveFinanceRecordModal)

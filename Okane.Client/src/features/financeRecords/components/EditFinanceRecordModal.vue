@@ -33,8 +33,8 @@ const saveProvider = inject(SAVE_FINANCE_RECORD_SYMBOL) as SaveFinanceRecordProv
 const editMutation = useEditFinanceRecord()
 
 const initialFormState = computed(() => {
-  if (!saveProvider.editingFinanceRecord) return getInitialSaveFinanceRecordFormState()
-  return mapFinanceRecord.to.saveFinanceRecordFormState(saveProvider.editingFinanceRecord)
+  if (!saveProvider.financeRecordToEdit) return getInitialSaveFinanceRecordFormState()
+  return mapFinanceRecord.to.saveFinanceRecordFormState(saveProvider.financeRecordToEdit)
 })
 
 const formState = ref<SaveFinanceRecordFormState>(getInitialSaveFinanceRecordFormState())
@@ -56,11 +56,11 @@ function handleChange(updates: Partial<SaveFinanceRecordFormState>) {
 }
 
 function handleClose() {
-  saveProvider.setEditingFinanceRecord(undefined)
+  saveProvider.setFinanceRecordToEdit(undefined)
 }
 
 function handleSubmit() {
-  const id = saveProvider.editingFinanceRecord?.id
+  const id = saveProvider.financeRecordToEdit?.id
   if (!id) return
 
   const { changes, hasChanges } = getSaveFinanceRecordFormChanges(
@@ -95,7 +95,7 @@ function handleSubmit() {
   <SaveFinanceRecordModal
     :form-errors="formErrors"
     :form-state="formState"
-    :is-showing="!!saveProvider.editingFinanceRecord"
+    :is-showing="!!saveProvider.financeRecordToEdit"
     :title="FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.EDIT_FINANCE_RECORD"
     @change="handleChange"
     @close="handleClose"

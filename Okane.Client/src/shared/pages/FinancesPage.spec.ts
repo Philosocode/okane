@@ -142,9 +142,9 @@ test('provides save finance record state', () => {
 
   vi.spyOn(saveFinanceRecordProvider, 'useSaveFinanceRecordProvider').mockReturnValue({
     isCreating,
-    editingFinanceRecord: financeRecord,
+    financeRecordToEdit: financeRecord,
     setIsCreating: vi.fn(),
-    setEditingFinanceRecord: vi.fn(),
+    setFinanceRecordToEdit: vi.fn(),
   })
 
   const ListStub = defineComponent({
@@ -155,7 +155,7 @@ test('provides save finance record state', () => {
     template: `
       <div>
         <span id="providerIsCreating">{{ provider.isCreating }}</span>
-        <span id="providerFinanceRecordId">{{ provider.editingFinanceRecord.id }}</span>
+        <span id="providerFinanceRecordId">{{ provider.financeRecordToEdit.id }}</span>
       </div>
     `,
   })

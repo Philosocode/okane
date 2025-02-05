@@ -2,13 +2,13 @@
 // External
 import { computed, onMounted, useTemplateRef } from 'vue'
 
-export type ButtonProps = {
+type Props = {
   disabled?: boolean
   focusOnMount?: boolean
   variant?: 'callToAction' | 'warning'
 }
 
-const props = defineProps<ButtonProps>()
+const props = defineProps<Props>()
 
 const buttonRef = useTemplateRef<HTMLButtonElement>('buttonRef')
 defineExpose({ buttonRef })

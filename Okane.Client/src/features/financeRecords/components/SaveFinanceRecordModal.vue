@@ -3,7 +3,7 @@
 import { useTemplateRef } from 'vue'
 
 // Internal
-import Button from '@shared/components/Button.vue'
+import AppButton from '@shared/components/AppButton.vue'
 import Modal from '@shared/components/modal/Modal.vue'
 import ModalActions from '@shared/components/modal/ModalActions.vue'
 import SaveFinanceRecordFormInputs from '@features/financeRecords/components/SaveFinanceRecordFormInputs.vue'
@@ -61,10 +61,10 @@ function handleSave() {
       />
 
       <ModalActions>
-        <Button @click="handleSave" type="submit" variant="callToAction">{{
+        <AppButton @click="handleSave" type="submit" variant="callToAction">{{
           SHARED_COPY.ACTIONS.SAVE
-        }}</Button>
-        <Button @click="handleClose" type="button">{{ SHARED_COPY.ACTIONS.CANCEL }}</Button>
+        }}</AppButton>
+        <AppButton @click="handleClose" type="button">{{ SHARED_COPY.ACTIONS.CANCEL }}</AppButton>
       </ModalActions>
     </form>
   </Modal>

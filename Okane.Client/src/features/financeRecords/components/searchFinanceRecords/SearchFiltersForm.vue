@@ -3,7 +3,7 @@
 import { computed, inject, ref, useTemplateRef } from 'vue'
 
 // Internal
-import Button from '@shared/components/Button.vue'
+import AppButton from '@shared/components/AppButton.vue'
 import FinanceRecordAmountFilter from '@features/financeRecords/components/FinanceRecordAmountFilter.vue'
 import FinanceRecordHappenedAtFilter from '@features/financeRecords/components/FinanceRecordHappenedAtFilter.vue'
 import FinanceUserTagCombobox from '@features/financeUserTags/components/FinanceUserTagCombobox.vue'
@@ -120,16 +120,16 @@ function handleSubmit() {
       />
 
       <ModalActions>
-        <Button :type="BUTTON_TYPE.SUBMIT" variant="callToAction">{{
+        <AppButton :type="BUTTON_TYPE.SUBMIT" variant="callToAction">{{
           SHARED_COPY.ACTIONS.SAVE
-        }}</Button>
-        <Button @click="handleCancel" :type="BUTTON_TYPE.BUTTON">
+        }}</AppButton>
+        <AppButton @click="handleCancel" :type="BUTTON_TYPE.BUTTON">
           {{ SHARED_COPY.ACTIONS.CANCEL }}
-        </Button>
+        </AppButton>
 
-        <Button class="reset-button" @click.prevent="handleReset" :type="BUTTON_TYPE.RESET">
+        <AppButton class="reset-button" @click.prevent="handleReset" :type="BUTTON_TYPE.RESET">
           {{ SHARED_COPY.ACTIONS.RESET }}
-        </Button>
+        </AppButton>
       </ModalActions>
     </form>
   </div>

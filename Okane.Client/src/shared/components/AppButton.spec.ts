@@ -1,15 +1,10 @@
 // External
-import Button from '@shared/components/Button.vue'
+import AppButton from '@shared/components/AppButton.vue'
 
 import { defineComponent, useTemplateRef, watchEffect } from 'vue'
 import { flushPromises } from '@vue/test-utils'
 
-/* eslint-disable vue/no-reserved-component-names */
-export default defineComponent({
-  components: { Button },
-})
-
-const mountComponent = getMountComponent(Button)
+const mountComponent = getMountComponent(AppButton)
 
 test('renders a button with the passed attributes', () => {
   const id = 'cool-button'
@@ -59,9 +54,9 @@ test('focuses the button when focusOnMount is true', () => {
 
 test('exposes a buttonRef', async () => {
   const TestComponent = defineComponent({
-    components: { Button },
+    components: { AppButton },
     setup() {
-      const buttonRef = useTemplateRef<InstanceType<typeof Button>>('buttonRef')
+      const buttonRef = useTemplateRef<InstanceType<typeof AppButton>>('buttonRef')
 
       watchEffect(() => {
         buttonRef.value?.buttonRef?.focus()
@@ -69,7 +64,7 @@ test('exposes a buttonRef', async () => {
 
       return { buttonRef }
     },
-    template: `<Button ref="buttonRef" />`,
+    template: `<AppButton ref="buttonRef" />`,
   })
 
   const wrapper = getMountComponent(TestComponent)({

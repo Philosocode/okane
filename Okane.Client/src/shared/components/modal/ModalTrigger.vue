@@ -3,7 +3,7 @@
 import { ref } from 'vue'
 
 // Internal
-import Button from '@shared/components/Button.vue'
+import AppButton from '@shared/components/AppButton.vue'
 import IconButton from '@shared/components/IconButton.vue'
 
 import { useModalTriggerStore } from '@shared/composables/useModalTriggerStore'
@@ -33,7 +33,7 @@ function handleClick() {
 
 <template>
   <component
-    :is="props.isIcon ? IconButton : Button"
+    :is="props.isIcon ? IconButton : AppButton"
     ref="triggerRef"
     v-bind="$attrs"
     @click="handleClick"

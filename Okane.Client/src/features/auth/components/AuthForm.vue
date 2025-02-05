@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Internal
-import Button from '@shared/components/Button.vue'
+import AppButton from '@shared/components/AppButton.vue'
 import Card from '@shared/components/wrappers/Card.vue'
 
 export type AuthFormProps = {
@@ -24,14 +24,14 @@ const emit = defineEmits<{
       <fieldset class="fieldset">
         <slot />
 
-        <Button
+        <AppButton
           class="submit-button"
           :disabled="props.submitButtonIsDisabled"
           type="submit"
           variant="callToAction"
         >
           {{ submitButtonText }}
-        </Button>
+        </AppButton>
 
         <p v-if="props.submitError" class="submit-error">{{ props.submitError }}</p>
         <p v-else-if="props.submitSuccess" class="submit-success">{{ props.submitSuccess }}</p>

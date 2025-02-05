@@ -78,7 +78,7 @@ async function handleSubmit() {
   <AuthForm
     :submit-button-is-disabled="!formIsValid"
     :submit-button-text="AUTH_COPY.AUTH_FORM.REGISTER"
-    :submit-error="hasSubmitError ? AUTH_COPY.AUTH_FORM.REGISTER_ERROR : ''"
+    :submit-error="hasSubmitError ? AUTH_COPY.AUTH_FORM.ERRORS.REGISTER : ''"
     @submit="handleSubmit"
   >
     <FormInput

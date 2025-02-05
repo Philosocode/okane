@@ -14,6 +14,7 @@ import { SHARED_COPY } from '@shared/constants/copy'
 
 import { useDeleteAccount } from '@features/auth/composables/useDeleteAccount'
 import { useModal } from '@shared/composables/useModal'
+import ErrorMessage from '@shared/components/typography/ErrorMessage.vue'
 
 const { modalIsShowing, showModal, closeModal } = useModal()
 const modalHeadingId = 'delete-account-modal-heading'
@@ -33,23 +34,18 @@ function handleDelete() {
 
 <template>
   <ModalTrigger @click="showModal" variant="warning">
-    {{ AUTH_COPY.ACCOUNT_PAGE.DELETE_ACCOUNT }}
+    {{ AUTH_COPY.DELETE_ACCOUNT.HEADING }}
   </ModalTrigger>
 
   <Modal
     :is-showing="modalIsShowing"
-    :heading-text="AUTH_COPY.ACCOUNT_PAGE.DELETE_ACCOUNT"
+    :heading-text="AUTH_COPY.DELETE_ACCOUNT.HEADING"
     :modal-heading-id="modalHeadingId"
     @close="closeModal"
   >
-    <p class="confirmation">{{ AUTH_COPY.ACCOUNT_PAGE.DELETE_ACCOUNT_CONFIRMATION }}</p>
+    <p>{{ AUTH_COPY.DELETE_ACCOUNT.CONFIRMATION }}</p>
     <ModalActions>
-      <AppButton
-        class="button error"
-        focus-on-mount
-        variant="warning"
-        @click.prevent="handleDelete"
-      >
+      <AppButton focus-on-mount variant="warning" @click.prevent="handleDelete">
         {{ SHARED_COPY.ACTIONS.DELETE }}
       </AppButton>
       <AppButton @click="closeModal">
@@ -57,14 +53,8 @@ function handleDelete() {
       </AppButton>
     </ModalActions>
 
-    <p v-if="deleteMutation.isError.value" class="error-text">
-      {{ AUTH_COPY.ACCOUNT_PAGE.DELETE_ACCOUNT_ERROR }}
-    </p>
+    <ErrorMessage v-if="deleteMutation.isError.value">
+      {{ AUTH_COPY.DELETE_ACCOUNT.ERROR }}
+    </ErrorMessage>
   </Modal>
 </template>
-
-<style scoped lang="scss">
-.error-text {
-  color: var(--color-error);
-}
-</style>

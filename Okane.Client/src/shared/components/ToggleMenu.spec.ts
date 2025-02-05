@@ -57,13 +57,13 @@ const selectors = {
 
 test('renders a menu toggle', () => {
   const wrapper = mountComponent()({ props })
-  const menuToggle = wrapper.findByText('button', SHARED_COPY.MENU.TOGGLE_MENU)
+  const menuToggle = wrapper.findByText('button', SHARED_COPY.TOGGLE_MENU.BUTTON_TITLE)
   expect(menuToggle.attributes(ARIA_ATTRIBUTES.HAS_POPUP)).toBe('true')
   expect(menuToggle.attributes(ARIA_ATTRIBUTES.CONTROLS)).toBe(props.menuId)
   expect(menuToggle.attributes(ARIA_ATTRIBUTES.EXPANDED)).toBe('false')
 
   const title = menuToggle.get(`title`)
-  expect(title.text()).toBe(SHARED_COPY.MENU.TOGGLE_MENU)
+  expect(title.text()).toBe(SHARED_COPY.TOGGLE_MENU.BUTTON_TITLE)
 })
 
 test('initially hides the menu', () => {

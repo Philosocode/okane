@@ -37,7 +37,7 @@ const elements = {
     return wrapper.findByText('button', SHARED_COPY.ACTIONS.DELETE, { isExact: true })
   },
   modalTrigger(wrapper: VueWrapper) {
-    return wrapper.findByText('button', AUTH_COPY.ACCOUNT_PAGE.DELETE_ACCOUNT, { isExact: true })
+    return wrapper.findByText('button', AUTH_COPY.DELETE_ACCOUNT.HEADING, { isExact: true })
   },
 }
 
@@ -65,11 +65,11 @@ describe('when the modal is showing', () => {
 
   test('renders the heading', () => {
     const heading = wrapper.getComponent(ModalHeading)
-    expect(heading.text()).toBe(AUTH_COPY.ACCOUNT_PAGE.DELETE_ACCOUNT)
+    expect(heading.text()).toBe(AUTH_COPY.DELETE_ACCOUNT.HEADING)
   })
 
   test('renders the confirmation text', () => {
-    const text = wrapper.findByText('p', AUTH_COPY.ACCOUNT_PAGE.DELETE_ACCOUNT_CONFIRMATION)
+    const text = wrapper.findByText('p', AUTH_COPY.DELETE_ACCOUNT.CONFIRMATION)
     expect(text).toBeDefined()
   })
 
@@ -84,7 +84,7 @@ describe('when the modal is showing', () => {
   })
 
   test('does not render an error', () => {
-    const error = wrapper.findByText('p', AUTH_COPY.ACCOUNT_PAGE.DELETE_ACCOUNT_ERROR)
+    const error = wrapper.findByText('p', AUTH_COPY.DELETE_ACCOUNT.ERROR)
     expect(error).toBeUndefined()
   })
 
@@ -133,7 +133,7 @@ describe('when the modal is showing', () => {
     })
 
     test('renders an error', () => {
-      const error = wrapper.findByText('p', AUTH_COPY.ACCOUNT_PAGE.DELETE_ACCOUNT_ERROR)
+      const error = wrapper.findByText('p', AUTH_COPY.DELETE_ACCOUNT.ERROR)
       expect(error).toBeDefined()
     })
   })

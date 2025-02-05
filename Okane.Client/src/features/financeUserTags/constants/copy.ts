@@ -1,7 +1,9 @@
 export const FINANCE_USER_TAGS_COPY = {
   COMBOBOX: {
-    CREATE_ERROR: 'Error creating tag. Refresh the page and try again.',
-    FETCH_ERROR: 'Error fetching tags. Refresh the page and try again.',
+    ERRORS: {
+      CREATE: 'Error creating tag. Refresh the page and try again.',
+      FETCH: 'Error fetching tags. Refresh the page and try again.',
+    },
   },
 
   DELETE_MODAL: {

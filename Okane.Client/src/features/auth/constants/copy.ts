@@ -1,43 +1,57 @@
 export const AUTH_COPY = {
+  ACCOUNT: 'Account',
   ACCOUNT_DELETED: {
     HEADING: 'Account Successfully Deleted',
     TEXT: 'Your account has been permanently deleted. Thank you for using Okane.',
   },
 
-  ACCOUNT_PAGE: {
-    CURRENT_PASSWORD: 'Current password',
-    DELETE_ACCOUNT: 'Delete Account',
-    DELETE_ACCOUNT_CONFIRMATION: 'Are you sure you want to permanently delete your account?',
-    DELETE_ACCOUNT_ERROR: 'Error deleting account. Please try again later.',
-    EDIT_NAME: 'Edit Name',
-    EDIT_NAME_ERROR: 'Error editing name. Please try again later.',
-    EDIT_NAME_SUCCESS: 'Successfully edited name.',
-    EDIT_PASSWORD: 'Edit Password',
-    EDIT_PASSWORD_ERROR_GENERAL: 'Error editing password. Please try again later.',
-    EDIT_PASSWORD_ERROR_CURRENT_PASSWORD_INVALID: 'Current password is invalid.',
-    EDIT_PASSWORD_SUCCESS: 'Successfully edited password.',
-    HEADING: 'Account',
-    LINK: 'Account',
-    NEW_PASSWORD: 'New password',
-    NEW_PASSWORD_CONFIRM: 'Confirm new password',
+  AUTH_FORM: {
+    CONFIRM_PASSWORD: 'Confirm password',
+    EMAIL: 'Email',
+    ERRORS: {
+      LOGIN: 'Invalid email or password',
+      REGISTER: 'Error registering. Refresh the page and try again.',
+    },
+    LOGIN: 'Login',
+    NAME: 'Name',
+    PASSWORD: 'Password',
+    REGISTER: 'Register',
+  },
+
+  DELETE_ACCOUNT: {
+    CONFIRMATION: 'Are you sure you want to permanently delete your account?',
+    ERROR: 'Error deleting account. Please try again later.',
+    HEADING: 'Delete Account',
+  },
+
+  EDIT_NAME: {
+    HEADING: 'Edit Name',
+    ERROR: 'Error editing name. Please try again later.',
+    SUCCESS: 'Successfully edited name.',
+  },
+
+  EDIT_PASSWORD: {
+    ERRORS: {
+      INVALID_PASSWORD: 'Current password is invalid.',
+      OTHER: 'Error editing password. Please try again later.',
+    },
+    HEADING: 'Edit Password',
+    LABELS: {
+      CURRENT_PASSWORD: 'Current password',
+      NEW_PASSWORD: 'New password',
+      NEW_PASSWORD_CONFIRM: 'Confirm new password',
+    },
+    SUCCESS: 'Successfully edited password.',
   },
 
   FORGOT_PASSWORD: 'I forgot my password.',
   LOGOUT: 'Logout',
 
-  AUTH_FORM: {
-    CONFIRM_PASSWORD: 'Confirm password',
-    EMAIL: 'Email',
-    LOGIN: 'Login',
-    LOGIN_ERROR: 'Invalid email or password',
-    NAME: 'Name',
-    PASSWORD: 'Password',
-    REGISTER: 'Register',
-    REGISTER_ERROR: 'Error registering. Refresh the page and try again.',
-
-    PASSWORD_REQUIREMENTS: {
+  PASSWORD_REQUIREMENTS: {
+    FETCH_ERROR: 'Error fetching password requirements. Please refresh the page.',
+    HEADING: 'Password requirements',
+    LABELS: {
       DIGIT: '1 digit',
-      HEADING: 'Password requirements',
       LOWERCASE_LETTER: '1 lowercase letter',
       MATCHING_PASSWORDS: '"Confirm password" matches "Password"',
       MIN_LENGTH: (n: number) => `${n} or more characters`,
@@ -46,15 +60,12 @@ export const AUTH_COPY = {
     },
   },
 
-  PASSWORD_REQUIREMENTS: {
-    FETCH_ERROR: 'Error fetching password requirements. Please refresh the page.',
-  },
-
   RESET_PASSWORD: {
+    ERRORS: {
+      INVALID_URL: 'Invalid URL. Please request a new reset password email and try again.',
+      RESET: 'Error resetting password. Please request a new reset password email and try again.',
+    },
     HEADING: 'Reset Password',
-    INVALID_URL: 'Invalid URL. Please request a new reset password email and try again.',
-    RESET_ERROR:
-      'Error resetting password. Please request a new reset password email and try again.',
     RESET_SUCCEEDED: {
       SUCCESS: 'Successfully reset password!',
       CLICK_HERE: 'Click here to login.',

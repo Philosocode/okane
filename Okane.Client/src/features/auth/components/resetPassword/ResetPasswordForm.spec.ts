@@ -41,14 +41,14 @@ async function mountComponent(
 
 const asserts = {
   rendersAnInvalidUrlError(wrapper: VueWrapper) {
-    const error = wrapper.findByText('p', AUTH_COPY.RESET_PASSWORD.INVALID_URL)
+    const error = wrapper.findByText('p', AUTH_COPY.RESET_PASSWORD.ERRORS.INVALID_URL)
     expect(error).toBeDefined()
   },
   doesNotRenderAnyErrors(wrapper: VueWrapper) {
-    let error = wrapper.findByText('p', AUTH_COPY.RESET_PASSWORD.INVALID_URL)
+    let error = wrapper.findByText('p', AUTH_COPY.RESET_PASSWORD.ERRORS.INVALID_URL)
     expect(error).toBeUndefined()
 
-    error = wrapper.findByText('p', AUTH_COPY.RESET_PASSWORD.RESET_ERROR)
+    error = wrapper.findByText('p', AUTH_COPY.RESET_PASSWORD.ERRORS.RESET)
     expect(error).toBeUndefined()
   },
   doesNotRenderSuccessText(wrapper: VueWrapper) {
@@ -222,7 +222,7 @@ describe('when password reset fails', () => {
   })
 
   test('renders a reset error', () => {
-    const error = wrapper.findByText('p', AUTH_COPY.RESET_PASSWORD.RESET_ERROR)
+    const error = wrapper.findByText('p', AUTH_COPY.RESET_PASSWORD.ERRORS.RESET)
     expect(error).toBeDefined()
   })
 

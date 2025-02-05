@@ -93,10 +93,10 @@ function handleCreateTag(tagToCreate: Tag): false {
   />
 
   <ErrorMessage v-if="queryUserTags.isError.value">
-    {{ FINANCE_USER_TAGS_COPY.COMBOBOX.FETCH_ERROR }}
+    {{ FINANCE_USER_TAGS_COPY.COMBOBOX.ERRORS.FETCH }}
   </ErrorMessage>
 
   <ErrorMessage v-if="createMutation.isError.value">
-    {{ FINANCE_USER_TAGS_COPY.COMBOBOX.CREATE_ERROR }}
+    {{ FINANCE_USER_TAGS_COPY.COMBOBOX.ERRORS.CREATE }}
   </ErrorMessage>
 </template>

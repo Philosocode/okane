@@ -34,11 +34,19 @@ export const SHARED_COPY = {
   INFINITE_SCROLLER: {
     REACHED_THE_BOTTOM: "You've reached the bottom.",
   },
-  MENU: {
-    TOGGLE_MENU: 'Toggle Menu',
-  },
   MODAL: {
-    CLOSE_MODAL: 'Close Modal',
+    CLOSE_BUTTON_TITLE: 'Close Modal',
+  },
+  NOUNS: {
+    TAGS: 'Tags',
+  },
+
+  SEARCH: {
+    OPERATOR: 'Operator',
+    SORT_BY: 'Sort By',
+    SORT_DIRECTION: 'Sort Direction',
+    USE_RANGE: 'Use Range',
+    USE_SINGLE: 'Use Single',
   },
 
   TAG_COMBOBOX: {
@@ -48,13 +56,7 @@ export const SHARED_COPY = {
     PLACEHOLDER: 'Select tags...',
   },
 
-  TAGS: 'Tags',
-
-  SEARCH: {
-    OPERATOR: 'Operator',
-    SORT_BY: 'Sort By',
-    SORT_DIRECTION: 'Sort Direction',
-    USE_RANGE: 'Use Range',
-    USE_SINGLE: 'Use Single',
+  TOGGLE_MENU: {
+    BUTTON_TITLE: 'Toggle Menu',
   },
 } as const

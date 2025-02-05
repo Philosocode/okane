@@ -33,7 +33,7 @@ function mountComponent(
 test('renders a heading', async () => {
   const wrapper = mountComponent()
   await flushPromises()
-  const heading = wrapper.findByText('h1', AUTH_COPY.ACCOUNT_PAGE.HEADING)
+  const heading = wrapper.findByText('h1', AUTH_COPY.ACCOUNT)
   expect(heading).toBeDefined()
 })
 

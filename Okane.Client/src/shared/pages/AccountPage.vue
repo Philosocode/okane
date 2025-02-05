@@ -17,7 +17,7 @@ const { data: requirements, isError } = useQueryPasswordRequirements()
 
 <template>
   <PageLayout>
-    <Heading tag="h1">{{ AUTH_COPY.ACCOUNT_PAGE.HEADING }}</Heading>
+    <Heading tag="h1">{{ AUTH_COPY.ACCOUNT }}</Heading>
     <div v-if="requirements" class="column flow">
       <section class="row">
         <EditPassword class="edit-password" :requirements="requirements" />

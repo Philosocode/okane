@@ -24,6 +24,7 @@ export const FINANCES_COPY = {
   },
 
   MANAGE_TAGS: 'Manage Tags',
+
   MONEY(args: { amount: number; type?: FINANCE_RECORD_TYPE }) {
     let symbol = ''
     if (args.amount > 0) {
@@ -49,10 +50,12 @@ export const FINANCES_COPY = {
 
   SAVE_FINANCE_RECORD_MODAL: {
     CREATE_FINANCE_RECORD: 'Create Finance Record',
-    CREATE_SUCCESS_TOAST: 'Successfully created finance record.',
     EDIT_FINANCE_RECORD: 'Edit Finance Record',
-    EDIT_SUCCESS_TOAST: 'Successfully saved finance record.',
     SHOW_MODAL: 'Show save finance record modal.',
+    TOASTS: {
+      CREATE_SUCCESS: 'Successfully created finance record.',
+      EDIT_SUCCESS: 'Successfully saved finance record.',
+    },
   },
 
   SEARCH_FILTERS: {

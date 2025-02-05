@@ -109,12 +109,12 @@ test('renders a combobox with an ID', async () => {
 
 test('does not render a query error', async () => {
   const wrapper = await mountComponent({ props: defaultProps })
-  expect(wrapper.findByText('p', FINANCE_USER_TAGS_COPY.COMBOBOX.FETCH_ERROR)).toBeUndefined()
+  expect(wrapper.findByText('p', FINANCE_USER_TAGS_COPY.COMBOBOX.ERRORS.FETCH)).toBeUndefined()
 })
 
 test('does not render a create error', async () => {
   const wrapper = await mountComponent({ props: defaultProps })
-  expect(wrapper.findByText('p', FINANCE_USER_TAGS_COPY.COMBOBOX.CREATE_ERROR)).toBeUndefined()
+  expect(wrapper.findByText('p', FINANCE_USER_TAGS_COPY.COMBOBOX.ERRORS.CREATE)).toBeUndefined()
 })
 
 test('renders only expense tag options', async () => {
@@ -288,12 +288,12 @@ describe('with an error creating a tag', () => {
   })
 
   test('renders a create error', () => {
-    const error = wrapper.findByText('p', FINANCE_USER_TAGS_COPY.COMBOBOX.CREATE_ERROR)
+    const error = wrapper.findByText('p', FINANCE_USER_TAGS_COPY.COMBOBOX.ERRORS.CREATE)
     expect(error).toBeDefined()
   })
 
   test('does not render a fetch error', () => {
-    const error = wrapper.findByText('p', FINANCE_USER_TAGS_COPY.COMBOBOX.FETCH_ERROR)
+    const error = wrapper.findByText('p', FINANCE_USER_TAGS_COPY.COMBOBOX.ERRORS.FETCH)
     expect(error).toBeUndefined()
   })
 
@@ -313,12 +313,12 @@ describe('with an error fetching finance user tags', () => {
   })
 
   test('renders a fetch error', () => {
-    const error = wrapper.findByText('p', FINANCE_USER_TAGS_COPY.COMBOBOX.FETCH_ERROR)
+    const error = wrapper.findByText('p', FINANCE_USER_TAGS_COPY.COMBOBOX.ERRORS.FETCH)
     expect(error).toBeDefined()
   })
 
   test('does not render a create error', () => {
-    const error = wrapper.findByText('p', FINANCE_USER_TAGS_COPY.COMBOBOX.CREATE_ERROR)
+    const error = wrapper.findByText('p', FINANCE_USER_TAGS_COPY.COMBOBOX.ERRORS.CREATE)
     expect(error).toBeUndefined()
   })
 

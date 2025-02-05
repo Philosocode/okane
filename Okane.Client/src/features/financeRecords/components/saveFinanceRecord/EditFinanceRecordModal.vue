@@ -78,7 +78,7 @@ function handleSubmit() {
     { id, request: mapSaveFinanceRecordFormState.to.editFinanceRecordRequest(changes) },
     {
       onSuccess() {
-        createToast(FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.EDIT_SUCCESS_TOAST)
+        createToast(FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.TOASTS.EDIT_SUCCESS)
         handleClose()
       },
       onError(err) {

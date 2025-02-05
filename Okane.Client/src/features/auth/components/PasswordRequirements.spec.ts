@@ -36,7 +36,7 @@ test('renders the heading', () => {
     props: { checks, minPasswordLength },
   })
   const heading = wrapper.getComponent(CardHeading)
-  expect(heading.text()).toBe(AUTH_COPY.AUTH_FORM.PASSWORD_REQUIREMENTS.HEADING)
+  expect(heading.text()).toBe(AUTH_COPY.PASSWORD_REQUIREMENTS.HEADING)
 })
 
 test('renders the "insufficient length" text', () => {
@@ -45,7 +45,7 @@ test('renders the "insufficient length" text', () => {
   })
   sharedAsserts.rendersLiWithText(
     wrapper,
-    AUTH_COPY.AUTH_FORM.PASSWORD_REQUIREMENTS.MIN_LENGTH(minPasswordLength),
+    AUTH_COPY.PASSWORD_REQUIREMENTS.LABELS.MIN_LENGTH(minPasswordLength),
   )
 })
 
@@ -59,7 +59,7 @@ describe('with a sufficient password length', () => {
     })
     sharedAsserts.doesNotRenderLiWithText(
       wrapper,
-      AUTH_COPY.AUTH_FORM.PASSWORD_REQUIREMENTS.MIN_LENGTH(minPasswordLength),
+      AUTH_COPY.PASSWORD_REQUIREMENTS.LABELS.MIN_LENGTH(minPasswordLength),
     )
   })
 })
@@ -68,10 +68,7 @@ test('renders the "missing uppercase letter" text', () => {
   const wrapper = mountComponent({
     props: { checks, minPasswordLength },
   })
-  sharedAsserts.rendersLiWithText(
-    wrapper,
-    AUTH_COPY.AUTH_FORM.PASSWORD_REQUIREMENTS.UPPERCASE_LETTER,
-  )
+  sharedAsserts.rendersLiWithText(wrapper, AUTH_COPY.PASSWORD_REQUIREMENTS.LABELS.UPPERCASE_LETTER)
 })
 
 describe('with an uppercase letter', () => {
@@ -84,7 +81,7 @@ describe('with an uppercase letter', () => {
     })
     sharedAsserts.doesNotRenderLiWithText(
       wrapper,
-      AUTH_COPY.AUTH_FORM.PASSWORD_REQUIREMENTS.UPPERCASE_LETTER,
+      AUTH_COPY.PASSWORD_REQUIREMENTS.LABELS.UPPERCASE_LETTER,
     )
   })
 })
@@ -93,10 +90,7 @@ test('renders the "missing lowercase letter" text', () => {
   const wrapper = mountComponent({
     props: { checks, minPasswordLength },
   })
-  sharedAsserts.rendersLiWithText(
-    wrapper,
-    AUTH_COPY.AUTH_FORM.PASSWORD_REQUIREMENTS.LOWERCASE_LETTER,
-  )
+  sharedAsserts.rendersLiWithText(wrapper, AUTH_COPY.PASSWORD_REQUIREMENTS.LABELS.LOWERCASE_LETTER)
 })
 
 describe('with a lowercase letter', () => {
@@ -109,7 +103,7 @@ describe('with a lowercase letter', () => {
     })
     sharedAsserts.doesNotRenderLiWithText(
       wrapper,
-      AUTH_COPY.AUTH_FORM.PASSWORD_REQUIREMENTS.LOWERCASE_LETTER,
+      AUTH_COPY.PASSWORD_REQUIREMENTS.LABELS.LOWERCASE_LETTER,
     )
   })
 })
@@ -118,7 +112,7 @@ test('renders the "missing digit" text', () => {
   const wrapper = mountComponent({
     props: { checks, minPasswordLength },
   })
-  sharedAsserts.rendersLiWithText(wrapper, AUTH_COPY.AUTH_FORM.PASSWORD_REQUIREMENTS.DIGIT)
+  sharedAsserts.rendersLiWithText(wrapper, AUTH_COPY.PASSWORD_REQUIREMENTS.LABELS.DIGIT)
 })
 
 describe('with a digit letter', () => {
@@ -129,7 +123,7 @@ describe('with a digit letter', () => {
         minPasswordLength,
       },
     })
-    sharedAsserts.doesNotRenderLiWithText(wrapper, AUTH_COPY.AUTH_FORM.PASSWORD_REQUIREMENTS.DIGIT)
+    sharedAsserts.doesNotRenderLiWithText(wrapper, AUTH_COPY.PASSWORD_REQUIREMENTS.LABELS.DIGIT)
   })
 })
 
@@ -139,7 +133,7 @@ test('renders the "missing non-alphanumeric symbol" text', () => {
   })
   sharedAsserts.rendersLiWithText(
     wrapper,
-    AUTH_COPY.AUTH_FORM.PASSWORD_REQUIREMENTS.NON_ALPHANUMERIC_SYMBOL,
+    AUTH_COPY.PASSWORD_REQUIREMENTS.LABELS.NON_ALPHANUMERIC_SYMBOL,
   )
 })
 
@@ -153,7 +147,7 @@ describe('with a non-alphanumeric symbol', () => {
     })
     sharedAsserts.doesNotRenderLiWithText(
       wrapper,
-      AUTH_COPY.AUTH_FORM.PASSWORD_REQUIREMENTS.NON_ALPHANUMERIC_SYMBOL,
+      AUTH_COPY.PASSWORD_REQUIREMENTS.LABELS.NON_ALPHANUMERIC_SYMBOL,
     )
   })
 })
@@ -164,7 +158,7 @@ test('renders the "invalid password confirm" text', () => {
   })
   sharedAsserts.rendersLiWithText(
     wrapper,
-    AUTH_COPY.AUTH_FORM.PASSWORD_REQUIREMENTS.MATCHING_PASSWORDS,
+    AUTH_COPY.PASSWORD_REQUIREMENTS.LABELS.MATCHING_PASSWORDS,
   )
 })
 
@@ -178,7 +172,7 @@ describe('with a valid password confirm', () => {
     })
     sharedAsserts.doesNotRenderLiWithText(
       wrapper,
-      AUTH_COPY.AUTH_FORM.PASSWORD_REQUIREMENTS.MATCHING_PASSWORDS,
+      AUTH_COPY.PASSWORD_REQUIREMENTS.LABELS.MATCHING_PASSWORDS,
     )
   })
 })

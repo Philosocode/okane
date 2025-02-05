@@ -7,7 +7,8 @@ import { AUTH_COPY } from '@features/auth/constants/copy'
 import { type PasswordChecks } from '@features/auth/types/authForm'
 import BulletedList from '@shared/components/wrapper/BulletedList.vue'
 
-const copy = AUTH_COPY.AUTH_FORM.PASSWORD_REQUIREMENTS
+const copy = AUTH_COPY.PASSWORD_REQUIREMENTS
+const labels = copy.LABELS
 
 type Props = {
   checks: PasswordChecks
@@ -21,21 +22,23 @@ const props = defineProps<Props>()
   <div>
     <CardHeading class="heading">{{ copy.HEADING }}</CardHeading>
     <BulletedList>
-      <li v-if="props.checks.insufficientLength">{{ copy.MIN_LENGTH(props.minPasswordLength) }}</li>
+      <li v-if="props.checks.insufficientLength">
+        {{ labels.MIN_LENGTH(props.minPasswordLength) }}
+      </li>
       <li v-if="props.checks.missingUppercase">
-        {{ copy.UPPERCASE_LETTER }}
+        {{ labels.UPPERCASE_LETTER }}
       </li>
       <li v-if="props.checks.missingLowercase">
-        {{ copy.LOWERCASE_LETTER }}
+        {{ labels.LOWERCASE_LETTER }}
       </li>
       <li v-if="props.checks.missingDigit">
-        {{ copy.DIGIT }}
+        {{ labels.DIGIT }}
       </li>
       <li v-if="props.checks.missingNonAlphanumeric">
-        {{ copy.NON_ALPHANUMERIC_SYMBOL }}
+        {{ labels.NON_ALPHANUMERIC_SYMBOL }}
       </li>
       <li v-if="props.checks.invalidPasswordConfirm">
-        {{ copy.MATCHING_PASSWORDS }}
+        {{ labels.MATCHING_PASSWORDS }}
       </li>
     </BulletedList>
   </div>

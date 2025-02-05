@@ -13,7 +13,7 @@ import { AUTH_COPY } from '@features/auth/constants/copy'
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
-import { getMSWURL } from '@tests/utils/url'
+import { getMswUrl } from '@tests/utils/url'
 import { testServer } from '@tests/msw/testServer'
 
 const mountComponent = getMountComponent(SendResetPasswordEmailForm, { withQueryClient: true })
@@ -82,7 +82,7 @@ describe('when submitting the form', () => {
   describe('and email is sent successfully', () => {
     beforeEach(() => {
       const handler = http.post(
-        getMSWURL(authApiRoutes.sendResetPasswordEmail()),
+        getMswUrl(authApiRoutes.sendResetPasswordEmail()),
         () => new HttpResponse(null, { status: HTTP_STATUS_CODE.NO_CONTENT_204 }),
       )
       testServer.use(handler)
@@ -111,7 +111,7 @@ describe('when submitting the form', () => {
     beforeEach(() => {
       consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
-      const handler = http.post(getMSWURL(authApiRoutes.sendResetPasswordEmail()), () =>
+      const handler = http.post(getMswUrl(authApiRoutes.sendResetPasswordEmail()), () =>
         HttpResponse.json(problemDetails, { status: HTTP_STATUS_CODE.BAD_REQUEST_400 }),
       )
       testServer.use(handler)

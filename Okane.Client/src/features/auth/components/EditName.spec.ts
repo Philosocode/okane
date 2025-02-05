@@ -15,7 +15,7 @@ import { useAuthStore } from '@features/auth/composables/useAuthStore'
 
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { createTestUser } from '@tests/factories/user'
-import { getMSWURL } from '@tests/utils/url'
+import { getMswUrl } from '@tests/utils/url'
 import { useMockedStore } from '@tests/composables/useMockedStore'
 import { testServer } from '@tests/msw/testServer'
 
@@ -126,7 +126,7 @@ describe('when patch request succeeds', () => {
 
   beforeEach(async () => {
     wrapper = await setUpWrapperSubmitWithName(
-      http.patch(getMSWURL(authApiRoutes.self()), () =>
+      http.patch(getMswUrl(authApiRoutes.self()), () =>
         HttpResponse.json({}, { status: HTTP_STATUS_CODE.OK_200 }),
       ),
     )
@@ -156,7 +156,7 @@ describe('when patch request fails', () => {
 
   beforeEach(async () => {
     wrapper = await setUpWrapperSubmitWithName(
-      http.patch(getMSWURL(authApiRoutes.self()), () =>
+      http.patch(getMswUrl(authApiRoutes.self()), () =>
         HttpResponse.json(createTestProblemDetails(), { status: HTTP_STATUS_CODE.BAD_REQUEST_400 }),
       ),
     )

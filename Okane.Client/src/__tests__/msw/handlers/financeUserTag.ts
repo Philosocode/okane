@@ -13,18 +13,18 @@ import {
 
 import { createTestFinanceUserTag } from '@tests/factories/financeUserTag'
 import { createTestTag } from '@tests/factories/tag'
-import { getMSWURL } from '@tests/utils/url'
+import { getMswUrl } from '@tests/utils/url'
 import { wrapInApiResponse } from '@tests/utils/apiResponse'
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
 
 export const financeUserTagHandlers = {
   getAllSuccess(args: { userTags: FinanceUserTag[] }) {
-    return http.get(getMSWURL(financeUserTagApiRoutes.getAll()), () => {
+    return http.get(getMswUrl(financeUserTagApiRoutes.getAll()), () => {
       return HttpResponse.json(wrapInApiResponse(args.userTags))
     })
   },
   getAllError() {
-    return http.get(getMSWURL(financeUserTagApiRoutes.getAll()), () =>
+    return http.get(getMswUrl(financeUserTagApiRoutes.getAll()), () =>
       HttpResponse.json(createTestProblemDetails(), {
         status: HTTP_STATUS_CODE.BAD_REQUEST_400,
       }),
@@ -39,7 +39,7 @@ export const financeUserTagHandlers = {
     createdUserTagId?: number
   }) {
     return http.post<never, CreateFinanceUserTagRequest, ApiResponse<FinanceUserTag>>(
-      getMSWURL(financeUserTagApiRoutes.post()),
+      getMswUrl(financeUserTagApiRoutes.post()),
       async function resolver({ request }) {
         const requestUserTag = await request.json()
 

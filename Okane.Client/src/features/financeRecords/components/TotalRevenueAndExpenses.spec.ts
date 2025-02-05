@@ -22,7 +22,7 @@ import {
 
 import { pluralize } from '@shared/utils/string'
 
-import { getMSWURL } from '@tests/utils/url'
+import { getMswUrl } from '@tests/utils/url'
 import { testServer } from '@tests/msw/testServer'
 import { wrapInApiResponse } from '@tests/utils/apiResponse'
 import { useToastStore } from '@shared/composables/useToastStore'
@@ -38,7 +38,7 @@ const mountComponent = getMountComponent(TotalRevenueAndExpenses, {
   withQueryClient: true,
 })
 
-const getStatsUrl = getMSWURL(
+const getStatsUrl = getMswUrl(
   financeRecordApiRoutes.getStats({
     searchFilters: DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,
   }),

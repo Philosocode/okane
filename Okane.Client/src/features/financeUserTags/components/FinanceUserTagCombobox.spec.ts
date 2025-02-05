@@ -22,7 +22,7 @@ import { createTestFinanceUserTag } from '@tests/factories/financeUserTag'
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { createTestTag } from '@tests/factories/tag'
 import { financeUserTagHandlers } from '@tests/msw/handlers/financeUserTag'
-import { getMSWURL } from '@tests/utils/url'
+import { getMswUrl } from '@tests/utils/url'
 import { testServer } from '@tests/msw/testServer'
 
 const allUserTags: FinanceUserTag[] = [
@@ -270,7 +270,7 @@ describe('with an error creating a tag', () => {
   let wrapper: VueWrapper
 
   beforeEach(async () => {
-    const errorHandler = http.post(getMSWURL(financeUserTagApiRoutes.post()), () =>
+    const errorHandler = http.post(getMswUrl(financeUserTagApiRoutes.post()), () =>
       HttpResponse.json(createTestProblemDetails(), {
         status: HTTP_STATUS_CODE.BAD_REQUEST_400,
       }),

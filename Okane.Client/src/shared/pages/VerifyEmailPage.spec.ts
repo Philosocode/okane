@@ -14,7 +14,7 @@ import { HTTP_STATUS_CODE } from '@shared/constants/http'
 import { appRoutes, createAppRouter } from '@shared/services/router/router'
 
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
-import { getMSWURL } from '@tests/utils/url'
+import { getMswUrl } from '@tests/utils/url'
 import { testServer } from '@tests/msw/testServer'
 
 function getURL(queryString: string = '') {
@@ -119,7 +119,7 @@ describe('when verification fails', () => {
   let wrapper: VueWrapper
 
   beforeEach(async () => {
-    const errorHandler = http.post(getMSWURL(authApiRoutes.verifyEmail()), () =>
+    const errorHandler = http.post(getMswUrl(authApiRoutes.verifyEmail()), () =>
       HttpResponse.json(createTestProblemDetails(), {
         status: HTTP_STATUS_CODE.BAD_REQUEST_400,
       }),
@@ -152,7 +152,7 @@ describe('when verification succeeds', () => {
   let wrapper: VueWrapper
 
   beforeEach(async () => {
-    const successHandler = http.post(getMSWURL(authApiRoutes.verifyEmail()), () =>
+    const successHandler = http.post(getMswUrl(authApiRoutes.verifyEmail()), () =>
       HttpResponse.json({}, { status: HTTP_STATUS_CODE.OK_200 }),
     )
     testServer.use(successHandler)

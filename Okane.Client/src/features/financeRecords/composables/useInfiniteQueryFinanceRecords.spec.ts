@@ -19,7 +19,7 @@ import {
 } from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
 import { getFinanceRecordsSearchCursor } from '@features/financeRecords/utils/searchFinanceRecords'
-import { wrapInAPIPaginatedResponse, wrapInAPIResponse } from '@tests/utils/apiResponse'
+import { wrapInApiPaginatedResponse, wrapInApiResponse } from '@tests/utils/apiResponse'
 
 import { createTestFinanceRecord } from '@tests/factories/financeRecord'
 
@@ -51,9 +51,9 @@ test('makes multiple requests to fetch paginated finance records', async () => {
   const financeRecord = createTestFinanceRecord()
   const getSpy = vi
     .spyOn(apiClient, 'get')
-    .mockResolvedValueOnce(wrapInAPIPaginatedResponse(wrapInAPIResponse([financeRecord]), {}))
+    .mockResolvedValueOnce(wrapInApiPaginatedResponse(wrapInApiResponse([financeRecord]), {}))
     .mockResolvedValueOnce(
-      wrapInAPIPaginatedResponse(wrapInAPIResponse([]), { hasNextPage: false }),
+      wrapInApiPaginatedResponse(wrapInApiResponse([]), { hasNextPage: false }),
     )
 
   const searchProvider = useSearchFinanceRecordsProvider()
@@ -90,7 +90,7 @@ test('makes multiple requests to fetch paginated finance records', async () => {
 })
 
 test('cleans up the infinite query', () => {
-  vi.spyOn(apiClient, 'get').mockResolvedValue(wrapInAPIResponse([]))
+  vi.spyOn(apiClient, 'get').mockResolvedValue(wrapInApiResponse([]))
 
   const cleanUpSpy = vi.spyOn(useCleanUpInfiniteQuery, 'useCleanUpInfiniteQuery').mockReturnValue()
   const searchProvider = useSearchFinanceRecordsProvider()

@@ -17,7 +17,7 @@ import {
   type SaveFinanceRecordProvider,
 } from '@features/financeRecords/providers/saveFinanceRecordProvider'
 
-import { getFormErrorsFromAPIResponse } from '@shared/services/apiClient/utils'
+import { getFormErrorsFromApiResponse } from '@shared/services/apiClient/utils'
 import { getInitialFormErrors } from '@shared/utils/form'
 import { getInitialSaveFinanceRecordFormState } from '@features/financeRecords/utils/saveFinanceRecord'
 import { isObjectType } from '@shared/utils/object'
@@ -60,7 +60,7 @@ function handleSubmit() {
     },
     onError(err) {
       if (isObjectType(err)) {
-        formErrors.value = getFormErrorsFromAPIResponse(err, formState.value)
+        formErrors.value = getFormErrorsFromApiResponse(err, formState.value)
       }
     },
   })

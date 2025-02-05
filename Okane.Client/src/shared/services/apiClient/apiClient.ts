@@ -1,7 +1,7 @@
 // Internal
 import { HTTP_METHOD, HTTP_STATUS_CODE, MIME_TYPE } from '@shared/constants/http'
 
-import type { APIResponse } from '@shared/services/apiClient/types'
+import type { ApiResponse } from '@shared/services/apiClient/types'
 
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
 
@@ -58,7 +58,7 @@ async function makeRequest<TResponse>(
 }
 
 function makeRequestWithBody(method: HTTP_METHOD) {
-  return <TResponse extends APIResponse = never>(
+  return <TResponse extends ApiResponse = never>(
     url: string,
     body?: any,
     optionOverrides?: RequestInit,
@@ -66,7 +66,7 @@ function makeRequestWithBody(method: HTTP_METHOD) {
 }
 
 function makeRequestWithoutBody(method: HTTP_METHOD) {
-  return <TResponse extends APIResponse = never>(url: string, optionOverrides?: RequestInit) =>
+  return <TResponse extends ApiResponse = never>(url: string, optionOverrides?: RequestInit) =>
     makeRequest<TResponse>(method, url, undefined, optionOverrides)
 }
 

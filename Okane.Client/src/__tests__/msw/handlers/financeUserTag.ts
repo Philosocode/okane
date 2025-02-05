@@ -5,7 +5,7 @@ import { http, HttpResponse } from 'msw'
 import { financeUserTagAPIRoutes } from '@features/financeUserTags/constants/apiRoutes'
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 
-import { type APIResponse } from '@shared/services/apiClient/types'
+import { type ApiResponse } from '@shared/services/apiClient/types'
 import {
   type CreateFinanceUserTagRequest,
   type FinanceUserTag,
@@ -14,13 +14,13 @@ import {
 import { createTestFinanceUserTag } from '@tests/factories/financeUserTag'
 import { createTestTag } from '@tests/factories/tag'
 import { getMSWURL } from '@tests/utils/url'
-import { wrapInAPIResponse } from '@tests/utils/apiResponse'
+import { wrapInApiResponse } from '@tests/utils/apiResponse'
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
 
 export const financeUserTagHandlers = {
   getAllSuccess(args: { userTags: FinanceUserTag[] }) {
     return http.get(getMSWURL(financeUserTagAPIRoutes.getAll()), () => {
-      return HttpResponse.json(wrapInAPIResponse(args.userTags))
+      return HttpResponse.json(wrapInApiResponse(args.userTags))
     })
   },
   getAllError() {
@@ -38,13 +38,13 @@ export const financeUserTagHandlers = {
     createdTagId: number
     createdUserTagId?: number
   }) {
-    return http.post<never, CreateFinanceUserTagRequest, APIResponse<FinanceUserTag>>(
+    return http.post<never, CreateFinanceUserTagRequest, ApiResponse<FinanceUserTag>>(
       getMSWURL(financeUserTagAPIRoutes.post()),
       async function resolver({ request }) {
         const requestUserTag = await request.json()
 
         return HttpResponse.json(
-          wrapInAPIResponse(
+          wrapInApiResponse(
             createTestFinanceUserTag({
               id: createdUserTagId,
               tag: createTestTag({ id: createdTagId, name: requestUserTag.name }),

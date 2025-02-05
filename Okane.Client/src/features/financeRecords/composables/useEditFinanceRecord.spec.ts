@@ -19,12 +19,12 @@ import {
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
 import { testQueryClient } from '@tests/queryClient/testQueryClient'
-import { wrapInAPIResponse } from '@tests/utils/apiResponse'
+import { wrapInApiResponse } from '@tests/utils/apiResponse'
 import { mapSaveFinanceRecordFormState } from '@features/financeRecords/utils/mappers'
 
 const spyOn = {
   patch() {
-    return vi.spyOn(apiClient, 'patch').mockResolvedValue(wrapInAPIResponse('ok'))
+    return vi.spyOn(apiClient, 'patch').mockResolvedValue(wrapInApiResponse('ok'))
   },
   invalidateQueries() {
     return vi.spyOn(testQueryClient, 'invalidateQueries')

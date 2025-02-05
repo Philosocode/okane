@@ -21,7 +21,7 @@ import {
 
 import { flattenPages } from '@shared/utils/pagination'
 import { getRange } from '@shared/utils/array'
-import { wrapInAPIPaginatedResponse, wrapInAPIResponse } from '@tests/utils/apiResponse'
+import { wrapInApiPaginatedResponse, wrapInApiResponse } from '@tests/utils/apiResponse'
 
 import { createTestFinanceRecord } from '@tests/factories/financeRecord'
 import { getMSWURL } from '@tests/utils/url'
@@ -271,7 +271,7 @@ describe(`when there are more pages to fetch page`, () => {
           (searchParams) => !searchParams.has('cursorId'),
           () => {
             return HttpResponse.json(
-              wrapInAPIPaginatedResponse(wrapInAPIResponse([page1FinanceRecord])),
+              wrapInApiPaginatedResponse(wrapInApiResponse([page1FinanceRecord])),
             )
           },
         ),
@@ -282,7 +282,7 @@ describe(`when there are more pages to fetch page`, () => {
           (searchParams) => searchParams.get('cursorId') === page1FinanceRecord.id.toString(),
           () => {
             return HttpResponse.json(
-              wrapInAPIPaginatedResponse(wrapInAPIResponse([page2FinanceRecord])),
+              wrapInApiPaginatedResponse(wrapInApiResponse([page2FinanceRecord])),
             )
           },
         ),
@@ -295,7 +295,7 @@ describe(`when there are more pages to fetch page`, () => {
           },
           () => {
             return HttpResponse.json(
-              wrapInAPIPaginatedResponse(wrapInAPIResponse([page3FinanceRecord]), {
+              wrapInApiPaginatedResponse(wrapInApiResponse([page3FinanceRecord]), {
                 hasNextPage: false,
               }),
             )

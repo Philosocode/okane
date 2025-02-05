@@ -8,7 +8,7 @@ import { useQueryFinanceRecordsStats } from '@features/financeRecords/composable
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
-import { wrapInAPIResponse } from '@tests/utils/apiResponse'
+import { wrapInApiResponse } from '@tests/utils/apiResponse'
 import {
   SEARCH_FINANCE_RECORDS_SYMBOL,
   type SearchFinanceRecordsProvider,
@@ -39,7 +39,7 @@ function mountWithProviders(args: { searchProvider?: SearchFinanceRecordsProvide
 }
 
 test('makes a request to fetch stats for finance records', () => {
-  const getSpy = vi.spyOn(apiClient, 'get').mockResolvedValue(wrapInAPIResponse({}))
+  const getSpy = vi.spyOn(apiClient, 'get').mockResolvedValue(wrapInApiResponse({}))
   const searchProvider = useSearchFinanceRecordsProvider()
 
   mountWithProviders({ searchProvider })

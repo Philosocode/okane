@@ -9,11 +9,11 @@ import ErrorMessage from '@shared/components/typography/ErrorMessage.vue'
 import Loader from '@shared/components/loader/Loader.vue'
 import Observer from '@shared/components/Observer.vue'
 
-import { type APIPaginatedResponse } from '@shared/services/apiClient/types'
+import { type ApiPaginatedResponse } from '@shared/services/apiClient/types'
 
 type Props = {
   items: unknown[]
-  queryResult: UseInfiniteQueryReturnType<InfiniteData<APIPaginatedResponse, unknown>, Error>
+  queryResult: UseInfiniteQueryReturnType<InfiniteData<ApiPaginatedResponse, unknown>, Error>
 }
 
 const props = defineProps<Props>()

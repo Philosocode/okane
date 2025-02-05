@@ -9,13 +9,13 @@ import { useQueryPasswordRequirements } from '@features/auth/composables/useQuer
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
-import { wrapInAPIResponse } from '@tests/utils/apiResponse'
+import { wrapInApiResponse } from '@tests/utils/apiResponse'
 
 const getResponse = 'cool-requirements'
 
 const spyOn = {
   get() {
-    return vi.spyOn(apiClient, 'get').mockResolvedValue(wrapInAPIResponse(getResponse))
+    return vi.spyOn(apiClient, 'get').mockResolvedValue(wrapInApiResponse(getResponse))
   },
 }
 

@@ -1,22 +1,22 @@
 // Internal
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 
-import { type APIPaginatedResponse, type APIResponse } from '@shared/services/apiClient/types'
+import { type ApiPaginatedResponse, type ApiResponse } from '@shared/services/apiClient/types'
 
-export function wrapInAPIResponse<TData>(
+export function wrapInApiResponse<TData>(
   data: TData | TData[],
   status: number = HTTP_STATUS_CODE.OK_200,
-): APIResponse<TData> {
+): ApiResponse<TData> {
   return {
     items: Array.isArray(data) ? data : [data],
     status,
   }
 }
 
-export function wrapInAPIPaginatedResponse<TData>(
-  response: APIResponse<TData>,
-  overrides?: Partial<APIPaginatedResponse<TData>>,
-): APIPaginatedResponse<TData> {
+export function wrapInApiPaginatedResponse<TData>(
+  response: ApiResponse<TData>,
+  overrides?: Partial<ApiPaginatedResponse<TData>>,
+): ApiPaginatedResponse<TData> {
   return {
     hasNextPage: true,
     ...response,

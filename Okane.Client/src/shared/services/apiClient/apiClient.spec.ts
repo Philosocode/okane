@@ -6,7 +6,7 @@ import { authAPIRoutes } from '@features/auth/constants/apiRoutes'
 import { appRoutes } from '@shared/services/router/router'
 import { HTTP_STATUS_CODE, MIME_TYPE } from '@shared/constants/http'
 
-import { type APIResponse } from '@shared/services/apiClient/types'
+import { type ApiResponse } from '@shared/services/apiClient/types'
 
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
 
@@ -19,23 +19,23 @@ import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { createTestUser } from '@tests/factories/user'
 import { testQueryClient } from '@tests/queryClient/testQueryClient'
 
-import { wrapInAPIResponse } from '@tests/utils/apiResponse'
+import { wrapInApiResponse } from '@tests/utils/apiResponse'
 
 test('makes a basic GET request', async () => {
-  const handler = http.get('/api/ping', () => HttpResponse.json(wrapInAPIResponse('pong')))
+  const handler = http.get('/api/ping', () => HttpResponse.json(wrapInApiResponse('pong')))
 
   testServer.use(handler)
 
-  const response = await apiClient.get<APIResponse<string>>('/ping')
+  const response = await apiClient.get<ApiResponse<string>>('/ping')
   expect(response.items[0]).toBe('pong')
 })
 
 test('prepends a forward slash to the request URL', async () => {
-  const handler = http.get('/api/ping', () => HttpResponse.json(wrapInAPIResponse('pong')))
+  const handler = http.get('/api/ping', () => HttpResponse.json(wrapInApiResponse('pong')))
 
   testServer.use(handler)
 
-  const response = await apiClient.get<APIResponse<string>>('ping')
+  const response = await apiClient.get<ApiResponse<string>>('ping')
   expect(response.items[0]).toBe('pong')
 })
 
@@ -94,7 +94,7 @@ describe('when not logged in', () => {
       })
     }
 
-    return HttpResponse.json(wrapInAPIResponse('pong'))
+    return HttpResponse.json(wrapInApiResponse('pong'))
   })
 
   beforeEach(() => {
@@ -102,12 +102,12 @@ describe('when not logged in', () => {
   })
 
   test('includes the Content-Type', async () => {
-    const response = await apiClient.post<APIResponse<string>>('/ping')
+    const response = await apiClient.post<ApiResponse<string>>('/ping')
     expect(response.items[0]).toBe('pong')
   })
 
   test('does not include the Authorization header', async () => {
-    const response = await apiClient.post<APIResponse<string>>('/ping')
+    const response = await apiClient.post<ApiResponse<string>>('/ping')
     expect(response.items[0]).toBe('pong')
   })
 })
@@ -133,12 +133,12 @@ describe('when logged in', () => {
         })
       }
 
-      return HttpResponse.json(wrapInAPIResponse('pong'))
+      return HttpResponse.json(wrapInApiResponse('pong'))
     })
 
     testServer.use(handler)
 
-    const response = await apiClient.patch<APIResponse<string>>('/ping')
+    const response = await apiClient.patch<ApiResponse<string>>('/ping')
 
     expect(response.items[0]).toEqual('pong')
   })

@@ -9,7 +9,7 @@ import { HTTP_STATUS_CODE } from '@shared/constants/http'
 import { createTestPasswordRequirements } from '@tests/factories/passwordRequirements'
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { getMSWURL } from '@tests/utils/url'
-import { wrapInAPIResponse } from '@tests/utils/apiResponse'
+import { wrapInApiResponse } from '@tests/utils/apiResponse'
 
 export const authHandlers = {
   postLogoutSuccess() {
@@ -19,7 +19,7 @@ export const authHandlers = {
   },
   getPasswordRequirementsSuccess() {
     return http.get(getMSWURL(authAPIRoutes.passwordRequirements()), () => {
-      return HttpResponse.json(wrapInAPIResponse(createTestPasswordRequirements()))
+      return HttpResponse.json(wrapInApiResponse(createTestPasswordRequirements()))
     })
   },
   getPasswordRequirementsError() {

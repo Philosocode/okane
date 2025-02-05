@@ -1,9 +1,9 @@
-export interface APIResponse<TItem = unknown> {
+export interface ApiResponse<TItem = unknown> {
   items: TItem[]
   status: number
 }
 
-export interface APIPaginatedResponse<TItem = unknown> extends APIResponse<TItem> {
+export interface ApiPaginatedResponse<TItem = unknown> extends ApiResponse<TItem> {
   hasNextPage: boolean
 }
 

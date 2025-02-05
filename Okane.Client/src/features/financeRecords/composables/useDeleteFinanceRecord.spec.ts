@@ -26,7 +26,7 @@ import {
   createTestFinanceRecord,
   createTestFinanceRecordsStats,
 } from '@tests/factories/financeRecord'
-import { wrapInAPIPaginatedResponse, wrapInAPIResponse } from '@tests/utils/apiResponse'
+import { wrapInApiPaginatedResponse, wrapInApiResponse } from '@tests/utils/apiResponse'
 
 const spyOn = {
   delete() {
@@ -79,8 +79,8 @@ test('makes a DELETE request to the expected endpoint', async () => {
 test('removes the finance record from the query cache', async () => {
   const initialCachedData = {
     pages: [
-      wrapInAPIPaginatedResponse(
-        wrapInAPIResponse([
+      wrapInApiPaginatedResponse(
+        wrapInApiResponse([
           createTestFinanceRecord({ id: financeRecord.id }),
           createTestFinanceRecord({ id: 2 }),
           createTestFinanceRecord({ id: 3 }),
@@ -106,7 +106,7 @@ test('removes the finance record from the query cache', async () => {
 
 async function assertUpdatesCachedStats(deletedFinanceRecord: FinanceRecord) {
   const initialStats = createTestFinanceRecordsStats()
-  const initialCachedData = wrapInAPIResponse(initialStats)
+  const initialCachedData = wrapInApiResponse(initialStats)
 
   const searchProvider = useSearchFinanceRecordsProvider()
   const queryKey = financeRecordQueryKeys.stats({ filters: searchProvider.filters })
@@ -135,7 +135,7 @@ async function assertUpdatesCachedStats(deletedFinanceRecord: FinanceRecord) {
   }
 
   const cachedData = testQueryClient.getQueryData(queryKey)
-  expect(cachedData).toEqual(wrapInAPIResponse(expectedStats))
+  expect(cachedData).toEqual(wrapInApiResponse(expectedStats))
 }
 
 test('updates cached stats when removing an expense finance record', async () => {

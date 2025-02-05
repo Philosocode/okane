@@ -8,7 +8,7 @@ import { financeRecordQueryKeys } from '@features/financeRecords/constants/query
 
 import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
 import { type FinanceRecordsStats } from '@features/financeRecords/types/financeRecordsStats'
-import { type APIResponse } from '@shared/services/apiClient/types'
+import { type ApiResponse } from '@shared/services/apiClient/types'
 
 import {
   SEARCH_FINANCE_RECORDS_SYMBOL,
@@ -20,7 +20,7 @@ import { apiClient } from '@shared/services/apiClient/apiClient'
 function fetchStats({
   queryKey,
   signal,
-}: QueryFunctionContext): Promise<APIResponse<FinanceRecordsStats>> {
+}: QueryFunctionContext): Promise<ApiResponse<FinanceRecordsStats>> {
   const searchFilters = queryKey[queryKey.length - 1] as FinanceRecordsSearchFilters
   return apiClient.get(financeRecordAPIRoutes.getStats({ searchFilters }), { signal })
 }

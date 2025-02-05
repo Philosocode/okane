@@ -43,7 +43,7 @@ const tagOptions = computed(() => {
   function pushUniqueTag(userTag: FinanceUserTag) {
     if (!uniqueTagIds.has(userTag.tag.id)) {
       uniqueTagIds.add(userTag.tag.id)
-      uniqueTags.push(userTag.tag)
+      uniqueTags.push({ ...userTag.tag })
     }
   }
 

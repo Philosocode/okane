@@ -38,13 +38,13 @@ import { useMockedStore } from '@tests/composables/useMockedStore'
 import { testServer } from '@tests/msw/testServer'
 import { wrapInAPIResponse } from '@tests/utils/apiResponse'
 
-const editingFinanceRecord = createTestFinanceRecord()
-const initialFormState = mapFinanceRecord.to.saveFinanceRecordFormState(editingFinanceRecord)
+const financeRecordToEdit = createTestFinanceRecord()
+const initialFormState = mapFinanceRecord.to.saveFinanceRecordFormState(financeRecordToEdit)
 
 const helpers = {
   getEditingSaveProvider() {
     const saveProvider = useSaveFinanceRecordProvider()
-    saveProvider.setEditingFinanceRecord(editingFinanceRecord)
+    saveProvider.setFinanceRecordToEdit(financeRecordToEdit)
 
     return saveProvider
   },
@@ -79,7 +79,7 @@ function mountWithProviders(args: { saveProvider?: SaveFinanceRecordProvider } =
 
 test('does not render the modal content when not editing a finance record', () => {
   const saveProvider = useSaveFinanceRecordProvider()
-  saveProvider.setEditingFinanceRecord(undefined)
+  saveProvider.setFinanceRecordToEdit(undefined)
 
   const wrapper = mountWithProviders({ saveProvider })
   const heading = wrapper.findComponent(CardHeading)
@@ -97,10 +97,10 @@ test('closes the modal', () => {
   const wrapper = mountWithProviders({ saveProvider })
   const modal = wrapper.getComponent(SaveFinanceRecordModal)
   modal.vm.$emit('close')
-  expect(saveProvider.editingFinanceRecord).toBeUndefined()
+  expect(saveProvider.financeRecordToEdit).toBeUndefined()
 })
 
-test('sets the initial form state based on the editingFinanceRecord', () => {
+test('sets the initial form state based on the financeRecordToEdit', () => {
   const wrapper = mountWithProviders()
 
   const amountInput = wrapper.get('input[name="amount"]').element as HTMLInputElement
@@ -119,7 +119,7 @@ test('sets the initial form state based on the editingFinanceRecord', () => {
 test('updates the form state when the initial form state changes', () => {
   const updates = { amount: 100_000 }
   const saveProvider = useSaveFinanceRecordProvider()
-  saveProvider.setEditingFinanceRecord({ ...editingFinanceRecord, ...updates })
+  saveProvider.setFinanceRecordToEdit({ ...financeRecordToEdit, ...updates })
 
   const wrapper = mountWithProviders({ saveProvider })
   const amountInput = wrapper.get('input[name="amount"]').element as HTMLInputElement
@@ -128,14 +128,14 @@ test('updates the form state when the initial form state changes', () => {
 
 test('closes the modal without making a request when the form state is unchanged', async () => {
   const saveProvider = useSaveFinanceRecordProvider()
-  saveProvider.setEditingFinanceRecord(editingFinanceRecord)
+  saveProvider.setFinanceRecordToEdit(financeRecordToEdit)
 
   const patchSpy = vi.spyOn(apiClient, 'patch')
   const wrapper = mountWithProviders({ saveProvider })
 
   await helpers.submitForm(wrapper)
   expect(patchSpy).not.toHaveBeenCalled()
-  expect(saveProvider.editingFinanceRecord).toBeUndefined()
+  expect(saveProvider.financeRecordToEdit).toBeUndefined()
 })
 
 describe('with a successful request to edit a finance record', () => {
@@ -151,7 +151,7 @@ describe('with a successful request to edit a finance record', () => {
     const financeRecord = mapSaveFinanceRecordFormState.to.editFinanceRecordRequest(updates)
     expect(patchSpy).toHaveBeenCalledOnce()
     expect(patchSpy).toHaveBeenCalledWith(
-      financeRecordAPIRoutes.patchFinanceRecord({ id: editingFinanceRecord.id }),
+      financeRecordAPIRoutes.patchFinanceRecord({ id: financeRecordToEdit.id }),
       financeRecord,
     )
   })
@@ -180,7 +180,7 @@ describe('with a successful request to edit a finance record', () => {
     helpers.setFormState(wrapper, updates)
     await helpers.submitForm(wrapper)
 
-    expect(saveProvider.editingFinanceRecord).toBeUndefined()
+    expect(saveProvider.financeRecordToEdit).toBeUndefined()
   })
 
   test('resets the form errors', async () => {

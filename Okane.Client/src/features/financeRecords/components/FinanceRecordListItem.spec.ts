@@ -128,9 +128,9 @@ describe('with the menu open', () => {
     const editButton = wrapper.findByText('button', SHARED_COPY.ACTIONS.EDIT)
     expect(editButton.exists()).toBe(true)
 
-    expect(saveProvider.editingFinanceRecord).toBeUndefined()
+    expect(saveProvider.financeRecordToEdit).toBeUndefined()
     await editButton.trigger('click')
-    expect(saveProvider.editingFinanceRecord).toEqual(financeRecord)
+    expect(saveProvider.financeRecordToEdit).toEqual(financeRecord)
   })
 
   test('renders an option to delete a finance record', async () => {

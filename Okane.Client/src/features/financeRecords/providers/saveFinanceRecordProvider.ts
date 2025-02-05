@@ -10,25 +10,25 @@ export const SAVE_FINANCE_RECORD_SYMBOL = Symbol() as InjectionKey<SaveFinanceRe
 
 export function useSaveFinanceRecordProvider() {
   const isCreating = ref(false)
-  const editingFinanceRecord = ref<FinanceRecord>()
+  const financeRecordToEdit = ref<FinanceRecord>()
 
   function setIsCreating(value: boolean) {
     isCreating.value = value
   }
 
-  function setEditingFinanceRecord(financeRecord?: FinanceRecord) {
-    editingFinanceRecord.value = financeRecord
+  function setFinanceRecordToEdit(financeRecord?: FinanceRecord) {
+    financeRecordToEdit.value = financeRecord
   }
 
   return {
-    get editingFinanceRecord() {
-      return editingFinanceRecord.value
+    get financeRecordToEdit() {
+      return financeRecordToEdit.value
     },
     get isCreating() {
       return isCreating.value
     },
 
     setIsCreating,
-    setEditingFinanceRecord,
+    setFinanceRecordToEdit,
   }
 }

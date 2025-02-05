@@ -47,7 +47,7 @@ const menuActions = [
 ]
 
 function handleEdit() {
-  saveProvider.setEditingFinanceRecord({ ...financeRecord })
+  saveProvider.setFinanceRecordToEdit({ ...financeRecord })
 }
 
 function handleDelete() {

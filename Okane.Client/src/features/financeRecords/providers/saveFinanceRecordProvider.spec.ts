@@ -15,15 +15,15 @@ describe('setIsCreating', () => {
   })
 })
 
-describe('setEditingFinanceRecord', () => {
-  test('updates the editingFinanceRecord state', () => {
+describe('setFinanceRecordToEdit', () => {
+  test('updates the financeRecordToEdit state', () => {
     const financeRecord = createTestFinanceRecord()
     const provider = useSaveFinanceRecordProvider()
 
-    provider.setEditingFinanceRecord(financeRecord)
-    expect(provider.editingFinanceRecord).toEqual(financeRecord)
+    provider.setFinanceRecordToEdit(financeRecord)
+    expect(provider.financeRecordToEdit).toEqual(financeRecord)
 
-    provider.setEditingFinanceRecord(undefined)
-    expect(provider.editingFinanceRecord).toBeUndefined()
+    provider.setFinanceRecordToEdit(undefined)
+    expect(provider.financeRecordToEdit).toBeUndefined()
   })
 })

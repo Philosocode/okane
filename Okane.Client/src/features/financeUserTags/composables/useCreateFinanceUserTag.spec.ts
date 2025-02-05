@@ -7,7 +7,7 @@ import { financeUserTagAPIRoutes } from '@features/financeUserTags/constants/api
 import { financeUserTagQueryKeys } from '@features/financeUserTags/constants/queryKeys'
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 
-import { type APIResponse } from '@shared/services/apiClient/types'
+import { type ApiResponse } from '@shared/services/apiClient/types'
 import {
   type CreateFinanceUserTagRequest,
   type FinanceUserTag,
@@ -20,7 +20,7 @@ import { apiClient } from '@shared/services/apiClient/apiClient'
 import { createTestFinanceUserTag } from '@tests/factories/financeUserTag'
 import { createTestTag } from '@tests/factories/tag'
 import { testQueryClient } from '@tests/queryClient/testQueryClient'
-import { wrapInAPIResponse } from '@tests/utils/apiResponse'
+import { wrapInApiResponse } from '@tests/utils/apiResponse'
 
 const body: CreateFinanceUserTagRequest = {
   name: 'a',
@@ -35,7 +35,7 @@ const createdUserTag = createTestFinanceUserTag({
 
 const spyOn = {
   post() {
-    return vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInAPIResponse(createdUserTag))
+    return vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInApiResponse(createdUserTag))
   },
 }
 
@@ -67,10 +67,10 @@ test('updates the expected cached finance user tags', async () => {
     tag: createTestTag({ name: 'b' }),
   })
 
-  testQueryClient.setQueryData(queryKey, wrapInAPIResponse(existingUserTag))
+  testQueryClient.setQueryData(queryKey, wrapInApiResponse(existingUserTag))
   mountComponent()
   await flushPromises()
 
-  const cachedUserTags = testQueryClient.getQueryData<APIResponse<FinanceUserTag>>(queryKey)
+  const cachedUserTags = testQueryClient.getQueryData<ApiResponse<FinanceUserTag>>(queryKey)
   expect(cachedUserTags?.items).toEqual([createdUserTag, existingUserTag])
 })

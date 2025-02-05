@@ -17,7 +17,7 @@ import { useAuthStore } from '@features/auth/composables/useAuthStore'
 
 import { createTestUser } from '@tests/factories/user'
 import { useMockedStore } from '@tests/composables/useMockedStore'
-import { wrapInAPIResponse } from '@tests/utils/apiResponse'
+import { wrapInApiResponse } from '@tests/utils/apiResponse'
 
 const spyOn = {
   authStore() {
@@ -26,7 +26,7 @@ const spyOn = {
     return authStore
   },
   patch() {
-    return vi.spyOn(apiClient, 'patch').mockResolvedValue(wrapInAPIResponse('ok'))
+    return vi.spyOn(apiClient, 'patch').mockResolvedValue(wrapInApiResponse('ok'))
   },
 }
 

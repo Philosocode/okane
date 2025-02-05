@@ -23,7 +23,7 @@ import { apiClient } from '@shared/services/apiClient/apiClient'
 import { createTestFinanceUserTag } from '@tests/factories/financeUserTag'
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { createTestTag } from '@tests/factories/tag'
-import { wrapInAPIResponse } from '@tests/utils/apiResponse'
+import { wrapInApiResponse } from '@tests/utils/apiResponse'
 
 const userTagToRename = createTestFinanceUserTag()
 const renamedUserTag = createTestFinanceUserTag({
@@ -131,7 +131,7 @@ describe('when submitting the form', () => {
   let putSpy: MockInstance
 
   beforeEach(() => {
-    putSpy = spyOn.put().mockResolvedValue(wrapInAPIResponse(userTagToRename))
+    putSpy = spyOn.put().mockResolvedValue(wrapInApiResponse(userTagToRename))
   })
 
   async function submitForm(wrapper: VueWrapper) {

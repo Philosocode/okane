@@ -33,7 +33,7 @@ import { createTestSaveFinanceRecordFormState } from '@tests/factories/financeRe
 import { financeUserTagHandlers } from '@tests/msw/handlers/financeUserTag'
 import { testServer } from '@tests/msw/testServer'
 import { useMockedStore } from '@tests/composables/useMockedStore'
-import { wrapInAPIResponse } from '@tests/utils/apiResponse'
+import { wrapInApiResponse } from '@tests/utils/apiResponse'
 
 const mountComponent = getMountComponent(CreateFinanceRecordModal, {
   global: {
@@ -103,7 +103,7 @@ describe('with a successful request to create a finance record', () => {
   })
 
   test('makes a POST request to create a finance record', async () => {
-    const postSpy = vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInAPIResponse(null))
+    const postSpy = vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInApiResponse(null))
     const saveProvider = helpers.getCreatingSaveProvider()
     const wrapper = mountWithProviders({ saveProvider })
 
@@ -118,7 +118,7 @@ describe('with a successful request to create a finance record', () => {
   test('creates a toast', async () => {
     const toastStore = useMockedStore(useToastStore)
     const createToastSpy = vi.spyOn(toastStore, 'createToast')
-    vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInAPIResponse(null))
+    vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInApiResponse(null))
 
     const saveProvider = helpers.getCreatingSaveProvider()
     const wrapper = mountWithProviders({ saveProvider })
@@ -133,7 +133,7 @@ describe('with a successful request to create a finance record', () => {
   })
 
   test('resets the amount and description', async () => {
-    vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInAPIResponse(null))
+    vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInApiResponse(null))
     const saveProvider = helpers.getCreatingSaveProvider()
     const wrapper = mountWithProviders({ saveProvider })
 
@@ -157,7 +157,7 @@ describe('with a successful request to create a finance record', () => {
     const apiErrors = createTestAPIFormErrors(formState)
     vi.spyOn(apiClient, 'post')
       .mockRejectedValueOnce(createTestProblemDetails(apiErrors))
-      .mockResolvedValueOnce(wrapInAPIResponse(null))
+      .mockResolvedValueOnce(wrapInApiResponse(null))
 
     const saveProvider = helpers.getCreatingSaveProvider()
     const wrapper = mountWithProviders({ saveProvider })

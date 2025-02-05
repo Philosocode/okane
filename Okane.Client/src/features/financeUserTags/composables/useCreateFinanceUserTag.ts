@@ -2,7 +2,7 @@
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
 
 // Internal
-import { type APIResponse } from '@shared/services/apiClient/types'
+import { type ApiResponse } from '@shared/services/apiClient/types'
 import {
   type CreateFinanceUserTagRequest,
   type FinanceUserTag,
@@ -17,7 +17,7 @@ import { insertIntoSortedArray } from '@shared/utils/array'
 
 function postFinanceUserTag(
   body: CreateFinanceUserTagRequest,
-): Promise<APIResponse<FinanceUserTag>> {
+): Promise<ApiResponse<FinanceUserTag>> {
   return apiClient.post(financeUserTagAPIRoutes.post(), body)
 }
 
@@ -27,7 +27,7 @@ export function useCreateFinanceUserTag() {
   return useMutation({
     mutationFn: postFinanceUserTag,
     onSuccess(res) {
-      queryClient.setQueryData<APIResponse<FinanceUserTag>>(
+      queryClient.setQueryData<ApiResponse<FinanceUserTag>>(
         financeUserTagQueryKeys.listAll(),
         (tagResponse) => {
           if (!tagResponse) return tagResponse

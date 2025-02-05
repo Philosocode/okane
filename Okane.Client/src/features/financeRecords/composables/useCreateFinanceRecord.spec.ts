@@ -20,14 +20,14 @@ import { apiClient } from '@shared/services/apiClient/apiClient'
 
 import { createTestSaveFinanceRecordFormState } from '@tests/factories/financeRecord'
 import { testQueryClient } from '@tests/queryClient/testQueryClient'
-import { wrapInAPIResponse } from '@tests/utils/apiResponse'
+import { wrapInApiResponse } from '@tests/utils/apiResponse'
 
 const formState = createTestSaveFinanceRecordFormState()
 const request = mapSaveFinanceRecordFormState.to.createFinanceRecordRequest(formState)
 
 const spyOn = {
   post() {
-    return vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInAPIResponse('ok'))
+    return vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInApiResponse('ok'))
   },
   invalidateQueries() {
     return vi.spyOn(testQueryClient, 'invalidateQueries')

@@ -7,7 +7,7 @@ import { type QueryFunctionContext, useInfiniteQuery } from '@tanstack/vue-query
 import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 
-import { type APIPaginatedResponse } from '@shared/services/apiClient/types'
+import { type ApiPaginatedResponse } from '@shared/services/apiClient/types'
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
 import {
   type FinanceRecordsSearchCursor,
@@ -29,7 +29,7 @@ export function fetchPaginatedFinanceRecords({
   pageParam,
   queryKey,
   signal,
-}: QueryFunctionContext): Promise<APIPaginatedResponse<FinanceRecord>> {
+}: QueryFunctionContext): Promise<ApiPaginatedResponse<FinanceRecord>> {
   const searchFilters = queryKey[queryKey.length - 1] as FinanceRecordsSearchFilters
   const cursor = pageParam as FinanceRecordsSearchCursor
   const url = financeRecordAPIRoutes.getPaginatedList({ cursor, searchFilters })

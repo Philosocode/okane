@@ -6,12 +6,12 @@ import { authQueryKeys } from '@features/auth/constants/queryKeys'
 import { apiClient } from '@shared/services/apiClient/apiClient'
 import { authAPIRoutes } from '@features/auth/constants/apiRoutes'
 
-import { type APIResponse } from '@shared/services/apiClient/types'
+import { type ApiResponse } from '@shared/services/apiClient/types'
 import { type PasswordRequirements } from '@features/auth/types/authForm'
 
 function getPasswordRequirements({
   signal,
-}: QueryFunctionContext): Promise<APIResponse<PasswordRequirements>> {
+}: QueryFunctionContext): Promise<ApiResponse<PasswordRequirements>> {
   return apiClient.get(authAPIRoutes.passwordRequirements(), { signal })
 }
 

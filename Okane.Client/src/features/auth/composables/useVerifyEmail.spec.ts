@@ -9,11 +9,11 @@ import { useVerifyEmail } from '@features/auth/composables/useVerifyEmail'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
-import { wrapInAPIResponse } from '@tests/utils/apiResponse'
+import { wrapInApiResponse } from '@tests/utils/apiResponse'
 
 const spyOn = {
   post() {
-    return vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInAPIResponse('ok'))
+    return vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInApiResponse('ok'))
   },
 }
 

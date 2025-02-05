@@ -8,7 +8,7 @@ import { AUTH_COPY } from '@features/auth/constants/copy'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
-import { wrapInAPIResponse } from '@tests/utils/apiResponse'
+import { wrapInApiResponse } from '@tests/utils/apiResponse'
 
 const email = 'sir-doggo@okane.com'
 const mountComponent = getMountComponent(VerifyEmailFailed, {
@@ -49,7 +49,7 @@ describe('when successfully re-sending the verification email', () => {
 
   beforeEach(async () => {
     wrapper = mountComponent()
-    vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInAPIResponse('success'))
+    vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInApiResponse('success'))
 
     const button = wrapper.find('button')
     await button.trigger('click')

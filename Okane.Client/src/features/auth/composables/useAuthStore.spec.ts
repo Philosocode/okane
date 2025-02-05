@@ -20,7 +20,7 @@ import { testServer } from '@tests/msw/testServer'
 import { createTestJWTToken } from '@tests/factories/jwtToken'
 import { createTestUser } from '@tests/factories/user'
 import { omitObjectKeys } from '@shared/utils/object'
-import { wrapInAPIResponse } from '@tests/utils/apiResponse'
+import { wrapInApiResponse } from '@tests/utils/apiResponse'
 
 const formData = {
   email: 'test@test.com',
@@ -38,7 +38,7 @@ beforeEach(() => {
   testServer.use(
     http.post(`/api${authAPIRoutes.login()}`, () => HttpResponse.json(authResponse)),
     http.post(`/api${authAPIRoutes.refreshToken()}`, () => HttpResponse.json(authResponse)),
-    http.post(`/api${authAPIRoutes.logout()}`, () => HttpResponse.json(wrapInAPIResponse(null))),
+    http.post(`/api${authAPIRoutes.logout()}`, () => HttpResponse.json(wrapInApiResponse(null))),
   )
 })
 
@@ -47,7 +47,7 @@ afterEach(() => {
 })
 
 test('register', async () => {
-  const spy = vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInAPIResponse(null))
+  const spy = vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInApiResponse(null))
 
   const authStore = useAuthStore()
   await authStore.register(formData.email, formData.name, formData.password)

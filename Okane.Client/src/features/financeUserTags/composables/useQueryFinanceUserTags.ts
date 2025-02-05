@@ -7,7 +7,7 @@ import { apiClient } from '@shared/services/apiClient/apiClient'
 import { financeUserTagQueryKeys } from '@features/financeUserTags/constants/queryKeys'
 import { financeUserTagAPIRoutes } from '@features/financeUserTags/constants/apiRoutes'
 
-import { type APIResponse } from '@shared/services/apiClient/types'
+import { type ApiResponse } from '@shared/services/apiClient/types'
 import {
   type FinanceUserTag,
   type FinanceUserTagMap,
@@ -15,7 +15,7 @@ import {
 
 function getFinanceUserTags({
   signal,
-}: QueryFunctionContext): Promise<APIResponse<FinanceUserTag>> {
+}: QueryFunctionContext): Promise<ApiResponse<FinanceUserTag>> {
   return apiClient.get(financeUserTagAPIRoutes.getAll(), { signal })
 }
 

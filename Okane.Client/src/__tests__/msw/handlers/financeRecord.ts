@@ -11,7 +11,7 @@ import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types
 
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { getMSWURL } from '@tests/utils/url'
-import { wrapInAPIPaginatedResponse, wrapInAPIResponse } from '@tests/utils/apiResponse'
+import { wrapInApiPaginatedResponse, wrapInApiResponse } from '@tests/utils/apiResponse'
 
 export const financeRecordHandlers = {
   deleteFinanceRecordSuccess(args: { id: number }) {
@@ -45,7 +45,7 @@ export const financeRecordHandlers = {
     )
     return http.get(url, () => {
       return HttpResponse.json({
-        ...wrapInAPIPaginatedResponse(wrapInAPIResponse(financeRecords)),
+        ...wrapInApiPaginatedResponse(wrapInApiResponse(financeRecords)),
         hasNextPage,
       })
     })

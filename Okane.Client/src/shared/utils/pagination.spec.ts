@@ -1,7 +1,7 @@
 // Internal
 import * as utils from '@shared/utils/pagination'
 
-import { wrapInAPIPaginatedResponse, wrapInAPIResponse } from '@tests/utils/apiResponse'
+import { wrapInApiPaginatedResponse, wrapInApiResponse } from '@tests/utils/apiResponse'
 
 describe('flattenPages', () => {
   test.each([[undefined], [[]]])('flattenPages(%s) -> []', (input) => {
@@ -10,8 +10,8 @@ describe('flattenPages', () => {
 
   test('returns a flattened array of items', () => {
     const pages = [
-      wrapInAPIPaginatedResponse(wrapInAPIResponse([1, 2, 3])),
-      wrapInAPIPaginatedResponse(wrapInAPIResponse([4, 5])),
+      wrapInApiPaginatedResponse(wrapInApiResponse([1, 2, 3])),
+      wrapInApiPaginatedResponse(wrapInApiResponse([4, 5])),
     ]
     const result = utils.flattenPages(pages)
 
@@ -30,9 +30,9 @@ describe('removeItemFromPages', () => {
   test('removes items where the callback returns true', () => {
     const data = {
       pages: [
-        wrapInAPIPaginatedResponse(wrapInAPIResponse(1)),
-        wrapInAPIPaginatedResponse(wrapInAPIResponse(2)),
-        wrapInAPIPaginatedResponse(wrapInAPIResponse(3)),
+        wrapInApiPaginatedResponse(wrapInApiResponse(1)),
+        wrapInApiPaginatedResponse(wrapInApiResponse(2)),
+        wrapInApiPaginatedResponse(wrapInApiResponse(3)),
       ],
       pageParams: [1, 2, 3],
     }

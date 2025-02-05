@@ -36,7 +36,7 @@ import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { financeUserTagHandlers } from '@tests/msw/handlers/financeUserTag'
 import { useMockedStore } from '@tests/composables/useMockedStore'
 import { testServer } from '@tests/msw/testServer'
-import { wrapInAPIResponse } from '@tests/utils/apiResponse'
+import { wrapInApiResponse } from '@tests/utils/apiResponse'
 
 const financeRecordToEdit = createTestFinanceRecord()
 const initialFormState = mapFinanceRecord.to.saveFinanceRecordFormState(financeRecordToEdit)
@@ -142,7 +142,7 @@ describe('with a successful request to edit a finance record', () => {
   const updates = { amount: 10_000 }
 
   test('makes a PATCH request to update the finance record', async () => {
-    const patchSpy = vi.spyOn(apiClient, 'patch').mockResolvedValue(wrapInAPIResponse(null))
+    const patchSpy = vi.spyOn(apiClient, 'patch').mockResolvedValue(wrapInApiResponse(null))
     const wrapper = mountWithProviders()
 
     helpers.setFormState(wrapper, updates)
@@ -159,7 +159,7 @@ describe('with a successful request to edit a finance record', () => {
   test('creates a toast', async () => {
     const toastStore = useMockedStore(useToastStore)
     const createToastSpy = vi.spyOn(toastStore, 'createToast')
-    vi.spyOn(apiClient, 'patch').mockResolvedValue(wrapInAPIResponse(null))
+    vi.spyOn(apiClient, 'patch').mockResolvedValue(wrapInApiResponse(null))
     const saveProvider = helpers.getEditingSaveProvider()
     const wrapper = mountWithProviders({ saveProvider })
 
@@ -173,7 +173,7 @@ describe('with a successful request to edit a finance record', () => {
   })
 
   test('closes the form', async () => {
-    vi.spyOn(apiClient, 'patch').mockResolvedValue(wrapInAPIResponse(null))
+    vi.spyOn(apiClient, 'patch').mockResolvedValue(wrapInApiResponse(null))
     const saveProvider = helpers.getEditingSaveProvider()
     const wrapper = mountWithProviders({ saveProvider })
 
@@ -187,7 +187,7 @@ describe('with a successful request to edit a finance record', () => {
     const apiErrors = createTestAPIFormErrors(initialFormState)
     vi.spyOn(apiClient, 'patch')
       .mockRejectedValueOnce(createTestProblemDetails(apiErrors))
-      .mockResolvedValueOnce(wrapInAPIResponse(null))
+      .mockResolvedValueOnce(wrapInApiResponse(null))
 
     const wrapper = mountWithProviders()
 

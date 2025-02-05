@@ -10,7 +10,7 @@ import { useQueryFinanceUserTags } from '@features/financeUserTags/composables/u
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
-import { wrapInAPIResponse } from '@tests/utils/apiResponse'
+import { wrapInApiResponse } from '@tests/utils/apiResponse'
 
 function getTestComponent() {
   return defineComponent({
@@ -41,7 +41,7 @@ const returnedUserTags = [
 ]
 
 test('makes a request to fetch all finance user tags', async () => {
-  const getSpy = vi.spyOn(apiClient, 'get').mockResolvedValue(wrapInAPIResponse(returnedUserTags))
+  const getSpy = vi.spyOn(apiClient, 'get').mockResolvedValue(wrapInApiResponse(returnedUserTags))
   const wrapper = mountComponent()
 
   expect(getSpy).toHaveBeenCalledWith(financeUserTagAPIRoutes.getAll(), {

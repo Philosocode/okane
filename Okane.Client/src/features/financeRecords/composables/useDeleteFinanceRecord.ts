@@ -9,7 +9,7 @@ import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFina
 
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
 import { type FinanceRecordsStats } from '@features/financeRecords/types/financeRecordsStats'
-import { type APIPaginatedResponse, type APIResponse } from '@shared/services/apiClient/types'
+import { type ApiPaginatedResponse, type ApiResponse } from '@shared/services/apiClient/types'
 
 import {
   SEARCH_FINANCE_RECORDS_SYMBOL,
@@ -31,7 +31,7 @@ export function useDeleteFinanceRecord() {
   return useMutation({
     mutationFn: (financeRecord: FinanceRecord) => deleteFinanceRecord(financeRecord.id),
     onSuccess(_, deletedFinanceRecord) {
-      queryClient.setQueryData<InfiniteData<APIPaginatedResponse<FinanceRecord>>>(
+      queryClient.setQueryData<InfiniteData<ApiPaginatedResponse<FinanceRecord>>>(
         financeRecordQueryKeys.listByFilters({ filters: searchProvider.filters }),
         (data) => {
           if (!data) return data
@@ -39,7 +39,7 @@ export function useDeleteFinanceRecord() {
         },
       )
 
-      queryClient.setQueryData<APIResponse<FinanceRecordsStats>>(
+      queryClient.setQueryData<ApiResponse<FinanceRecordsStats>>(
         financeRecordQueryKeys.stats({ filters: searchProvider.filters }),
         (data) => {
           if (!data) return data

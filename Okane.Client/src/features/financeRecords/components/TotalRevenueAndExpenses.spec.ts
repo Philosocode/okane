@@ -24,7 +24,7 @@ import { pluralize } from '@shared/utils/string'
 
 import { getMSWURL } from '@tests/utils/url'
 import { testServer } from '@tests/msw/testServer'
-import { wrapInAPIResponse } from '@tests/utils/apiResponse'
+import { wrapInApiResponse } from '@tests/utils/apiResponse'
 import { useToastStore } from '@shared/composables/useToastStore'
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
@@ -44,7 +44,7 @@ const getStatsUrl = getMSWURL(
   }),
 )
 function useStatsHandler(stats: FinanceRecordsStats) {
-  testServer.use(http.get(getStatsUrl, () => HttpResponse.json(wrapInAPIResponse(stats))))
+  testServer.use(http.get(getStatsUrl, () => HttpResponse.json(wrapInApiResponse(stats))))
 }
 
 const sharedTests = {

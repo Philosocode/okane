@@ -4,7 +4,7 @@ import type { FormErrors } from '@shared/types/form'
 import { capitalize } from '@shared/utils/string'
 import { objectHasKey } from '@shared/utils/object'
 
-export function getFormErrorsFromAPIResponse<TForm extends Record<string, unknown>>(
+export function getFormErrorsFromApiResponse<TForm extends Record<string, unknown>>(
   apiErrors: Record<string, unknown>,
   formState: TForm,
 ): FormErrors<TForm> {

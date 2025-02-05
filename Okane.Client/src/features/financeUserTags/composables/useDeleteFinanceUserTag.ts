@@ -2,7 +2,7 @@
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
 
 // Internal
-import { type APIResponse } from '@shared/services/apiClient/types'
+import { type ApiResponse } from '@shared/services/apiClient/types'
 import { type FinanceUserTag } from '@features/financeUserTags/types/financeUserTag'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
@@ -19,7 +19,7 @@ export function useDeleteFinanceUserTag() {
   return useMutation({
     mutationFn: deleteFinanceUserTag,
     onSuccess(res, args) {
-      queryClient.setQueryData<APIResponse<FinanceUserTag>>(
+      queryClient.setQueryData<ApiResponse<FinanceUserTag>>(
         financeUserTagQueryKeys.listAll(),
         (userTagResponse) => {
           if (!userTagResponse) return userTagResponse

@@ -2,9 +2,9 @@
 import { type InfiniteData } from '@tanstack/vue-query'
 
 // Internal
-import { type APIPaginatedResponse } from '@shared/services/apiClient/types'
+import { type ApiPaginatedResponse } from '@shared/services/apiClient/types'
 
-export function flattenPages<T>(pages?: APIPaginatedResponse<T>[]) {
+export function flattenPages<T>(pages?: ApiPaginatedResponse<T>[]) {
   return pages?.flatMap((page) => page.items) ?? []
 }
 
@@ -15,9 +15,9 @@ export function flattenPages<T>(pages?: APIPaginatedResponse<T>[]) {
  * @param shouldIncludeItem
  */
 export function removeItemFromPages<TItem>(
-  data: InfiniteData<APIPaginatedResponse<TItem>>,
+  data: InfiniteData<ApiPaginatedResponse<TItem>>,
   shouldIncludeItem: (item: TItem) => boolean,
-): InfiniteData<APIPaginatedResponse<TItem>> {
+): InfiniteData<ApiPaginatedResponse<TItem>> {
   if (!Array.isArray(data.pages)) return data
 
   return {

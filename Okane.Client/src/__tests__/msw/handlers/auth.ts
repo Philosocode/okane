@@ -2,7 +2,7 @@
 import { http, HttpResponse } from 'msw'
 
 // Internal
-import { authAPIRoutes } from '@features/auth/constants/apiRoutes'
+import { authApiRoutes } from '@features/auth/constants/apiRoutes'
 
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 
@@ -13,17 +13,17 @@ import { wrapInApiResponse } from '@tests/utils/apiResponse'
 
 export const authHandlers = {
   postLogoutSuccess() {
-    return http.post(getMSWURL(authAPIRoutes.logout()), () => {
+    return http.post(getMSWURL(authApiRoutes.logout()), () => {
       return new HttpResponse(null, { status: HTTP_STATUS_CODE.NO_CONTENT_204 })
     })
   },
   getPasswordRequirementsSuccess() {
-    return http.get(getMSWURL(authAPIRoutes.passwordRequirements()), () => {
+    return http.get(getMSWURL(authApiRoutes.passwordRequirements()), () => {
       return HttpResponse.json(wrapInApiResponse(createTestPasswordRequirements()))
     })
   },
   getPasswordRequirementsError() {
-    return http.get(getMSWURL(authAPIRoutes.passwordRequirements()), () =>
+    return http.get(getMSWURL(authApiRoutes.passwordRequirements()), () =>
       HttpResponse.json(createTestProblemDetails(), {
         status: HTTP_STATUS_CODE.BAD_REQUEST_400,
       }),

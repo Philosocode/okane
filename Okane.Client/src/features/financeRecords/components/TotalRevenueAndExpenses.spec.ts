@@ -11,7 +11,7 @@ import VerticalDivider from '@shared/components/VerticalDivider.vue'
 import { DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
-import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
+import { financeRecordApiRoutes } from '@features/financeRecords/constants/apiRoutes'
 
 import { type FinanceRecordsStats } from '@features/financeRecords/types/financeRecordsStats'
 
@@ -39,7 +39,7 @@ const mountComponent = getMountComponent(TotalRevenueAndExpenses, {
 })
 
 const getStatsUrl = getMSWURL(
-  financeRecordAPIRoutes.getStats({
+  financeRecordApiRoutes.getStats({
     searchFilters: DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,
   }),
 )

@@ -3,7 +3,7 @@ import { inject } from 'vue'
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
 
 // Internal
-import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
+import { financeRecordApiRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 
 import { type EditFinanceRecordRequest } from '@features/financeRecords/types/saveFinanceRecord'
@@ -16,7 +16,7 @@ import {
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
 function patchFinanceRecord(id: number, request: EditFinanceRecordRequest) {
-  return apiClient.patch(financeRecordAPIRoutes.patchFinanceRecord({ id }), request)
+  return apiClient.patch(financeRecordApiRoutes.patchFinanceRecord({ id }), request)
 }
 
 type MutationArgs = {

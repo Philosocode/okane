@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 // Internal
-import { authAPIRoutes } from '@features/auth/constants/apiRoutes'
+import { authApiRoutes } from '@features/auth/constants/apiRoutes'
 
 import { type AuthenticateResponse } from '@features/auth/types/authResponse'
 import { type User } from '@features/users/types'
@@ -31,7 +31,7 @@ export const useAuthStore = defineStore('AuthStore', () => {
    * @param password
    */
   async function register(email: string, name: string, password: string): Promise<void> {
-    await apiClient.post(authAPIRoutes.register(), { email, name, password })
+    await apiClient.post(authApiRoutes.register(), { email, name, password })
   }
 
   /**
@@ -49,7 +49,7 @@ export const useAuthStore = defineStore('AuthStore', () => {
    * Get a new JWT token and update the auth store.
    */
   async function handleRefreshToken() {
-    const response = await apiClient.post<AuthenticateResponse>(authAPIRoutes.refreshToken())
+    const response = await apiClient.post<AuthenticateResponse>(authApiRoutes.refreshToken())
     initState(response)
   }
 
@@ -100,7 +100,7 @@ export const useAuthStore = defineStore('AuthStore', () => {
    * Log out the user and reset the store state.
    */
   async function logout() {
-    await apiClient.post(authAPIRoutes.logout())
+    await apiClient.post(authApiRoutes.logout())
     resetState()
     await getRouter().push({ name: ROUTE_NAME.LOGIN })
   }

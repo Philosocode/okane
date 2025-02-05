@@ -3,7 +3,7 @@ import { flushPromises } from '@vue/test-utils'
 import { defineComponent } from 'vue'
 
 // Internal
-import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
+import { financeRecordApiRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 
 import { useCreateFinanceRecord } from '@features/financeRecords/composables/useCreateFinanceRecord'
@@ -66,7 +66,7 @@ test('makes a POST request to the expected endpoint', async () => {
 
   await flushPromises()
 
-  expect(postSpy).toHaveBeenCalledWith(financeRecordAPIRoutes.postFinanceRecord(), request)
+  expect(postSpy).toHaveBeenCalledWith(financeRecordApiRoutes.postFinanceRecord(), request)
 })
 
 test('invalidates the expected query keys', async () => {

@@ -6,7 +6,7 @@ import { capitalize } from '@shared/utils/string'
  *
  * @param formState
  */
-export function createTestAPIFormErrors<TForm extends Record<string, unknown>>(
+export function createTestApiFormErrors<TForm extends Record<string, unknown>>(
   formState: Partial<TForm>,
 ): Record<string, string[]> {
   return Object.keys(formState).reduce((errors, key) => {

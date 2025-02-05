@@ -3,7 +3,7 @@ import { defineComponent } from 'vue'
 import { flushPromises } from '@vue/test-utils'
 
 // Internal
-import { authAPIRoutes } from '@features/auth/constants/apiRoutes'
+import { authApiRoutes } from '@features/auth/constants/apiRoutes'
 
 import { useQueryPasswordRequirements } from '@features/auth/composables/useQueryPasswordRequirements'
 
@@ -34,7 +34,7 @@ test('makes a GET request to the expected endpoint', async () => {
 
   const wrapper = mountComponent()
   await flushPromises()
-  expect(getSpy).toHaveBeenCalledWith(authAPIRoutes.passwordRequirements(), {
+  expect(getSpy).toHaveBeenCalledWith(authApiRoutes.passwordRequirements(), {
     signal: new AbortController().signal,
   })
   expect(wrapper.findByText('div', getResponse)).toBeDefined()

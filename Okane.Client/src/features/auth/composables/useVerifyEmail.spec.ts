@@ -3,7 +3,7 @@ import { defineComponent } from 'vue'
 import { flushPromises } from '@vue/test-utils'
 
 // Internal
-import { authAPIRoutes } from '@features/auth/constants/apiRoutes'
+import { authApiRoutes } from '@features/auth/constants/apiRoutes'
 
 import { useVerifyEmail } from '@features/auth/composables/useVerifyEmail'
 
@@ -35,5 +35,5 @@ test('makes a POST request to the expected endpoint', async () => {
 
   mountComponent()
   await flushPromises()
-  expect(postSpy).toHaveBeenCalledWith(authAPIRoutes.verifyEmail(), { email, token })
+  expect(postSpy).toHaveBeenCalledWith(authApiRoutes.verifyEmail(), { email, token })
 })

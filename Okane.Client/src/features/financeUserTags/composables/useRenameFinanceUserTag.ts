@@ -2,7 +2,7 @@
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
 
 // Internal
-import { financeUserTagAPIRoutes } from '@features/financeUserTags/constants/apiRoutes'
+import { financeUserTagApiRoutes } from '@features/financeUserTags/constants/apiRoutes'
 import { financeUserTagQueryKeys } from '@features/financeUserTags/constants/queryKeys'
 
 import { type ApiResponse } from '@shared/services/apiClient/types'
@@ -19,7 +19,7 @@ import { insertIntoSortedArray } from '@shared/utils/array'
 function putRenameFinanceUserTag(
   args: RenameFinanceUserTagRequest,
 ): Promise<ApiResponse<FinanceUserTag>> {
-  return apiClient.put(financeUserTagAPIRoutes.rename({ id: args.id }), {
+  return apiClient.put(financeUserTagApiRoutes.rename({ id: args.id }), {
     name: args.name,
   })
 }

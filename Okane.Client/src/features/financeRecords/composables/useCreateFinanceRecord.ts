@@ -3,7 +3,7 @@ import { inject } from 'vue'
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
 
 // Internal
-import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
+import { financeRecordApiRoutes } from '@features/financeRecords/constants/apiRoutes'
 
 import { type CreateFinanceRecordRequest } from '@features/financeRecords/types/saveFinanceRecord'
 
@@ -16,7 +16,7 @@ import {
 } from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
 function postFinanceRecord(financeRecord: CreateFinanceRecordRequest) {
-  return apiClient.post(financeRecordAPIRoutes.postFinanceRecord(), financeRecord)
+  return apiClient.post(financeRecordApiRoutes.postFinanceRecord(), financeRecord)
 }
 
 export function useCreateFinanceRecord() {

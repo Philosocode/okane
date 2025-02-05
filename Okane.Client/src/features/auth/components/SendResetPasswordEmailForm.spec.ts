@@ -8,7 +8,7 @@ import { type MockInstance } from 'vitest'
 import Heading from '@shared/components/Heading.vue'
 import SendResetPasswordEmailForm from '@features/auth/components/SendResetPasswordEmailForm.vue'
 
-import { authAPIRoutes } from '@features/auth/constants/apiRoutes'
+import { authApiRoutes } from '@features/auth/constants/apiRoutes'
 import { AUTH_COPY } from '@features/auth/constants/copy'
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 
@@ -82,7 +82,7 @@ describe('when submitting the form', () => {
   describe('and email is sent successfully', () => {
     beforeEach(() => {
       const handler = http.post(
-        getMSWURL(authAPIRoutes.sendResetPasswordEmail()),
+        getMSWURL(authApiRoutes.sendResetPasswordEmail()),
         () => new HttpResponse(null, { status: HTTP_STATUS_CODE.NO_CONTENT_204 }),
       )
       testServer.use(handler)
@@ -111,7 +111,7 @@ describe('when submitting the form', () => {
     beforeEach(() => {
       consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
-      const handler = http.post(getMSWURL(authAPIRoutes.sendResetPasswordEmail()), () =>
+      const handler = http.post(getMSWURL(authApiRoutes.sendResetPasswordEmail()), () =>
         HttpResponse.json(problemDetails, { status: HTTP_STATUS_CODE.BAD_REQUEST_400 }),
       )
       testServer.use(handler)

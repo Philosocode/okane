@@ -3,7 +3,7 @@ import { defineComponent } from 'vue'
 import { flushPromises } from '@vue/test-utils'
 
 // Internal
-import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
+import { financeRecordApiRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 
@@ -72,7 +72,7 @@ test('makes a DELETE request to the expected endpoint', async () => {
   await flushPromises()
 
   expect(deleteSpy).toHaveBeenCalledWith(
-    financeRecordAPIRoutes.deleteFinanceRecord({ id: financeRecord.id }),
+    financeRecordApiRoutes.deleteFinanceRecord({ id: financeRecord.id }),
   )
 })
 

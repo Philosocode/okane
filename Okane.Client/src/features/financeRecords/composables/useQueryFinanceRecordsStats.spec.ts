@@ -2,7 +2,7 @@
 import { defineComponent } from 'vue'
 
 // Internal
-import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
+import { financeRecordApiRoutes } from '@features/financeRecords/constants/apiRoutes'
 
 import { useQueryFinanceRecordsStats } from '@features/financeRecords/composables/useQueryFinanceRecordsStats'
 
@@ -45,7 +45,7 @@ test('makes a request to fetch stats for finance records', () => {
   mountWithProviders({ searchProvider })
 
   expect(getSpy).toHaveBeenCalledWith(
-    financeRecordAPIRoutes.getStats({ searchFilters: searchProvider.filters }),
+    financeRecordApiRoutes.getStats({ searchFilters: searchProvider.filters }),
     { signal: new AbortController().signal },
   )
 })

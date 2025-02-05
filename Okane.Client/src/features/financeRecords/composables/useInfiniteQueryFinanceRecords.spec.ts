@@ -3,7 +3,7 @@ import { flushPromises } from '@vue/test-utils'
 import { defineComponent, toValue } from 'vue'
 
 // Internal
-import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
+import { financeRecordApiRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 import { SORT_DIRECTION } from '@shared/constants/search'
 
@@ -64,7 +64,7 @@ test('makes multiple requests to fetch paginated finance records', async () => {
 
   expect(getSpy).toHaveBeenCalledOnce()
   expect(getSpy).toHaveBeenLastCalledWith(
-    financeRecordAPIRoutes.getPaginatedList({
+    financeRecordApiRoutes.getPaginatedList({
       cursor: {},
       searchFilters: searchProvider.filters,
     }),
@@ -79,7 +79,7 @@ test('makes multiple requests to fetch paginated finance records', async () => {
 
   expect(getSpy).toHaveBeenCalledTimes(2)
   expect(getSpy).toHaveBeenLastCalledWith(
-    financeRecordAPIRoutes.getPaginatedList({
+    financeRecordApiRoutes.getPaginatedList({
       cursor: getFinanceRecordsSearchCursor(searchProvider.filters, financeRecord),
       searchFilters: searchProvider.filters,
     }),

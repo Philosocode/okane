@@ -7,7 +7,7 @@ import AuthForm from '@features/auth/components/AuthForm.vue'
 import PasswordRequirements from '@features/auth/components/PasswordRequirements.vue'
 import ResetPasswordForm from '@features/auth/components/ResetPasswordForm.vue'
 
-import { authAPIRoutes } from '@features/auth/constants/apiRoutes'
+import { authApiRoutes } from '@features/auth/constants/apiRoutes'
 import { AUTH_COPY } from '@features/auth/constants/copy'
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 import { INPUT_TYPE } from '@shared/constants/form'
@@ -175,7 +175,7 @@ describe('when password reset succeeds', () => {
   let wrapper: VueWrapper
 
   beforeEach(async () => {
-    const handler = http.post(getMSWURL(authAPIRoutes.resetPassword()), () =>
+    const handler = http.post(getMSWURL(authApiRoutes.resetPassword()), () =>
       HttpResponse.json({}, { status: HTTP_STATUS_CODE.OK_200 }),
     )
     testServer.use(handler)
@@ -209,7 +209,7 @@ describe('when password reset fails', () => {
   let wrapper: VueWrapper
 
   beforeEach(async () => {
-    const handler = http.post(getMSWURL(authAPIRoutes.resetPassword()), () =>
+    const handler = http.post(getMSWURL(authApiRoutes.resetPassword()), () =>
       HttpResponse.json(createTestProblemDetails(), {
         status: HTTP_STATUS_CODE.BAD_REQUEST_400,
       }),

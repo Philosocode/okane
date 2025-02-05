@@ -3,7 +3,7 @@ import { computed, inject } from 'vue'
 import { useQuery, type QueryFunctionContext } from '@tanstack/vue-query'
 
 // Internal
-import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
+import { financeRecordApiRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 
 import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
@@ -22,7 +22,7 @@ function fetchStats({
   signal,
 }: QueryFunctionContext): Promise<ApiResponse<FinanceRecordsStats>> {
   const searchFilters = queryKey[queryKey.length - 1] as FinanceRecordsSearchFilters
-  return apiClient.get(financeRecordAPIRoutes.getStats({ searchFilters }), { signal })
+  return apiClient.get(financeRecordApiRoutes.getStats({ searchFilters }), { signal })
 }
 
 export function useQueryFinanceRecordsStats() {

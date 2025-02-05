@@ -6,7 +6,7 @@ import CardHeading from '@shared/components/typography/CardHeading.vue'
 import EditFinanceRecordModal from '@features/financeRecords/components/EditFinanceRecordModal.vue'
 import SaveFinanceRecordModal from '@features/financeRecords/components/SaveFinanceRecordModal.vue'
 
-import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
+import { financeRecordApiRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
 import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
@@ -30,7 +30,7 @@ import {
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
-import { createTestAPIFormErrors } from '@tests/factories/formErrors'
+import { createTestApiFormErrors } from '@tests/factories/formErrors'
 import { createTestFinanceRecord } from '@tests/factories/financeRecord'
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { financeUserTagHandlers } from '@tests/msw/handlers/financeUserTag'
@@ -151,7 +151,7 @@ describe('with a successful request to edit a finance record', () => {
     const financeRecord = mapSaveFinanceRecordFormState.to.editFinanceRecordRequest(updates)
     expect(patchSpy).toHaveBeenCalledOnce()
     expect(patchSpy).toHaveBeenCalledWith(
-      financeRecordAPIRoutes.patchFinanceRecord({ id: financeRecordToEdit.id }),
+      financeRecordApiRoutes.patchFinanceRecord({ id: financeRecordToEdit.id }),
       financeRecord,
     )
   })
@@ -184,7 +184,7 @@ describe('with a successful request to edit a finance record', () => {
   })
 
   test('resets the form errors', async () => {
-    const apiErrors = createTestAPIFormErrors(initialFormState)
+    const apiErrors = createTestApiFormErrors(initialFormState)
     vi.spyOn(apiClient, 'patch')
       .mockRejectedValueOnce(createTestProblemDetails(apiErrors))
       .mockResolvedValueOnce(wrapInApiResponse(null))
@@ -205,7 +205,7 @@ describe('with a successful request to edit a finance record', () => {
 
 describe('with an error updating a finance record', () => {
   test('displays the API errors', async () => {
-    const apiErrors = createTestAPIFormErrors({
+    const apiErrors = createTestApiFormErrors({
       amount: 0,
       description: '',
       happenedAt: '',

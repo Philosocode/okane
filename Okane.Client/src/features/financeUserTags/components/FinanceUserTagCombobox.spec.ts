@@ -7,7 +7,7 @@ import FinanceUserTagCombobox, {
   type FinanceUserTagComboboxProps,
 } from '@features/financeUserTags/components/FinanceUserTagCombobox.vue'
 
-import { financeUserTagAPIRoutes } from '@features/financeUserTags/constants/apiRoutes'
+import { financeUserTagApiRoutes } from '@features/financeUserTags/constants/apiRoutes'
 import { FINANCE_USER_TAGS_COPY } from '@features/financeUserTags/constants/copy'
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 import { HTML_ROLE } from '@shared/constants/html'
@@ -270,7 +270,7 @@ describe('with an error creating a tag', () => {
   let wrapper: VueWrapper
 
   beforeEach(async () => {
-    const errorHandler = http.post(getMSWURL(financeUserTagAPIRoutes.post()), () =>
+    const errorHandler = http.post(getMSWURL(financeUserTagApiRoutes.post()), () =>
       HttpResponse.json(createTestProblemDetails(), {
         status: HTTP_STATUS_CODE.BAD_REQUEST_400,
       }),

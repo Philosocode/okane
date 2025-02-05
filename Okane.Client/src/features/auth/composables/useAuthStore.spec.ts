@@ -2,7 +2,7 @@
 import { http, HttpResponse } from 'msw'
 
 // Internal
-import { authAPIRoutes } from '@features/auth/constants/apiRoutes'
+import { authApiRoutes } from '@features/auth/constants/apiRoutes'
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 
 import { type AuthenticateResponse } from '@features/auth/types/authResponse'
@@ -36,9 +36,9 @@ const authResponse: AuthenticateResponse = {
 
 beforeEach(() => {
   testServer.use(
-    http.post(`/api${authAPIRoutes.login()}`, () => HttpResponse.json(authResponse)),
-    http.post(`/api${authAPIRoutes.refreshToken()}`, () => HttpResponse.json(authResponse)),
-    http.post(`/api${authAPIRoutes.logout()}`, () => HttpResponse.json(wrapInApiResponse(null))),
+    http.post(`/api${authApiRoutes.login()}`, () => HttpResponse.json(authResponse)),
+    http.post(`/api${authApiRoutes.refreshToken()}`, () => HttpResponse.json(authResponse)),
+    http.post(`/api${authApiRoutes.logout()}`, () => HttpResponse.json(wrapInApiResponse(null))),
   )
 })
 
@@ -54,7 +54,7 @@ test('register', async () => {
 
   expect(spy).toHaveBeenCalledTimes(1)
   expect(spy).toHaveBeenCalledWith(
-    authAPIRoutes.register(),
+    authApiRoutes.register(),
     omitObjectKeys(formData, ['passwordConfirm']),
   )
 })

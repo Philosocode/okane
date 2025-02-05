@@ -9,7 +9,7 @@ import {
 } from '@features/financeUserTags/types/financeUserTag'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
-import { financeUserTagAPIRoutes } from '@features/financeUserTags/constants/apiRoutes'
+import { financeUserTagApiRoutes } from '@features/financeUserTags/constants/apiRoutes'
 import { financeUserTagQueryKeys } from '@features/financeUserTags/constants/queryKeys'
 
 import { compareStrings } from '@shared/utils/string'
@@ -18,7 +18,7 @@ import { insertIntoSortedArray } from '@shared/utils/array'
 function postFinanceUserTag(
   body: CreateFinanceUserTagRequest,
 ): Promise<ApiResponse<FinanceUserTag>> {
-  return apiClient.post(financeUserTagAPIRoutes.post(), body)
+  return apiClient.post(financeUserTagApiRoutes.post(), body)
 }
 
 export function useCreateFinanceUserTag() {

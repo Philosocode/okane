@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/vue-query'
 
 // Internal
 import { apiClient } from '@shared/services/apiClient/apiClient'
-import { authAPIRoutes } from '@features/auth/constants/apiRoutes'
+import { authApiRoutes } from '@features/auth/constants/apiRoutes'
 
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
 
@@ -20,7 +20,7 @@ export const defaultBody = {
 }
 
 function patchSelf(body: Partial<PatchSelfBody>) {
-  return apiClient.patch(authAPIRoutes.self(), {
+  return apiClient.patch(authApiRoutes.self(), {
     ...defaultBody,
     ...body,
   })

@@ -3,7 +3,7 @@ import { defineComponent } from 'vue'
 import { flushPromises } from '@vue/test-utils'
 
 // Internal
-import { financeUserTagAPIRoutes } from '@features/financeUserTags/constants/apiRoutes'
+import { financeUserTagApiRoutes } from '@features/financeUserTags/constants/apiRoutes'
 import { financeUserTagQueryKeys } from '@features/financeUserTags/constants/queryKeys'
 
 import { type ApiResponse } from '@shared/services/apiClient/types'
@@ -48,7 +48,7 @@ test('makes a DELETE request to the expected endpoint', async () => {
 
   await flushPromises()
 
-  expect(spy).toHaveBeenCalledWith(financeUserTagAPIRoutes.delete({ id: userTagId }))
+  expect(spy).toHaveBeenCalledWith(financeUserTagApiRoutes.delete({ id: userTagId }))
 })
 
 test('updates the expected cached finance user tags', async () => {

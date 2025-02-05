@@ -1,7 +1,7 @@
 // Internal
 const basePath = '/finance-user-tags'
 
-export const financeUserTagAPIRoutes = {
+export const financeUserTagApiRoutes = {
   getAll: () => basePath,
   delete: ({ id }: { id: number }) => `${basePath}/${id}`,
   post: () => basePath,

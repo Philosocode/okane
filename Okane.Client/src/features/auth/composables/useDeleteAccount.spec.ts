@@ -3,7 +3,7 @@ import { defineComponent } from 'vue'
 import { flushPromises } from '@vue/test-utils'
 
 // Internal
-import { authAPIRoutes } from '@features/auth/constants/apiRoutes'
+import { authApiRoutes } from '@features/auth/constants/apiRoutes'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
@@ -36,7 +36,7 @@ test('makes a DELETE request to the expected endpoint', async () => {
   const deleteSpy = spyOn.apiDelete()
   mountComponent()
   await flushPromises()
-  expect(deleteSpy).toHaveBeenCalledWith(authAPIRoutes.self())
+  expect(deleteSpy).toHaveBeenCalledWith(authApiRoutes.self())
 })
 
 test('resets the auth store state', async () => {

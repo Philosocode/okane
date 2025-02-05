@@ -2,7 +2,7 @@
 import { http, HttpResponse } from 'msw'
 
 // Internal
-import { financeUserTagAPIRoutes } from '@features/financeUserTags/constants/apiRoutes'
+import { financeUserTagApiRoutes } from '@features/financeUserTags/constants/apiRoutes'
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 
 import { type ApiResponse } from '@shared/services/apiClient/types'
@@ -19,12 +19,12 @@ import { createTestProblemDetails } from '@tests/factories/problemDetails'
 
 export const financeUserTagHandlers = {
   getAllSuccess(args: { userTags: FinanceUserTag[] }) {
-    return http.get(getMSWURL(financeUserTagAPIRoutes.getAll()), () => {
+    return http.get(getMSWURL(financeUserTagApiRoutes.getAll()), () => {
       return HttpResponse.json(wrapInApiResponse(args.userTags))
     })
   },
   getAllError() {
-    return http.get(getMSWURL(financeUserTagAPIRoutes.getAll()), () =>
+    return http.get(getMSWURL(financeUserTagApiRoutes.getAll()), () =>
       HttpResponse.json(createTestProblemDetails(), {
         status: HTTP_STATUS_CODE.BAD_REQUEST_400,
       }),
@@ -39,7 +39,7 @@ export const financeUserTagHandlers = {
     createdUserTagId?: number
   }) {
     return http.post<never, CreateFinanceUserTagRequest, ApiResponse<FinanceUserTag>>(
-      getMSWURL(financeUserTagAPIRoutes.post()),
+      getMSWURL(financeUserTagApiRoutes.post()),
       async function resolver({ request }) {
         const requestUserTag = await request.json()
 

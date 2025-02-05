@@ -6,11 +6,11 @@ import { type ApiResponse } from '@shared/services/apiClient/types'
 import { type FinanceUserTag } from '@features/financeUserTags/types/financeUserTag'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
-import { financeUserTagAPIRoutes } from '@features/financeUserTags/constants/apiRoutes'
+import { financeUserTagApiRoutes } from '@features/financeUserTags/constants/apiRoutes'
 import { financeUserTagQueryKeys } from '@features/financeUserTags/constants/queryKeys'
 
 function deleteFinanceUserTag(args: { id: number }): Promise<void> {
-  return apiClient.delete(financeUserTagAPIRoutes.delete({ id: args.id }))
+  return apiClient.delete(financeUserTagApiRoutes.delete({ id: args.id }))
 }
 
 export function useDeleteFinanceUserTag() {

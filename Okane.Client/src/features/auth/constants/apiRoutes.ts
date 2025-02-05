@@ -1,7 +1,7 @@
 // Internal
 const basePath = '/auth'
 
-export const authAPIRoutes = {
+export const authApiRoutes = {
   login: () => `${basePath}/login`,
   logout: () => `${basePath}/logout`,
   passwordRequirements: () => `${basePath}/password-requirements`,

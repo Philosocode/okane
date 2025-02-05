@@ -3,7 +3,7 @@ import { http, HttpResponse } from 'msw'
 
 // Internal
 import { DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
-import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
+import { financeRecordApiRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
@@ -15,13 +15,13 @@ import { wrapInApiPaginatedResponse, wrapInApiResponse } from '@tests/utils/apiR
 
 export const financeRecordHandlers = {
   deleteFinanceRecordSuccess(args: { id: number }) {
-    const url = getMSWURL(financeRecordAPIRoutes.deleteFinanceRecord({ id: args.id }))
+    const url = getMSWURL(financeRecordApiRoutes.deleteFinanceRecord({ id: args.id }))
     return http.delete(url, () => {
       return new HttpResponse(null, { status: HTTP_STATUS_CODE.NO_CONTENT_204 })
     })
   },
   deleteFinanceRecordError(args: { id: number }) {
-    const url = getMSWURL(financeRecordAPIRoutes.deleteFinanceRecord({ id: args.id }))
+    const url = getMSWURL(financeRecordApiRoutes.deleteFinanceRecord({ id: args.id }))
     const status = HTTP_STATUS_CODE.BAD_REQUEST_400
 
     return http.delete(url, () => {
@@ -38,7 +38,7 @@ export const financeRecordHandlers = {
     hasNextPage?: boolean
   }) {
     const url = getMSWURL(
-      financeRecordAPIRoutes.getPaginatedList({
+      financeRecordApiRoutes.getPaginatedList({
         cursor: {},
         searchFilters,
       }),
@@ -52,7 +52,7 @@ export const financeRecordHandlers = {
   },
   getPaginatedFinanceRecordsError(args: { detail?: string }) {
     const url = getMSWURL(
-      financeRecordAPIRoutes.getPaginatedList({
+      financeRecordApiRoutes.getPaginatedList({
         cursor: {},
         searchFilters: DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,
       }),

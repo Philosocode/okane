@@ -3,7 +3,7 @@ import { defineComponent } from 'vue'
 import { flushPromises } from '@vue/test-utils'
 
 // Internal
-import { financeUserTagAPIRoutes } from '@features/financeUserTags/constants/apiRoutes'
+import { financeUserTagApiRoutes } from '@features/financeUserTags/constants/apiRoutes'
 import { financeUserTagQueryKeys } from '@features/financeUserTags/constants/queryKeys'
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 
@@ -56,7 +56,7 @@ test('makes a POST request to the expected endpoint', async () => {
 
   await flushPromises()
 
-  expect(postSpy).toHaveBeenCalledWith(financeUserTagAPIRoutes.post(), body)
+  expect(postSpy).toHaveBeenCalledWith(financeUserTagApiRoutes.post(), body)
 })
 
 test('updates the expected cached finance user tags', async () => {

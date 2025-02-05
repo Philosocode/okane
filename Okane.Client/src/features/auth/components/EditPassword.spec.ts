@@ -7,7 +7,7 @@ import { flushPromises, type VueWrapper } from '@vue/test-utils'
 import EditPassword from '@features/auth/components/EditPassword.vue'
 import PasswordRequirements from '@features/auth/components/PasswordRequirements.vue'
 
-import { authAPIRoutes } from '@features/auth/constants/apiRoutes'
+import { authApiRoutes } from '@features/auth/constants/apiRoutes'
 import { AUTH_COPY } from '@features/auth/constants/copy'
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 import { BUTTON_TYPE, INPUT_TYPE } from '@shared/constants/form'
@@ -301,7 +301,7 @@ describe('when the patch request succeeds', () => {
   let wrapper: VueWrapper
 
   beforeEach(async () => {
-    const handler = http.patch(getMSWURL(authAPIRoutes.self()), () =>
+    const handler = http.patch(getMSWURL(authApiRoutes.self()), () =>
       HttpResponse.json({}, { status: HTTP_STATUS_CODE.OK_200 }),
     )
     testServer.use(handler)
@@ -359,7 +359,7 @@ describe('when current password is invalid', () => {
         PasswordMismatch: ['Invalid password'],
       },
     })
-    const handler = http.patch(getMSWURL(authAPIRoutes.self()), () =>
+    const handler = http.patch(getMSWURL(authApiRoutes.self()), () =>
       HttpResponse.json(problemDetails, { status: HTTP_STATUS_CODE.BAD_REQUEST_400 }),
     )
     testServer.use(handler)
@@ -391,7 +391,7 @@ describe('when current password is valid but the patch request fails', () => {
   let wrapper: VueWrapper
 
   beforeEach(async () => {
-    const handler = http.patch(getMSWURL(authAPIRoutes.self()), () =>
+    const handler = http.patch(getMSWURL(authApiRoutes.self()), () =>
       HttpResponse.json(createTestProblemDetails(), { status: HTTP_STATUS_CODE.BAD_REQUEST_400 }),
     )
     testServer.use(handler)

@@ -5,7 +5,7 @@ import { useQuery, type QueryFunctionContext } from '@tanstack/vue-query'
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
 import { financeUserTagQueryKeys } from '@features/financeUserTags/constants/queryKeys'
-import { financeUserTagAPIRoutes } from '@features/financeUserTags/constants/apiRoutes'
+import { financeUserTagApiRoutes } from '@features/financeUserTags/constants/apiRoutes'
 
 import { type ApiResponse } from '@shared/services/apiClient/types'
 import {
@@ -16,7 +16,7 @@ import {
 function getFinanceUserTags({
   signal,
 }: QueryFunctionContext): Promise<ApiResponse<FinanceUserTag>> {
-  return apiClient.get(financeUserTagAPIRoutes.getAll(), { signal })
+  return apiClient.get(financeUserTagApiRoutes.getAll(), { signal })
 }
 
 export function useQueryFinanceUserTags() {

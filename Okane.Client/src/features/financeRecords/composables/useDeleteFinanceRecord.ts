@@ -3,7 +3,7 @@ import { inject } from 'vue'
 import { useMutation, useQueryClient, type InfiniteData } from '@tanstack/vue-query'
 
 // Internal
-import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
+import { financeRecordApiRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 
@@ -21,7 +21,7 @@ import { apiClient } from '@shared/services/apiClient/apiClient'
 import { removeItemFromPages } from '@shared/utils/pagination'
 
 function deleteFinanceRecord(id: number) {
-  return apiClient.delete(financeRecordAPIRoutes.deleteFinanceRecord({ id }))
+  return apiClient.delete(financeRecordApiRoutes.deleteFinanceRecord({ id }))
 }
 
 export function useDeleteFinanceRecord() {

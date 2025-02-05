@@ -8,7 +8,7 @@ import VerifyEmailFailed from '@features/auth/components/VerifyEmailFailed.vue'
 import VerifyEmailPage from '@shared/pages/VerifyEmailPage.vue'
 import VerifyEmailSucceeded from '@features/auth/components/VerifyEmailSucceeded.vue'
 
-import { authAPIRoutes } from '@features/auth/constants/apiRoutes'
+import { authApiRoutes } from '@features/auth/constants/apiRoutes'
 import { AUTH_COPY } from '@features/auth/constants/copy'
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 import { appRoutes, createAppRouter } from '@shared/services/router/router'
@@ -119,7 +119,7 @@ describe('when verification fails', () => {
   let wrapper: VueWrapper
 
   beforeEach(async () => {
-    const errorHandler = http.post(getMSWURL(authAPIRoutes.verifyEmail()), () =>
+    const errorHandler = http.post(getMSWURL(authApiRoutes.verifyEmail()), () =>
       HttpResponse.json(createTestProblemDetails(), {
         status: HTTP_STATUS_CODE.BAD_REQUEST_400,
       }),
@@ -152,7 +152,7 @@ describe('when verification succeeds', () => {
   let wrapper: VueWrapper
 
   beforeEach(async () => {
-    const successHandler = http.post(getMSWURL(authAPIRoutes.verifyEmail()), () =>
+    const successHandler = http.post(getMSWURL(authApiRoutes.verifyEmail()), () =>
       HttpResponse.json({}, { status: HTTP_STATUS_CODE.OK_200 }),
     )
     testServer.use(successHandler)

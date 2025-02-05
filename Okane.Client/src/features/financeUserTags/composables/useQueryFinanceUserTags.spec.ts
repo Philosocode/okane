@@ -3,7 +3,7 @@ import { defineComponent } from 'vue'
 import { flushPromises } from '@vue/test-utils'
 
 // Internal
-import { financeUserTagAPIRoutes } from '@features/financeUserTags/constants/apiRoutes'
+import { financeUserTagApiRoutes } from '@features/financeUserTags/constants/apiRoutes'
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 
 import { useQueryFinanceUserTags } from '@features/financeUserTags/composables/useQueryFinanceUserTags'
@@ -44,7 +44,7 @@ test('makes a request to fetch all finance user tags', async () => {
   const getSpy = vi.spyOn(apiClient, 'get').mockResolvedValue(wrapInApiResponse(returnedUserTags))
   const wrapper = mountComponent()
 
-  expect(getSpy).toHaveBeenCalledWith(financeUserTagAPIRoutes.getAll(), {
+  expect(getSpy).toHaveBeenCalledWith(financeUserTagApiRoutes.getAll(), {
     signal: new AbortController().signal,
   })
 

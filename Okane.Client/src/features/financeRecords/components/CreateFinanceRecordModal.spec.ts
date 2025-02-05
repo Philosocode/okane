@@ -6,7 +6,7 @@ import CardHeading from '@shared/components/typography/CardHeading.vue'
 import CreateFinanceRecordModal from '@features/financeRecords/components/CreateFinanceRecordModal.vue'
 import SaveFinanceRecordModal from '@features/financeRecords/components/SaveFinanceRecordModal.vue'
 
-import { financeRecordAPIRoutes } from '@features/financeRecords/constants/apiRoutes'
+import { financeRecordApiRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
@@ -27,7 +27,7 @@ import {
   useSaveFinanceRecordProvider,
 } from '@features/financeRecords/providers/saveFinanceRecordProvider'
 
-import { createTestAPIFormErrors } from '@tests/factories/formErrors'
+import { createTestApiFormErrors } from '@tests/factories/formErrors'
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { createTestSaveFinanceRecordFormState } from '@tests/factories/financeRecord'
 import { financeUserTagHandlers } from '@tests/msw/handlers/financeUserTag'
@@ -112,7 +112,7 @@ describe('with a successful request to create a finance record', () => {
 
     const financeRecord = mapSaveFinanceRecordFormState.to.createFinanceRecordRequest(formState)
     expect(postSpy).toHaveBeenCalledOnce()
-    expect(postSpy).toHaveBeenCalledWith(financeRecordAPIRoutes.postFinanceRecord(), financeRecord)
+    expect(postSpy).toHaveBeenCalledWith(financeRecordApiRoutes.postFinanceRecord(), financeRecord)
   })
 
   test('creates a toast', async () => {
@@ -154,7 +154,7 @@ describe('with a successful request to create a finance record', () => {
   })
 
   test('resets the form errors', async () => {
-    const apiErrors = createTestAPIFormErrors(formState)
+    const apiErrors = createTestApiFormErrors(formState)
     vi.spyOn(apiClient, 'post')
       .mockRejectedValueOnce(createTestProblemDetails(apiErrors))
       .mockResolvedValueOnce(wrapInApiResponse(null))
@@ -177,7 +177,7 @@ describe('with an error creating a finance record', () => {
   const formState = createTestSaveFinanceRecordFormState()
 
   test('displays the API errors', async () => {
-    const apiErrors = createTestAPIFormErrors({
+    const apiErrors = createTestApiFormErrors({
       amount: 0,
       description: '',
       happenedAt: '',

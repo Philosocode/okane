@@ -10,7 +10,7 @@ import { mapFinanceRecordsSearchFilters } from '@features/financeRecords/utils/m
 
 const basePath = '/finance-records'
 
-export const financeRecordAPIRoutes = {
+export const financeRecordApiRoutes = {
   getPaginatedList(args: {
     cursor: FinanceRecordsSearchCursor
     searchFilters: FinanceRecordsSearchFilters

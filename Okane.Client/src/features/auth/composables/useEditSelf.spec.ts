@@ -3,7 +3,7 @@ import { defineComponent } from 'vue'
 import { flushPromises } from '@vue/test-utils'
 
 // Internal
-import { authAPIRoutes } from '@features/auth/constants/apiRoutes'
+import { authApiRoutes } from '@features/auth/constants/apiRoutes'
 
 import {
   defaultBody,
@@ -54,7 +54,7 @@ describe('with an empty body', () => {
 
     mountComponent(body)
     await flushPromises()
-    expect(patchSpy).toHaveBeenCalledWith(authAPIRoutes.self(), body)
+    expect(patchSpy).toHaveBeenCalledWith(authApiRoutes.self(), body)
     expect(authStore.authUser?.name).toBe(originalName)
   })
 })
@@ -73,7 +73,7 @@ describe('when updating the password', () => {
 
     mountComponent(body)
     await flushPromises()
-    expect(patchSpy).toHaveBeenCalledWith(authAPIRoutes.self(), body)
+    expect(patchSpy).toHaveBeenCalledWith(authApiRoutes.self(), body)
     expect(authStore.authUser?.name).toBe(originalName)
   })
 })
@@ -90,7 +90,7 @@ describe('when updating the name', () => {
 
     mountComponent(body)
     await flushPromises()
-    expect(patchSpy).toHaveBeenCalledWith(authAPIRoutes.self(), body)
+    expect(patchSpy).toHaveBeenCalledWith(authApiRoutes.self(), body)
     expect(authStore.authUser?.name).toBe(body.name)
   })
 })

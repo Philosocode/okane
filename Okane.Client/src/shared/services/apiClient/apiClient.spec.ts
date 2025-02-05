@@ -2,7 +2,7 @@
 import { http, HttpResponse } from 'msw'
 
 // Internal
-import { authAPIRoutes } from '@features/auth/constants/apiRoutes'
+import { authApiRoutes } from '@features/auth/constants/apiRoutes'
 import { appRoutes } from '@shared/services/router/router'
 import { HTTP_STATUS_CODE, MIME_TYPE } from '@shared/constants/http'
 
@@ -143,7 +143,7 @@ describe('when logged in', () => {
     expect(response.items[0]).toEqual('pong')
   })
 
-  const logoutHandler = http.post(`/api${authAPIRoutes.logout()}`, () => HttpResponse.json())
+  const logoutHandler = http.post(`/api${authApiRoutes.logout()}`, () => HttpResponse.json())
   const getErrorHandler = (statusCode: HTTP_STATUS_CODE) =>
     http.get('/api/ping', () => {
       const errorResponse = JSON.stringify(createTestProblemDetails())

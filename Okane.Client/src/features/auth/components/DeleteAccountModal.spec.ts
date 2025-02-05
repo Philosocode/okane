@@ -6,7 +6,7 @@ import { flushPromises, type VueWrapper } from '@vue/test-utils'
 import DeleteAccountModal from '@features/auth/components/DeleteAccountModal.vue'
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 
-import { authAPIRoutes } from '@features/auth/constants/apiRoutes'
+import { authApiRoutes } from '@features/auth/constants/apiRoutes'
 import { AUTH_COPY } from '@features/auth/constants/copy'
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 import { SHARED_COPY } from '@shared/constants/copy'
@@ -103,7 +103,7 @@ describe('when the modal is showing', () => {
   describe('when account deletion succeeds', () => {
     beforeEach(async () => {
       const handler = http.delete(
-        getMSWURL(authAPIRoutes.self()),
+        getMSWURL(authApiRoutes.self()),
         () => new HttpResponse(null, { status: HTTP_STATUS_CODE.NO_CONTENT_204 }),
       )
       testServer.use(handler)
@@ -120,7 +120,7 @@ describe('when the modal is showing', () => {
 
   describe('when account deletion fails', () => {
     beforeEach(async () => {
-      const handler = http.delete(getMSWURL(authAPIRoutes.self()), () =>
+      const handler = http.delete(getMSWURL(authApiRoutes.self()), () =>
         HttpResponse.json(createTestProblemDetails(), {
           status: HTTP_STATUS_CODE.BAD_REQUEST_400,
         }),

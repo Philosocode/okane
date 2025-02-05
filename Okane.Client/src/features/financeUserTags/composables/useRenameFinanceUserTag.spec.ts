@@ -3,7 +3,7 @@ import { defineComponent } from 'vue'
 import { flushPromises } from '@vue/test-utils'
 
 // Internal
-import { financeUserTagAPIRoutes } from '@features/financeUserTags/constants/apiRoutes'
+import { financeUserTagApiRoutes } from '@features/financeUserTags/constants/apiRoutes'
 import { financeUserTagQueryKeys } from '@features/financeUserTags/constants/queryKeys'
 
 import { type ApiResponse } from '@shared/services/apiClient/types'
@@ -65,7 +65,7 @@ test('makes a PUT request to the expected endpoint', async () => {
 
   await flushPromises()
 
-  expect(putSpy).toHaveBeenCalledWith(financeUserTagAPIRoutes.rename({ id: renameRequest.id }), {
+  expect(putSpy).toHaveBeenCalledWith(financeUserTagApiRoutes.rename({ id: renameRequest.id }), {
     name: renameRequest.name,
   })
 })

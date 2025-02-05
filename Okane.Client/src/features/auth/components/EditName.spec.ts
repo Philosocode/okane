@@ -6,7 +6,7 @@ import { flushPromises, type VueWrapper } from '@vue/test-utils'
 // Internal
 import EditName from '@features/auth/components/EditName.vue'
 
-import { authAPIRoutes } from '@features/auth/constants/apiRoutes'
+import { authApiRoutes } from '@features/auth/constants/apiRoutes'
 import { AUTH_COPY } from '@features/auth/constants/copy'
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 import { BUTTON_TYPE, INPUT_TYPE } from '@shared/constants/form'
@@ -126,7 +126,7 @@ describe('when patch request succeeds', () => {
 
   beforeEach(async () => {
     wrapper = await setUpWrapperSubmitWithName(
-      http.patch(getMSWURL(authAPIRoutes.self()), () =>
+      http.patch(getMSWURL(authApiRoutes.self()), () =>
         HttpResponse.json({}, { status: HTTP_STATUS_CODE.OK_200 }),
       ),
     )
@@ -156,7 +156,7 @@ describe('when patch request fails', () => {
 
   beforeEach(async () => {
     wrapper = await setUpWrapperSubmitWithName(
-      http.patch(getMSWURL(authAPIRoutes.self()), () =>
+      http.patch(getMSWURL(authApiRoutes.self()), () =>
         HttpResponse.json(createTestProblemDetails(), { status: HTTP_STATUS_CODE.BAD_REQUEST_400 }),
       ),
     )

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Internal
-import Heading from '@shared/components/Heading.vue'
+import Heading from '@shared/components/nav/Heading.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
 </script>

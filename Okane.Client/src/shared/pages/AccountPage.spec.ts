@@ -3,9 +3,9 @@ import { flushPromises, VueWrapper } from '@vue/test-utils'
 
 // Internal
 import AccountPage from '@shared/pages/AccountPage.vue'
-import DeleteAccountModal from '@features/auth/components/DeleteAccountModal.vue'
-import EditName from '@features/auth/components/EditName.vue'
-import EditPassword from '@features/auth/components/EditPassword.vue'
+import DeleteAccountModal from '@features/auth/components/accountPage/DeleteAccountModal.vue'
+import EditName from '@features/auth/components/accountPage/EditName.vue'
+import EditPassword from '@features/auth/components/accountPage/EditPassword.vue'
 import ErrorMessage from '@shared/components/typography/ErrorMessage.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'

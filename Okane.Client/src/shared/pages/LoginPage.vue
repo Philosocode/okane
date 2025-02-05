@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // Internal
 import LoginForm from '@features/auth/components/LoginForm.vue'
-import PageLayout from '@shared/components/wrappers/PageLayout.vue'
+import PageLayout from '@shared/components/wrapper/PageLayout.vue'
 </script>
 
 <template>

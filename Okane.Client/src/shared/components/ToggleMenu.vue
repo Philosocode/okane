@@ -4,7 +4,7 @@ import { onClickOutside, onKeyStroke } from '@vueuse/core'
 import { ref, useTemplateRef } from 'vue'
 
 // Internal
-import IconButton from '@shared/components/IconButton.vue'
+import IconButton from '@shared/components/button/IconButton.vue'
 import ModalTrigger from '@shared/components/modal/ModalTrigger.vue'
 
 import { SHARED_COPY } from '@shared/constants/copy'

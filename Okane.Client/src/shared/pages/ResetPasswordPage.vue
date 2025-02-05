@@ -1,8 +1,8 @@
 <script setup lang="ts">
 // Internal
 import ErrorMessage from '@shared/components/typography/ErrorMessage.vue'
-import PageLayout from '@shared/components/wrappers/PageLayout.vue'
-import ResetPasswordForm from '@features/auth/components/ResetPasswordForm.vue'
+import PageLayout from '@shared/components/wrapper/PageLayout.vue'
+import ResetPasswordForm from '@features/auth/components/resetPassword/ResetPasswordForm.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
 

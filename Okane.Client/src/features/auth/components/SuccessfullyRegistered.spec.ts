@@ -1,5 +1,5 @@
 // Internal
-import Heading from '@shared/components/Heading.vue'
+import Heading from '@shared/components/nav/Heading.vue'
 import SuccessfullyRegistered from '@features/auth/components/SuccessfullyRegistered.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'

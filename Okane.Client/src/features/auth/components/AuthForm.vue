@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // Internal
-import AppButton from '@shared/components/AppButton.vue'
-import Card from '@shared/components/wrappers/Card.vue'
+import AppButton from '@shared/components/button/AppButton.vue'
+import Card from '@shared/components/wrapper/Card.vue'
 
 export type AuthFormProps = {
   submitButtonText: string

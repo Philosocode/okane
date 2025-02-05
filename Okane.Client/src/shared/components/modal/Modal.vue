@@ -5,7 +5,7 @@ import { useTemplateRef } from 'vue'
 import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component'
 
 // Internal
-import IconButton from '@shared/components/IconButton.vue'
+import IconButton from '@shared/components/button/IconButton.vue'
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 
 import { SHARED_COPY } from '@shared/constants/copy'

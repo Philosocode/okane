@@ -3,7 +3,7 @@
 import { format } from 'date-fns'
 
 // Internal
-import Card from '@shared/components/wrappers/Card.vue'
+import Card from '@shared/components/wrapper/Card.vue'
 import FinanceRecordTags from '@features/financeRecords/components/financeRecordList/FinanceRecordTags.vue'
 import FinanceRecordTypePill from '@features/financeRecords/components/financeRecordList/FinanceRecordTypePill.vue'
 import Kicker from '@shared/components/typography/Kicker.vue'

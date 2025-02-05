@@ -4,9 +4,9 @@ import { http, HttpResponse } from 'msw'
 
 // Internal
 import Loader from '@shared/components/loader/Loader.vue'
-import VerifyEmailFailed from '@features/auth/components/VerifyEmailFailed.vue'
+import VerifyEmailFailed from '@features/auth/components/verifyEmail/VerifyEmailFailed.vue'
 import VerifyEmailPage from '@shared/pages/VerifyEmailPage.vue'
-import VerifyEmailSucceeded from '@features/auth/components/VerifyEmailSucceeded.vue'
+import VerifyEmailSucceeded from '@features/auth/components/verifyEmail/VerifyEmailSucceeded.vue'
 
 import { authApiRoutes } from '@features/auth/constants/apiRoutes'
 import { AUTH_COPY } from '@features/auth/constants/copy'

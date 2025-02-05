@@ -3,7 +3,7 @@
 import { inject } from 'vue'
 
 // Internal
-import AppButton from '@shared/components/AppButton.vue'
+import AppButton from '@shared/components/button/AppButton.vue'
 import ErrorMessage from '@shared/components/typography/ErrorMessage.vue'
 import FinanceUserTagSummary from '@features/financeUserTags/components/FinanceUserTagSummary.vue'
 import Modal from '@shared/components/modal/Modal.vue'

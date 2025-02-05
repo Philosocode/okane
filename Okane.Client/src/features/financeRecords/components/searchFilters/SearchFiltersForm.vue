@@ -3,9 +3,9 @@
 import { computed, inject, ref, useTemplateRef } from 'vue'
 
 // Internal
-import AppButton from '@shared/components/AppButton.vue'
-import FinanceRecordAmountFilter from '@features/financeRecords/components/FinanceRecordAmountFilter.vue'
-import FinanceRecordHappenedAtFilter from '@features/financeRecords/components/FinanceRecordHappenedAtFilter.vue'
+import AppButton from '@shared/components/button/AppButton.vue'
+import FinanceRecordAmountFilter from '@features/financeRecords/components/searchFilters/FinanceRecordAmountFilter.vue'
+import FinanceRecordHappenedAtFilter from '@features/financeRecords/components/searchFilters/FinanceRecordHappenedAtFilter.vue'
 import FinanceUserTagCombobox from '@features/financeUserTags/components/FinanceUserTagCombobox.vue'
 import FormInput from '@shared/components/form/FormInput.vue'
 import FormSelect from '@shared/components/form/FormSelect.vue'

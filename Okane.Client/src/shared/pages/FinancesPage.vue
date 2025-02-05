@@ -3,16 +3,16 @@
 import { provide } from 'vue'
 
 // Internal
-import Card from '@shared/components/wrappers/Card.vue'
-import CreateFinanceRecordButton from '@features/financeRecords/components/CreateFinanceRecordButton.vue'
-import CreateFinanceRecordModal from '@features/financeRecords/components/CreateFinanceRecordModal.vue'
-import DeleteFinanceRecordModal from '@features/financeRecords/components/DeleteFinanceRecordModal.vue'
-import EditFinanceRecordModal from '@features/financeRecords/components/EditFinanceRecordModal.vue'
-import FinanceRecordList from '@features/financeRecords/components/FinanceRecordList.vue'
-import Heading from '@shared/components/Heading.vue'
-import PageLayout from '@shared/components/wrappers/PageLayout.vue'
+import Card from '@shared/components/wrapper/Card.vue'
+import CreateFinanceRecordButton from '@features/financeRecords/components/saveFinanceRecord/CreateFinanceRecordButton.vue'
+import CreateFinanceRecordModal from '@features/financeRecords/components/saveFinanceRecord/CreateFinanceRecordModal.vue'
+import DeleteFinanceRecordModal from '@features/financeRecords/components/saveFinanceRecord/DeleteFinanceRecordModal.vue'
+import EditFinanceRecordModal from '@features/financeRecords/components/saveFinanceRecord/EditFinanceRecordModal.vue'
+import FinanceRecordList from '@features/financeRecords/components/financeRecordList/FinanceRecordList.vue'
+import Heading from '@shared/components/nav/Heading.vue'
+import PageLayout from '@shared/components/wrapper/PageLayout.vue'
 import SearchFiltersSection from '@features/financeRecords/components/searchFilters/SearchFiltersSection.vue'
-import TotalRevenueAndExpenses from '@features/financeRecords/components/TotalRevenueAndExpenses.vue'
+import TotalRevenueAndExpenses from '@features/financeRecords/components/stats/TotalRevenueAndExpenses.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 

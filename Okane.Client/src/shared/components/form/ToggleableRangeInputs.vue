@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Internal
-import AppButton from '@shared/components/AppButton.vue'
+import AppButton from '@shared/components/button/AppButton.vue'
 import FormSelect from '@shared/components/form/FormSelect.vue'
 import Kicker from '@shared/components/typography/Kicker.vue'
 

@@ -1,7 +1,7 @@
 // Internal
 import App from './App.vue'
-import Footer from '@shared/components/Footer.vue'
-import NavBar from '@shared/components/NavBar.vue'
+import Footer from '@shared/components/nav/Footer.vue'
+import NavBar from '@shared/components/nav/NavBar.vue'
 import Toaster from '@shared/components/toast/Toaster.vue'
 
 const mountComponent = getMountComponent(App, {

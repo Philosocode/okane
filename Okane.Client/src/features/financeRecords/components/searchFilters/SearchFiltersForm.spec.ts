@@ -2,8 +2,8 @@
 import { flushPromises, type VueWrapper } from '@vue/test-utils'
 
 // Internal
-import FinanceRecordAmountFilter from '@features/financeRecords/components/FinanceRecordAmountFilter.vue'
-import FinanceRecordHappenedAtFilter from '@features/financeRecords/components/FinanceRecordHappenedAtFilter.vue'
+import FinanceRecordAmountFilter from '@features/financeRecords/components/searchFilters/FinanceRecordAmountFilter.vue'
+import FinanceRecordHappenedAtFilter from '@features/financeRecords/components/searchFilters/FinanceRecordHappenedAtFilter.vue'
 import SearchFiltersForm from '@features/financeRecords/components/searchFilters/SearchFiltersForm.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'

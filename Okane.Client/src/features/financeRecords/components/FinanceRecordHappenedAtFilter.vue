@@ -10,18 +10,18 @@ import { COMPARISON_OPERATOR } from '@shared/constants/search'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { INPUT_TYPE } from '@shared/constants/form'
 
-import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
+import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 
 import { mapDate, mapUTCTimestampToLocalDate } from '@shared/utils/dateTime'
 
 export type FinanceRecordHappenedAtFilterProps = Pick<
-  FinanceRecordsSearchFilters,
+  FinanceRecordSearchFilters,
   'happenedAt1' | 'happenedAt2' | 'happenedAtOperator'
 >
 
 const props = defineProps<FinanceRecordHappenedAtFilterProps>()
 const emit = defineEmits<{
-  (e: 'change', formState: Partial<FinanceRecordsSearchFilters>): void
+  (e: 'change', formState: Partial<FinanceRecordSearchFilters>): void
 }>()
 
 const happenedAt1 = computed(() => {

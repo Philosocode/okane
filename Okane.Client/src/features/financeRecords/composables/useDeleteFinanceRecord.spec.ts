@@ -12,10 +12,10 @@ import { useDeleteFinanceRecord } from '@features/financeRecords/composables/use
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
 
 import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  type SearchFinanceRecordsProvider,
-  useSearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  type FinanceRecordSearchFiltersProvider,
+  useFinanceRecordSearchFiltersProvider,
+} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
@@ -51,14 +51,14 @@ function createTestComponent(financeRecordToDelete = financeRecord) {
 
 const TestComponent = createTestComponent()
 
-function mountWithProviders(args: { searchProvider?: SearchFinanceRecordsProvider } = {}) {
+function mountWithProviders(args: { searchProvider?: FinanceRecordSearchFiltersProvider } = {}) {
   let searchProvider = args.searchProvider
-  if (!searchProvider) searchProvider = useSearchFinanceRecordsProvider()
+  if (!searchProvider) searchProvider = useFinanceRecordSearchFiltersProvider()
 
   return getMountComponent(TestComponent, {
     global: {
       provide: {
-        [SEARCH_FINANCE_RECORDS_SYMBOL]: searchProvider,
+        [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: searchProvider,
       },
     },
     withQueryClient: true,
@@ -90,7 +90,7 @@ test('removes the finance record from the query cache', async () => {
     pageParams: [],
   }
 
-  const searchProvider = useSearchFinanceRecordsProvider()
+  const searchProvider = useFinanceRecordSearchFiltersProvider()
   const queryKey = financeRecordQueryKeys.listByFilters({ filters: searchProvider.filters })
   testQueryClient.setQueryData(queryKey, initialCachedData)
 
@@ -108,7 +108,7 @@ async function assertUpdatesCachedStats(deletedFinanceRecord: FinanceRecord) {
   const initialStats = createTestFinanceRecordsStats()
   const initialCachedData = wrapInApiResponse(initialStats)
 
-  const searchProvider = useSearchFinanceRecordsProvider()
+  const searchProvider = useFinanceRecordSearchFiltersProvider()
   const queryKey = financeRecordQueryKeys.stats({ filters: searchProvider.filters })
   testQueryClient.setQueryData(queryKey, initialCachedData)
 
@@ -117,7 +117,7 @@ async function assertUpdatesCachedStats(deletedFinanceRecord: FinanceRecord) {
   getMountComponent(createTestComponent(deletedFinanceRecord), {
     global: {
       provide: {
-        [SEARCH_FINANCE_RECORDS_SYMBOL]: searchProvider,
+        [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: searchProvider,
       },
     },
     withQueryClient: true,

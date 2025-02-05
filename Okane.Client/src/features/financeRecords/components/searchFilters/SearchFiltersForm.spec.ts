@@ -4,31 +4,31 @@ import { flushPromises, type VueWrapper } from '@vue/test-utils'
 // Internal
 import FinanceRecordAmountFilter from '@features/financeRecords/components/FinanceRecordAmountFilter.vue'
 import FinanceRecordHappenedAtFilter from '@features/financeRecords/components/FinanceRecordHappenedAtFilter.vue'
-import SearchFiltersForm from '@features/financeRecords/components/searchFinanceRecords/SearchFiltersForm.vue'
+import SearchFiltersForm from '@features/financeRecords/components/searchFilters/SearchFiltersForm.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 import { INPUT_TYPE } from '@shared/constants/form'
 import { SHARED_COPY } from '@shared/constants/copy'
 import {
-  DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,
+  DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
   FINANCE_RECORD_SORT_FIELD_OPTIONS,
   SEARCH_FINANCE_RECORDS_TYPE_OPTIONS,
-} from '@features/financeRecords/constants/searchFinanceRecords'
+} from '@features/financeRecords/constants/searchFilters'
 import {
   COMPARISON_OPERATOR,
   SORT_DIRECTION,
   SORT_DIRECTION_OPTIONS,
 } from '@shared/constants/search'
 
-import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
+import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 import { type FinanceUserTagMap } from '@features/financeUserTags/types/financeUserTag'
 
 import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  type SearchFinanceRecordsProvider,
-  useSearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  type FinanceRecordSearchFiltersProvider,
+  useFinanceRecordSearchFiltersProvider,
+} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
 import { commonAsserts } from '@tests/utils/commonAsserts'
 import { createTestTag } from '@tests/factories/tag'
@@ -55,9 +55,11 @@ const userTagMap: FinanceUserTagMap = {
 
 const userTags = [...userTagMap.Expense, ...userTagMap.Revenue]
 
-async function mountWithProviders(args: { searchProvider?: SearchFinanceRecordsProvider } = {}) {
+async function mountWithProviders(
+  args: { searchProvider?: FinanceRecordSearchFiltersProvider } = {},
+) {
   let searchProvider = args.searchProvider
-  if (!searchProvider) searchProvider = useSearchFinanceRecordsProvider()
+  if (!searchProvider) searchProvider = useFinanceRecordSearchFiltersProvider()
 
   testServer.use(financeUserTagHandlers.getAllSuccess({ userTags }))
 
@@ -65,7 +67,7 @@ async function mountWithProviders(args: { searchProvider?: SearchFinanceRecordsP
     attachTo: document.body,
     global: {
       provide: {
-        [SEARCH_FINANCE_RECORDS_SYMBOL]: searchProvider,
+        [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: searchProvider,
       },
     },
     withQueryClient: true,
@@ -94,7 +96,7 @@ describe('Description input', () => {
   })
 
   test('updates the search filters description state', async () => {
-    const searchProvider = useSearchFinanceRecordsProvider()
+    const searchProvider = useFinanceRecordSearchFiltersProvider()
     const wrapper = await mountWithProviders({ searchProvider })
     const input = wrapper.get('input[name="description"]')
     const description = 'Test description'
@@ -132,7 +134,7 @@ describe('Type select', () => {
   })
 
   test('updates the search filters type state and resets the tags', async () => {
-    const searchProvider = useSearchFinanceRecordsProvider()
+    const searchProvider = useFinanceRecordSearchFiltersProvider()
     searchProvider.setFilters({ tags: [userTags[0].tag] })
 
     const wrapper = await mountWithProviders({ searchProvider })
@@ -154,10 +156,10 @@ describe('Amount filter', () => {
   })
 
   test('updates the search filters amount state', async () => {
-    const searchProvider = useSearchFinanceRecordsProvider()
+    const searchProvider = useFinanceRecordSearchFiltersProvider()
     const wrapper = await mountWithProviders({ searchProvider })
     const amountFilter = wrapper.findComponent(FinanceRecordAmountFilter)
-    const changes: Partial<FinanceRecordsSearchFilters> = {
+    const changes: Partial<FinanceRecordSearchFilters> = {
       amount1: 1,
       amount2: 2,
       amountOperator: COMPARISON_OPERATOR.LTE,
@@ -178,10 +180,10 @@ describe('Happened at filter', () => {
   })
 
   test('updates the search filters happenedAt state', async () => {
-    const searchProvider = useSearchFinanceRecordsProvider()
+    const searchProvider = useFinanceRecordSearchFiltersProvider()
     const wrapper = await mountWithProviders({ searchProvider })
     const amountFilter = wrapper.findComponent(FinanceRecordAmountFilter)
-    const changes: Partial<FinanceRecordsSearchFilters> = {
+    const changes: Partial<FinanceRecordSearchFilters> = {
       happenedAt1: new Date(),
       happenedAt2: new Date(),
       happenedAtOperator: COMPARISON_OPERATOR.LTE,
@@ -214,7 +216,7 @@ describe('Sort by select', () => {
   })
 
   test('updates the search filters sort field state', async () => {
-    const searchProvider = useSearchFinanceRecordsProvider()
+    const searchProvider = useFinanceRecordSearchFiltersProvider()
     const wrapper = await mountWithProviders({ searchProvider })
     const input = wrapper.get('select[name="sortBy"]')
 
@@ -245,7 +247,7 @@ describe('Sort direction select', () => {
   })
 
   test('updates the search filters sort direction state', async () => {
-    const searchProvider = useSearchFinanceRecordsProvider()
+    const searchProvider = useFinanceRecordSearchFiltersProvider()
     const wrapper = await mountWithProviders({ searchProvider })
     const input = wrapper.get('select[name="sortDirection"]')
 
@@ -270,7 +272,7 @@ describe('Tag combobox', () => {
   })
 
   test(`renders expense tag options when type is set to ${FINANCE_RECORD_TYPE.EXPENSE}`, async () => {
-    const searchProvider = useSearchFinanceRecordsProvider()
+    const searchProvider = useFinanceRecordSearchFiltersProvider()
     searchProvider.setFilters({ type: FINANCE_RECORD_TYPE.EXPENSE })
     const wrapper = await mountWithProviders({ searchProvider })
 
@@ -284,7 +286,7 @@ describe('Tag combobox', () => {
   })
 
   test(`renders revenue tag options when type is set to ${FINANCE_RECORD_TYPE.REVENUE}`, async () => {
-    const searchProvider = useSearchFinanceRecordsProvider()
+    const searchProvider = useFinanceRecordSearchFiltersProvider()
     searchProvider.setFilters({ type: FINANCE_RECORD_TYPE.REVENUE })
     const wrapper = await mountWithProviders({ searchProvider })
 
@@ -298,7 +300,7 @@ describe('Tag combobox', () => {
   })
 
   test('updates the search filters tags state', async () => {
-    const searchProvider = useSearchFinanceRecordsProvider()
+    const searchProvider = useFinanceRecordSearchFiltersProvider()
     const wrapper = await mountWithProviders({ searchProvider })
     const tagOption = getTagOption(wrapper, userTags[0].tag.name)
     await tagOption.trigger('click')
@@ -309,7 +311,7 @@ describe('Tag combobox', () => {
 
 describe('Save button', () => {
   test('updates multiple search filters and closes the modal', async () => {
-    const searchProvider = useSearchFinanceRecordsProvider()
+    const searchProvider = useFinanceRecordSearchFiltersProvider()
     searchProvider.setModalIsShowing(true)
 
     const wrapper = await mountWithProviders({ searchProvider })
@@ -319,7 +321,7 @@ describe('Save button', () => {
     const typeSelect = wrapper.get('select[name="type"]')
     await typeSelect.setValue(updates.type)
 
-    expect(searchProvider.filters).toEqual(DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS)
+    expect(searchProvider.filters).toEqual(DEFAULT_FINANCE_RECORD_SEARCH_FILTERS)
 
     const saveButton = wrapper.findByText('button', SHARED_COPY.ACTIONS.SAVE)
     await saveButton.trigger('submit')
@@ -329,9 +331,9 @@ describe('Save button', () => {
   })
 
   test('does not update the search filters state when the form is invalid', async () => {
-    const searchProvider = useSearchFinanceRecordsProvider()
+    const searchProvider = useFinanceRecordSearchFiltersProvider()
     const initialSearchFilters = {
-      ...DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,
+      ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
 
       // When the amountOperator is empty, that means an amount range is showing and both inputs need
       // to be populated.
@@ -364,7 +366,7 @@ describe('Save button', () => {
 
 describe('Cancel button', () => {
   test('closes the modal without saving changes', async () => {
-    const searchProvider = useSearchFinanceRecordsProvider()
+    const searchProvider = useFinanceRecordSearchFiltersProvider()
     searchProvider.setModalIsShowing(true)
 
     const wrapper = await mountWithProviders({ searchProvider })
@@ -375,17 +377,17 @@ describe('Cancel button', () => {
     await cancelButton.trigger('click')
 
     expect(searchProvider.modalIsShowing).toBe(false)
-    expect(searchProvider.filters).toEqual(DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS)
+    expect(searchProvider.filters).toEqual(DEFAULT_FINANCE_RECORD_SEARCH_FILTERS)
   })
 })
 
 describe('Reset button', () => {
   test('resets the search filters state', async () => {
     const initialSearchFilters = {
-      ...DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,
+      ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
       description: 'Initial description',
     }
-    const searchProvider = useSearchFinanceRecordsProvider()
+    const searchProvider = useFinanceRecordSearchFiltersProvider()
     searchProvider.setFilters(initialSearchFilters)
 
     const wrapper = await mountWithProviders({ searchProvider })

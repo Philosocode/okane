@@ -4,12 +4,12 @@ import { defineComponent, inject } from 'vue'
 // Internal
 import FinancesPage from '@shared/pages/FinancesPage.vue'
 
-import { DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
+import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
 import * as deleteFinanceRecordProvider from '@features/financeRecords/providers/deleteFinanceRecordProvider'
+import * as financeRecordSearchFiltersProvider from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 import * as saveFinanceRecordProvider from '@features/financeRecords/providers/saveFinanceRecordProvider'
-import * as searchFinanceRecordsProvider from '@features/financeRecords/providers/searchFinanceRecordsProvider'
 
 import { commonAsserts } from '@tests/utils/commonAsserts'
 import { createTestFinanceRecord } from '@tests/factories/financeRecord'
@@ -175,9 +175,12 @@ test('provides save finance record state', () => {
 test('provides search finance records state', () => {
   const description = 'Cool description'
   const modalIsShowing = true
-  vi.spyOn(searchFinanceRecordsProvider, 'useSearchFinanceRecordsProvider').mockReturnValue({
+  vi.spyOn(
+    financeRecordSearchFiltersProvider,
+    'useFinanceRecordSearchFiltersProvider',
+  ).mockReturnValue({
     filters: {
-      ...DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,
+      ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
       description,
     },
     modalIsShowing,
@@ -187,7 +190,9 @@ test('provides search finance records state', () => {
 
   const ListStub = defineComponent({
     setup() {
-      const provider = inject(searchFinanceRecordsProvider.SEARCH_FINANCE_RECORDS_SYMBOL)
+      const provider = inject(
+        financeRecordSearchFiltersProvider.FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+      )
       return { provider }
     },
     template: `

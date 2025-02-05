@@ -9,10 +9,10 @@ import { financeRecordQueryKeys } from '@features/financeRecords/constants/query
 import { useCreateFinanceRecord } from '@features/financeRecords/composables/useCreateFinanceRecord'
 
 import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  type SearchFinanceRecordsProvider,
-  useSearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  type FinanceRecordSearchFiltersProvider,
+  useFinanceRecordSearchFiltersProvider,
+} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
 import { mapSaveFinanceRecordFormState } from '@features/financeRecords/utils/mappers'
 
@@ -45,14 +45,14 @@ const TestComponent = defineComponent({
   template: '<div />',
 })
 
-function mountWithProviders(args: { searchProvider?: SearchFinanceRecordsProvider } = {}) {
+function mountWithProviders(args: { searchProvider?: FinanceRecordSearchFiltersProvider } = {}) {
   let searchProvider = args.searchProvider
-  if (!searchProvider) searchProvider = useSearchFinanceRecordsProvider()
+  if (!searchProvider) searchProvider = useFinanceRecordSearchFiltersProvider()
 
   return getMountComponent(TestComponent, {
     global: {
       provide: {
-        [SEARCH_FINANCE_RECORDS_SYMBOL]: searchProvider,
+        [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: searchProvider,
       },
     },
     withQueryClient: true,
@@ -72,7 +72,7 @@ test('makes a POST request to the expected endpoint', async () => {
 test('invalidates the expected query keys', async () => {
   spyOn.post()
   const invalidateSpy = spyOn.invalidateQueries()
-  const searchProvider = useSearchFinanceRecordsProvider()
+  const searchProvider = useFinanceRecordSearchFiltersProvider()
 
   mountWithProviders({ searchProvider })
 

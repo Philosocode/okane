@@ -7,7 +7,7 @@ import { http, HttpResponse } from 'msw'
 import FinanceRecordListItem from '@features/financeRecords/components/FinanceRecordListItem.vue'
 import InfiniteScroller from '@shared/components/InfiniteScroller.vue'
 
-import { DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
+import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
 import { DEFAULT_PAGE_SIZE } from '@shared/constants/request'
 import { financeRecordApiRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { financeRecordHandlers } from '@tests/msw/handlers/financeRecord'
@@ -15,9 +15,9 @@ import { financeRecordHandlers } from '@tests/msw/handlers/financeRecord'
 import { useInfiniteQueryFinanceRecords } from '@features/financeRecords/composables/useInfiniteQueryFinanceRecords'
 
 import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  useSearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  useFinanceRecordSearchFiltersProvider,
+} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
 import { flattenPages } from '@shared/utils/pagination'
 import { getRange } from '@shared/utils/array'
@@ -38,7 +38,7 @@ const testIds = {
   noMoreItemsSlot: 'noMoreItemsSlot',
 }
 
-const searchFilters = DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS
+const searchFilters = DEFAULT_FINANCE_RECORD_SEARCH_FILTERS
 
 function getTestComponent(errorTemplate?: string) {
   return defineComponent({
@@ -83,13 +83,13 @@ const ObserverStub = defineComponent({
 })
 
 function mountComponent(errorTemplate?: string) {
-  const searchProvider = useSearchFinanceRecordsProvider()
+  const searchProvider = useFinanceRecordSearchFiltersProvider()
   searchProvider.setFilters(searchFilters)
 
   return getMountComponent(getTestComponent(errorTemplate), {
     global: {
       provide: {
-        [SEARCH_FINANCE_RECORDS_SYMBOL]: searchProvider,
+        [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: searchProvider,
       },
       stubs: {
         FinanceRecordListItem: FinanceRecordListItemStub,

@@ -9,18 +9,18 @@ import ToggleableRangeInputs from '@shared/components/form/ToggleableRangeInputs
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { INPUT_TYPE } from '@shared/constants/form'
 
-import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
+import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 import { FINANCE_RECORD_MIN_AMOUNT } from '@features/financeRecords/constants/saveFinanceRecord'
 
 export type FinanceRecordAmountFilterProps = Pick<
-  FinanceRecordsSearchFilters,
+  FinanceRecordSearchFilters,
   'amount1' | 'amountOperator' | 'amount2'
 >
 const props = defineProps<FinanceRecordAmountFilterProps>()
 const isShowingRange = computed(() => !props.amountOperator)
 
 const emit = defineEmits<{
-  (e: 'change', formState: Partial<FinanceRecordsSearchFilters>): void
+  (e: 'change', formState: Partial<FinanceRecordSearchFilters>): void
 }>()
 </script>
 

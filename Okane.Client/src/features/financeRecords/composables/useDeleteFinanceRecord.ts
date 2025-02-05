@@ -12,9 +12,9 @@ import { type FinanceRecordsStats } from '@features/financeRecords/types/finance
 import { type ApiPaginatedResponse, type ApiResponse } from '@shared/services/apiClient/types'
 
 import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  type SearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  type FinanceRecordSearchFiltersProvider,
+} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
@@ -26,7 +26,9 @@ function deleteFinanceRecord(id: number) {
 
 export function useDeleteFinanceRecord() {
   const queryClient = useQueryClient()
-  const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
+  const searchProvider = inject(
+    FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  ) as FinanceRecordSearchFiltersProvider
 
   return useMutation({
     mutationFn: (financeRecord: FinanceRecord) => deleteFinanceRecord(financeRecord.id),

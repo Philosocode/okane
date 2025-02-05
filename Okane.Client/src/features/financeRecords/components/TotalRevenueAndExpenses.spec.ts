@@ -8,7 +8,7 @@ import TotalAmountCell from '@features/financeRecords/components/TotalAmountCell
 import TotalRevenueAndExpenses from '@features/financeRecords/components/TotalRevenueAndExpenses.vue'
 import VerticalDivider from '@shared/components/VerticalDivider.vue'
 
-import { DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
+import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { financeRecordApiRoutes } from '@features/financeRecords/constants/apiRoutes'
@@ -16,9 +16,9 @@ import { financeRecordApiRoutes } from '@features/financeRecords/constants/apiRo
 import { type FinanceRecordsStats } from '@features/financeRecords/types/financeRecordsStats'
 
 import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  useSearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  useFinanceRecordSearchFiltersProvider,
+} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
 import { pluralize } from '@shared/utils/string'
 
@@ -32,7 +32,7 @@ import { HTTP_STATUS_CODE } from '@shared/constants/http'
 const mountComponent = getMountComponent(TotalRevenueAndExpenses, {
   global: {
     provide: {
-      [SEARCH_FINANCE_RECORDS_SYMBOL]: useSearchFinanceRecordsProvider(),
+      [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: useFinanceRecordSearchFiltersProvider(),
     },
   },
   withQueryClient: true,
@@ -40,7 +40,7 @@ const mountComponent = getMountComponent(TotalRevenueAndExpenses, {
 
 const getStatsUrl = getMswUrl(
   financeRecordApiRoutes.getStats({
-    searchFilters: DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,
+    searchFilters: DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
   }),
 )
 function useStatsHandler(stats: FinanceRecordsStats) {

@@ -3,10 +3,10 @@ import { endOfDay } from 'date-fns'
 
 // Internal
 import { COMPARISON_OPERATOR } from '@shared/constants/search'
-import { DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
+import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 
-import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
+import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 
 import * as utils from '@features/financeRecords/utils/mappers'
@@ -81,16 +81,16 @@ describe('mapSaveFinanceRecordFormState', () => {
 
 describe('mapFinanceRecordsSearchFilters', () => {
   describe('URLSearchParams', () => {
-    function getParams(overrides?: Partial<FinanceRecordsSearchFilters>) {
+    function getParams(overrides?: Partial<FinanceRecordSearchFilters>) {
       const filters = {
-        ...DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,
+        ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
         ...overrides,
       }
       return utils.mapFinanceRecordsSearchFilters.to.URLSearchParams(filters)
     }
 
     test('sortField and sortDirection', () => {
-      const filters = DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS
+      const filters = DEFAULT_FINANCE_RECORD_SEARCH_FILTERS
       const params = getParams(filters)
       expect(params.get('sortDirection')).toBe(filters.sortDirection)
       expect(params.get('sortField')).toBe(filters.sortField)

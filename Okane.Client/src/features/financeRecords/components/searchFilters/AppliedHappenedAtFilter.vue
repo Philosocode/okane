@@ -2,10 +2,10 @@
 // Internal
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
-import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
+import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 
 export type AppliedHappenedAtFilterProps = Pick<
-  FinanceRecordsSearchFilters,
+  FinanceRecordSearchFilters,
   'happenedAt1' | 'happenedAt2' | 'happenedAtOperator'
 >
 

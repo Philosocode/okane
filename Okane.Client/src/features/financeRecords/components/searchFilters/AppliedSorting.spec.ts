@@ -1,7 +1,7 @@
 // Internal
 import AppliedSorting, {
   type AppliedSortingProps,
-} from '@features/financeRecords/components/searchFinanceRecords/AppliedSorting.vue'
+} from '@features/financeRecords/components/searchFilters/AppliedSorting.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { SORT_DIRECTION } from '@shared/constants/search'

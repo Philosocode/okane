@@ -3,23 +3,25 @@
 import { inject } from 'vue'
 
 // Internal
-import AppliedAmountFilter from '@features/financeRecords/components/searchFinanceRecords/AppliedAmountFilter.vue'
-import AppliedDescriptionFilter from '@features/financeRecords/components/searchFinanceRecords/AppliedDescriptionFilter.vue'
-import AppliedHappenedAtFilter from '@features/financeRecords/components/searchFinanceRecords/AppliedHappenedAtFilter.vue'
-import AppliedSorting from '@features/financeRecords/components/searchFinanceRecords/AppliedSorting.vue'
-import AppliedTagsFilter from '@features/financeRecords/components/searchFinanceRecords/AppliedTagsFilter.vue'
-import AppliedTypeFilter from '@features/financeRecords/components/searchFinanceRecords/AppliedTypeFilter.vue'
+import AppliedAmountFilter from '@features/financeRecords/components/searchFilters/AppliedAmountFilter.vue'
+import AppliedDescriptionFilter from '@features/financeRecords/components/searchFilters/AppliedDescriptionFilter.vue'
+import AppliedHappenedAtFilter from '@features/financeRecords/components/searchFilters/AppliedHappenedAtFilter.vue'
+import AppliedSorting from '@features/financeRecords/components/searchFilters/AppliedSorting.vue'
+import AppliedTagsFilter from '@features/financeRecords/components/searchFilters/AppliedTagsFilter.vue'
+import AppliedTypeFilter from '@features/financeRecords/components/searchFilters/AppliedTypeFilter.vue'
 import BulletedList from '@shared/components/BulletedList.vue'
 import CardHeading from '@shared/components/typography/CardHeading.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
 import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  type SearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  type FinanceRecordSearchFiltersProvider,
+} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
-const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
+const searchProvider = inject(
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+) as FinanceRecordSearchFiltersProvider
 </script>
 
 <template>

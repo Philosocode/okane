@@ -10,35 +10,37 @@ import { financeRecordQueryKeys } from '@features/financeRecords/constants/query
 import { type ApiPaginatedResponse } from '@shared/services/apiClient/types'
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
 import {
-  type FinanceRecordsSearchCursor,
-  type FinanceRecordsSearchFilters,
-} from '@features/financeRecords/types/searchFinanceRecords'
+  type FinanceRecordSearchCursor,
+  type FinanceRecordSearchFilters,
+} from '@features/financeRecords/types/searchFilters'
 
 import { useCleanUpInfiniteQuery } from '@shared/composables/useCleanUpInfiniteQuery'
 
 import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  type SearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  type FinanceRecordSearchFiltersProvider,
+} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
-import { getFinanceRecordsSearchCursor } from '@features/financeRecords/utils/searchFinanceRecords'
+import { getFinanceRecordsSearchCursor } from '@features/financeRecords/utils/searchFilters'
 
 export function fetchPaginatedFinanceRecords({
   pageParam,
   queryKey,
   signal,
 }: QueryFunctionContext): Promise<ApiPaginatedResponse<FinanceRecord>> {
-  const searchFilters = queryKey[queryKey.length - 1] as FinanceRecordsSearchFilters
-  const cursor = pageParam as FinanceRecordsSearchCursor
+  const searchFilters = queryKey[queryKey.length - 1] as FinanceRecordSearchFilters
+  const cursor = pageParam as FinanceRecordSearchCursor
   const url = financeRecordApiRoutes.getPaginatedList({ cursor, searchFilters })
 
   return apiClient.get(url, { signal })
 }
 
 export function useInfiniteQueryFinanceRecords() {
-  const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
+  const searchProvider = inject(
+    FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  ) as FinanceRecordSearchFiltersProvider
   const queryKey = computed(() =>
     financeRecordQueryKeys.listByFilters({ filters: searchProvider.filters }),
   )
@@ -48,7 +50,7 @@ export function useInfiniteQueryFinanceRecords() {
   return useInfiniteQuery({
     queryKey,
     queryFn: fetchPaginatedFinanceRecords,
-    initialPageParam: {} as FinanceRecordsSearchCursor,
+    initialPageParam: {} as FinanceRecordSearchCursor,
     getNextPageParam: (lastPage, _) => {
       if (!lastPage.hasNextPage) return null
       return getFinanceRecordsSearchCursor(searchProvider.filters, lastPage.items[0])

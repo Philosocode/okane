@@ -19,14 +19,14 @@ import { BUTTON_TYPE, INPUT_TYPE } from '@shared/constants/form'
 import {
   FINANCE_RECORD_SORT_FIELD_OPTIONS,
   SEARCH_FINANCE_RECORDS_TYPE_OPTIONS,
-} from '@features/financeRecords/constants/searchFinanceRecords'
+} from '@features/financeRecords/constants/searchFilters'
 
-import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
+import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 
 import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  type SearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  type FinanceRecordSearchFiltersProvider,
+} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
 const userTagTypes = computed(() => {
   if (formState.value.type === '') {
@@ -36,11 +36,13 @@ const userTagTypes = computed(() => {
   return [formState.value.type]
 })
 
-const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
+const searchProvider = inject(
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+) as FinanceRecordSearchFiltersProvider
 const formRef = useTemplateRef<HTMLFormElement>('form')
-const formState = ref<FinanceRecordsSearchFilters>({ ...searchProvider.filters })
+const formState = ref<FinanceRecordSearchFilters>({ ...searchProvider.filters })
 
-function handleChange(updates: Partial<FinanceRecordsSearchFilters>) {
+function handleChange(updates: Partial<FinanceRecordSearchFilters>) {
   formState.value = {
     ...formState.value,
     ...updates,

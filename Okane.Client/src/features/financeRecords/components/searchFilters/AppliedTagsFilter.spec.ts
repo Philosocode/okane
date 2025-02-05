@@ -1,7 +1,7 @@
 // Internal
 import AppliedTagsFilter, {
   type AppliedTagsFilterProps,
-} from '@features/financeRecords/components/searchFinanceRecords/AppliedTagsFilter.vue'
+} from '@features/financeRecords/components/searchFilters/AppliedTagsFilter.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 

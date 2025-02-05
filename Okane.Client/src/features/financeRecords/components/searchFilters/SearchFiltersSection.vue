@@ -3,18 +3,20 @@
 import { inject } from 'vue'
 
 // Internal
-import AppliedSearchFilters from '@features/financeRecords/components/searchFinanceRecords/AppliedSearchFilters.vue'
+import AppliedSearchFilters from '@features/financeRecords/components/searchFilters/AppliedSearchFilters.vue'
 import ModalTrigger from '@shared/components/modal/ModalTrigger.vue'
-import SearchFiltersModal from '@features/financeRecords/components/searchFinanceRecords/SearchFiltersModal.vue'
+import SearchFiltersModal from '@features/financeRecords/components/searchFilters/SearchFiltersModal.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
 import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  type SearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  type FinanceRecordSearchFiltersProvider,
+} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
-const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
+const searchProvider = inject(
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+) as FinanceRecordSearchFiltersProvider
 </script>
 
 <template>

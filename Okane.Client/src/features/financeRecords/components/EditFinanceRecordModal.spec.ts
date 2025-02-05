@@ -92,7 +92,7 @@ test('renders the modal heading', () => {
   expect(heading.text()).toBe(FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.EDIT_FINANCE_RECORD)
 })
 
-test('closes the modal', async () => {
+test('closes the modal', () => {
   const saveProvider = helpers.getEditingSaveProvider()
   const wrapper = mountWithProviders({ saveProvider })
   const modal = wrapper.getComponent(SaveFinanceRecordModal)
@@ -100,7 +100,7 @@ test('closes the modal', async () => {
   expect(saveProvider.editingFinanceRecord).toBeUndefined()
 })
 
-test('sets the initial form state based on the editingFinanceRecord', async () => {
+test('sets the initial form state based on the editingFinanceRecord', () => {
   const wrapper = mountWithProviders()
 
   const amountInput = wrapper.get('input[name="amount"]').element as HTMLInputElement
@@ -116,7 +116,7 @@ test('sets the initial form state based on the editingFinanceRecord', async () =
   expect(typeSelect.value).toBe(initialFormState.type)
 })
 
-test('updates the form state when the initial form state changes', async () => {
+test('updates the form state when the initial form state changes', () => {
   const updates = { amount: 100_000 }
   const saveProvider = useSaveFinanceRecordProvider()
   saveProvider.setEditingFinanceRecord({ ...editingFinanceRecord, ...updates })

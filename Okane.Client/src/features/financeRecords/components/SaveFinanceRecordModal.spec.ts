@@ -65,7 +65,7 @@ test('renders the form inputs', () => {
   expect(inputs.exists()).toBe(true)
 })
 
-test('renders a button to submit the form', async () => {
+test('renders a button to submit the form', () => {
   const wrapper = mountComponent()
   const submitButton = wrapper.find("button[type='submit'")
   expect(submitButton.exists()).toBe(true)
@@ -89,7 +89,7 @@ test('renders the form errors', () => {
   expect(descriptionError).toBeDefined()
 })
 
-test('emits a "change" event when an input is updated', async () => {
+test('emits a "change" event when an input is updated', () => {
   const wrapper = mountComponent()
   expect(wrapper.emitted('change')).toBeUndefined()
 

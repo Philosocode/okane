@@ -287,12 +287,12 @@ describe('when form is valid', () => {
     await helpers.populateInputs({ wrapper, ...validInputValues })
   })
 
-  test('enables the submit button', async () => {
+  test('enables the submit button', () => {
     const button = elements.saveButton(wrapper)
     expect(button.attributes('disabled')).toBeUndefined()
   })
 
-  test('does not render the password requirements', async () => {
+  test('does not render the password requirements', () => {
     asserts.doesNotRenderPasswordRequirements(wrapper)
   })
 })

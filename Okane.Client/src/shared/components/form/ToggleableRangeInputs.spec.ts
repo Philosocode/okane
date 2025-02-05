@@ -81,7 +81,7 @@ describe('when showing a range', () => {
     expect(secondInput.exists()).toBe(true)
   })
 
-  test('does not render a dropdown to select an operator', async () => {
+  test('does not render a dropdown to select an operator', () => {
     const wrapper = mountComponent({ props: propsWithRange })
     const formSelect = wrapper.findComponent(FormSelect)
     expect(formSelect.exists()).toBe(false)

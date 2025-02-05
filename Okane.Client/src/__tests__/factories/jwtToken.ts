@@ -2,16 +2,16 @@
 import jwt from 'jsonwebtoken'
 
 // Internal
-import type { JWTTokenPayload } from '@features/auth/types/authResponse'
+import type { JwtTokenPayload } from '@features/auth/types/authResponse'
 
-export const createTestJWTToken = (overrides?: Partial<JWTTokenPayload>): string => {
-  const defaultJWTTokenPayload: JWTTokenPayload = {
+export const createTestJwtToken = (overrides?: Partial<JwtTokenPayload>): string => {
+  const defaultJwtTokenPayload: JwtTokenPayload = {
     sub: crypto.randomUUID(),
     exp: Date.now() / 1000, // exp should be in seconds, not milliseconds.
   }
 
   const mergedPayload = {
-    ...defaultJWTTokenPayload,
+    ...defaultJwtTokenPayload,
     ...overrides,
   }
 

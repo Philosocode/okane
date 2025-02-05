@@ -2,7 +2,7 @@
 import type { ApiResponse } from '@shared/services/apiClient/types'
 import type { User } from '@features/users/types'
 
-export type JWTTokenPayload = {
+export type JwtTokenPayload = {
   exp: number
   sub: string
 }

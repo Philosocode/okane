@@ -90,6 +90,8 @@ test('makes multiple requests to fetch paginated finance records', async () => {
 })
 
 test('cleans up the infinite query', () => {
+  vi.spyOn(apiClient, 'get').mockResolvedValue(wrapInAPIResponse([]))
+
   const cleanUpSpy = vi.spyOn(useCleanUpInfiniteQuery, 'useCleanUpInfiniteQuery').mockReturnValue()
   const searchProvider = useSearchFinanceRecordsProvider()
 

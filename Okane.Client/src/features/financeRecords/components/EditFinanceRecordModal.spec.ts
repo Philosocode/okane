@@ -19,9 +19,9 @@ import {
 } from '@features/financeRecords/utils/mappers'
 
 import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  useSearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  useFinanceRecordSearchFiltersProvider,
+} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 import {
   SAVE_FINANCE_RECORD_SYMBOL,
   type SaveFinanceRecordProvider,
@@ -67,7 +67,7 @@ function mountWithProviders(args: { saveProvider?: SaveFinanceRecordProvider } =
     global: {
       provide: {
         [SAVE_FINANCE_RECORD_SYMBOL]: saveProvider,
-        [SEARCH_FINANCE_RECORDS_SYMBOL]: useSearchFinanceRecordsProvider(),
+        [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: useFinanceRecordSearchFiltersProvider(),
       },
       stubs: {
         teleport: true,

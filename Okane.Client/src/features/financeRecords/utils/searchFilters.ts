@@ -1,17 +1,17 @@
 // Internal
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
 import {
-  type FinanceRecordsSearchCursor,
-  type FinanceRecordsSearchFilters,
-} from '@features/financeRecords/types/searchFinanceRecords'
+  type FinanceRecordSearchCursor,
+  type FinanceRecordSearchFilters,
+} from '@features/financeRecords/types/searchFilters'
 
 export function getFinanceRecordsSearchCursor(
-  searchFilters: FinanceRecordsSearchFilters,
+  searchFilters: FinanceRecordSearchFilters,
   lastFinanceRecord?: FinanceRecord,
-): FinanceRecordsSearchCursor {
+): FinanceRecordSearchCursor {
   if (!lastFinanceRecord) return {}
 
-  const cursor: FinanceRecordsSearchCursor = { id: lastFinanceRecord?.id }
+  const cursor: FinanceRecordSearchCursor = { id: lastFinanceRecord?.id }
 
   if (searchFilters.sortField === 'amount') {
     cursor.amount = lastFinanceRecord.amount

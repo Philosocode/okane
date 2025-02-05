@@ -2,9 +2,9 @@
 import { DEFAULT_PAGE_SIZE } from '@shared/constants/request'
 
 import {
-  type FinanceRecordsSearchCursor,
-  type FinanceRecordsSearchFilters,
-} from '@features/financeRecords/types/searchFinanceRecords'
+  type FinanceRecordSearchCursor,
+  type FinanceRecordSearchFilters,
+} from '@features/financeRecords/types/searchFilters'
 
 import { mapFinanceRecordsSearchFilters } from '@features/financeRecords/utils/mappers'
 
@@ -12,8 +12,8 @@ const basePath = '/finance-records'
 
 export const financeRecordApiRoutes = {
   getPaginatedList(args: {
-    cursor: FinanceRecordsSearchCursor
-    searchFilters: FinanceRecordsSearchFilters
+    cursor: FinanceRecordSearchCursor
+    searchFilters: FinanceRecordSearchFilters
   }) {
     const { cursor, searchFilters } = args
     const searchParams = mapFinanceRecordsSearchFilters.to.URLSearchParams(searchFilters)
@@ -32,7 +32,7 @@ export const financeRecordApiRoutes = {
 
     return `${basePath}?${searchParams.toString()}`
   },
-  getStats(args: { searchFilters: FinanceRecordsSearchFilters }) {
+  getStats(args: { searchFilters: FinanceRecordSearchFilters }) {
     const searchParams = mapFinanceRecordsSearchFilters.to.URLSearchParams(args.searchFilters)
     return `${basePath}/stats?${searchParams.toString()}`
   },

@@ -7,12 +7,12 @@ import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { SHARED_COPY } from '@shared/constants/copy'
 import { COMPARISON_OPERATOR, SORT_DIRECTION } from '@shared/constants/search'
 
-import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
+import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 import { type SelectOption } from '@shared/components/form/FormSelect.vue'
 
 import { capitalize } from '@shared/utils/string'
 
-export const DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS: FinanceRecordsSearchFilters = {
+export const DEFAULT_FINANCE_RECORD_SEARCH_FILTERS: FinanceRecordSearchFilters = {
   description: '',
   type: '',
 
@@ -32,7 +32,7 @@ export const SEARCH_FINANCE_RECORDS_TYPE_OPTIONS: SelectOption[] = [
 ]
 
 interface SortFieldOption extends SelectOption {
-  value: FinanceRecordsSearchFilters['sortField']
+  value: FinanceRecordSearchFilters['sortField']
 }
 
 export const FINANCE_RECORD_SORT_FIELD_OPTIONS: SortFieldOption[] = [

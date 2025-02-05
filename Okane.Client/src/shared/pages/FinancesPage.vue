@@ -11,7 +11,7 @@ import EditFinanceRecordModal from '@features/financeRecords/components/EditFina
 import FinanceRecordList from '@features/financeRecords/components/FinanceRecordList.vue'
 import Heading from '@shared/components/Heading.vue'
 import PageLayout from '@shared/components/wrappers/PageLayout.vue'
-import SearchFiltersSection from '@features/financeRecords/components/searchFinanceRecords/SearchFiltersSection.vue'
+import SearchFiltersSection from '@features/financeRecords/components/searchFilters/SearchFiltersSection.vue'
 import TotalRevenueAndExpenses from '@features/financeRecords/components/TotalRevenueAndExpenses.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
@@ -25,13 +25,13 @@ import {
   useSaveFinanceRecordProvider,
 } from '@features/financeRecords/providers/saveFinanceRecordProvider'
 import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  useSearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  useFinanceRecordSearchFiltersProvider,
+} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
 provide(DELETE_FINANCE_RECORD_SYMBOL, useDeleteFinanceRecordProvider())
 provide(SAVE_FINANCE_RECORD_SYMBOL, useSaveFinanceRecordProvider())
-provide(SEARCH_FINANCE_RECORDS_SYMBOL, useSearchFinanceRecordsProvider())
+provide(FINANCE_RECORD_SEARCH_FILTERS_SYMBOL, useFinanceRecordSearchFiltersProvider())
 </script>
 
 <template>

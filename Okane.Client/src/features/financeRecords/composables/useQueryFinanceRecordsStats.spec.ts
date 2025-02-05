@@ -10,10 +10,10 @@ import { apiClient } from '@shared/services/apiClient/apiClient'
 
 import { wrapInApiResponse } from '@tests/utils/apiResponse'
 import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  type SearchFinanceRecordsProvider,
-  useSearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  type FinanceRecordSearchFiltersProvider,
+  useFinanceRecordSearchFiltersProvider,
+} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
 function getTestComponent() {
   return defineComponent({
@@ -24,14 +24,14 @@ function getTestComponent() {
   })
 }
 
-function mountWithProviders(args: { searchProvider?: SearchFinanceRecordsProvider } = {}) {
+function mountWithProviders(args: { searchProvider?: FinanceRecordSearchFiltersProvider } = {}) {
   let searchProvider = args.searchProvider
-  if (!searchProvider) searchProvider = useSearchFinanceRecordsProvider()
+  if (!searchProvider) searchProvider = useFinanceRecordSearchFiltersProvider()
 
   return getMountComponent(getTestComponent(), {
     global: {
       provide: {
-        [SEARCH_FINANCE_RECORDS_SYMBOL]: searchProvider,
+        [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: searchProvider,
       },
     },
     withQueryClient: true,
@@ -40,7 +40,7 @@ function mountWithProviders(args: { searchProvider?: SearchFinanceRecordsProvide
 
 test('makes a request to fetch stats for finance records', () => {
   const getSpy = vi.spyOn(apiClient, 'get').mockResolvedValue(wrapInApiResponse({}))
-  const searchProvider = useSearchFinanceRecordsProvider()
+  const searchProvider = useFinanceRecordSearchFiltersProvider()
 
   mountWithProviders({ searchProvider })
 

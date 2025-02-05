@@ -1,22 +1,22 @@
 // Internal
-import AppliedAmountFilter from '@features/financeRecords/components/searchFinanceRecords/AppliedAmountFilter.vue'
-import AppliedDescriptionFilter from '@features/financeRecords/components/searchFinanceRecords/AppliedDescriptionFilter.vue'
-import AppliedHappenedAtFilter from '@features/financeRecords/components/searchFinanceRecords/AppliedHappenedAtFilter.vue'
-import AppliedSearchFilters from '@features/financeRecords/components/searchFinanceRecords/AppliedSearchFilters.vue'
-import AppliedSorting from '@features/financeRecords/components/searchFinanceRecords/AppliedSorting.vue'
-import AppliedTagsFilter from '@features/financeRecords/components/searchFinanceRecords/AppliedTagsFilter.vue'
-import AppliedTypeFilter from '@features/financeRecords/components/searchFinanceRecords/AppliedTypeFilter.vue'
+import AppliedAmountFilter from '@features/financeRecords/components/searchFilters/AppliedAmountFilter.vue'
+import AppliedDescriptionFilter from '@features/financeRecords/components/searchFilters/AppliedDescriptionFilter.vue'
+import AppliedHappenedAtFilter from '@features/financeRecords/components/searchFilters/AppliedHappenedAtFilter.vue'
+import AppliedSearchFilters from '@features/financeRecords/components/searchFilters/AppliedSearchFilters.vue'
+import AppliedSorting from '@features/financeRecords/components/searchFilters/AppliedSorting.vue'
+import AppliedTagsFilter from '@features/financeRecords/components/searchFilters/AppliedTagsFilter.vue'
+import AppliedTypeFilter from '@features/financeRecords/components/searchFilters/AppliedTypeFilter.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  useSearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  useFinanceRecordSearchFiltersProvider,
+} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
 const mountComponent = getMountComponent(AppliedSearchFilters, {
   global: {
     provide: {
-      [SEARCH_FINANCE_RECORDS_SYMBOL]: useSearchFinanceRecordsProvider(),
+      [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: useFinanceRecordSearchFiltersProvider(),
     },
   },
 })

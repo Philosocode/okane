@@ -6,14 +6,14 @@ import { useQuery, type QueryFunctionContext } from '@tanstack/vue-query'
 import { financeRecordApiRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 
-import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
+import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 import { type FinanceRecordsStats } from '@features/financeRecords/types/financeRecordsStats'
 import { type ApiResponse } from '@shared/services/apiClient/types'
 
 import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  type SearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  type FinanceRecordSearchFiltersProvider,
+} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
@@ -21,12 +21,14 @@ function fetchStats({
   queryKey,
   signal,
 }: QueryFunctionContext): Promise<ApiResponse<FinanceRecordsStats>> {
-  const searchFilters = queryKey[queryKey.length - 1] as FinanceRecordsSearchFilters
+  const searchFilters = queryKey[queryKey.length - 1] as FinanceRecordSearchFilters
   return apiClient.get(financeRecordApiRoutes.getStats({ searchFilters }), { signal })
 }
 
 export function useQueryFinanceRecordsStats() {
-  const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
+  const searchProvider = inject(
+    FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  ) as FinanceRecordSearchFiltersProvider
   const queryKey = computed(() => financeRecordQueryKeys.stats({ filters: searchProvider.filters }))
 
   return useQuery({

@@ -2,12 +2,12 @@
 import { http, HttpResponse } from 'msw'
 
 // Internal
-import { DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
+import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
 import { financeRecordApiRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
-import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
+import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { getMswUrl } from '@tests/utils/url'
@@ -34,7 +34,7 @@ export const financeRecordHandlers = {
     hasNextPage = true,
   }: {
     financeRecords: FinanceRecord[]
-    searchFilters: FinanceRecordsSearchFilters
+    searchFilters: FinanceRecordSearchFilters
     hasNextPage?: boolean
   }) {
     const url = getMswUrl(
@@ -54,7 +54,7 @@ export const financeRecordHandlers = {
     const url = getMswUrl(
       financeRecordApiRoutes.getPaginatedList({
         cursor: {},
-        searchFilters: DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,
+        searchFilters: DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
       }),
     )
     return http.get(url, () => {

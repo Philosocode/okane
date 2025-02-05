@@ -2,9 +2,9 @@
 // Internal
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
-import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
+import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 
-export type AppliedSortingProps = Pick<FinanceRecordsSearchFilters, 'sortDirection' | 'sortField'>
+export type AppliedSortingProps = Pick<FinanceRecordSearchFilters, 'sortDirection' | 'sortField'>
 
 const props = defineProps<AppliedSortingProps>()
 </script>

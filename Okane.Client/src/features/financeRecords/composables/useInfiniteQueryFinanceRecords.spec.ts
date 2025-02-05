@@ -13,12 +13,12 @@ import { useInfiniteQueryFinanceRecords } from '@features/financeRecords/composa
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
 import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  type SearchFinanceRecordsProvider,
-  useSearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  type FinanceRecordSearchFiltersProvider,
+  useFinanceRecordSearchFiltersProvider,
+} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
-import { getFinanceRecordsSearchCursor } from '@features/financeRecords/utils/searchFinanceRecords'
+import { getFinanceRecordsSearchCursor } from '@features/financeRecords/utils/searchFilters'
 import { wrapInApiPaginatedResponse, wrapInApiResponse } from '@tests/utils/apiResponse'
 
 import { createTestFinanceRecord } from '@tests/factories/financeRecord'
@@ -33,14 +33,14 @@ function getTestComponent() {
   })
 }
 
-function mountWithProviders(args: { searchProvider?: SearchFinanceRecordsProvider } = {}) {
+function mountWithProviders(args: { searchProvider?: FinanceRecordSearchFiltersProvider } = {}) {
   let searchProvider = args.searchProvider
-  if (!searchProvider) searchProvider = useSearchFinanceRecordsProvider()
+  if (!searchProvider) searchProvider = useFinanceRecordSearchFiltersProvider()
 
   return getMountComponent(getTestComponent(), {
     global: {
       provide: {
-        [SEARCH_FINANCE_RECORDS_SYMBOL]: searchProvider,
+        [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: searchProvider,
       },
     },
     withQueryClient: true,
@@ -56,7 +56,7 @@ test('makes multiple requests to fetch paginated finance records', async () => {
       wrapInApiPaginatedResponse(wrapInApiResponse([]), { hasNextPage: false }),
     )
 
-  const searchProvider = useSearchFinanceRecordsProvider()
+  const searchProvider = useFinanceRecordSearchFiltersProvider()
   searchProvider.setFilters({ sortDirection: SORT_DIRECTION.ASCENDING, sortField: 'amount' })
 
   const wrapper = mountWithProviders({ searchProvider })
@@ -93,7 +93,7 @@ test('cleans up the infinite query', () => {
   vi.spyOn(apiClient, 'get').mockResolvedValue(wrapInApiResponse([]))
 
   const cleanUpSpy = vi.spyOn(useCleanUpInfiniteQuery, 'useCleanUpInfiniteQuery').mockReturnValue()
-  const searchProvider = useSearchFinanceRecordsProvider()
+  const searchProvider = useFinanceRecordSearchFiltersProvider()
 
   mountWithProviders()
 

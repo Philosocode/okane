@@ -11,9 +11,9 @@ import { apiClient } from '@shared/services/apiClient/apiClient'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 
 import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  type SearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  type FinanceRecordSearchFiltersProvider,
+} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
 function postFinanceRecord(financeRecord: CreateFinanceRecordRequest) {
   return apiClient.post(financeRecordApiRoutes.postFinanceRecord(), financeRecord)
@@ -21,7 +21,9 @@ function postFinanceRecord(financeRecord: CreateFinanceRecordRequest) {
 
 export function useCreateFinanceRecord() {
   const queryClient = useQueryClient()
-  const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
+  const searchProvider = inject(
+    FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  ) as FinanceRecordSearchFiltersProvider
 
   return useMutation({
     mutationFn: postFinanceRecord,

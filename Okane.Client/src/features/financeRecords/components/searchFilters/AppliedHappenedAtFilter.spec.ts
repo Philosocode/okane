@@ -1,7 +1,7 @@
 // Internal
 import AppliedHappenedAtFilter, {
   type AppliedHappenedAtFilterProps,
-} from '@features/financeRecords/components/searchFinanceRecords/AppliedHappenedAtFilter.vue'
+} from '@features/financeRecords/components/searchFilters/AppliedHappenedAtFilter.vue'
 
 import { COMPARISON_OPERATOR } from '@shared/constants/search'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'

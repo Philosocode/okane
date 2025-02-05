@@ -6,7 +6,7 @@ import { COMPARISON_OPERATOR, SORT_DIRECTION } from '@shared/constants/search'
 import { SHARED_COPY } from '@shared/constants/copy'
 
 import { type FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
-import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
+import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 import { type Tag } from '@shared/types/tag'
 import { COMMON_DATE_FORMAT } from '@shared/constants/dateTime'
 
@@ -88,7 +88,7 @@ export const FINANCES_COPY = {
     },
     APPLIED_SORTING(args: {
       sortDirection: SORT_DIRECTION
-      sortField: FinanceRecordsSearchFilters['sortField']
+      sortField: FinanceRecordSearchFilters['sortField']
     }) {
       let direction = 'ascending'
       if (args.sortDirection === 'desc') direction = 'descending'

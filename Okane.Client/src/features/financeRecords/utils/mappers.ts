@@ -2,7 +2,7 @@
 import { endOfDay } from 'date-fns'
 
 // Internal
-import { type FinanceRecordsSearchFilters } from '@features/financeRecords/types/searchFinanceRecords'
+import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
 import { type MinMax } from '@shared/types/search'
 import {
@@ -49,7 +49,7 @@ export const mapFinanceRecordsSearchFilters = createMappers({
 })
 
 function mapFinanceRecordsSearchFiltersToURLSearchParams(
-  filters: FinanceRecordsSearchFilters,
+  filters: FinanceRecordSearchFilters,
 ): URLSearchParams {
   const params = new URLSearchParams({
     sortDirection: filters.sortDirection,

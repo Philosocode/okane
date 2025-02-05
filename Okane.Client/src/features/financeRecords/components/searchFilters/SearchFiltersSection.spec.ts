@@ -1,14 +1,14 @@
 // Internal
-import AppliedSearchFilters from '@features/financeRecords/components/searchFinanceRecords/AppliedSearchFilters.vue'
+import AppliedSearchFilters from '@features/financeRecords/components/searchFilters/AppliedSearchFilters.vue'
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
 import ModalTrigger from '@shared/components/modal/ModalTrigger.vue'
-import SearchFiltersSection from '@features/financeRecords/components/searchFinanceRecords/SearchFiltersSection.vue'
+import SearchFiltersSection from '@features/financeRecords/components/searchFilters/SearchFiltersSection.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  useSearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  useFinanceRecordSearchFiltersProvider,
+} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
 import { financeUserTagHandlers } from '@tests/msw/handlers/financeUserTag'
 import { testServer } from '@tests/msw/testServer'
@@ -16,7 +16,7 @@ import { testServer } from '@tests/msw/testServer'
 const mountComponent = getMountComponent(SearchFiltersSection, {
   global: {
     provide: {
-      [SEARCH_FINANCE_RECORDS_SYMBOL]: useSearchFinanceRecordsProvider(),
+      [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: useFinanceRecordSearchFiltersProvider(),
     },
     stubs: {
       teleport: true,
@@ -35,11 +35,11 @@ test('renders the applied search filters', () => {
 })
 
 test('renders a modal trigger to show the search modal', async () => {
-  const provider = useSearchFinanceRecordsProvider()
+  const provider = useFinanceRecordSearchFiltersProvider()
   const wrapper = mountComponent({
     global: {
       provide: {
-        [SEARCH_FINANCE_RECORDS_SYMBOL]: provider,
+        [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: provider,
       },
     },
   })

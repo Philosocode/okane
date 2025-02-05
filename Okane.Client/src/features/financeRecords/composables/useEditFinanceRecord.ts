@@ -9,9 +9,9 @@ import { financeRecordQueryKeys } from '@features/financeRecords/constants/query
 import { type EditFinanceRecordRequest } from '@features/financeRecords/types/saveFinanceRecord'
 
 import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  type SearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  type FinanceRecordSearchFiltersProvider,
+} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
@@ -25,7 +25,9 @@ type MutationArgs = {
 }
 
 export function useEditFinanceRecord() {
-  const searchProvider = inject(SEARCH_FINANCE_RECORDS_SYMBOL) as SearchFinanceRecordsProvider
+  const searchProvider = inject(
+    FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  ) as FinanceRecordSearchFiltersProvider
   const queryClient = useQueryClient()
 
   return useMutation({

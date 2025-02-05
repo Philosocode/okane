@@ -1,32 +1,32 @@
 // Internal
 import ModalHeading from '@shared/components/modal/ModalHeading.vue'
-import SearchFiltersForm from '@features/financeRecords/components/searchFinanceRecords/SearchFiltersForm.vue'
-import SearchFiltersModal from '@features/financeRecords/components/searchFinanceRecords/SearchFiltersModal.vue'
+import SearchFiltersForm from '@features/financeRecords/components/searchFilters/SearchFiltersForm.vue'
+import SearchFiltersModal from '@features/financeRecords/components/searchFilters/SearchFiltersModal.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
 import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  type SearchFinanceRecordsProvider,
-  useSearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  type FinanceRecordSearchFiltersProvider,
+  useFinanceRecordSearchFiltersProvider,
+} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
 import { commonAsserts } from '@tests/utils/commonAsserts'
 
-function mountWithProviders(args?: { searchProvider: SearchFinanceRecordsProvider }) {
+function mountWithProviders(args?: { searchProvider: FinanceRecordSearchFiltersProvider }) {
   let searchProvider = args?.searchProvider
   if (!searchProvider) {
-    searchProvider = useSearchFinanceRecordsProvider()
+    searchProvider = useFinanceRecordSearchFiltersProvider()
     searchProvider.setModalIsShowing(true)
   }
 
   return getMountComponent(SearchFiltersModal, {
     global: {
       provide: {
-        [SEARCH_FINANCE_RECORDS_SYMBOL]: searchProvider,
+        [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: searchProvider,
       },
       stubs: {
-        SearchFinanceRecordsForm: true,
+        SearchFiltersForm: true,
         teleport: true,
       },
     },
@@ -35,7 +35,7 @@ function mountWithProviders(args?: { searchProvider: SearchFinanceRecordsProvide
 }
 
 test('does not render the modal content when modal is hidden', () => {
-  const searchProvider = useSearchFinanceRecordsProvider()
+  const searchProvider = useFinanceRecordSearchFiltersProvider()
   searchProvider.setModalIsShowing(false)
 
   const wrapper = mountWithProviders({ searchProvider })

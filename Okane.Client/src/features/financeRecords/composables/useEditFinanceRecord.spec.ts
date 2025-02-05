@@ -11,10 +11,10 @@ import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/
 import { useEditFinanceRecord } from '@features/financeRecords/composables/useEditFinanceRecord'
 
 import {
-  SEARCH_FINANCE_RECORDS_SYMBOL,
-  type SearchFinanceRecordsProvider,
-  useSearchFinanceRecordsProvider,
-} from '@features/financeRecords/providers/searchFinanceRecordsProvider'
+  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
+  type FinanceRecordSearchFiltersProvider,
+  useFinanceRecordSearchFiltersProvider,
+} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
@@ -46,14 +46,14 @@ const TestComponent = defineComponent({
   template: '<div />',
 })
 
-function mountWithProviders(args: { searchProvider?: SearchFinanceRecordsProvider } = {}) {
+function mountWithProviders(args: { searchProvider?: FinanceRecordSearchFiltersProvider } = {}) {
   let searchProvider = args.searchProvider
-  if (!searchProvider) searchProvider = useSearchFinanceRecordsProvider()
+  if (!searchProvider) searchProvider = useFinanceRecordSearchFiltersProvider()
 
   return getMountComponent(TestComponent, {
     global: {
       provide: {
-        [SEARCH_FINANCE_RECORDS_SYMBOL]: searchProvider,
+        [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: searchProvider,
       },
     },
     withQueryClient: true,
@@ -71,7 +71,7 @@ test('makes a PATCH request to the expected endpoint', async () => {
 test('invalidates the expected query keys', async () => {
   spyOn.patch()
   const invalidateSpy = spyOn.invalidateQueries()
-  const searchProvider = useSearchFinanceRecordsProvider()
+  const searchProvider = useFinanceRecordSearchFiltersProvider()
 
   mountWithProviders()
   await flushPromises()

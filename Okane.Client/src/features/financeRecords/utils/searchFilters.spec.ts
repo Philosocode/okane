@@ -1,7 +1,7 @@
 // Internal
-import { DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFinanceRecords'
+import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
 
-import * as utils from '@features/financeRecords/utils/searchFinanceRecords'
+import * as utils from '@features/financeRecords/utils/searchFilters'
 
 import { createTestFinanceRecord } from '@tests/factories/financeRecord'
 
@@ -9,13 +9,13 @@ describe('getFinanceRecordsSearchCursor', () => {
   const financeRecord = createTestFinanceRecord()
 
   test('returns an empty object when lastFinanceRecord is empty', () => {
-    expect(utils.getFinanceRecordsSearchCursor(DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS)).toEqual({})
+    expect(utils.getFinanceRecordsSearchCursor(DEFAULT_FINANCE_RECORD_SEARCH_FILTERS)).toEqual({})
   })
 
   test('returns the expected cursor when sorting by amount', () => {
     const cursor = utils.getFinanceRecordsSearchCursor(
       {
-        ...DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,
+        ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
         sortField: 'amount',
       },
       financeRecord,
@@ -26,7 +26,7 @@ describe('getFinanceRecordsSearchCursor', () => {
   test('returns the expected cursor when sorting by happenedAt', () => {
     const cursor = utils.getFinanceRecordsSearchCursor(
       {
-        ...DEFAULT_FINANCE_RECORDS_SEARCH_FILTERS,
+        ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
         sortField: 'happenedAt',
       },
       financeRecord,

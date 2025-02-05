@@ -14,7 +14,7 @@ import { apiClient } from '@shared/services/apiClient/apiClient'
 import { testServer } from '@tests/msw/testServer'
 
 import * as appQueryClient from '@shared/services/queryClient/queryClient'
-import { createTestJWTToken } from '@tests/factories/jwtToken'
+import { createTestJwtToken } from '@tests/factories/jwtToken'
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { createTestUser } from '@tests/factories/user'
 import { testQueryClient } from '@tests/queryClient/testQueryClient'
@@ -113,7 +113,7 @@ describe('when not logged in', () => {
 })
 
 describe('when logged in', () => {
-  const jwtToken = createTestJWTToken()
+  const jwtToken = createTestJwtToken()
   const authUser = createTestUser()
 
   beforeEach(() => {

@@ -13,7 +13,7 @@ import { apiClient } from '@shared/services/apiClient/apiClient'
 import { ROUTE_NAME, getRouter } from '@shared/services/router/router'
 
 import { getQueryClient } from '@shared/services/queryClient/queryClient'
-import { getJWTTokenPayload } from '@features/auth/utils/authResponse'
+import { getJwtTokenPayload } from '@features/auth/utils/authResponse'
 
 export type AuthStore = ReturnType<typeof useAuthStore>
 
@@ -87,7 +87,7 @@ export const useAuthStore = defineStore('AuthStore', () => {
   function startRefreshTokenTimer() {
     if (!isLoggedIn.value || !jwtToken.value) return
 
-    const payload = getJWTTokenPayload(jwtToken.value)
+    const payload = getJwtTokenPayload(jwtToken.value)
 
     // Set a timeout to refresh the token 1 minute before it expires.
     const expiresAt = new Date(payload.exp * 1000)

@@ -13,7 +13,7 @@ import { useAuthStore } from '@features/auth/composables/useAuthStore'
 
 import { testServer } from '@tests/msw/testServer'
 
-import { createTestJWTToken } from '@tests/factories/jwtToken'
+import { createTestJwtToken } from '@tests/factories/jwtToken'
 import { createTestUser } from '@tests/factories/user'
 
 const mountComponent = getMountComponent(NavBar, {
@@ -65,7 +65,7 @@ describe('when authenticated', () => {
     const authStore = useAuthStore()
 
     authStore.authUser = createTestUser()
-    authStore.jwtToken = createTestJWTToken()
+    authStore.jwtToken = createTestJwtToken()
   })
 
   test('renders a finances link', () => {

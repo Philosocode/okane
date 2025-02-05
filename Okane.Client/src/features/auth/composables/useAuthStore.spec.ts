@@ -17,7 +17,7 @@ import { createAppRouter, ROUTE_NAME } from '@shared/services/router/router'
 import { testQueryClient } from '@tests/queryClient/testQueryClient'
 import { testServer } from '@tests/msw/testServer'
 
-import { createTestJWTToken } from '@tests/factories/jwtToken'
+import { createTestJwtToken } from '@tests/factories/jwtToken'
 import { createTestUser } from '@tests/factories/user'
 import { omitObjectKeys } from '@shared/utils/object'
 import { wrapInApiResponse } from '@tests/utils/apiResponse'
@@ -30,7 +30,7 @@ const formData = {
 }
 
 const authResponse: AuthenticateResponse = {
-  items: [{ jwtToken: createTestJWTToken(), user: createTestUser() }],
+  items: [{ jwtToken: createTestJwtToken(), user: createTestUser() }],
   status: HTTP_STATUS_CODE.OK_200,
 }
 
@@ -85,7 +85,7 @@ function setUpResetState() {
   const authStore = useAuthStore()
   authStore.$patch({
     authUser: createTestUser(),
-    jwtToken: createTestJWTToken(),
+    jwtToken: createTestJwtToken(),
   })
 
   const queryKey = ['hey']

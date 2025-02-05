@@ -20,14 +20,14 @@ import { testServer } from '@tests/msw/testServer'
 
 const requirements = createTestPasswordRequirements()
 
-function getURL(queryString: string = '') {
+function getUrl(queryString: string = '') {
   let url = appRoutes.resetPassword.buildPath()
   if (queryString) url += `?${queryString}`
   return url
 }
 
 async function mountComponent(
-  url: string = getURL('email=coolEmail123@okane.com&token=coolToken'),
+  url: string = getUrl('email=coolEmail123@okane.com&token=coolToken'),
 ) {
   const router = createAppRouter()
   await router.push(url)
@@ -40,7 +40,7 @@ async function mountComponent(
 }
 
 const asserts = {
-  rendersAnInvalidURLError(wrapper: VueWrapper) {
+  rendersAnInvalidUrlError(wrapper: VueWrapper) {
     const error = wrapper.findByText('p', AUTH_COPY.RESET_PASSWORD.INVALID_URL)
     expect(error).toBeDefined()
   },
@@ -140,11 +140,11 @@ describe('when URL is missing an email', () => {
   let wrapper: VueWrapper
 
   beforeEach(async () => {
-    wrapper = await mountComponent(getURL('token=coolToken'))
+    wrapper = await mountComponent(getUrl('token=coolToken'))
   })
 
   test('renders an invalid URL error', () => {
-    asserts.rendersAnInvalidURLError(wrapper)
+    asserts.rendersAnInvalidUrlError(wrapper)
   })
 })
 
@@ -152,11 +152,11 @@ describe('when URL is missing a token', () => {
   let wrapper: VueWrapper
 
   beforeEach(async () => {
-    wrapper = await mountComponent(getURL('email=coolEmail@okane.com'))
+    wrapper = await mountComponent(getUrl('email=coolEmail@okane.com'))
   })
 
   test('renders an invalid URL error', () => {
-    asserts.rendersAnInvalidURLError(wrapper)
+    asserts.rendersAnInvalidUrlError(wrapper)
   })
 })
 

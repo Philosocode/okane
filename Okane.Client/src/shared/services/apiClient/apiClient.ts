@@ -27,12 +27,12 @@ async function makeRequest<TResponse>(
   optionOverrides?: RequestInit,
 ): Promise<TResponse> {
   const requestOptions = getRequestOptions(method, body, optionOverrides)
-  const formattedURL = formatURL(url)
+  const formattedUrl = formatUrl(url)
   const authStore = useAuthStore()
   const queryClient = getQueryClient()
 
   try {
-    const response = await window.fetch(formattedURL, requestOptions)
+    const response = await window.fetch(formattedUrl, requestOptions)
     const responseText = await response.text()
     const parsedResponse = responseText ? JSON.parse(responseText) : null
 
@@ -122,7 +122,7 @@ function getRequestOptions(
  *
  * @param url
  */
-function formatURL(url: string): string {
-  const formattedURL = removePrefixCharacters(url, '/')
-  return `/api/${formattedURL}`
+function formatUrl(url: string): string {
+  const formatted = removePrefixCharacters(url, '/')
+  return `/api/${formatted}`
 }

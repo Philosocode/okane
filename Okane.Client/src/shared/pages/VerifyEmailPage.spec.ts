@@ -17,13 +17,13 @@ import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { getMswUrl } from '@tests/utils/url'
 import { testServer } from '@tests/msw/testServer'
 
-function getURL(queryString: string = '') {
+function getUrl(queryString: string = '') {
   let url = appRoutes.verifyEmail.buildPath()
   if (queryString) url += `?${queryString}`
   return url
 }
 
-async function mountComponent(url: string = getURL()) {
+async function mountComponent(url: string = getUrl()) {
   const router = createAppRouter()
   await router.push(url)
 
@@ -93,7 +93,7 @@ describe('when the token param is missing', () => {
   let wrapper: VueWrapper
 
   beforeEach(async () => {
-    wrapper = await mountComponent(getURL('email=test@okane.com'))
+    wrapper = await mountComponent(getUrl('email=test@okane.com'))
     await flushPromises()
   })
 
@@ -126,7 +126,7 @@ describe('when verification fails', () => {
     )
     testServer.use(errorHandler)
 
-    wrapper = await mountComponent(getURL('email=test@okane.com&token=coolToken123'))
+    wrapper = await mountComponent(getUrl('email=test@okane.com&token=coolToken123'))
     await flushPromises()
   })
 
@@ -157,7 +157,7 @@ describe('when verification succeeds', () => {
     )
     testServer.use(successHandler)
 
-    wrapper = await mountComponent(getURL('email=test@okane.com&token=coolToken123'))
+    wrapper = await mountComponent(getUrl('email=test@okane.com&token=coolToken123'))
     await flushPromises()
     await flushPromises()
   })

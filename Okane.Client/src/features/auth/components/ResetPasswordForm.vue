@@ -37,7 +37,7 @@ const params = computed(() => {
   return { email, token }
 })
 
-const validURL = computed(() => params.value.email && params.value.token)
+const urlIsValid = computed(() => params.value.email && params.value.token)
 
 const password = ref('')
 const passwordConfirm = ref('')
@@ -72,7 +72,7 @@ function handleReset() {
 <template>
   <Heading tag="h1">{{ AUTH_COPY.RESET_PASSWORD.HEADING }}</Heading>
   <AuthForm
-    v-if="validURL && !resetSucceeded"
+    v-if="urlIsValid && !resetSucceeded"
     :submit-button-text="AUTH_COPY.RESET_PASSWORD.SUBMIT_BUTTON"
     :submit-button-is-disabled="!validateResult.isValid || resetMutation.isError.value"
     @submit="handleReset"
@@ -103,7 +103,7 @@ function handleReset() {
     }}</Link>
   </p>
 
-  <ErrorMessage v-if="!validURL" class="error">
+  <ErrorMessage v-if="!urlIsValid" class="error">
     {{ AUTH_COPY.RESET_PASSWORD.INVALID_URL }}
   </ErrorMessage>
   <ErrorMessage v-if="resetMutation.isError.value" class="error">

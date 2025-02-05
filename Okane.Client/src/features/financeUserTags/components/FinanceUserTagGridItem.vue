@@ -3,7 +3,7 @@
 import { inject } from 'vue'
 
 // Internal
-import Card from '@shared/components/wrappers/Card.vue'
+import Card from '@shared/components/wrapper/Card.vue'
 import ModalTrigger from '@shared/components/modal/ModalTrigger.vue'
 
 import { FINANCE_USER_TAGS_COPY } from '@features/financeUserTags/constants/copy'

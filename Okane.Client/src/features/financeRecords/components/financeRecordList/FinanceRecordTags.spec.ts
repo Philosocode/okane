@@ -1,5 +1,5 @@
 // Internal
-import Pill from '@shared/components/Pill.vue'
+import Pill from '@shared/components/wrapper/Pill.vue'
 import FinanceRecordTags, {
   type FinanceRecordTagsProps,
 } from '@features/financeRecords/components/financeRecordList/FinanceRecordTags.vue'

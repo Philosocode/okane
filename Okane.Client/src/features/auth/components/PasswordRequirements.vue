@@ -5,7 +5,7 @@ import CardHeading from '@shared/components/typography/CardHeading.vue'
 import { AUTH_COPY } from '@features/auth/constants/copy'
 
 import { type PasswordChecks } from '@features/auth/types/authForm'
-import BulletedList from '@shared/components/BulletedList.vue'
+import BulletedList from '@shared/components/wrapper/BulletedList.vue'
 
 const copy = AUTH_COPY.AUTH_FORM.PASSWORD_REQUIREMENTS
 

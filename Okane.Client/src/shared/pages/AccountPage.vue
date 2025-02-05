@@ -1,11 +1,11 @@
 <script setup lang="ts">
 // Internal
-import DeleteAccountModal from '@features/auth/components/DeleteAccountModal.vue'
-import EditName from '@features/auth/components/EditName.vue'
-import EditPassword from '@features/auth/components/EditPassword.vue'
-import Heading from '@shared/components/Heading.vue'
-import HorizontalDivider from '@shared/components/HorizontalDivider.vue'
-import PageLayout from '@shared/components/wrappers/PageLayout.vue'
+import DeleteAccountModal from '@features/auth/components/accountPage/DeleteAccountModal.vue'
+import EditName from '@features/auth/components/accountPage/EditName.vue'
+import EditPassword from '@features/auth/components/accountPage/EditPassword.vue'
+import Heading from '@shared/components/nav/Heading.vue'
+import HorizontalDivider from '@shared/components/divider/HorizontalDivider.vue'
+import PageLayout from '@shared/components/wrapper/PageLayout.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
 

@@ -3,8 +3,8 @@
 import { ref } from 'vue'
 
 // Internal
-import AppButton from '@shared/components/AppButton.vue'
-import IconButton from '@shared/components/IconButton.vue'
+import AppButton from '@shared/components/button/AppButton.vue'
+import IconButton from '@shared/components/button/IconButton.vue'
 
 import { useModalTriggerStore } from '@shared/composables/useModalTriggerStore'
 

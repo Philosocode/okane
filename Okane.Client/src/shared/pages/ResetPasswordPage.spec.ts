@@ -3,7 +3,7 @@ import { flushPromises, type VueWrapper } from '@vue/test-utils'
 
 // Internal
 import ErrorMessage from '@shared/components/typography/ErrorMessage.vue'
-import ResetPasswordForm from '@features/auth/components/ResetPasswordForm.vue'
+import ResetPasswordForm from '@features/auth/components/resetPassword/ResetPasswordForm.vue'
 import ResetPasswordPage from '@shared/pages/ResetPasswordPage.vue'
 
 import { authHandlers } from '@tests/msw/handlers/auth'

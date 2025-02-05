@@ -3,9 +3,9 @@
 import { ref } from 'vue'
 
 // Internal
-import Heading from '@shared/components/Heading.vue'
-import PageLayout from '@shared/components/wrappers/PageLayout.vue'
-import SendResetPasswordEmailForm from '@features/auth/components/SendResetPasswordEmailForm.vue'
+import Heading from '@shared/components/nav/Heading.vue'
+import PageLayout from '@shared/components/wrapper/PageLayout.vue'
+import SendResetPasswordEmailForm from '@features/auth/components/resetPassword/SendResetPasswordEmailForm.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
 

@@ -2,8 +2,8 @@
 import { type VueWrapper } from '@vue/test-utils'
 
 // Internal
-import Heading from '@shared/components/Heading.vue'
-import SendResetPasswordEmailForm from '@features/auth/components/SendResetPasswordEmailForm.vue'
+import Heading from '@shared/components/nav/Heading.vue'
+import SendResetPasswordEmailForm from '@features/auth/components/resetPassword/SendResetPasswordEmailForm.vue'
 import SendResetPasswordEmailPage from '@shared/pages/SendResetPasswordEmailPage.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Internal
-import Pill from '@shared/components/Pill.vue'
+import Pill from '@shared/components/wrapper/Pill.vue'
 
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
 

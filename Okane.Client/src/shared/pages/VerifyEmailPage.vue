@@ -4,11 +4,11 @@ import { useRoute } from 'vue-router'
 import { computed, onMounted, ref } from 'vue'
 
 // Internal
-import Heading from '@shared/components/Heading.vue'
+import Heading from '@shared/components/nav/Heading.vue'
 import Loader from '@shared/components/loader/Loader.vue'
-import PageLayout from '@shared/components/wrappers/PageLayout.vue'
-import VerifyEmailFailed from '@features/auth/components/VerifyEmailFailed.vue'
-import VerifyEmailSucceeded from '@features/auth/components/VerifyEmailSucceeded.vue'
+import PageLayout from '@shared/components/wrapper/PageLayout.vue'
+import VerifyEmailFailed from '@features/auth/components/verifyEmail/VerifyEmailFailed.vue'
+import VerifyEmailSucceeded from '@features/auth/components/verifyEmail/VerifyEmailSucceeded.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
 

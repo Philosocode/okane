@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Internal
-import Card from '@shared/components/wrappers/Card.vue'
+import Card from '@shared/components/wrapper/Card.vue'
 
 import { FINANCE_USER_TAGS_COPY } from '@features/financeUserTags/constants/copy'
 

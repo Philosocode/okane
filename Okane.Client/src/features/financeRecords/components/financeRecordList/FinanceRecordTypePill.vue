@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // Internal
 import Kicker from '@shared/components/typography/Kicker.vue'
-import Pill from '@shared/components/Pill.vue'
+import Pill from '@shared/components/wrapper/Pill.vue'
 
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
 

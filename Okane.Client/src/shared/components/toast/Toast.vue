@@ -3,8 +3,8 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 // Internal
-import Card from '@shared/components/wrappers/Card.vue'
-import IconButton from '@shared/components/IconButton.vue'
+import Card from '@shared/components/wrapper/Card.vue'
+import IconButton from '@shared/components/button/IconButton.vue'
 
 import { SHARED_COPY } from '@shared/constants/copy'
 import {

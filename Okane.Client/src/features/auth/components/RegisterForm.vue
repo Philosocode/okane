@@ -5,7 +5,7 @@ import { computed, ref } from 'vue'
 // Internal
 import AuthForm from '@features/auth/components/AuthForm.vue'
 import FormInput from '@shared/components/form/FormInput.vue'
-import Heading from '@shared/components/Heading.vue'
+import Heading from '@shared/components/nav/Heading.vue'
 import PasswordRequirements from '@features/auth/components/PasswordRequirements.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'

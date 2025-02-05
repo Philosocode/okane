@@ -9,7 +9,7 @@ import AppliedHappenedAtFilter from '@features/financeRecords/components/searchF
 import AppliedSorting from '@features/financeRecords/components/searchFilters/AppliedSorting.vue'
 import AppliedTagsFilter from '@features/financeRecords/components/searchFilters/AppliedTagsFilter.vue'
 import AppliedTypeFilter from '@features/financeRecords/components/searchFilters/AppliedTypeFilter.vue'
-import BulletedList from '@shared/components/BulletedList.vue'
+import BulletedList from '@shared/components/wrapper/BulletedList.vue'
 import CardHeading from '@shared/components/typography/CardHeading.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'

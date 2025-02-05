@@ -3,7 +3,7 @@
 import { ref } from 'vue'
 
 // Internal
-import Button from '@shared/components/Button.vue'
+import AppButton from '@shared/components/AppButton.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
 
@@ -34,9 +34,9 @@ function reSendVerificationEmail() {
   <p :class="{ 'body-text': true, error: sendEmailMutation.isError.value }">
     <template v-if="!sentEmailSuccessfully && !sendEmailMutation.isError.value">
       {{ AUTH_COPY.VERIFY_EMAIL.VERIFICATION_FAILED.FAILED }}
-      <Button @click="reSendVerificationEmail">
+      <AppButton @click="reSendVerificationEmail">
         {{ AUTH_COPY.VERIFY_EMAIL.VERIFICATION_FAILED.CLICK_HERE }}
-      </Button>
+      </AppButton>
       {{ AUTH_COPY.VERIFY_EMAIL.VERIFICATION_FAILED.RESEND }}
     </template>
 

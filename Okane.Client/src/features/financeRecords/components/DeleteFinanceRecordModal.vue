@@ -3,7 +3,7 @@
 import { inject } from 'vue'
 
 // Internal
-import Button from '@shared/components/Button.vue'
+import AppButton from '@shared/components/AppButton.vue'
 import ErrorMessage from '@shared/components/typography/ErrorMessage.vue'
 import FinanceRecordSummary from '@features/financeRecords/components/FinanceRecordSummary.vue'
 import Modal from '@shared/components/modal/Modal.vue'
@@ -51,15 +51,15 @@ function handleDelete() {
     <FinanceRecordSummary :finance-record="deleteProvider.financeRecordToDelete!" />
 
     <ModalActions>
-      <Button
+      <AppButton
         focus-on-mount
         variant="warning"
         @click="handleDelete"
         :disabled="deleteMutation.isError.value"
       >
         {{ SHARED_COPY.ACTIONS.DELETE }}
-      </Button>
-      <Button @click="handleClose">{{ SHARED_COPY.ACTIONS.CANCEL }}</Button>
+      </AppButton>
+      <AppButton @click="handleClose">{{ SHARED_COPY.ACTIONS.CANCEL }}</AppButton>
     </ModalActions>
     <ErrorMessage v-if="deleteMutation.isError.value">{{
       FINANCES_COPY.DELETE_FINANCE_RECORD_MODAL.ERROR

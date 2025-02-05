@@ -3,7 +3,7 @@
 import { computed, inject, ref } from 'vue'
 
 // Internal
-import Button from '@shared/components/Button.vue'
+import AppButton from '@shared/components/AppButton.vue'
 import ErrorMessage from '@shared/components/typography/ErrorMessage.vue'
 import FinanceUserTagSummary from '@features/financeUserTags/components/FinanceUserTagSummary.vue'
 import FormInput from '@shared/components/form/FormInput.vue'
@@ -78,10 +78,10 @@ function handleSubmit() {
         </ErrorMessage>
 
         <ModalActions>
-          <Button type="submit" :disabled="submitDisabled" variant="callToAction">{{
+          <AppButton type="submit" :disabled="submitDisabled" variant="callToAction">{{
             SHARED_COPY.ACTIONS.RENAME
-          }}</Button>
-          <Button @click="closeModal" type="button">{{ SHARED_COPY.ACTIONS.CANCEL }}</Button>
+          }}</AppButton>
+          <AppButton @click="closeModal" type="button">{{ SHARED_COPY.ACTIONS.CANCEL }}</AppButton>
         </ModalActions>
       </form>
     </template>

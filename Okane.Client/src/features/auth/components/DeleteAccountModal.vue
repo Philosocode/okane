@@ -3,7 +3,7 @@
 import { useRouter } from 'vue-router'
 
 // Internal
-import Button from '@shared/components/Button.vue'
+import AppButton from '@shared/components/AppButton.vue'
 import Modal from '@shared/components/modal/Modal.vue'
 import ModalActions from '@shared/components/modal/ModalActions.vue'
 import ModalTrigger from '@shared/components/modal/ModalTrigger.vue'
@@ -44,12 +44,17 @@ function handleDelete() {
   >
     <p class="confirmation">{{ AUTH_COPY.ACCOUNT_PAGE.DELETE_ACCOUNT_CONFIRMATION }}</p>
     <ModalActions>
-      <Button class="button error" focus-on-mount variant="warning" @click.prevent="handleDelete">
+      <AppButton
+        class="button error"
+        focus-on-mount
+        variant="warning"
+        @click.prevent="handleDelete"
+      >
         {{ SHARED_COPY.ACTIONS.DELETE }}
-      </Button>
-      <Button @click="closeModal">
+      </AppButton>
+      <AppButton @click="closeModal">
         {{ SHARED_COPY.ACTIONS.CANCEL }}
-      </Button>
+      </AppButton>
     </ModalActions>
 
     <p v-if="deleteMutation.isError.value" class="error-text">

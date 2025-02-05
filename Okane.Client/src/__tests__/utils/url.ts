@@ -1,6 +1,6 @@
 // Internal
 import { stripSearchParams } from '@shared/utils/url'
 
-export function getMSWURL(url: string) {
+export function getMswUrl(url: string) {
   return stripSearchParams(`/api${url}`)
 }

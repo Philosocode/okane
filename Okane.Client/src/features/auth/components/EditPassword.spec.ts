@@ -14,7 +14,7 @@ import { BUTTON_TYPE, INPUT_TYPE } from '@shared/constants/form'
 
 import { createTestPasswordRequirements } from '@tests/factories/passwordRequirements'
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
-import { getMSWURL } from '@tests/utils/url'
+import { getMswUrl } from '@tests/utils/url'
 import { testServer } from '@tests/msw/testServer'
 
 const requirements = createTestPasswordRequirements()
@@ -301,7 +301,7 @@ describe('when the patch request succeeds', () => {
   let wrapper: VueWrapper
 
   beforeEach(async () => {
-    const handler = http.patch(getMSWURL(authApiRoutes.self()), () =>
+    const handler = http.patch(getMswUrl(authApiRoutes.self()), () =>
       HttpResponse.json({}, { status: HTTP_STATUS_CODE.OK_200 }),
     )
     testServer.use(handler)
@@ -359,7 +359,7 @@ describe('when current password is invalid', () => {
         PasswordMismatch: ['Invalid password'],
       },
     })
-    const handler = http.patch(getMSWURL(authApiRoutes.self()), () =>
+    const handler = http.patch(getMswUrl(authApiRoutes.self()), () =>
       HttpResponse.json(problemDetails, { status: HTTP_STATUS_CODE.BAD_REQUEST_400 }),
     )
     testServer.use(handler)
@@ -391,7 +391,7 @@ describe('when current password is valid but the patch request fails', () => {
   let wrapper: VueWrapper
 
   beforeEach(async () => {
-    const handler = http.patch(getMSWURL(authApiRoutes.self()), () =>
+    const handler = http.patch(getMswUrl(authApiRoutes.self()), () =>
       HttpResponse.json(createTestProblemDetails(), { status: HTTP_STATUS_CODE.BAD_REQUEST_400 }),
     )
     testServer.use(handler)

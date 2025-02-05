@@ -14,7 +14,7 @@ import { SHARED_COPY } from '@shared/constants/copy'
 import { createAppRouter, ROUTE_NAME } from '@shared/services/router/router'
 
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
-import { getMSWURL } from '@tests/utils/url'
+import { getMswUrl } from '@tests/utils/url'
 import { testServer } from '@tests/msw/testServer'
 
 const router = createAppRouter()
@@ -103,7 +103,7 @@ describe('when the modal is showing', () => {
   describe('when account deletion succeeds', () => {
     beforeEach(async () => {
       const handler = http.delete(
-        getMSWURL(authApiRoutes.self()),
+        getMswUrl(authApiRoutes.self()),
         () => new HttpResponse(null, { status: HTTP_STATUS_CODE.NO_CONTENT_204 }),
       )
       testServer.use(handler)
@@ -120,7 +120,7 @@ describe('when the modal is showing', () => {
 
   describe('when account deletion fails', () => {
     beforeEach(async () => {
-      const handler = http.delete(getMSWURL(authApiRoutes.self()), () =>
+      const handler = http.delete(getMswUrl(authApiRoutes.self()), () =>
         HttpResponse.json(createTestProblemDetails(), {
           status: HTTP_STATUS_CODE.BAD_REQUEST_400,
         }),

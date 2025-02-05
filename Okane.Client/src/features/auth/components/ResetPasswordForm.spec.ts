@@ -15,7 +15,7 @@ import { appRoutes, createAppRouter } from '@shared/services/router/router'
 
 import { createTestPasswordRequirements } from '@tests/factories/passwordRequirements'
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
-import { getMSWURL } from '@tests/utils/url'
+import { getMswUrl } from '@tests/utils/url'
 import { testServer } from '@tests/msw/testServer'
 
 const requirements = createTestPasswordRequirements()
@@ -175,7 +175,7 @@ describe('when password reset succeeds', () => {
   let wrapper: VueWrapper
 
   beforeEach(async () => {
-    const handler = http.post(getMSWURL(authApiRoutes.resetPassword()), () =>
+    const handler = http.post(getMswUrl(authApiRoutes.resetPassword()), () =>
       HttpResponse.json({}, { status: HTTP_STATUS_CODE.OK_200 }),
     )
     testServer.use(handler)
@@ -209,7 +209,7 @@ describe('when password reset fails', () => {
   let wrapper: VueWrapper
 
   beforeEach(async () => {
-    const handler = http.post(getMSWURL(authApiRoutes.resetPassword()), () =>
+    const handler = http.post(getMswUrl(authApiRoutes.resetPassword()), () =>
       HttpResponse.json(createTestProblemDetails(), {
         status: HTTP_STATUS_CODE.BAD_REQUEST_400,
       }),

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 // External
 import { useRoute } from 'vue-router'
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 
 // Internal
+import AppButton from '@shared/components/button/AppButton.vue'
 import Heading from '@shared/components/nav/Heading.vue'
 import Loader from '@shared/components/loader/Loader.vue'
 import PageLayout from '@shared/components/wrapper/PageLayout.vue'
@@ -13,6 +14,8 @@ import VerifyEmailSucceeded from '@features/auth/components/verifyEmail/VerifyEm
 import { AUTH_COPY } from '@features/auth/constants/copy'
 
 import { useVerifyEmail } from '@features/auth/composables/useVerifyEmail'
+
+const attemptedToVerify = ref(false)
 
 const route = useRoute()
 
@@ -25,18 +28,7 @@ const params = computed(() => {
   return { email, token }
 })
 
-const doneInitialLoad = ref(false)
 const verifyMutation = useVerifyEmail()
-
-onMounted(() => {
-  const { email, token } = params.value
-
-  if (email && token) {
-    verifyEmail()
-  } else {
-    doneInitialLoad.value = true
-  }
-})
 
 function verifyEmail() {
   verifyMutation.mutate(
@@ -46,7 +38,7 @@ function verifyEmail() {
     },
     {
       onSettled() {
-        doneInitialLoad.value = true
+        attemptedToVerify.value = true
       },
     },
   )
@@ -55,26 +47,29 @@ function verifyEmail() {
 
 <template>
   <PageLayout is-narrow>
-    <Heading tag="h1">{{ AUTH_COPY.VERIFY_EMAIL.VERIFYING_YOUR_EMAIL }}</Heading>
+    <Heading tag="h1">{{ AUTH_COPY.VERIFY_EMAIL.HEADING }}</Heading>
 
-    <template v-if="!doneInitialLoad">
-      <p class="body-text">{{ AUTH_COPY.VERIFY_EMAIL.PLEASE_WAIT }}</p>
-      <Loader />
+    <p v-if="!params.email">{{ AUTH_COPY.VERIFY_EMAIL.MISSING_EMAIL }}</p>
+
+    <VerifyEmailFailed v-else-if="!params.token" :email="params.email" />
+
+    <template v-else-if="!attemptedToVerify">
+      <div class="row">
+        <AppButton variant="callToAction" @click="verifyEmail">{{
+          AUTH_COPY.VERIFY_EMAIL.CLICK_TO_VERIFY
+        }}</AppButton>
+        <Loader v-if="verifyMutation.isPending.value" />
+      </div>
     </template>
 
-    <p v-else-if="!params.email" class="body-text">{{ AUTH_COPY.VERIFY_EMAIL.MISSING_EMAIL }}</p>
-
-    <VerifyEmailFailed
-      v-else-if="!params.token || verifyMutation.isError.value"
-      :email="params.email"
-    />
-
+    <VerifyEmailFailed v-else-if="verifyMutation.isError.value" :email="params.email" />
     <VerifyEmailSucceeded v-else />
   </PageLayout>
 </template>
 
 <style scoped>
-.body-text {
-  margin-bottom: var(--space-sm);
+.row {
+  display: flex;
+  gap: var(--space-md);
 }
 </style>

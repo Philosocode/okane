@@ -28,7 +28,7 @@ test('renders the "verification failed" text', () => {
 
 test('does not render the "email sent successfully" text', () => {
   const wrapper = mountComponent()
-  const text = wrapper.findByText('p', AUTH_COPY.VERIFY_EMAIL.SEND_VERIFICATION_EMAIL.SUCCESS)
+  const text = wrapper.findByText('p', AUTH_COPY.VERIFY_EMAIL.RE_SEND_VERIFICATION_EMAIL.SUCCESS)
   expect(text).toBeUndefined()
 })
 
@@ -40,7 +40,7 @@ test('renders a button to re-send the verification email', () => {
 
 test('does not render the error text', () => {
   const wrapper = mountComponent()
-  const text = wrapper.findByText('p', AUTH_COPY.VERIFY_EMAIL.SEND_VERIFICATION_EMAIL.ERROR)
+  const text = wrapper.findByText('p', AUTH_COPY.VERIFY_EMAIL.RE_SEND_VERIFICATION_EMAIL.ERROR)
   expect(text).toBeUndefined()
 })
 
@@ -58,7 +58,7 @@ describe('when successfully re-sending the verification email', () => {
   })
 
   test('renders the "email sent successfully" text', () => {
-    const text = wrapper.findByText('p', AUTH_COPY.VERIFY_EMAIL.SEND_VERIFICATION_EMAIL.SUCCESS)
+    const text = wrapper.findByText('p', AUTH_COPY.VERIFY_EMAIL.RE_SEND_VERIFICATION_EMAIL.SUCCESS)
     expect(text).toBeDefined()
   })
 
@@ -77,7 +77,7 @@ describe('when successfully re-sending the verification email', () => {
 
   test('does not render the error text', () => {
     const wrapper = mountComponent()
-    const text = wrapper.findByText('p', AUTH_COPY.VERIFY_EMAIL.SEND_VERIFICATION_EMAIL.ERROR)
+    const text = wrapper.findByText('p', AUTH_COPY.VERIFY_EMAIL.RE_SEND_VERIFICATION_EMAIL.ERROR)
     expect(text).toBeUndefined()
   })
 })
@@ -96,12 +96,12 @@ describe('with an error re-sending the verification email', () => {
   })
 
   test('renders the error text', () => {
-    const text = wrapper.findByText('p', AUTH_COPY.VERIFY_EMAIL.SEND_VERIFICATION_EMAIL.ERROR)
+    const text = wrapper.findByText('p', AUTH_COPY.VERIFY_EMAIL.RE_SEND_VERIFICATION_EMAIL.ERROR)
     expect(text).toBeDefined()
   })
 
   test('does not render the "email sent successfully" text', () => {
-    const text = wrapper.findByText('p', AUTH_COPY.VERIFY_EMAIL.SEND_VERIFICATION_EMAIL.SUCCESS)
+    const text = wrapper.findByText('p', AUTH_COPY.VERIFY_EMAIL.RE_SEND_VERIFICATION_EMAIL.SUCCESS)
     expect(text).toBeUndefined()
   })
 

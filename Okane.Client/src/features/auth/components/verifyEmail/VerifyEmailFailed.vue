@@ -41,11 +41,11 @@ function reSendVerificationEmail() {
     </template>
 
     <template v-if="sentEmailSuccessfully">
-      {{ AUTH_COPY.VERIFY_EMAIL.SEND_VERIFICATION_EMAIL.SUCCESS }}
+      {{ AUTH_COPY.VERIFY_EMAIL.RE_SEND_VERIFICATION_EMAIL.SUCCESS }}
     </template>
 
     <template v-if="sendEmailMutation.isError.value">
-      {{ AUTH_COPY.VERIFY_EMAIL.SEND_VERIFICATION_EMAIL.ERROR }}
+      {{ AUTH_COPY.VERIFY_EMAIL.RE_SEND_VERIFICATION_EMAIL.ERROR }}
     </template>
   </p>
 </template>

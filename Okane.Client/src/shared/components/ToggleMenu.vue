@@ -4,10 +4,12 @@ import { onClickOutside, onKeyStroke } from '@vueuse/core'
 import { ref, useTemplateRef } from 'vue'
 
 // Internal
+import AppButton from '@shared/components/button/AppButton.vue'
 import IconButton from '@shared/components/button/IconButton.vue'
-import ModalTrigger from '@shared/components/modal/ModalTrigger.vue'
 
 import { SHARED_COPY } from '@shared/constants/copy'
+
+import { useModalTriggerStore } from '@shared/composables/useModalTriggerStore'
 
 type MenuAction = {
   onClick: () => void
@@ -19,9 +21,11 @@ type Props = {
   menuId: string
 }
 
-const rootRef = useTemplateRef<HTMLDivElement>('rootRef')
+const rootRef = useTemplateRef('rootRef')
+const toggleRef = useTemplateRef('toggleRef')
 const props = defineProps<Props>()
 const menuIsShowing = ref(false)
+const triggerStore = useModalTriggerStore()
 
 onClickOutside(rootRef, () => {
   if (menuIsShowing.value) menuIsShowing.value = false
@@ -37,6 +41,8 @@ onKeyStroke(
 
 function handleClick(callback: MenuAction['onClick']) {
   callback()
+  menuIsShowing.value = false
+  triggerStore.setModalTrigger(toggleRef.value?.buttonRef ?? null)
 }
 </script>
 
@@ -46,8 +52,8 @@ function handleClick(callback: MenuAction['onClick']) {
       aria-haspopup="true"
       :aria-controls="props.menuId"
       :aria-expanded="menuIsShowing"
-      class="menu-toggle"
       icon="fa-solid fa-ellipsis-vertical"
+      ref="toggleRef"
       :title="SHARED_COPY.MENU.TOGGLE_MENU"
       @click="menuIsShowing = !menuIsShowing"
     />
@@ -59,9 +65,9 @@ function handleClick(callback: MenuAction['onClick']) {
         class="button-wrapper"
         role="presentation"
       >
-        <ModalTrigger class="menu-item" role="menuitem" @click="handleClick(action.onClick)">
+        <AppButton class="menu-item" role="menuitem" @click="handleClick(action.onClick)">
           {{ action.text }}
-        </ModalTrigger>
+        </AppButton>
       </li>
     </ul>
   </div>
@@ -77,13 +83,6 @@ function handleClick(callback: MenuAction['onClick']) {
   &:last-child {
     border-top: var(--border-main);
   }
-}
-
-.menu-toggle {
-  align-self: flex-end;
-  background: none;
-  display: grid;
-  place-items: center center;
 }
 
 .menu {

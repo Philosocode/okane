@@ -51,7 +51,7 @@ public class GetFinanceRecordsStatsTests(PostgresApiFactory apiFactory) : Databa
     {
         var loginResponse = await _client.RegisterAndLogInTestUserAsync();
         var record = CreateRecordWithAmountAndType(10, FinanceRecordType.Revenue, loginResponse.User.Id);
-        await Db.AddAsync(record);
+        Db.Add(record);
         await Db.SaveChangesAsync();
 
         var matchingStats = s_emptyStats with
@@ -79,8 +79,7 @@ public class GetFinanceRecordsStatsTests(PostgresApiFactory apiFactory) : Databa
         var loginResponse = await _client.RegisterAndLogInTestUserAsync();
         var record = CreateRecordWithAmountAndType(10, FinanceRecordType.Revenue, loginResponse.User.Id);
         record.Description = "Hello World";
-
-        await Db.AddAsync(record);
+        Db.Add(record);
         await Db.SaveChangesAsync();
 
         var matchingStats = s_emptyStats with
@@ -102,7 +101,7 @@ public class GetFinanceRecordsStatsTests(PostgresApiFactory apiFactory) : Databa
         var loginResponse = await _client.RegisterAndLogInTestUserAsync();
         var record = CreateRecordWithAmountAndType(10, FinanceRecordType.Revenue, loginResponse.User.Id);
         record.HappenedAt = new DateTime(2010, 10, 10, 10, 10, 10, DateTimeKind.Utc);
-        await Db.AddAsync(record);
+        Db.Add(record);
         await Db.SaveChangesAsync();
 
         var matchingStats = s_emptyStats with
@@ -159,7 +158,7 @@ public class GetFinanceRecordsStatsTests(PostgresApiFactory apiFactory) : Databa
     {
         var loginResponse = await _client.RegisterAndLogInTestUserAsync();
         var record = CreateRecordWithAmountAndType(10, FinanceRecordType.Revenue, loginResponse.User.Id);
-        await Db.AddAsync(record);
+        Db.Add(record);
         await Db.SaveChangesAsync();
 
         var stats = await FetchStatsAsync($"minAmount={record.Amount}&type=Expense");
@@ -183,7 +182,7 @@ public class GetFinanceRecordsStatsTests(PostgresApiFactory apiFactory) : Databa
 
         var revenueRecord = FinanceRecordStubFactory.Create(loginResponse.User.Id);
         revenueRecord.Type = FinanceRecordType.Revenue;
-        await Db.AddAsync(revenueRecord);
+        Db.Add(revenueRecord);
         await Db.SaveChangesAsync();
 
         stats = await FetchStatsAsync("type=Expense");

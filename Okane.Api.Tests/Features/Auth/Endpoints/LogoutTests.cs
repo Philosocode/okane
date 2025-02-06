@@ -27,7 +27,7 @@ public class LogoutTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFactor
         var otherRefreshTokenCount = 4;
         for (var i = 0; i < otherRefreshTokenCount; i++)
         {
-            await Db.AddAsync(new RefreshToken
+            Db.Add(new RefreshToken
             {
                 Token = Guid.NewGuid()
                     .ToString(),

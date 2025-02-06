@@ -43,7 +43,7 @@ public class PatchFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTe
     {
         var loginResponse = await _client.RegisterAndLogInTestUserAsync();
         var financeRecord = FinanceRecordStubFactory.Create(loginResponse.User.Id);
-        await Db.AddAsync(financeRecord);
+        Db.Add(financeRecord);
         await Db.SaveChangesAsync();
 
         var patchResponse = await _client.PatchAsJsonAsync(
@@ -61,13 +61,13 @@ public class PatchFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTe
         var otherUserEmail = await UserUtils.RegisterUserAsync(_client);
         var otherUser = await UserUtils.GetByEmailAsync(Db, otherUserEmail);
         var otherRecord = FinanceRecordStubFactory.Create(otherUser.Id);
-        await Db.AddAsync(otherRecord);
+        Db.Add(otherRecord);
 
         var loginResponse = await _client.RegisterAndLogInTestUserAsync();
         var financeRecord1 = FinanceRecordStubFactory.Create(loginResponse.User.Id);
         var financeRecord2 = FinanceRecordStubFactory.Create(loginResponse.User.Id);
-        await Db.AddAsync(financeRecord1);
-        await Db.AddAsync(financeRecord2);
+        Db.Add(financeRecord1);
+        Db.Add(financeRecord2);
 
         await Db.SaveChangesAsync();
 
@@ -190,7 +190,7 @@ public class PatchFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTe
     {
         var loginResponse = await _client.RegisterAndLogInTestUserAsync();
         var financeRecord = FinanceRecordStubFactory.Create(loginResponse.User.Id);
-        await Db.AddAsync(financeRecord);
+        Db.Add(financeRecord);
         await Db.SaveChangesAsync();
 
         var response = await _client.PatchAsJsonAsync(
@@ -209,7 +209,7 @@ public class PatchFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTe
     {
         var loginResponse = await _client.RegisterAndLogInTestUserAsync();
         var financeRecord = FinanceRecordStubFactory.Create(loginResponse.User.Id);
-        await Db.AddAsync(financeRecord);
+        Db.Add(financeRecord);
         await Db.SaveChangesAsync();
 
         var response = await _client.PatchAsJsonAsync(
@@ -350,7 +350,7 @@ public class PatchFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTe
         var otherUser = await UserUtils.GetByEmailAsync(Db, otherUserEmail);
         var financeRecord = FinanceRecordStubFactory.Create(otherUser.Id);
 
-        await Db.AddAsync(financeRecord);
+        Db.Add(financeRecord);
         await Db.SaveChangesAsync();
 
         await _client.RegisterAndLogInTestUserAsync();

@@ -89,11 +89,12 @@ export const AUTH_COPY = {
   },
 
   VERIFY_EMAIL: {
+    CLICK_TO_VERIFY: 'Click here to verify your email.',
+    HEADING: 'Verify Email',
     MISSING_EMAIL: 'Invalid verification link. Please retry clicking on the link in the email.',
-    PLEASE_WAIT: 'Please wait...',
-    SEND_VERIFICATION_EMAIL: {
-      SUCCESS: 'Verification email sent! Please check your email.',
-      ERROR: 'Error sending verification email. Please try again later.',
+    RE_SEND_VERIFICATION_EMAIL: {
+      SUCCESS: 'Re-sent verification email! Please check your email.',
+      ERROR: 'Error re-sending verification email. Please try again later.',
     },
     VERIFICATION_FAILED: {
       FAILED: 'Verification failed.',
@@ -104,6 +105,5 @@ export const AUTH_COPY = {
       SUCCEEDED: 'Verification succeeded!',
       CLICK_HERE_TO_LOGIN: 'Click here to login.',
     },
-    VERIFYING_YOUR_EMAIL: 'Verifying Your Email',
   },
 } as const

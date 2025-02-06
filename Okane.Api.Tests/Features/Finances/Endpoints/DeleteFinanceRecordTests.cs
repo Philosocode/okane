@@ -53,11 +53,11 @@ public class DeleteFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseT
         var otherUserEmail = await UserUtils.RegisterUserAsync(_client);
         var otherUser = await UserUtils.GetByEmailAsync(Db, otherUserEmail);
         var otherFinanceRecord = FinanceRecordStubFactory.Create(otherUser.Id);
-        await Db.AddAsync(otherFinanceRecord);
+        Db.Add(otherFinanceRecord);
 
         var loginResponse = await _client.RegisterAndLogInTestUserAsync();
         var ownFinanceRecord = FinanceRecordStubFactory.Create(loginResponse.User.Id);
-        await Db.AddAsync(ownFinanceRecord);
+        Db.Add(ownFinanceRecord);
 
         await Db.SaveChangesAsync();
 

@@ -53,7 +53,7 @@ public class GetFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTest
         var otherUser = await UserUtils.GetByEmailAsync(Db, otherUserEmail);
         var financeRecord = FinanceRecordStubFactory.Create(otherUser.Id);
 
-        await Db.FinanceRecords.AddAsync(financeRecord);
+        Db.FinanceRecords.Add(financeRecord);
         await Db.SaveChangesAsync();
 
         await _client.RegisterAndLogInTestUserAsync();

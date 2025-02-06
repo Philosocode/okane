@@ -132,7 +132,7 @@ public class RotateRefreshTokenTests(PostgresApiFactory apiFactory) : DatabaseTe
         var refreshTokensPerUser = 3;
         for (var i = 0; i < refreshTokensPerUser; i++)
         {
-            await Db.AddAsync(RefreshTokenStubFactory.Create(authResponse.User.Id));
+            Db.Add(RefreshTokenStubFactory.Create(authResponse.User.Id));
         }
 
         // We'll also register another user and check that their tokens are NOT affected.
@@ -147,7 +147,7 @@ public class RotateRefreshTokenTests(PostgresApiFactory apiFactory) : DatabaseTe
 
         for (var i = 0; i < refreshTokensPerUser; i++)
         {
-            await Db.AddAsync(RefreshTokenStubFactory.Create(otherUser.Id));
+            Db.Add(RefreshTokenStubFactory.Create(otherUser.Id));
         }
 
         await Db.SaveChangesAsync();

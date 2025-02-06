@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Okane.Api.Features.Auth.Entities;
-using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.HostedServices;
 using Okane.Api.Shared.Wrappers;
 using Okane.Api.Tests.Testing.Integration;
@@ -52,12 +51,7 @@ public class RefreshTokenCleanupServiceTests(PostgresApiFactory apiFactory) : Da
             ExpiresAt = _dateTimeWrapper.UtcNow.AddDays(1)
         };
 
-        await Db.AddRangeAsync([
-            expiredToken,
-            revokedToken,
-            revokedAndExpiredToken,
-            validToken
-        ]);
+        Db.AddRange(expiredToken, revokedToken, revokedAndExpiredToken, validToken);
 
         await Db.SaveChangesAsync();
 

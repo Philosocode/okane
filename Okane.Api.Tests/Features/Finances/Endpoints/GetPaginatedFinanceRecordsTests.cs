@@ -58,7 +58,7 @@ public class GetPaginatedFinanceRecordsTests(PostgresApiFactory apiFactory) : Da
             financeRecords.Add(financeRecord);
         }
 
-        await Db.AddRangeAsync(financeRecords);
+        Db.AddRange(financeRecords);
         await Db.SaveChangesAsync();
 
         var queryString = $"pageSize={pageSize}&sortField=amount&sortDirection=asc";

@@ -133,7 +133,7 @@ public class GetFinanceRecordsStatsTests(PostgresApiFactory apiFactory) : Databa
         var revenue2 = CreateRecordWithAmountAndType(7.20m, FinanceRecordType.Revenue, userId);
         var expense1 = CreateRecordWithAmountAndType(3.60m, FinanceRecordType.Expense, userId);
         var expense2 = CreateRecordWithAmountAndType(3.60m, FinanceRecordType.Expense, userId);
-        await Db.AddRangeAsync([revenue1, expense1, revenue2, expense2]);
+        Db.AddRange(revenue1, expense1, revenue2, expense2);
         await Db.SaveChangesAsync();
 
         var expenseStats = await FetchStatsAsync("type=Expense");
@@ -199,7 +199,7 @@ public class GetFinanceRecordsStatsTests(PostgresApiFactory apiFactory) : Databa
         var loginResponse = await _client.RegisterAndLogInTestUserAsync();
         var ownRecord = CreateRecordWithAmountAndType(2, FinanceRecordType.Expense, loginResponse.User.Id);
 
-        await Db.AddRangeAsync(otherRecord, ownRecord);
+        Db.AddRange(otherRecord, ownRecord);
         await Db.SaveChangesAsync();
 
         var stats = await FetchStatsAsync();

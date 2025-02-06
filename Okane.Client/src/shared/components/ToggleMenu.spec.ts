@@ -7,6 +7,8 @@ import ToggleMenu from '@shared/components/ToggleMenu.vue'
 import { ARIA_ATTRIBUTES } from '@shared/constants/aria'
 import { SHARED_COPY } from '@shared/constants/copy'
 
+import { useModalTriggerStore } from '@shared/composables/useModalTriggerStore'
+
 const outsideOfMenuTestId = 'outsideOfMenu'
 
 const TestComponent = defineComponent({
@@ -85,16 +87,20 @@ describe('after clicking the menu toggle', () => {
     return { actions, wrapper }
   }
 
-  test('shows the menu', async () => {
+  test('shows the menu without setting the modal trigger', async () => {
+    const triggerStore = useModalTriggerStore()
     const { wrapper } = await setUp()
     const toggleButton = wrapper.get(selectors.toggleButton)
     expect(toggleButton.attributes(ARIA_ATTRIBUTES.EXPANDED)).toBe('true')
+    expect(triggerStore.modalTrigger).toBeNull()
 
     const menu = wrapper.get(selectors.menu)
     expect(menu.attributes('id')).toBe(props.menuId)
   })
 
   test('renders clickable menu actions', async () => {
+    const triggerStore = useModalTriggerStore()
+
     const { actions, wrapper } = await setUp()
     const menuLis = wrapper.findAll('li[role="presentation"]')
     expect(menuLis).toHaveLength(actions.length)
@@ -105,6 +111,15 @@ describe('after clicking the menu toggle', () => {
 
       await menuButton.trigger('click')
       expect(actions[i].onClick).toHaveBeenCalledOnce()
+
+      const toggleButton = wrapper.get(selectors.toggleButton)
+      expect(triggerStore.modalTrigger).toBe(toggleButton.element)
+
+      // After clicking an action, the menu should be closed and re-opened.
+      const menu = wrapper.find(selectors.menu)
+      expect(menu.exists()).toBe(false)
+
+      await toggleButton.trigger('click')
     }
   })
 })

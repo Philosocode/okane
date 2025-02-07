@@ -3,7 +3,7 @@ CLIENT_DIR='./Okane.Client'
 
 .PHONY: deps
 deps:
-	asdf install
+	mise install
 	pnpm install
 
 # Run commands in the Makefiles located in the sub-directories.

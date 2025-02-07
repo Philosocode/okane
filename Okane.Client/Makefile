@@ -4,7 +4,6 @@ run:
 
 .PHONY: install
 install:
-	asdf install
 	pnpm install
 
 .PHONY: build

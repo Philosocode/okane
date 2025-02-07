@@ -6,7 +6,7 @@ import { flushPromises, type VueWrapper } from '@vue/test-utils'
 import RegisterForm from '@features/auth/components/RegisterForm.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
-import { INPUT_TYPE } from '@shared/constants/form'
+import { HONEYPOT_INPUT_NAME, INPUT_TYPE } from '@shared/constants/form'
 
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
 
@@ -24,10 +24,12 @@ const constants = {
   email: 'sir-doggo@okane.com',
   name: 'Sir Doggo',
   password: 'coolPassword1234@@@@@',
+  [HONEYPOT_INPUT_NAME]: 'I am robot',
 }
 
 const elements = {
   emailInput: (wrapper: VueWrapper) => wrapper.get('input[name="email"]'),
+  honeypotInput: (wrapper: VueWrapper) => wrapper.get(`input[name="${HONEYPOT_INPUT_NAME}"]`),
   nameInput: (wrapper: VueWrapper) => wrapper.get('input[name="name"]'),
   passwordInput: (wrapper: VueWrapper) => wrapper.get('input[name="password"]'),
   passwordConfirmInput: (wrapper: VueWrapper) => wrapper.get('input[name="passwordConfirm"]'),
@@ -74,6 +76,12 @@ test('renders a password confirm input', () => {
   expect(input.attributes('type')).toBe(INPUT_TYPE.PASSWORD)
 })
 
+test('renders a honeypot input', () => {
+  const wrapper = mountComponent()
+  const input = elements.honeypotInput(wrapper)
+  expect(input.attributes('name')).toBe(HONEYPOT_INPUT_NAME)
+})
+
 test('does not render an error message', () => {
   const wrapper = mountComponent()
   const error = wrapper.findByText('p', AUTH_COPY.AUTH_FORM.ERRORS.REGISTER)
@@ -114,6 +122,9 @@ async function populateInputs(wrapper: VueWrapper) {
 
   const passwordConfirmInput = elements.passwordConfirmInput(wrapper)
   await passwordConfirmInput.setValue(constants.password)
+
+  const honeypotInput = elements.honeypotInput(wrapper)
+  await honeypotInput.setValue(constants[HONEYPOT_INPUT_NAME])
 }
 
 test('disables the submit button with an invalid password', async () => {
@@ -149,7 +160,7 @@ describe('when successfully registering', () => {
 
   test('makes a request to register', () => {
     expect(registerSpy).toHaveBeenCalledOnce()
-    expect(registerSpy).toHaveBeenCalledWith(constants.email, constants.name, constants.password)
+    expect(registerSpy).toHaveBeenCalledWith(constants)
   })
 
   test('emits a success event', () => {
@@ -178,7 +189,12 @@ describe('with an error registering', () => {
 
   test('makes a request to register', () => {
     expect(registerSpy).toHaveBeenCalledOnce()
-    expect(registerSpy).toHaveBeenCalledWith(constants.email, constants.name, constants.password)
+    expect(registerSpy).toHaveBeenCalledWith({
+      email: constants.email,
+      name: constants.name,
+      password: constants.password,
+      [HONEYPOT_INPUT_NAME]: constants[HONEYPOT_INPUT_NAME],
+    })
   })
 
   test('renders an error', () => {

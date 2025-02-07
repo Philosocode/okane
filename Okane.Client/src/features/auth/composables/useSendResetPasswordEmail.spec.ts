@@ -4,6 +4,7 @@ import { flushPromises } from '@vue/test-utils'
 
 // Internal
 import { authApiRoutes } from '@features/auth/constants/apiRoutes'
+import { HONEYPOT_INPUT_NAME } from '@shared/constants/form'
 
 import { useSendResetPasswordEmail } from '@features/auth/composables/useSendResetPasswordEmail'
 
@@ -18,11 +19,15 @@ const spyOn = {
 }
 
 const email = 'sir-doggo@okane.com'
+const honeypot = 'I am human'
 
 const TestComponent = defineComponent({
   setup() {
     const mutation = useSendResetPasswordEmail()
-    mutation.mutate({ email })
+    mutation.mutate({
+      email,
+      [HONEYPOT_INPUT_NAME]: honeypot,
+    })
   },
   template: '<div />',
 })
@@ -34,5 +39,8 @@ test('makes a POST request to the expected endpoint', async () => {
 
   mountComponent()
   await flushPromises()
-  expect(postSpy).toHaveBeenCalledWith(authApiRoutes.sendResetPasswordEmail(), { email })
+  expect(postSpy).toHaveBeenCalledWith(authApiRoutes.sendResetPasswordEmail(), {
+    email,
+    [HONEYPOT_INPUT_NAME]: honeypot,
+  })
 })

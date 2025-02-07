@@ -7,7 +7,7 @@ import { flushPromises, type VueWrapper } from '@vue/test-utils'
 import LoginForm from '@features/auth/components/LoginForm.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
-import { INPUT_TYPE } from '@shared/constants/form'
+import { HONEYPOT_INPUT_NAME, INPUT_TYPE } from '@shared/constants/form'
 import { appRoutes, createAppRouter } from '@shared/services/router/router'
 
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
@@ -23,10 +23,12 @@ function mountComponent(args: { router?: Router } = {}) {
 const constants = {
   email: 'hi@hi.com',
   password: 'coolPassword',
+  [HONEYPOT_INPUT_NAME]: 'I am not a bot',
 }
 
 const elements = {
   emailInput: (wrapper: VueWrapper) => wrapper.get('input[name="email"]'),
+  honeypotInput: (wrapper: VueWrapper) => wrapper.get(`input[name="${HONEYPOT_INPUT_NAME}"]`),
   passwordInput: (wrapper: VueWrapper) => wrapper.get('input[name="password"]'),
   submitButton: (wrapper: VueWrapper) => wrapper.get('button[type="submit"]'),
 }
@@ -57,6 +59,12 @@ test('renders a password input', () => {
   const wrapper = mountComponent()
   const input = elements.passwordInput(wrapper)
   expect(input.attributes('type')).toBe(INPUT_TYPE.PASSWORD)
+})
+
+test('renders a honeypot input', () => {
+  const wrapper = mountComponent()
+  const input = elements.honeypotInput(wrapper)
+  expect(input.attributes('name')).toBe(HONEYPOT_INPUT_NAME)
 })
 
 test('does not render an error message', () => {
@@ -93,6 +101,9 @@ async function populateInputs(wrapper: VueWrapper) {
 
   const passwordInput = elements.passwordInput(wrapper)
   await passwordInput.setValue(constants.password)
+
+  const honeypotInput = elements.honeypotInput(wrapper)
+  await honeypotInput.setValue(constants[HONEYPOT_INPUT_NAME])
 }
 
 describe('when successfully logging in', () => {
@@ -116,7 +127,11 @@ describe('when successfully logging in', () => {
 
   test('makes a request to login', () => {
     expect(loginSpy).toHaveBeenCalledOnce()
-    expect(loginSpy).toHaveBeenCalledWith(constants.email, constants.password)
+    expect(loginSpy).toHaveBeenCalledWith({
+      email: constants.email,
+      password: constants.password,
+      [HONEYPOT_INPUT_NAME]: constants[HONEYPOT_INPUT_NAME],
+    })
   })
 
   test('redirects to the finances page', () => {
@@ -147,7 +162,11 @@ describe('with an error logging in', () => {
 
   test('makes a request to login', () => {
     expect(loginSpy).toHaveBeenCalledOnce()
-    expect(loginSpy).toHaveBeenCalledWith(constants.email, constants.password)
+    expect(loginSpy).toHaveBeenCalledWith({
+      email: constants.email,
+      password: constants.password,
+      [HONEYPOT_INPUT_NAME]: constants[HONEYPOT_INPUT_NAME],
+    })
   })
 
   test('renders an error', () => {

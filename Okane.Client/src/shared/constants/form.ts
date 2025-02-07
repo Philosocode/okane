@@ -12,3 +12,5 @@ export enum INPUT_TYPE {
   PASSWORD = 'password',
   TEXT = 'text',
 }
+
+export const HONEYPOT_INPUT_NAME = 'city'

@@ -4,11 +4,13 @@ import { ref } from 'vue'
 
 // Internal
 import AuthForm from '@features/auth/components/AuthForm.vue'
+import ErrorMessage from '@shared/components/typography/ErrorMessage.vue'
 import FormInput from '@shared/components/form/FormInput.vue'
 import Heading from '@shared/components/nav/Heading.vue'
+import Honeypot from '@shared/components/form/Honeypot.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
-import { INPUT_TYPE } from '@shared/constants/form'
+import { HONEYPOT_INPUT_NAME, INPUT_TYPE } from '@shared/constants/form'
 
 import { useSendResetPasswordEmail } from '@features/auth/composables/useSendResetPasswordEmail'
 
@@ -18,19 +20,21 @@ const emit = defineEmits<{
 
 const sendMutation = useSendResetPasswordEmail()
 const email = ref('')
+const honeypot = ref('')
 
 function handleSubmit() {
-  sendMutation.mutate(
-    { email: email.value },
-    {
-      onSuccess() {
-        emit('success')
-      },
-      onError(err) {
-        console.error('Error sending reset password email:', err)
-      },
+  const request = {
+    email: email.value,
+    [HONEYPOT_INPUT_NAME]: honeypot.value,
+  }
+  sendMutation.mutate(request, {
+    onSuccess() {
+      emit('success')
     },
-  )
+    onError(err) {
+      console.error('Error sending reset password email:', err)
+    },
+  })
 }
 </script>
 
@@ -43,18 +47,18 @@ function handleSubmit() {
     :submit-button-text="AUTH_COPY.SEND_RESET_PASSWORD_EMAIL.RESET_PASSWORD"
     @submit="handleSubmit"
   >
-    <div>
-      <FormInput
-        :label="AUTH_COPY.AUTH_FORM.EMAIL"
-        name="email"
-        :type="INPUT_TYPE.EMAIL"
-        v-model="email"
-      />
+    <FormInput
+      :label="AUTH_COPY.AUTH_FORM.EMAIL"
+      name="email"
+      :type="INPUT_TYPE.EMAIL"
+      v-model="email"
+    />
 
-      <p v-if="sendMutation.isError.value" class="submit-error">
-        {{ AUTH_COPY.SEND_RESET_PASSWORD_EMAIL.ERROR }}
-      </p>
-    </div>
+    <Honeypot v-model="honeypot" />
+
+    <ErrorMessage v-if="sendMutation.isError.value" class="submit-error">
+      {{ AUTH_COPY.SEND_RESET_PASSWORD_EMAIL.ERROR }}
+    </ErrorMessage>
   </AuthForm>
 </template>
 
@@ -65,6 +69,5 @@ function handleSubmit() {
 
 .submit-error {
   color: var(--color-error);
-  margin-top: var(--space-xs);
 }
 </style>

@@ -1,5 +1,6 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -30,7 +31,17 @@ public static class ConfigureServices
         if (builder.Environment.IsDevelopment())
         {
             builder.Configuration.AddUserSecrets<Program>();
-            builder.Services.AddHttpLogging(_ => { });
+            builder.Services.AddHttpLogging(options =>
+            {
+                options.CombineLogs = true;
+                options.LoggingFields = HttpLoggingFields.RequestQuery
+                                        | HttpLoggingFields.RequestMethod
+                                        | HttpLoggingFields.RequestPath
+                                        | HttpLoggingFields.RequestBody
+                                        | HttpLoggingFields.ResponseStatusCode
+                                        | HttpLoggingFields.ResponseBody
+                                        | HttpLoggingFields.Duration;
+            });
         }
 
         builder.Host.UseSerilog((context, config) =>

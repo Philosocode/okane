@@ -38,6 +38,7 @@ export const SHARED_COPY = {
     CLOSE_BUTTON_TITLE: 'Close Modal',
   },
   NOUNS: {
+    CITY: 'City',
     TAGS: 'Tags',
   },
 

@@ -14,6 +14,7 @@ import { ROUTE_NAME, getRouter } from '@shared/services/router/router'
 
 import { getQueryClient } from '@shared/services/queryClient/queryClient'
 import { getJwtTokenPayload } from '@features/auth/utils/authResponse'
+import type { LoginRequest, RegisterRequest } from '@features/auth/types/authForm'
 
 export type AuthStore = ReturnType<typeof useAuthStore>
 
@@ -25,23 +26,19 @@ export const useAuthStore = defineStore('AuthStore', () => {
 
   /**
    * Register a user.
-   *
-   * @param email
-   * @param name
-   * @param password
+   * @param request
    */
-  async function register(email: string, name: string, password: string): Promise<void> {
-    await apiClient.post(authApiRoutes.register(), { email, name, password })
+  async function register(request: RegisterRequest): Promise<void> {
+    await apiClient.post(authApiRoutes.register(), request)
   }
 
   /**
    * Log in a user and update the auth store.
    *
-   * @param email
-   * @param password
+   * @param request
    */
-  async function login(email: string, password: string) {
-    const response = await apiClient.post<AuthenticateResponse>(`/auth/login`, { email, password })
+  async function login(request: LoginRequest) {
+    const response = await apiClient.post<AuthenticateResponse>(`/auth/login`, request)
     initState(response)
   }
 

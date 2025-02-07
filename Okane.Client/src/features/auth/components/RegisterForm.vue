@@ -6,10 +6,11 @@ import { computed, ref } from 'vue'
 import AuthForm from '@features/auth/components/AuthForm.vue'
 import FormInput from '@shared/components/form/FormInput.vue'
 import Heading from '@shared/components/nav/Heading.vue'
+import Honeypot from '@shared/components/form/Honeypot.vue'
 import PasswordRequirements from '@features/auth/components/PasswordRequirements.vue'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
-import { INPUT_TYPE } from '@shared/constants/form'
+import { HONEYPOT_INPUT_NAME, INPUT_TYPE } from '@shared/constants/form'
 
 import { type PasswordRequirements as PasswordRequirementsType } from '@features/auth/types/authForm'
 
@@ -35,6 +36,8 @@ const formState = ref({
   name: '',
   password: '',
   passwordConfirm: '',
+
+  [HONEYPOT_INPUT_NAME]: '',
 })
 
 const hasSubmitError = ref(false)
@@ -61,10 +64,9 @@ const formIsValid = computed<boolean>(() => {
 })
 
 async function handleSubmit() {
-  const postData = omitObjectKeys(formState.value, ['passwordConfirm'])
-
   try {
-    await authStore.register(postData.email, postData.name, postData.password)
+    const registerRequest = omitObjectKeys(formState.value, ['passwordConfirm'])
+    await authStore.register(registerRequest)
     emit('success')
   } catch (err) {
     console.error('Error registering:', err)
@@ -114,5 +116,7 @@ async function handleSubmit() {
       :checks="validatePasswordResult?.passwordChecks ?? {}"
       :min-password-length="passwordRequirements.minLength"
     />
+
+    <Honeypot v-model="formState[HONEYPOT_INPUT_NAME]" />
   </AuthForm>
 </template>

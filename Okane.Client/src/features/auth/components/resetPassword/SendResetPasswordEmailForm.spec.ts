@@ -10,6 +10,7 @@ import SendResetPasswordEmailForm from '@features/auth/components/resetPassword/
 
 import { authApiRoutes } from '@features/auth/constants/apiRoutes'
 import { AUTH_COPY } from '@features/auth/constants/copy'
+import { HONEYPOT_INPUT_NAME } from '@shared/constants/form'
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
@@ -21,6 +22,9 @@ const mountComponent = getMountComponent(SendResetPasswordEmailForm, { withQuery
 const elements = {
   emailInput(wrapper: VueWrapper) {
     return wrapper.get('input[type="email"]')
+  },
+  honeypotInput(wrapper: VueWrapper) {
+    return wrapper.get(`input[name="${HONEYPOT_INPUT_NAME}"]`)
   },
   submitButton(wrapper: VueWrapper) {
     return wrapper.get('button[type="submit"]')
@@ -53,6 +57,12 @@ test('renders an email input', () => {
   const wrapper = mountComponent()
   const input = elements.emailInput(wrapper)
   expect(input.attributes('name')).toBe('email')
+})
+
+test('renders a honeypot input', () => {
+  const wrapper = mountComponent()
+  const input = elements.honeypotInput(wrapper)
+  expect(input.attributes('name')).toBe(HONEYPOT_INPUT_NAME)
 })
 
 test('renders a submit button', () => {

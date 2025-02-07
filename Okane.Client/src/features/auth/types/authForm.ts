@@ -1,3 +1,6 @@
+// Internal
+import { HONEYPOT_INPUT_NAME } from '@shared/constants/form'
+
 export type PasswordChecks = {
   insufficientLength?: boolean
   invalidPasswordConfirm?: boolean
@@ -13,4 +16,17 @@ export type PasswordRequirements = {
   requireLowercase: boolean
   requireUppercase: boolean
   requireNonAlphanumeric: boolean
+}
+
+export type RegisterRequest = {
+  email: string
+  name: string
+  password: string
+  [HONEYPOT_INPUT_NAME]: string
+}
+
+export type LoginRequest = {
+  email: string
+  password: string
+  [HONEYPOT_INPUT_NAME]: string
 }

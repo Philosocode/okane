@@ -18,11 +18,6 @@ public class TestingEmailService : IEmailService
         Calls = calls;
     }
 
-    public static void ClearCalls()
-    {
-        Calls?.Clear();
-    }
-
     public Task SendAsync(string to, string subject, string html, CancellationToken cancellationToken)
     {
         Calls?.Add(new TestingEmailServiceCall(to, subject, html));

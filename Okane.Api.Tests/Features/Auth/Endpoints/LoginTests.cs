@@ -108,7 +108,16 @@ public class LoginTests : DatabaseTest, IAsyncLifetime
     }
 
     [Fact]
-    public async Task ReturnsAnError_WhenUserDoesNotExist()
+    public async Task ReturnsABadRequest_ForSpamRequests()
+    {
+        var response = await _client.PostAsJsonAsync("/auth/login", new Login.Request(
+            TestUser.Email, TestUser.Password, "Legit city"
+        ));
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task ReturnsABadRequest_WhenUserDoesNotExist()
     {
         var request = new Login.Request("non-existent-user@gmail.com", TestUser.Password);
         HttpResponseMessage response = await _client.PostAsJsonAsync("/auth/login", request);
@@ -116,7 +125,7 @@ public class LoginTests : DatabaseTest, IAsyncLifetime
     }
 
     [Fact]
-    public async Task ReturnsAnError_WhenPasswordIsInvalid()
+    public async Task ReturnsABadRequest_WhenPasswordIsInvalid()
     {
         var request = new Login.Request(TestUser.Email!, "invalidPassword");
         HttpResponseMessage response = await _client.PostAsJsonAsync("/auth/login", request);

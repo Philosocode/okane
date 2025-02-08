@@ -98,6 +98,26 @@ public class RegisterTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFact
         calls.Last().To.Should().Be(_validRequest.Email);
     }
 
+    // Honeypot
+    [Fact]
+    public async Task ReturnsANoContentAndDoesNothing_ForSpamRequests()
+    {
+        var calls = TestingEmailService.CreateCalls();
+        TestingEmailService.SetCalls(calls);
+
+        var client = CreateClient();
+        var response = await client.PostAsJsonAsync("/auth/register", _validRequest with
+        {
+            City = "Legit city"
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        var user = await Db.Users.Where(u => u.Email == _validRequest.Email).SingleOrDefaultAsync();
+        user.Should().BeNull();
+        calls.Should().BeEmpty();
+    }
+
     // Input validation.
     private async Task AssertInvalidInput(Register.Request request)
     {

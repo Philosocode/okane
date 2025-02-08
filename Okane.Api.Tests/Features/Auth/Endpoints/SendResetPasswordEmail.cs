@@ -38,7 +38,7 @@ public class SendResetPasswordEmailTests(PostgresApiFactory apiFactory) : Databa
         });
 
         var client = factory.CreateClient();
-        var loginResponse = await client.RegisterAndLogInTestUserAsync();
+        await client.RegisterTestUserAsync();
 
         var calls = TestingEmailService.CreateCalls();
         TestingEmailService.SetCalls(calls);
@@ -49,6 +49,32 @@ public class SendResetPasswordEmailTests(PostgresApiFactory apiFactory) : Databa
 
         calls.Should().HaveCount(1);
         calls[0].Subject.Should().Be(EmailGenerator.ResetYourPasswordSubject);
-        calls[0].To.Should().Be(loginResponse.User.Email);
+        calls[0].To.Should().Be(TestUser.Email);
     }
+
+    [Fact]
+    public async Task ReturnsNoContentAndDoesNothing_ForSpamRequests()
+    {
+        var factory = _apiFactory.WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureTestServices(services =>
+            {
+                services.RemoveAll<IEmailService>();
+                services.AddScoped<IEmailService, TestingEmailService>();
+            });
+        });
+
+        var client = factory.CreateClient();
+        await client.RegisterTestUserAsync();
+
+        var calls = TestingEmailService.CreateCalls();
+        TestingEmailService.SetCalls(calls);
+
+        var request = new SendResetPasswordEmail.Request(TestUser.Email, "Coolest City");
+        var response = await client.PostAsJsonAsync("/auth/send-reset-password-email", request);
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        calls.Should().BeEmpty();
+    }
+
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Okane.Api.Features.Auth.Constants;
+using Okane.Api.Features.Auth.Dtos.Requests;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Emails.Services;
@@ -22,7 +23,7 @@ public class SendResetPasswordEmail : IEndpoint
             .WithSummary("Send reset password email.");
     }
 
-    public record Request(string Email);
+    public record Request(string Email, string City = "") : HoneypotRequest(City);
 
     private static async Task<Results<BadRequest<ProblemDetails>, NoContent>>
         HandleAsync(
@@ -34,6 +35,11 @@ public class SendResetPasswordEmail : IEndpoint
             UserManager<ApiUser> userManager,
             CancellationToken cancellationToken)
     {
+        if (request.City.Length > 0)
+        {
+            return TypedResults.NoContent();
+        }
+
         var user = await db.Users.SingleOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
         if (user is null)
         {

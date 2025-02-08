@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Okane.Api.Features.Auth.Config;
 using Okane.Api.Features.Auth.Constants;
+using Okane.Api.Features.Auth.Dtos.Requests;
 using Okane.Api.Features.Auth.Dtos.Responses;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Features.Auth.Mappers;
@@ -32,6 +33,18 @@ public class Login : IEndpoint
             .WithRequestValidation<Request>();
     }
 
+    public record Request(string Email, string Password, string City = "")
+        : HoneypotRequest(City);
+
+    public class RequestValidator : AbstractValidator<Request>
+    {
+        public RequestValidator()
+        {
+            RuleFor(r => r.Email).NotEmpty().EmailAddress();
+            RuleFor(r => r.Password).NotEmpty();
+        }
+    }
+
     private static async Task<Results<Ok<ApiResponse<AuthenticateResponse>>, BadRequest<ProblemDetails>>>
         HandleAsync(
             IDateTimeWrapper dateTime,
@@ -44,6 +57,15 @@ public class Login : IEndpoint
             ITokenService tokenService,
             CancellationToken cancellationToken)
     {
+        var errorAuthenticating = new ApiException("Error authenticating.");
+
+        if (request.City.Length > 0)
+        {
+            logger.LogInformation("Spam login received: {Email}", request.Email);
+
+            return TypedResults.BadRequest(errorAuthenticating.ToProblemDetails());
+        }
+
         signInManager.AuthenticationScheme = IdentityConstants.ApplicationScheme;
 
         SignInResult signInResult = await signInManager.PasswordSignInAsync(
@@ -54,8 +76,7 @@ public class Login : IEndpoint
         {
             logger.LogWarning("Login failure: {Email}", request.Email);
 
-            var exception = new ApiException("Error authenticating.");
-            return TypedResults.BadRequest(exception.ToProblemDetails());
+            return TypedResults.BadRequest(errorAuthenticating.ToProblemDetails());
         }
 
         ApiUser? user = await db.Users
@@ -84,16 +105,5 @@ public class Login : IEndpoint
         };
 
         return TypedResults.Ok(new ApiResponse<AuthenticateResponse>(response));
-    }
-
-    public record Request(string Email, string Password);
-
-    public class RequestValidator : AbstractValidator<Request>
-    {
-        public RequestValidator()
-        {
-            RuleFor(r => r.Email).NotEmpty().EmailAddress();
-            RuleFor(r => r.Password).NotEmpty();
-        }
     }
 }

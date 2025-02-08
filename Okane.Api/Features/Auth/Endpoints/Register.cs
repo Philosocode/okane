@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Okane.Api.Features.Auth.Constants;
+using Okane.Api.Features.Auth.Dtos.Requests;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Features.Auth.Mappers;
 using Okane.Api.Features.Auth.Services;
@@ -28,7 +29,8 @@ public class Register : IEndpoint
             .WithRequestValidation<Request>();
     }
 
-    public record Request(string Name, string Email, string Password);
+    public record Request(string Name, string Email, string Password, string City = "")
+        : HoneypotRequest(City);
 
     public class RequestValidator : AbstractValidator<Request>
     {
@@ -54,6 +56,13 @@ public class Register : IEndpoint
             IUserStore<ApiUser> userStore,
             CancellationToken cancellationToken)
     {
+        if (request.City.Length > 0)
+        {
+            logger.LogInformation("Spam registration received: {Request}", request);
+
+            return TypedResults.NoContent();
+        }
+
         var userToCreate = new ApiUser
         {
             Name = request.Name,

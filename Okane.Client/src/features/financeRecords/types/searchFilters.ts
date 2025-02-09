@@ -22,6 +22,18 @@ export type FinanceRecordSearchFilters = {
   tags: Tag[]
 }
 
+export type FinanceRecordSearchFiltersFormState = Omit<
+  FinanceRecordSearchFilters,
+  'amount1' | 'amount2' | 'amountOperator' | 'happenedAt1' | 'happenedAt2' | 'happenedAtOperator'
+> & {
+  amount1: string
+  amount2: string
+  amountOperator: string
+  happenedAt1: string
+  happenedAt2: string
+  happenedAtOperator: string
+}
+
 export type FinanceRecordSearchCursor = {
   id?: number
 

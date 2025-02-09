@@ -114,7 +114,7 @@ describe('when clicking the submit button', () => {
       ...defaultProps,
       formState: {
         ...defaultProps.formState,
-        amount: FINANCE_RECORD_MIN_AMOUNT - 1,
+        amount: (FINANCE_RECORD_MIN_AMOUNT - 1).toString(),
       },
     })
     const submitButton = wrapper.get("button[type='submit']")

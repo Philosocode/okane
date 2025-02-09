@@ -52,7 +52,7 @@ function handleSubmit() {
     onSuccess() {
       formState.value = {
         ...formState.value,
-        amount: 0,
+        amount: '0',
         description: '',
       }
 

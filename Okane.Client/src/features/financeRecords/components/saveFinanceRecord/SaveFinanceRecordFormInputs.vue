@@ -13,10 +13,12 @@ import {
   FINANCE_RECORD_TYPE_OPTIONS,
 } from '@features/financeRecords/constants/saveFinanceRecord'
 
-import type {
-  SaveFinanceRecordFormErrors,
-  SaveFinanceRecordFormState,
+import {
+  type SaveFinanceRecordFormErrors,
+  type SaveFinanceRecordFormState,
 } from '@features/financeRecords/types/saveFinanceRecord'
+
+import { isFinanceRecordType } from '@features/financeRecords/utils/financeRecord'
 
 type Props = {
   formState: SaveFinanceRecordFormState
@@ -27,6 +29,12 @@ const props = defineProps<Props>()
 const emit = defineEmits<{
   (e: 'change', formState: Partial<SaveFinanceRecordFormState>): void
 }>()
+
+function handleTypeChange(value: string) {
+  if (isFinanceRecordType(value)) {
+    emit('change', { tags: [], type: value })
+  }
+}
 </script>
 
 <template>
@@ -47,7 +55,7 @@ const emit = defineEmits<{
     <FormSelect
       :label="FINANCES_COPY.PROPERTIES.TYPE"
       :model-value="formState.type"
-      @update:model-value="emit('change', { tags: [], type: $event })"
+      @update:model-value="handleTypeChange"
       :options="FINANCE_RECORD_TYPE_OPTIONS"
       name="type"
       required

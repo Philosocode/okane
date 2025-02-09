@@ -1,5 +1,5 @@
 // Internal
-import type { AnyFunction } from '@shared/types/shared'
+import { type AnyFunction } from '@shared/types/shared'
 
 type Mappers = {
   [key: string]: AnyFunction

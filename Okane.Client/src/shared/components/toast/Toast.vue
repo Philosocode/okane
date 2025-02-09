@@ -13,6 +13,7 @@ import {
   TOAST_HIDE_AFTER_MS,
 } from '@shared/constants/toast'
 
+import { type Timeout } from '@shared/types/shared'
 import { type Toast as ToastType } from '@shared/types/toaster'
 
 import { useToastStore } from '@shared/composables/useToastStore'
@@ -21,7 +22,7 @@ type Props = {
   toast: ToastType
 }
 const props = defineProps<Props>()
-const timeout = ref<number>()
+const timeout = ref<Timeout>()
 
 const { removeToast } = useToastStore()
 

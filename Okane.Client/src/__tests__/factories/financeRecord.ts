@@ -28,7 +28,7 @@ export const createTestFinanceRecord: TestObjectFactoryFunction<FinanceRecord> =
 }
 
 const defaultSaveFinanceRecordFormState: SaveFinanceRecordFormState = {
-  amount: defaultFinanceRecord.amount,
+  amount: defaultFinanceRecord.amount.toString(),
   description: defaultFinanceRecord.description,
   tags: defaultFinanceRecord.tags,
   type: defaultFinanceRecord.type,

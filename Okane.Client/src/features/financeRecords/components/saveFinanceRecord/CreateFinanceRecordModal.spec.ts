@@ -178,7 +178,7 @@ describe('with an error creating a finance record', () => {
 
   test('displays the API errors', async () => {
     const apiErrors = createTestApiFormErrors({
-      amount: 0,
+      amount: '0',
       description: '',
       happenedAt: '',
     })

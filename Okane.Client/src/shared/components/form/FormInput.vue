@@ -11,8 +11,9 @@ import { VISUALLY_HIDDEN_CLASS } from '@shared/constants/styles'
 
 import { getUniqueFormControlId } from '@shared/utils/form'
 
-export interface FormInputProps extends /* @vue-ignore */ InputHTMLAttributes {
+interface Props {
   label: string
+  modelValue: string
   name: string
 
   error?: string
@@ -21,16 +22,22 @@ export interface FormInputProps extends /* @vue-ignore */ InputHTMLAttributes {
   withHiddenLabel?: boolean
 }
 
+const emit = defineEmits(['update:modelValue'])
+
 const controlId = getUniqueFormControlId()
 const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
-const model = defineModel<number | string>()
-const props = defineProps<FormInputProps>()
+const props = defineProps<Props>()
 
 const errorLabelId = `${controlId}-error`
 
 onMounted(() => {
   if (props.focusOnMount) inputRef.value?.focus()
 })
+
+function handleChange(event: Event) {
+  const target = event.target as HTMLInputElement
+  emit('update:modelValue', target.value)
+}
 </script>
 
 <template>
@@ -42,12 +49,13 @@ onMounted(() => {
       class="input form-input"
       ref="inputRef"
       v-bind="$attrs"
-      v-model="model"
       :aria-describedby="props.error ? errorLabelId : undefined"
       :aria-invalid="props.error ? true : undefined"
       :id="controlId"
       :name="props.name"
       :type="props.type"
+      :value="props.modelValue"
+      @input="handleChange"
     />
     <ErrorMessage v-if="error" :aria-live="ARIA_LIVE.ASSERTIVE" class="error" :id="errorLabelId">
       {{ error }}

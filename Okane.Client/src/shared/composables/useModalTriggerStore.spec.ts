@@ -6,7 +6,7 @@ import { useModalTriggerStore } from '@shared/composables/useModalTriggerStore'
 
 const TestComponent = defineComponent({
   setup() {
-    const buttonRef = useTemplateRef('buttonRef')
+    const buttonRef = useTemplateRef<HTMLButtonElement>('buttonRef')
     const store = useModalTriggerStore()
 
     function toggle() {

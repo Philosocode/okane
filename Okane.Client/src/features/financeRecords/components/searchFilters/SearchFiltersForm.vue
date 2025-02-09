@@ -17,16 +17,23 @@ import { SHARED_COPY } from '@shared/constants/copy'
 import { SORT_DIRECTION_OPTIONS } from '@shared/constants/search'
 import { BUTTON_TYPE, INPUT_TYPE } from '@shared/constants/form'
 import {
+  DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
   FINANCE_RECORD_SORT_FIELD_OPTIONS,
   SEARCH_FINANCE_RECORDS_TYPE_OPTIONS,
 } from '@features/financeRecords/constants/searchFilters'
 
-import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
+import { type FinanceRecordSearchFiltersFormState } from '@features/financeRecords/types/searchFilters'
 
 import {
   FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
   type FinanceRecordSearchFiltersProvider,
 } from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
+
+import { isFinanceRecordType } from '@features/financeRecords/utils/financeRecord'
+import {
+  mapFinanceRecordSearchFilters,
+  mapFinanceRecordSearchFiltersFormState,
+} from '@features/financeRecords/utils/mappers'
 
 const userTagTypes = computed(() => {
   if (formState.value.type === '') {
@@ -39,13 +46,22 @@ const userTagTypes = computed(() => {
 const searchProvider = inject(
   FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
 ) as FinanceRecordSearchFiltersProvider
-const formRef = useTemplateRef<HTMLFormElement>('form')
-const formState = ref<FinanceRecordSearchFilters>({ ...searchProvider.filters })
 
-function handleChange(updates: Partial<FinanceRecordSearchFilters>) {
+const formRef = useTemplateRef<HTMLFormElement>('form')
+const formState = ref<FinanceRecordSearchFiltersFormState>(
+  mapFinanceRecordSearchFilters.to.financeRecordSearchFiltersFormState(searchProvider.filters),
+)
+
+function handleChange(updates: Partial<FinanceRecordSearchFiltersFormState>) {
   formState.value = {
     ...formState.value,
     ...updates,
+  }
+}
+
+function handleTypeChange(type: string) {
+  if (isFinanceRecordType(type)) {
+    handleChange({ type, tags: [] })
   }
 }
 
@@ -54,13 +70,18 @@ function handleCancel() {
 }
 
 function handleReset() {
-  formState.value = { ...searchProvider.filters }
+  formState.value = mapFinanceRecordSearchFilters.to.financeRecordSearchFiltersFormState(
+    DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+  )
 }
 
 function handleSubmit() {
   if (!formRef.value?.checkValidity()) return
 
-  searchProvider.setFilters(formState.value)
+  const filters = mapFinanceRecordSearchFiltersFormState.to.financeRecordSearchFilters(
+    formState.value,
+  )
+  searchProvider.setFilters(filters)
 
   handleCancel()
 }
@@ -81,7 +102,7 @@ function handleSubmit() {
         :label="FINANCES_COPY.PROPERTIES.TYPE"
         name="type"
         :model-value="formState.type"
-        @update:model-value="(type) => handleChange({ tags: [], type })"
+        @update:model-value="handleTypeChange"
         :options="SEARCH_FINANCE_RECORDS_TYPE_OPTIONS"
       />
 

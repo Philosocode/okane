@@ -7,21 +7,29 @@ import Kicker from '@shared/components/typography/Kicker.vue'
 import { SHARED_COPY } from '@shared/constants/copy'
 import { ALL_COMPARISON_OPERATOR_OPTIONS, COMPARISON_OPERATOR } from '@shared/constants/search'
 
+import { isComparisonOperator } from '@shared/utils/search'
+
 type Props = {
   isShowingRange: boolean
   label: string
 
-  operator?: COMPARISON_OPERATOR
+  operator?: string
   operatorSelectName: string
 }
 
 const props = defineProps<Props>()
 const emit = defineEmits<{
-  (e: 'operatorChange', operator?: COMPARISON_OPERATOR): void
+  (e: 'operatorChange', operator?: string): void
 }>()
 
-function emitChange(update?: COMPARISON_OPERATOR) {
+function emitChange(update?: string) {
   emit('operatorChange', update)
+}
+
+function handleOperatorChange(value: string): void {
+  if (isComparisonOperator(value)) {
+    emit('operatorChange', value)
+  }
 }
 
 function useSingle() {
@@ -29,7 +37,7 @@ function useSingle() {
 }
 
 function useRange() {
-  emitChange(undefined)
+  emitChange('')
 }
 
 function toggleRange() {
@@ -51,7 +59,7 @@ function toggleRange() {
           v-if="!isShowingRange"
           class="operator"
           :model-value="props.operator"
-          @update:model-value="emitChange"
+          @update:model-value="handleOperatorChange"
           :label="SHARED_COPY.SEARCH.OPERATOR"
           :name="props.operatorSelectName"
           :options="ALL_COMPARISON_OPERATOR_OPTIONS"

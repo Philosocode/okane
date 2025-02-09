@@ -6,7 +6,7 @@ import {
   type FinanceRecordSearchFilters,
 } from '@features/financeRecords/types/searchFilters'
 
-import { mapFinanceRecordsSearchFilters } from '@features/financeRecords/utils/mappers'
+import { mapFinanceRecordSearchFilters } from '@features/financeRecords/utils/mappers'
 
 const basePath = '/finance-records'
 
@@ -16,7 +16,7 @@ export const financeRecordApiRoutes = {
     searchFilters: FinanceRecordSearchFilters
   }) {
     const { cursor, searchFilters } = args
-    const searchParams = mapFinanceRecordsSearchFilters.to.URLSearchParams(searchFilters)
+    const searchParams = mapFinanceRecordSearchFilters.to.URLSearchParams(searchFilters)
     searchParams.append('pageSize', DEFAULT_PAGE_SIZE.toString())
 
     if (cursor.id) {
@@ -33,7 +33,7 @@ export const financeRecordApiRoutes = {
     return `${basePath}?${searchParams.toString()}`
   },
   getStats(args: { searchFilters: FinanceRecordSearchFilters }) {
-    const searchParams = mapFinanceRecordsSearchFilters.to.URLSearchParams(args.searchFilters)
+    const searchParams = mapFinanceRecordSearchFilters.to.URLSearchParams(args.searchFilters)
     return `${basePath}/stats?${searchParams.toString()}`
   },
   deleteFinanceRecord: ({ id }: { id: number }) => `${basePath}/${id}`,

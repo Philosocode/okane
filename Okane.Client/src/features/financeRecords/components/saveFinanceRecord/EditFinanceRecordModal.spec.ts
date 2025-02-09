@@ -139,7 +139,7 @@ test('closes the modal without making a request when the form state is unchanged
 })
 
 describe('with a successful request to edit a finance record', () => {
-  const updates = { amount: 10_000 }
+  const updates = { amount: '10000' }
 
   test('makes a PATCH request to update the finance record', async () => {
     const patchSpy = vi.spyOn(apiClient, 'patch').mockResolvedValue(wrapInApiResponse(null))
@@ -213,7 +213,7 @@ describe('with an error updating a finance record', () => {
     vi.spyOn(apiClient, 'patch').mockRejectedValue(apiErrors)
     const wrapper = mountWithProviders()
 
-    helpers.setFormState(wrapper, { amount: 10_000 })
+    helpers.setFormState(wrapper, { amount: '10000' })
     await helpers.submitForm(wrapper)
 
     Object.values(apiErrors).forEach((errors) => {

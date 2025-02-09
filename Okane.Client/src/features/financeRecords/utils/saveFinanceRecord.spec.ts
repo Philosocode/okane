@@ -12,7 +12,7 @@ describe('getInitialSaveFinanceRecordFormState', () => {
   test('returns the initial form state', () => {
     vi.spyOn(Date, 'now').mockReturnValue(540)
     expect(utils.getInitialSaveFinanceRecordFormState()).toEqual({
-      amount: 0,
+      amount: '0',
       description: '',
       happenedAt: mapDate.to.dateTimeLocal(new Date(Date.now())),
       tags: [],

@@ -6,8 +6,6 @@ import { flushPromises } from '@vue/test-utils'
 import { financeRecordApiRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 
-import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
-
 import { useEditFinanceRecord } from '@features/financeRecords/composables/useEditFinanceRecord'
 
 import {
@@ -31,7 +29,7 @@ const spyOn = {
   },
 }
 
-const changes: Partial<SaveFinanceRecordFormState> = { amount: 99 }
+const changes = { amount: '99' }
 const request = mapSaveFinanceRecordFormState.to.editFinanceRecordRequest(changes)
 const id = 540
 
@@ -65,7 +63,9 @@ test('makes a PATCH request to the expected endpoint', async () => {
 
   mountWithProviders()
   await flushPromises()
-  expect(patchSpy).toHaveBeenCalledWith(financeRecordApiRoutes.patchFinanceRecord({ id }), changes)
+  expect(patchSpy).toHaveBeenCalledWith(financeRecordApiRoutes.patchFinanceRecord({ id }), {
+    amount: parseFloat(changes.amount),
+  })
 })
 
 test('invalidates the expected query keys', async () => {

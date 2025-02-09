@@ -149,7 +149,7 @@ describe('Amount input', () => {
   sharedTests.emitsAChangeEvent({
     selector: elementSelectors.amountInput,
     value: '1234',
-    emittedData: { amount: 1234 },
+    emittedData: { amount: '1234' },
   })
 
   sharedTests.rendersAnErrorLabel({

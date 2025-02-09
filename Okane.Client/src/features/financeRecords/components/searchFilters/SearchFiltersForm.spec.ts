@@ -30,6 +30,11 @@ import {
   useFinanceRecordSearchFiltersProvider,
 } from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
+import {
+  mapFinanceRecordSearchFilters,
+  mapFinanceRecordSearchFiltersFormState,
+} from '@features/financeRecords/utils/mappers'
+
 import { commonAsserts } from '@tests/utils/commonAsserts'
 import { createTestTag } from '@tests/factories/tag'
 import { createTestFinanceUserTag } from '@tests/factories/financeUserTag'
@@ -159,16 +164,22 @@ describe('Amount filter', () => {
     const searchProvider = useFinanceRecordSearchFiltersProvider()
     const wrapper = await mountWithProviders({ searchProvider })
     const amountFilter = wrapper.findComponent(FinanceRecordAmountFilter)
-    const changes: Partial<FinanceRecordSearchFilters> = {
-      amount1: 1,
-      amount2: 2,
+    const changes = {
+      amount1: '1',
+      amount2: '2',
       amountOperator: COMPARISON_OPERATOR.LTE,
     }
 
     amountFilter.vm.$emit('change', changes)
     await helpers.submitForm(wrapper)
 
-    expect(searchProvider.filters).toEqual(expect.objectContaining(changes))
+    expect(searchProvider.filters).toEqual(
+      expect.objectContaining({
+        amount1: parseFloat(changes.amount1),
+        amount2: parseFloat(changes.amount2),
+        amountOperator: changes.amountOperator,
+      }),
+    )
   })
 })
 
@@ -183,16 +194,22 @@ describe('Happened at filter', () => {
     const searchProvider = useFinanceRecordSearchFiltersProvider()
     const wrapper = await mountWithProviders({ searchProvider })
     const amountFilter = wrapper.findComponent(FinanceRecordAmountFilter)
-    const changes: Partial<FinanceRecordSearchFilters> = {
-      happenedAt1: new Date(),
-      happenedAt2: new Date(),
+    const changes = {
+      happenedAt1: '2024-01-01',
+      happenedAt2: '2024-01-01',
       happenedAtOperator: COMPARISON_OPERATOR.LTE,
     }
 
     amountFilter.vm.$emit('change', changes)
     await helpers.submitForm(wrapper)
 
-    expect(searchProvider.filters).toEqual(expect.objectContaining(changes))
+    expect(searchProvider.filters).toEqual(
+      expect.objectContaining({
+        happenedAt1: new Date(changes.happenedAt1),
+        happenedAt2: new Date(changes.happenedAt2),
+        happenedAtOperator: COMPARISON_OPERATOR.LTE,
+      }),
+    )
   })
 })
 
@@ -332,17 +349,20 @@ describe('Save button', () => {
 
   test('does not update the search filters state when the form is invalid', async () => {
     const searchProvider = useFinanceRecordSearchFiltersProvider()
-    const initialSearchFilters = {
+    const initialFilters: FinanceRecordSearchFilters = {
       ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
 
       // When the amountOperator is empty, that means an amount range is showing and both inputs need
       // to be populated.
       amountOperator: undefined,
     }
-    searchProvider.setFilters(initialSearchFilters)
+    searchProvider.setFilters(initialFilters)
+
+    const initialFormState =
+      mapFinanceRecordSearchFilters.to.financeRecordSearchFiltersFormState(initialFilters)
 
     const wrapper = await mountWithProviders({ searchProvider })
-    const updates = { amount1: 1, amount2: 2 }
+    const updates = { amount1: '1', amount2: '2' }
 
     const amount1Input = wrapper.get('input[name="amount1"]')
     await amount1Input.setValue(updates.amount1)
@@ -350,17 +370,18 @@ describe('Save button', () => {
     await saveButton.trigger('submit')
 
     // Shouldn't update because an amount range is showing and amount2 is missing.
-    expect(searchProvider.filters).toEqual(initialSearchFilters)
+    expect(searchProvider.filters).toEqual(initialFilters)
 
     const amount2Input = wrapper.get('input[name="amount2"]')
     await amount2Input.setValue(updates.amount2)
     await saveButton.trigger('submit')
 
     // Should update because amount1 and amount2 are both present.
-    expect(searchProvider.filters).toEqual({
-      ...initialSearchFilters,
+    const expectedFilters = mapFinanceRecordSearchFiltersFormState.to.financeRecordSearchFilters({
+      ...initialFormState,
       ...updates,
     })
+    expect(searchProvider.filters).toEqual(expectedFilters)
   })
 })
 
@@ -382,7 +403,7 @@ describe('Cancel button', () => {
 })
 
 describe('Reset button', () => {
-  test('resets the search filters state', async () => {
+  test('resets the form state', async () => {
     const initialSearchFilters = {
       ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
       description: 'Initial description',
@@ -396,6 +417,9 @@ describe('Reset button', () => {
 
     const resetButton = wrapper.findByText('button', SHARED_COPY.ACTIONS.RESET)
     await resetButton.trigger('click')
+
+    const inputElement = descriptionInput.element as HTMLInputElement
+    expect(inputElement.value).toBe('')
 
     expect(searchProvider.filters).toEqual(initialSearchFilters)
   })

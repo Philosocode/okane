@@ -13,7 +13,15 @@ import {
   type ManageFinanceUserTagsProvider,
 } from '@features/financeUserTags/providers/manageFinanceUserTagsProvider'
 
+import { isFinanceRecordType } from '@features/financeRecords/utils/financeRecord'
+
 const provider = inject(MANAGE_FINANCE_USER_TAGS_PROVIDER_SYMBOL) as ManageFinanceUserTagsProvider
+
+function updateUserTagType(value: string) {
+  if (isFinanceRecordType(value)) {
+    provider.setUserTagType(value)
+  }
+}
 </script>
 
 <template>
@@ -23,7 +31,7 @@ const provider = inject(MANAGE_FINANCE_USER_TAGS_PROVIDER_SYMBOL) as ManageFinan
       name="tagType"
       :options="FINANCE_RECORD_TYPE_OPTIONS"
       :model-value="provider.userTagType"
-      @update:model-value="provider.setUserTagType"
+      @update:model-value="updateUserTagType"
     />
   </div>
 </template>

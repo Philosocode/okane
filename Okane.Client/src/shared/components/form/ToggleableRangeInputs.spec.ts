@@ -62,7 +62,7 @@ test('clicking the toggle button switches to multiple inputs', async () => {
   const wrapper = mountComponent({ props })
   const toggleButton = wrapper.findByText('button', SHARED_COPY.SEARCH.USE_RANGE)
   await toggleButton.trigger('click')
-  expect(wrapper.emitted('operatorChange')?.[0][0]).toBe(undefined)
+  expect(wrapper.emitted('operatorChange')?.[0][0]).toBe('')
 })
 
 describe('when showing a range', () => {

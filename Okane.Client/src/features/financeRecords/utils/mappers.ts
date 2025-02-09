@@ -1,8 +1,11 @@
 // External
-import { endOfDay } from 'date-fns'
+import { endOfDay, isValid as isValidDate } from 'date-fns'
 
 // Internal
-import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
+import {
+  type FinanceRecordSearchFilters,
+  type FinanceRecordSearchFiltersFormState,
+} from '@features/financeRecords/types/searchFilters'
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
 import { type MinMax } from '@shared/types/search'
 import {
@@ -11,7 +14,7 @@ import {
   type SaveFinanceRecordFormState,
 } from '@features/financeRecords/types/saveFinanceRecord'
 
-import { convertValueAndOperatorToMinMax } from '@shared/utils/search'
+import { convertValueAndOperatorToMinMax, isComparisonOperator } from '@shared/utils/search'
 import { createMappers } from '@shared/utils/mappers'
 import { mapDate } from '@shared/utils/dateTime'
 
@@ -19,6 +22,7 @@ export const mapFinanceRecord = createMappers({
   saveFinanceRecordFormState(financeRecord: FinanceRecord): SaveFinanceRecordFormState {
     return {
       ...financeRecord,
+      amount: financeRecord.amount.toString(),
       happenedAt: mapDate.to.dateTimeLocal(financeRecord.happenedAt),
     }
   },
@@ -28,6 +32,7 @@ export const mapSaveFinanceRecordFormState = createMappers({
   createFinanceRecordRequest(formState: SaveFinanceRecordFormState): CreateFinanceRecordRequest {
     return {
       ...formState,
+      amount: parseFloat(formState.amount),
       happenedAt: new Date(formState.happenedAt),
       tagIds: formState.tags.map((tag) => tag.id),
     }
@@ -35,20 +40,44 @@ export const mapSaveFinanceRecordFormState = createMappers({
   editFinanceRecordRequest(
     formState: Partial<SaveFinanceRecordFormState>,
   ): EditFinanceRecordRequest {
-    const { happenedAt, tags, ...rest } = formState
+    const { amount, happenedAt, tags, ...rest } = formState
     return {
       ...rest,
+      ...(amount && { amount: parseFloat(amount) }),
       ...(happenedAt && { happenedAt: new Date(happenedAt) }),
       ...(tags && { tagIds: tags.map((tag) => tag.id) }),
     }
   },
 })
 
-export const mapFinanceRecordsSearchFilters = createMappers({
-  URLSearchParams: mapFinanceRecordsSearchFiltersToURLSearchParams,
+export const mapFinanceRecordSearchFilters = createMappers({
+  financeRecordSearchFiltersFormState(
+    filters: FinanceRecordSearchFilters,
+  ): FinanceRecordSearchFiltersFormState {
+    const {
+      amount1,
+      amount2,
+      amountOperator,
+      happenedAt1,
+      happenedAt2,
+      happenedAtOperator,
+      ...rest
+    } = filters
+
+    return {
+      ...rest,
+      amount1: amount1?.toString() ?? '',
+      amount2: amount2?.toString() ?? '',
+      amountOperator: amountOperator?.toString() ?? '',
+      happenedAt1: happenedAt1 ? mapDate.to.dateOnlyTimestamp(happenedAt1) : '',
+      happenedAt2: happenedAt2 ? mapDate.to.dateOnlyTimestamp(happenedAt2) : '',
+      happenedAtOperator: happenedAtOperator?.toString() ?? '',
+    }
+  },
+  URLSearchParams: mapFinanceRecordSearchFiltersToURLSearchParams,
 })
 
-function mapFinanceRecordsSearchFiltersToURLSearchParams(
+function mapFinanceRecordSearchFiltersToURLSearchParams(
   filters: FinanceRecordSearchFilters,
 ): URLSearchParams {
   const params = new URLSearchParams({
@@ -98,3 +127,41 @@ function mapFinanceRecordsSearchFiltersToURLSearchParams(
 
   return params
 }
+
+export const mapFinanceRecordSearchFiltersFormState = createMappers({
+  financeRecordSearchFilters(
+    formState: FinanceRecordSearchFiltersFormState,
+  ): FinanceRecordSearchFilters {
+    const {
+      amount1,
+      amount2,
+      amountOperator,
+      happenedAt1,
+      happenedAt2,
+      happenedAtOperator,
+      ...rest
+    } = formState
+
+    const filters: FinanceRecordSearchFilters = { ...rest }
+
+    const amount1Parsed = parseFloat(amount1)
+    filters.amount1 = isNaN(amount1Parsed) ? undefined : amount1Parsed
+
+    const amount2Parsed = parseFloat(amount2)
+    filters.amount2 = isNaN(amount2Parsed) ? undefined : amount2Parsed
+
+    filters.amountOperator = isComparisonOperator(amountOperator) ? amountOperator : undefined
+
+    const happenedAt1Parsed = new Date(happenedAt1)
+    filters.happenedAt1 = isValidDate(happenedAt1Parsed) ? happenedAt1Parsed : undefined
+
+    const happenedAt2Parsed = new Date(happenedAt2)
+    filters.happenedAt2 = isValidDate(happenedAt2Parsed) ? happenedAt2Parsed : undefined
+
+    filters.happenedAtOperator = isComparisonOperator(happenedAtOperator)
+      ? happenedAtOperator
+      : undefined
+
+    return filters
+  },
+})

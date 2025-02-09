@@ -10,8 +10,9 @@ import { FINANCE_RECORD_MIN_AMOUNT } from '@features/financeRecords/constants/sa
 
 const mountComponent = getMountComponent(FinanceRecordAmountFilter)
 const props: FinanceRecordAmountFilterProps = {
-  amount1: 10,
-  amount2: 20,
+  amount1: '10',
+  amount2: '20',
+  amountOperator: '',
 }
 
 test('renders an "amount" legend', () => {
@@ -44,7 +45,7 @@ test('emits a "change" event when the amount1 input value is updated', () => {
   const wrapper = mountComponent({ props })
   const amount1Input = wrapper.get('input[name="amount1"]')
   amount1Input.setValue(100)
-  expect(wrapper.emitted('change')).toEqual([[{ amount1: 100 }]])
+  expect(wrapper.emitted('change')).toEqual([[{ amount1: '100' }]])
 })
 
 test('renders an amount2 input', () => {
@@ -62,7 +63,7 @@ test('emits a "change" event when the amount2 input value is updated', () => {
   const wrapper = mountComponent({ props })
   const input = wrapper.get('input[name="amount2"]')
   input.setValue(100)
-  expect(wrapper.emitted('change')).toEqual([[{ amount2: 100 }]])
+  expect(wrapper.emitted('change')).toEqual([[{ amount2: '100' }]])
 })
 
 describe('when an operator is provided', () => {

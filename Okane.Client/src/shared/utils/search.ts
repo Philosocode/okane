@@ -1,5 +1,5 @@
 // Internal
-import { COMPARISON_OPERATOR } from '@shared/constants/search'
+import { ALL_COMPARISON_OPERATOR_OPTIONS, COMPARISON_OPERATOR } from '@shared/constants/search'
 
 import { type MinMax } from '@shared/types/search'
 
@@ -23,4 +23,8 @@ export function convertValueAndOperatorToMinMax<TValue>(
   }
 
   return results
+}
+
+export function isComparisonOperator(value: unknown): value is COMPARISON_OPERATOR {
+  return ALL_COMPARISON_OPERATOR_OPTIONS.some((option) => option.value.toString() === value)
 }

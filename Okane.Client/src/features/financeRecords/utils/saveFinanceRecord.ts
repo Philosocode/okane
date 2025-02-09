@@ -8,7 +8,7 @@ import { mapDate } from '@shared/utils/dateTime'
 
 export function getInitialSaveFinanceRecordFormState(): SaveFinanceRecordFormState {
   return {
-    amount: 0,
+    amount: '0',
     description: '',
     happenedAt: mapDate.to.dateTimeLocal(new Date(Date.now())),
     tags: [],

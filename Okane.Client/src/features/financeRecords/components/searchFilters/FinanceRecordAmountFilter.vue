@@ -6,21 +6,21 @@ import { computed } from 'vue'
 import FormInput from '@shared/components/form/FormInput.vue'
 import ToggleableRangeInputs from '@shared/components/form/ToggleableRangeInputs.vue'
 
+import { FINANCE_RECORD_MIN_AMOUNT } from '@features/financeRecords/constants/saveFinanceRecord'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { INPUT_TYPE } from '@shared/constants/form'
 
-import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
-import { FINANCE_RECORD_MIN_AMOUNT } from '@features/financeRecords/constants/saveFinanceRecord'
+import { type FinanceRecordSearchFiltersFormState } from '@features/financeRecords/types/searchFilters'
 
 export type FinanceRecordAmountFilterProps = Pick<
-  FinanceRecordSearchFilters,
+  FinanceRecordSearchFiltersFormState,
   'amount1' | 'amountOperator' | 'amount2'
 >
 const props = defineProps<FinanceRecordAmountFilterProps>()
 const isShowingRange = computed(() => !props.amountOperator)
 
 const emit = defineEmits<{
-  (e: 'change', formState: Partial<FinanceRecordSearchFilters>): void
+  (e: 'change', formState: Partial<FinanceRecordSearchFiltersFormState>): void
 }>()
 </script>
 

@@ -1,5 +1,5 @@
 // Internal
-import FormInput, { type FormInputProps } from '@shared/components/form/FormInput.vue'
+import FormInput from '@shared/components/form/FormInput.vue'
 
 import { INPUT_TYPE } from '@shared/constants/form'
 import { VISUALLY_HIDDEN_CLASS } from '@shared/constants/styles'
@@ -8,8 +8,9 @@ import { ARIA_ATTRIBUTES, ARIA_LIVE } from '@shared/constants/aria'
 import * as formUtils from '@shared/utils/form'
 
 // Data.
-const props: FormInputProps = {
+const props: InstanceType<typeof FormInput>['$props'] = {
   label: 'Cool Label',
+  modelValue: 'Cool Value',
   name: 'Cool Name',
   type: INPUT_TYPE.PASSWORD,
 }
@@ -60,6 +61,8 @@ test('renders an input with the expected attributes', () => {
       type: props.type,
     }),
   )
+
+  expect(input.element.value).toBe(props.modelValue)
 })
 
 test('does not focus the input by default', () => {

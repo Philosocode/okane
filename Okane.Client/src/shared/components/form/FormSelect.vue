@@ -6,10 +6,8 @@ import { VISUALLY_HIDDEN_CLASS } from '@shared/constants/styles'
 
 import { getUniqueFormControlId } from '@shared/utils/form'
 
-const model = defineModel<number | string>()
-
 export type SelectOption = {
-  value: number | string
+  value: string
 
   label?: string
 }
@@ -22,8 +20,10 @@ export type FormSelectProps = {
   withHiddenLabel?: boolean
 }
 
-const controlId = getUniqueFormControlId()
 const props = defineProps<FormSelectProps>()
+
+const controlId = getUniqueFormControlId()
+const model = defineModel()
 </script>
 
 <template>

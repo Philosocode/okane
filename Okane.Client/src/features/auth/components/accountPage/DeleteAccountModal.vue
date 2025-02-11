@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 
 // Internal
 import AppButton from '@shared/components/button/AppButton.vue'
+import ErrorMessage from '@shared/components/typography/ErrorMessage.vue'
 import Modal from '@shared/components/modal/Modal.vue'
 import ModalActions from '@shared/components/modal/ModalActions.vue'
 import ModalTrigger from '@shared/components/modal/ModalTrigger.vue'
@@ -14,7 +15,6 @@ import { SHARED_COPY } from '@shared/constants/copy'
 
 import { useDeleteAccount } from '@features/auth/composables/useDeleteAccount'
 import { useModal } from '@shared/composables/useModal'
-import ErrorMessage from '@shared/components/typography/ErrorMessage.vue'
 
 const { modalIsShowing, showModal, closeModal } = useModal()
 const modalHeadingId = 'delete-account-modal-heading'

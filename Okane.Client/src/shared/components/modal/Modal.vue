@@ -29,19 +29,19 @@ const backdropRef = useTemplateRef<HTMLDivElement>('backdropRef')
 const modalRef = useTemplateRef<HTMLDivElement>('modalRef')
 const triggerStore = useModalTriggerStore()
 
-function emitModalClose() {
+function refocusTrigger() {
   triggerStore.modalTrigger?.focus()
   triggerStore.setModalTrigger(null)
-
-  emit('close')
 }
 
 onClickOutside(modalRef, (event) => {
-  if (event.target === backdropRef.value) emitModalClose()
+  if (event.target === backdropRef.value) {
+    emit('close')
+  }
 })
 
 onKeyStroke('Escape', () => {
-  emitModalClose()
+  emit('close')
 })
 </script>
 
@@ -61,9 +61,8 @@ onKeyStroke('Escape', () => {
         ref="modalRef"
         :data-testid="TEST_IDS.MODAL"
         v-bind="$attrs"
-        @close="emitModalClose"
       >
-        <UseFocusTrap>
+        <UseFocusTrap :options="{ onDeactivate: refocusTrigger }">
           <div class="modal-content flow">
             <div class="top-row">
               <ModalHeading :id="props.modalHeadingId">{{ props.headingText }}</ModalHeading>
@@ -71,7 +70,7 @@ onKeyStroke('Escape', () => {
                 class="close-button"
                 icon="fa-solid fa-xmark"
                 :title="SHARED_COPY.MODAL.CLOSE_BUTTON_TITLE"
-                @click="emitModalClose"
+                @click="emit('close')"
               />
             </div>
 

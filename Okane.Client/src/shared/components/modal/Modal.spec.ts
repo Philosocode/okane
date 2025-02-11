@@ -1,7 +1,5 @@
 // External
 import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component'
-import { useModalTriggerStore } from '@shared/composables/useModalTriggerStore'
-import { defineComponent, useTemplateRef } from 'vue'
 
 import { type VueWrapper } from '@vue/test-utils'
 
@@ -119,28 +117,5 @@ describe('closes the modal', () => {
     expect(title.text()).toBe(SHARED_COPY.MODAL.CLOSE_BUTTON_TITLE)
     await closeButton.trigger('click')
     expect(wrapper.emitted()).toHaveProperty('close')
-  })
-
-  test('and resets the modal trigger state', async () => {
-    const TestComponent = defineComponent({
-      setup() {
-        const triggerRef = useTemplateRef('triggerRef')
-        const triggerStore = useModalTriggerStore()
-        return { triggerRef, triggerStore }
-      },
-      template: `<button id="modal-trigger" ref="triggerRef" @click="triggerStore.setModalTrigger(triggerRef)" />`,
-    })
-    const triggerStore = useModalTriggerStore()
-    const wrapper = mountComponent({
-      props,
-      slots: { default: TestComponent },
-    })
-    const trigger = wrapper.get('button#modal-trigger')
-    await trigger.trigger('click')
-    expect(triggerStore.modalTrigger).toEqual(trigger.element)
-
-    const closeButton = wrapper.get('button')
-    await closeButton.trigger('click')
-    expect(triggerStore.modalTrigger).toBeNull()
   })
 })

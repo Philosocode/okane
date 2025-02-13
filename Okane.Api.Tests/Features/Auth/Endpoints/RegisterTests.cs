@@ -9,7 +9,12 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Okane.Api.Features.Auth.Endpoints;
 using Okane.Api.Infrastructure.Emails.Services;
 using Okane.Api.Infrastructure.Emails.Utils;
+using Okane.Api.Infrastructure.RateLimit;
+using Okane.Api.Shared.Constants;
+using Okane.Api.Shared.Exceptions;
+using Okane.Api.Tests.Testing.Assertions;
 using Okane.Api.Tests.Testing.Constants;
+using Okane.Api.Tests.Testing.Extensions;
 using Okane.Api.Tests.Testing.Integration;
 using Okane.Api.Tests.Testing.Mocks;
 
@@ -18,6 +23,17 @@ namespace Okane.Api.Tests.Features.Auth.Endpoints;
 public class RegisterTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFactory)
 {
     private readonly PostgresApiFactory _apiFactory = apiFactory;
+
+    private readonly Register.Request _validRequest = new(
+        TestUser.Name,
+        TestUser.Email,
+        TestUser.Password
+    );
+
+    private readonly IDictionary<string, string> _xUserEmailHeader = new Dictionary<string, string>
+    {
+        [HttpHeaderNames.XUserEmail] = TestUser.Email
+    };
 
     private HttpClient CreateClient()
     {
@@ -32,12 +48,6 @@ public class RegisterTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFact
 
         return factory.CreateClient();
     }
-
-    private readonly Register.Request _validRequest = new(
-        TestUser.Name,
-        TestUser.Email,
-        TestUser.Password
-    );
 
     private static void AssertSendsVerificationEmail(
         string email,
@@ -56,7 +66,7 @@ public class RegisterTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFact
         TestingEmailService.SetCalls(calls);
 
         var client = CreateClient();
-        var response = await client.PostAsJsonAsync("/auth/register", _validRequest);
+        var response = await client.PostAsJsonAsync("/auth/register", _validRequest, _xUserEmailHeader);
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
         AssertSendsVerificationEmail(_validRequest.Email, calls);
     }
@@ -70,7 +80,7 @@ public class RegisterTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFact
         var client = CreateClient();
         await client.RegisterTestUserAsync();
 
-        var response = await client.PostAsJsonAsync("/auth/register", _validRequest);
+        var response = await client.PostAsJsonAsync("/auth/register", _validRequest, _xUserEmailHeader);
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
         AssertSendsVerificationEmail(_validRequest.Email, calls, 2);
     }
@@ -91,7 +101,7 @@ public class RegisterTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFact
                 true
             ));
 
-        var response = await client.PostAsJsonAsync("/auth/register", _validRequest);
+        var response = await client.PostAsJsonAsync("/auth/register", _validRequest, _xUserEmailHeader);
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
         calls.Count.Should().Be(2);
         calls.Last().Subject.Should().Be(EmailGenerator.AccountAlreadyRegisteredSubject);
@@ -106,10 +116,11 @@ public class RegisterTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFact
         TestingEmailService.SetCalls(calls);
 
         var client = CreateClient();
-        var response = await client.PostAsJsonAsync("/auth/register", _validRequest with
-        {
-            City = "Legit city"
-        });
+        var response = await client.PostAsJsonAsync(
+            "/auth/register",
+            _validRequest with { City = "Legit city" },
+            _xUserEmailHeader
+        );
 
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
@@ -119,10 +130,26 @@ public class RegisterTests(PostgresApiFactory apiFactory) : DatabaseTest(apiFact
     }
 
     // Input validation.
+    [Fact]
+    public async Task ReturnsA400_WhenXUserEmailIsInvalid()
+    {
+        var client = CreateClient();
+        var response = await client.PostAsJsonAsync("/auth/register", _validRequest, new Dictionary<string, string>
+        {
+            [HttpHeaderNames.XUserEmail] = "invalid@email.com"
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+        var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+        problemDetails.Should().NotBeNull();
+        problemDetails?.Detail.Should().Be(InvalidXUserEmailResult.ErrorDetail);
+    }
+
     private async Task AssertInvalidInput(Register.Request request)
     {
         var client = CreateClient();
-        var response = await client.PostAsJsonAsync("/auth/register", request);
+        var response = await client.PostAsJsonAsync("/auth/register", request, _xUserEmailHeader);
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
         var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();

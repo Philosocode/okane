@@ -34,7 +34,11 @@ public static class ConfigureApp
         app.UseStatusCodePages();
         app.UseExceptionHandler();
 
-        app.UseHttpsRedirection();
+        var rateLimitingEnabled = app.Configuration.GetValue<bool>("RateLimitSettings:Enabled");
+        if (rateLimitingEnabled)
+        {
+            app.UseRateLimiter();
+        }
 
         app.UsePathBase("/api");
 

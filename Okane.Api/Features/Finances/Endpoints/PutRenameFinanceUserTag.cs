@@ -33,7 +33,7 @@ public class PutRenameFinanceUserTag : IEndpoint
             HttpContext context,
             ApiDbContext db,
             int financeUserTagId,
-            ILogger<PostFinanceUserTag> logger,
+            ILogger<PutRenameFinanceUserTag> logger,
             Request request,
             IFinanceTagService tagService,
             IValidator<FinanceRecord> validator,

@@ -5,6 +5,7 @@ import { flushPromises } from '@vue/test-utils'
 // Internal
 import { authApiRoutes } from '@features/auth/constants/apiRoutes'
 import { HONEYPOT_INPUT_NAME } from '@shared/constants/form'
+import { HTTP_HEADER } from '@shared/constants/http'
 
 import { useSendResetPasswordEmail } from '@features/auth/composables/useSendResetPasswordEmail'
 
@@ -39,8 +40,16 @@ test('makes a POST request to the expected endpoint', async () => {
 
   mountComponent()
   await flushPromises()
-  expect(postSpy).toHaveBeenCalledWith(authApiRoutes.sendResetPasswordEmail(), {
-    email,
-    [HONEYPOT_INPUT_NAME]: honeypot,
-  })
+  expect(postSpy).toHaveBeenCalledWith(
+    authApiRoutes.sendResetPasswordEmail(),
+    {
+      email,
+      [HONEYPOT_INPUT_NAME]: honeypot,
+    },
+    {
+      headers: {
+        [HTTP_HEADER.X_USER_EMAIL]: email,
+      },
+    },
+  )
 })

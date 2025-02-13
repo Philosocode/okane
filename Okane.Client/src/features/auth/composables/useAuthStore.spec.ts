@@ -4,6 +4,7 @@ import { http, HttpResponse } from 'msw'
 // Internal
 import { authApiRoutes } from '@features/auth/constants/apiRoutes'
 import { HONEYPOT_INPUT_NAME } from '@shared/constants/form'
+import { HTTP_HEADER } from '@shared/constants/http'
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 
 import { type AuthenticateResponse } from '@features/auth/types/authResponse'
@@ -65,6 +66,11 @@ test('register', async () => {
   expect(spy).toHaveBeenCalledWith(
     authApiRoutes.register(),
     omitObjectKeys(formData, ['passwordConfirm']),
+    {
+      headers: {
+        [HTTP_HEADER.X_USER_EMAIL]: request.email,
+      },
+    },
   )
 })
 

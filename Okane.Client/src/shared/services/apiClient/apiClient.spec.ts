@@ -4,11 +4,12 @@ import { http, HttpResponse } from 'msw'
 // Internal
 import { authApiRoutes } from '@features/auth/constants/apiRoutes'
 import { appRoutes } from '@shared/services/router/router'
-import { HTTP_STATUS_CODE, MIME_TYPE } from '@shared/constants/http'
+import { HTTP_HEADER, HTTP_STATUS_CODE, MIME_TYPE } from '@shared/constants/http'
 
 import { type ApiResponse } from '@shared/services/apiClient/types'
 
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
+import { useToastStore } from '@shared/composables/useToastStore'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 import { testServer } from '@tests/msw/testServer'
@@ -37,6 +38,56 @@ test('prepends a forward slash to the request URL', async () => {
 
   const response = await apiClient.get<ApiResponse<string>>('ping')
   expect(response.items[0]).toBe('pong')
+})
+
+test('passes fetch overrides', async () => {
+  const successText = 'success'
+  const handler = http.get('/api/ping', ({ request }) => {
+    if (
+      request.headers.get(HTTP_HEADER.X_USER_EMAIL) &&
+      request.headers.get(HTTP_HEADER.CONTENT_TYPE)
+    ) {
+      return HttpResponse.json(wrapInApiResponse(successText))
+    }
+
+    return HttpResponse.json(wrapInApiResponse('failed'))
+  })
+
+  testServer.use(handler)
+
+  const response = await apiClient.get<ApiResponse<string>>('ping', {
+    headers: {
+      [HTTP_HEADER.X_USER_EMAIL]: 'randomEmail',
+    },
+  })
+  expect(response.items[0]).toBe(successText)
+})
+
+test(`creates a toast for rate limiting errors`, async () => {
+  const errorDetail = 'Too many requests'
+
+  testServer.use(
+    http.get('/api/ping', () => {
+      const errorResponse = JSON.stringify(
+        createTestProblemDetails({
+          detail: errorDetail,
+          status: HTTP_STATUS_CODE.TOO_MANY_REQUESTS_429,
+        }),
+      )
+
+      return HttpResponse.json(errorResponse, {
+        status: HTTP_STATUS_CODE.TOO_MANY_REQUESTS_429,
+      })
+    }),
+  )
+
+  const toastStore = useToastStore()
+
+  try {
+    await apiClient.get('/ping')
+  } catch {
+    expect(toastStore.toasts).toEqual([expect.objectContaining({})])
+  }
 })
 
 describe('with a failed request', () => {
@@ -76,6 +127,26 @@ describe('with a failed request', () => {
       await apiClient.get('/ping')
     } catch (err) {
       expect(err).toEqual(errorResponse.detail)
+    }
+  })
+
+  test('does not create an error toast', async () => {
+    const errorResponse = createTestProblemDetails({
+      detail: 'Something went wrong...',
+    })
+
+    const handler = http.get('/api/ping', () => {
+      return HttpResponse.json(errorResponse, { status: HTTP_STATUS_CODE.BAD_REQUEST_400 })
+    })
+
+    const toastStore = useToastStore()
+
+    testServer.use(handler)
+
+    try {
+      await apiClient.get('/ping')
+    } catch (err) {
+      expect(toastStore.toasts).toEqual([])
     }
   })
 })

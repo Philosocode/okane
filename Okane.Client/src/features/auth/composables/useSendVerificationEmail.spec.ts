@@ -4,6 +4,7 @@ import { flushPromises } from '@vue/test-utils'
 
 // Internal
 import { authApiRoutes } from '@features/auth/constants/apiRoutes'
+import { HTTP_HEADER } from '@shared/constants/http'
 
 import { useSendVerificationEmail } from '@features/auth/composables/useSendVerificationEmail'
 
@@ -34,5 +35,13 @@ test('makes a POST request to the expected endpoint', async () => {
 
   mountComponent()
   await flushPromises()
-  expect(postSpy).toHaveBeenCalledWith(authApiRoutes.sendVerificationEmail(), { email })
+  expect(postSpy).toHaveBeenCalledWith(
+    authApiRoutes.sendVerificationEmail(),
+    { email },
+    {
+      headers: {
+        [HTTP_HEADER.X_USER_EMAIL]: email,
+      },
+    },
+  )
 })

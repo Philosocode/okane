@@ -4,6 +4,7 @@ import { defineStore } from 'pinia'
 
 // Internal
 import { authApiRoutes } from '@features/auth/constants/apiRoutes'
+import { HTTP_HEADER } from '@shared/constants/http'
 
 import { type AuthenticateResponse } from '@features/auth/types/authResponse'
 import { type User } from '@features/users/types'
@@ -29,7 +30,11 @@ export const useAuthStore = defineStore('AuthStore', () => {
    * @param request
    */
   async function register(request: RegisterRequest): Promise<void> {
-    await apiClient.post(authApiRoutes.register(), request)
+    await apiClient.post(authApiRoutes.register(), request, {
+      headers: {
+        [HTTP_HEADER.X_USER_EMAIL]: request.email,
+      },
+    })
   }
 
   /**

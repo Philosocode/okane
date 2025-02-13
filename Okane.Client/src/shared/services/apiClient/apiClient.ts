@@ -4,6 +4,7 @@ import { HTTP_METHOD, HTTP_STATUS_CODE, MIME_TYPE } from '@shared/constants/http
 import type { ApiResponse } from '@shared/services/apiClient/types'
 
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
+import { useToastStore } from '@shared/composables/useToastStore'
 
 import { getQueryClient } from '@shared/services/queryClient/queryClient'
 import { objectHasKey } from '@shared/utils/object'
@@ -29,6 +30,7 @@ async function makeRequest<TResponse>(
   const requestOptions = getRequestOptions(method, body, optionOverrides)
   const formattedUrl = formatUrl(url)
   const authStore = useAuthStore()
+  const toastStore = useToastStore()
   const queryClient = getQueryClient()
 
   try {
@@ -38,6 +40,11 @@ async function makeRequest<TResponse>(
 
     if (response.ok) {
       return Promise.resolve(parsedResponse)
+    }
+
+    if (response.status === HTTP_STATUS_CODE.TOO_MANY_REQUESTS_429) {
+      toastStore.createToast(parsedResponse?.detail, 'error')
+      return Promise.reject(parsedResponse?.detail)
     }
 
     const authErrorStatusCodes = [HTTP_STATUS_CODE.UNAUTHORIZED_401, HTTP_STATUS_CODE.FORBIDDEN_403]
@@ -95,19 +102,18 @@ function getRequestOptions(
   body?: any,
   optionOverrides: RequestInit = {},
 ): RequestInit {
-  const headers: HeadersInit = {
-    'Content-Type': MIME_TYPE.JSON,
-  }
-
   const authStore = useAuthStore()
-  if (authStore.isLoggedIn) {
-    headers.Authorization = `Bearer ${authStore.jwtToken}`
+
+  const headers: HeadersInit = {
+    ...(authStore.isLoggedIn && { Authorization: `Bearer ${authStore.jwtToken}` }),
+    'Content-Type': MIME_TYPE.JSON,
+    ...optionOverrides.headers,
   }
 
   const options: RequestInit = {
     method,
-    headers,
     ...optionOverrides,
+    headers,
   }
 
   if (body) {

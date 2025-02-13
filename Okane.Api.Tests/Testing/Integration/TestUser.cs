@@ -4,8 +4,10 @@ using Okane.Api.Features.Auth.Dtos.Responses;
 using Okane.Api.Features.Auth.Endpoints;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Infrastructure.Database;
+using Okane.Api.Shared.Constants;
 using Okane.Api.Shared.Dtos.ApiResponses;
 using Okane.Api.Tests.Features.Auth.Extensions;
+using Okane.Api.Tests.Testing.Extensions;
 
 namespace Okane.Api.Tests.Testing.Integration;
 
@@ -28,7 +30,10 @@ public static class TestUser
     public static async Task RegisterTestUserAsync(this HttpClient client)
     {
         var request = new Register.Request(User.Name, User.Email!, Password);
-        await client.PostAsJsonAsync("/auth/register", request);
+        await client.PostAsJsonAsync("/auth/register", request, new Dictionary<string, string>
+        {
+            { HttpHeaderNames.XUserEmail, request.Email }
+        });
     }
 
     /// <summary>

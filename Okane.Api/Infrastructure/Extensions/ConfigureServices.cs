@@ -1,7 +1,9 @@
+using System.Threading.RateLimiting;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -18,7 +20,9 @@ using Okane.Api.Infrastructure.Emails.Services;
 using Okane.Api.Infrastructure.Emails.Utils;
 using Okane.Api.Infrastructure.HealthCheck;
 using Okane.Api.Infrastructure.HostedServices;
+using Okane.Api.Infrastructure.RateLimit;
 using Okane.Api.Shared.Exceptions;
+using Okane.Api.Shared.Extensions;
 using Okane.Api.Shared.Wrappers;
 using Serilog;
 
@@ -37,6 +41,7 @@ public static class ConfigureServices
                 options.LoggingFields = HttpLoggingFields.RequestQuery
                                         | HttpLoggingFields.RequestMethod
                                         | HttpLoggingFields.RequestPath
+                                        | HttpLoggingFields.RequestHeaders
                                         | HttpLoggingFields.RequestBody
                                         | HttpLoggingFields.ResponseStatusCode
                                         | HttpLoggingFields.ResponseBody
@@ -61,6 +66,8 @@ public static class ConfigureServices
         builder.Services.AddProblemDetails();
 
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
+        builder.AddRateLimiting();
 
         builder.Services.AddHealthChecks().AddDbContextCheck<ApiDbContext>();
 
@@ -213,5 +220,85 @@ public static class ConfigureServices
         builder.Services.AddTransient<EmailConfirmationTokenProvider<ApiUser>>();
 
         builder.Services.AddAuthorization();
+    }
+
+    private static void AddRateLimiting(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddRateLimiter(options =>
+        {
+            options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+            {
+                var windowOptions = new SlidingWindowRateLimiterOptions
+                {
+                    AutoReplenishment = true,
+                    PermitLimit = RateLimitAmounts.AnonymousUserLimit,
+                    SegmentsPerWindow = 6,
+                    Window = TimeSpan.FromMinutes(1)
+                };
+
+                var key = httpContext.GetRemoteIpAddress();
+                var userName = httpContext.User.Identity?.Name ?? "";
+                var xUserEmail = httpContext.GetXUserEmail();
+
+                if (userName.Length > 0)
+                {
+                    key = userName;
+
+                    windowOptions.PermitLimit = RateLimitAmounts.AuthenticatedUserLimit;
+                }
+                else if (xUserEmail.Length > 0)
+                {
+                    // Unauthenticated email requests have a lower limit & longer delay. I wanted to
+                    // create a chained limiter for the EmailEndpoint policy to rate limit on both the
+                    // IP and email address. However, as of Feb 2025, it's currently not possible to
+                    // use a chained limiter on an individual policy basis.
+                    // See: https://github.com/dotnet/aspnetcore/discussions/54051
+
+                    windowOptions.PermitLimit = RateLimitAmounts.GlobalEmailLimit;
+                    windowOptions.Window = TimeSpan.FromHours(1);
+                }
+
+                return RateLimitPartition.GetSlidingWindowLimiter(key, _ => windowOptions);
+            });
+
+            options.AddPolicy(RateLimitPolicyNames.EmailEndpoint, httpContext =>
+            {
+                var email = httpContext.GetXUserEmail();
+                var permittedPerEmail = RateLimitAmounts.PerEndpointEmailLimit;
+
+                return RateLimitPartition.GetFixedWindowLimiter(
+                    email,
+                    _ => new FixedWindowRateLimiterOptions
+                    {
+                        AutoReplenishment = true,
+                        PermitLimit = permittedPerEmail,
+                        Window = TimeSpan.FromHours(1)
+                    }
+                );
+            });
+
+
+            options.OnRejected = async (context, cancellationToken) =>
+            {
+                context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+
+                var problemDetails = new ProblemDetails
+                {
+                    Status = StatusCodes.Status429TooManyRequests,
+                    Title = "Too Many Requests"
+                };
+
+                if (context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
+                {
+                    problemDetails.Detail = $"Too many requests. Please try again after {retryAfter.TotalMinutes} minute(s)";
+                }
+                else
+                {
+                    problemDetails.Detail = "Too many requests. Please try again later.";
+                }
+
+                await context.HttpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
+            };
+        });
     }
 }

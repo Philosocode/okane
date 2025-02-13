@@ -8,10 +8,13 @@ using Okane.Api.Features.Auth.Dtos.Requests;
 using Okane.Api.Features.Auth.Entities;
 using Okane.Api.Features.Auth.Mappers;
 using Okane.Api.Features.Auth.Services;
+using Okane.Api.Features.Auth.Utils;
 using Okane.Api.Infrastructure.Database;
 using Okane.Api.Infrastructure.Emails.Services;
 using Okane.Api.Infrastructure.Emails.Utils;
 using Okane.Api.Infrastructure.Endpoints;
+using Okane.Api.Infrastructure.RateLimit;
+using Okane.Api.Shared.Exceptions;
 
 namespace Okane.Api.Features.Auth.Endpoints;
 
@@ -24,6 +27,7 @@ public class Register : IEndpoint
         builder
             .MapPost("/register", HandleAsync)
             .AllowAnonymous()
+            .RequireRateLimiting(RateLimitPolicyNames.EmailEndpoint)
             .WithName(AuthEndpointNames.Register)
             .WithSummary("Register a new user.")
             .WithRequestValidation<Request>();
@@ -43,7 +47,7 @@ public class Register : IEndpoint
     }
 
     // See: https://github.com/dotnet/aspnetcore/blob/e737c6fe54fa596289268140864c127957c0b1a1/src/Identity/Core/src/IdentityApiEndpointRouteBuilderExtensions.cs#L57
-    private static async Task<Results<NoContent, BadRequest<ProblemDetails>, ValidationProblem>>
+    private static async Task<Results<NoContent, BadRequest<ProblemDetails>, InvalidXUserEmailResult, ValidationProblem>>
         HandleAsync(
             HttpContext context,
             ApiDbContext db,
@@ -61,6 +65,13 @@ public class Register : IEndpoint
             logger.LogInformation("Spam registration received: {Request}", request);
 
             return TypedResults.NoContent();
+        }
+
+        if (!AuthUtils.ValidateXUserEmail(context, request.Email))
+        {
+            logger.LogInformation("X-User-Email doesn't match request email: {Email}", request.Email);
+
+            return new InvalidXUserEmailResult();
         }
 
         var userToCreate = new ApiUser

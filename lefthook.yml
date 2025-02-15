@@ -8,7 +8,7 @@ pre-commit:
     test-frontend:
       root: Okane.Client
       glob: "*.{vue,js,ts}"
-      run: npx vitest related --run {staged_files}
+      run: npx vitest related --bail 1 --run {staged_files}
 
 pre-push:
   commands:

@@ -238,24 +238,11 @@ public static class ConfigureServices
 
                 var key = httpContext.GetRemoteIpAddress();
                 var userName = httpContext.User.Identity?.Name ?? "";
-                var xUserEmail = httpContext.GetXUserEmail();
-
                 if (userName.Length > 0)
                 {
                     key = userName;
 
                     windowOptions.PermitLimit = RateLimitAmounts.AuthenticatedUserLimit;
-                }
-                else if (xUserEmail.Length > 0)
-                {
-                    // Unauthenticated email requests have a lower limit & longer delay. I wanted to
-                    // create a chained limiter for the EmailEndpoint policy to rate limit on both the
-                    // IP and email address. However, as of Feb 2025, it's currently not possible to
-                    // use a chained limiter on an individual policy basis.
-                    // See: https://github.com/dotnet/aspnetcore/discussions/54051
-
-                    windowOptions.PermitLimit = RateLimitAmounts.GlobalEmailLimit;
-                    windowOptions.Window = TimeSpan.FromHours(1);
                 }
 
                 return RateLimitPartition.GetSlidingWindowLimiter(key, _ => windowOptions);
@@ -263,20 +250,21 @@ public static class ConfigureServices
 
             options.AddPolicy(RateLimitPolicyNames.EmailEndpoint, httpContext =>
             {
-                var email = httpContext.GetXUserEmail();
-                var permittedPerEmail = RateLimitAmounts.PerEndpointEmailLimit;
+                // I wanted to create a chained limiter for the EmailEndpoint policy to rate limit
+                // on both the IP and email address. However, as of Feb 2025, it's currently not possible to
+                // use a chained limiter on an individual policy basis.
+                // See: https://github.com/dotnet/aspnetcore/discussions/54051
 
                 return RateLimitPartition.GetFixedWindowLimiter(
-                    email,
+                    httpContext.GetRemoteIpAddress(),
                     _ => new FixedWindowRateLimiterOptions
                     {
                         AutoReplenishment = true,
-                        PermitLimit = permittedPerEmail,
+                        PermitLimit = RateLimitAmounts.PerEndpointEmailLimit,
                         Window = TimeSpan.FromHours(1)
                     }
                 );
             });
-
 
             options.OnRejected = async (context, cancellationToken) =>
             {

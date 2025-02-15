@@ -1,14 +1,17 @@
-pre-push:
+pre-commit:
   parallel: true
   commands:
     lint-frontend:
       root: Okane.Client
       glob: "*.{vue,js,ts}"
-      run: make lint
+      run: pnpm lint {staged_files}
     test-frontend:
       root: Okane.Client
       glob: "*.{vue,js,ts}"
-      run: make test
+      run: npx vitest related --run {staged_files}
+
+pre-push:
+  commands:
     test-backend:
       glob: "*.cs"
       run: dotnet test --verbosity normal

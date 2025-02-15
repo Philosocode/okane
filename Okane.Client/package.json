@@ -45,7 +45,7 @@
     "@types/lodash.merge": "^4.6.9",
     "@types/node": "^20.14.11",
     "@vitejs/plugin-vue": "^5.2.1",
-    "@vitest/ui": "^3.0.4",
+    "@vitest/ui": "^3.0.5",
     "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/test-utils": "^2.4.6",

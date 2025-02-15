@@ -25,12 +25,14 @@
     "@vueuse/core": "^12.5.0",
     "@vueuse/integrations": "^12.5.0",
     "date-fns": "^3.6.0",
+    "echarts": "^5.6.0",
     "focus-trap": "^7",
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",
     "lodash.merge": "^4.6.2",
     "pinia": "^2.1.7",
     "vue": "^3.5.13",
+    "vue-echarts": "^7.0.3",
     "vue-router": "^4.5.0"
   },
   "devDependencies": {

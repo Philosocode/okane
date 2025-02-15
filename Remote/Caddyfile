@@ -1,14 +1,14 @@
 # Set the email address that should be used to contact you if there's a problem with your TLS
 # certificates.
 {
-	email mail@philosocode.com
+	email your@email.com
 }
 
-okane.philosocode.com {
+domain.com {
     encode gzip
 
     handle /api/* {
-        @spaRequests host okane.philosocode.com
+        @spaRequests host domain.com
         reverse_proxy @spaRequests localhost:5000
     }
 

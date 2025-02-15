@@ -57,7 +57,6 @@ prod/deploy:
 	rsync -qrP ${API_DIR}/bin/Release/net8.0/linux-x64/Publish ${SSH_TARGET}:~
 	rsync -qrP ${CLIENT_DIR}/dist ${SSH_TARGET}:~
 	rsync -qP ./Remote/okane-api.service ${SSH_TARGET}:~
-	rsync -qP ./Remote/Caddyfile ${SSH_TARGET}:~
 	ssh -t ${SSH_TARGET} '\
 		sudo rm -rf /var/www/okane/Api \
 		&& sudo rm -rf /var/www/okane/Client \
@@ -66,6 +65,4 @@ prod/deploy:
 		&& sudo mv ~/okane-api.service /etc/systemd/system/ \
 		&& sudo systemctl enable okane-api \
 		&& sudo systemctl restart okane-api \
-		&& sudo mv ~/Caddyfile /etc/caddy/ \
-		&& sudo systemctl reload caddy \
 	'

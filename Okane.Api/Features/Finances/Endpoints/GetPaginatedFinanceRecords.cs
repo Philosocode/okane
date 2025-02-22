@@ -78,13 +78,13 @@ public class GetPaginatedFinanceRecords : IEndpoint
     }
 
     private static async Task<IDictionary<string, string[]>?> ValidateQueryParameters(
-        [AsParameters] FinanceRecordCursorQueryParameters cursorParameters,
+        FinanceRecordCursorQueryParameters cursorParameters,
         IValidator<FinanceRecordCursorQueryParameters> cursorParametersValidator,
-        [AsParameters] FinanceRecordFilterQueryParameters filterParameters,
+        FinanceRecordFilterQueryParameters filterParameters,
         IValidator<FinanceRecordFilterQueryParameters> filterParametersValidator,
-        [AsParameters] PageQueryParameters pageParameters,
+        PageQueryParameters pageParameters,
         IValidator<PageQueryParameters> pageParametersValidator,
-        [AsParameters] FinanceRecordSortQueryParameters sortParameters,
+        FinanceRecordSortQueryParameters sortParameters,
         IValidator<FinanceRecordSortQueryParameters> sortParametersValidator,
         CancellationToken cancellationToken
     )

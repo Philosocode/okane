@@ -5,10 +5,11 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useDark } from '@vueuse/core'
 
 // Internal
+import { DARK_MODE_STORAGE_KEY } from '@shared/constants/styles'
 import { SHARED_COPY } from '@shared/constants/copy'
 
 const isDark = useDark({
-  storageKey: 'okane-color-mode',
+  storageKey: DARK_MODE_STORAGE_KEY,
 })
 
 const icon = computed(() => {

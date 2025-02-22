@@ -5,11 +5,8 @@ import { flushPromises } from '@vue/test-utils'
 // Internal
 import { financeRecordApiRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
-import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 
 import { useDeleteFinanceRecord } from '@features/financeRecords/composables/useDeleteFinanceRecord'
-
-import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
 
 import {
   FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
@@ -21,11 +18,8 @@ import { apiClient } from '@shared/services/apiClient/apiClient'
 
 import { removeItemFromPages } from '@shared/utils/pagination'
 
+import { createTestFinanceRecord } from '@tests/factories/financeRecord'
 import { testQueryClient } from '@tests/queryClient/testQueryClient'
-import {
-  createTestFinanceRecord,
-  createTestFinanceRecordsStats,
-} from '@tests/factories/financeRecord'
 import { wrapInApiPaginatedResponse, wrapInApiResponse } from '@tests/utils/apiResponse'
 
 const spyOn = {
@@ -104,44 +98,18 @@ test('removes the finance record from the query cache', async () => {
   )
 })
 
-async function assertUpdatesCachedStats(deletedFinanceRecord: FinanceRecord) {
-  const initialStats = createTestFinanceRecordsStats()
-  const initialCachedData = wrapInApiResponse(initialStats)
+test('invalidates the stats query', async () => {
+  spyOn.delete()
+  const invalidateSpy = vi.spyOn(testQueryClient, 'invalidateQueries')
 
   const searchProvider = useFinanceRecordSearchFiltersProvider()
-  const queryKey = financeRecordQueryKeys.stats({ filters: searchProvider.filters })
-  testQueryClient.setQueryData(queryKey, initialCachedData)
+  mountWithProviders({ searchProvider })
 
-  spyOn.delete()
+  expect(invalidateSpy).not.toHaveBeenCalled()
 
-  getMountComponent(createTestComponent(deletedFinanceRecord), {
-    global: {
-      provide: {
-        [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: searchProvider,
-      },
-    },
-    withQueryClient: true,
-  })()
   await flushPromises()
 
-  const expectedStats = { ...initialStats }
-  if (deletedFinanceRecord.type === 'Expense') {
-    expectedStats.totalExpenses -= deletedFinanceRecord.amount
-    expectedStats.expenseRecords--
-  }
-  if (deletedFinanceRecord.type === 'Revenue') {
-    expectedStats.totalRevenue -= deletedFinanceRecord.amount
-    expectedStats.revenueRecords--
-  }
-
-  const cachedData = testQueryClient.getQueryData(queryKey)
-  expect(cachedData).toEqual(wrapInApiResponse(expectedStats))
-}
-
-test('updates cached stats when removing an expense finance record', async () => {
-  await assertUpdatesCachedStats({ ...financeRecord, type: FINANCE_RECORD_TYPE.EXPENSE })
-})
-
-test('updates cached stats when removing a revenue finance record', async () => {
-  await assertUpdatesCachedStats({ ...financeRecord, type: FINANCE_RECORD_TYPE.REVENUE })
+  expect(invalidateSpy).toHaveBeenCalledExactlyOnceWith({
+    queryKey: financeRecordQueryKeys.stats({ filters: searchProvider.filters }),
+  })
 })

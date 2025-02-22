@@ -5,11 +5,9 @@ import { useMutation, useQueryClient, type InfiniteData } from '@tanstack/vue-qu
 // Internal
 import { financeRecordApiRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
-import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 
+import { type ApiPaginatedResponse } from '@shared/services/apiClient/types'
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
-import { type FinanceRecordsStats } from '@features/financeRecords/types/financeRecordsStats'
-import { type ApiPaginatedResponse, type ApiResponse } from '@shared/services/apiClient/types'
 
 import {
   FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
@@ -41,26 +39,9 @@ export function useDeleteFinanceRecord() {
         },
       )
 
-      queryClient.setQueryData<ApiResponse<FinanceRecordsStats>>(
-        financeRecordQueryKeys.stats({ filters: searchProvider.filters }),
-        (data) => {
-          if (!data) return data
-
-          const updatedStats = { ...data.items[0] }
-          if (deletedFinanceRecord.type === FINANCE_RECORD_TYPE.EXPENSE) {
-            updatedStats.totalExpenses -= deletedFinanceRecord.amount
-            updatedStats.expenseRecords--
-          } else {
-            updatedStats.totalRevenue -= deletedFinanceRecord.amount
-            updatedStats.revenueRecords--
-          }
-
-          return {
-            ...data,
-            items: [updatedStats],
-          }
-        },
-      )
+      void queryClient.invalidateQueries({
+        queryKey: financeRecordQueryKeys.stats({ filters: searchProvider.filters }),
+      })
     },
   })
 }

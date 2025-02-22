@@ -46,6 +46,9 @@ const defaultFinanceRecordsStats: FinanceRecordsStats = {
   revenueRecords: 50,
   totalExpenses: 1000,
   totalRevenue: 2000,
+  expensesByDate: [500, 500],
+  revenuesByDate: [1000, 1000],
+  dates: ['2025-01-01', '2025-02-01'],
 }
 
 export const createTestFinanceRecordsStats: TestObjectFactoryFunction<FinanceRecordsStats> = (

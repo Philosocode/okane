@@ -4,9 +4,11 @@ export const SHARED_COPY = {
     DELETE: 'Delete',
     DISMISS: 'Dismiss',
     EDIT: 'Edit',
+    HIDE: 'Hide',
     RENAME: 'Rename',
     RESET: 'Reset',
     SAVE: 'Save',
+    SHOW: 'Show',
     SWITCH_TO_DARK_MODE: 'Switch to Dark Mode',
     SWITCH_TO_LIGHT_MODE: 'Switch to Light Mode',
   },
@@ -34,6 +36,7 @@ export const SHARED_COPY = {
   INFINITE_SCROLLER: {
     REACHED_THE_BOTTOM: "You've reached the bottom.",
   },
+  LOADING_ELLIPSES: 'Loading...',
   MODAL: {
     CLOSE_BUTTON_TITLE: 'Close Modal',
   },

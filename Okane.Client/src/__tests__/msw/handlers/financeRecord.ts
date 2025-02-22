@@ -12,6 +12,8 @@ import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { getMswUrl } from '@tests/utils/url'
 import { wrapInApiPaginatedResponse, wrapInApiResponse } from '@tests/utils/apiResponse'
+import { DEFAULT_FINANCES_TIME_INTERVAL } from '@features/financeRecords/constants/stats'
+import type { FinanceRecordsStats } from '@features/financeRecords/types/financeRecordsStats'
 
 export const financeRecordHandlers = {
   deleteFinanceRecordSuccess(args: { id: number }) {
@@ -66,6 +68,30 @@ export const financeRecordHandlers = {
           status: HTTP_STATUS_CODE.BAD_REQUEST_400,
         },
       )
+    })
+  },
+  getStatsSuccess(args: { stats: FinanceRecordsStats }) {
+    const url = getMswUrl(
+      financeRecordApiRoutes.getStats({
+        searchFilters: DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+        timeInterval: DEFAULT_FINANCES_TIME_INTERVAL,
+      }),
+    )
+    return http.get(url, () => {
+      return HttpResponse.json(wrapInApiResponse(args.stats))
+    })
+  },
+  getStatsError() {
+    const url = getMswUrl(
+      financeRecordApiRoutes.getStats({
+        searchFilters: DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+        timeInterval: DEFAULT_FINANCES_TIME_INTERVAL,
+      }),
+    )
+    const status = HTTP_STATUS_CODE.BAD_REQUEST_400
+
+    return http.get(url, () => {
+      return HttpResponse.json(createTestProblemDetails({ status }), { status })
     })
   },
 } as const

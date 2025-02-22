@@ -11,6 +11,11 @@ import { type Tag } from '@shared/types/tag'
 import { COMMON_DATE_FORMAT } from '@shared/constants/dateTime'
 
 export const FINANCES_COPY = {
+  CHARTS: {
+    HEADING: 'Charts',
+    TIME_INTERVAL: 'Time Interval',
+  },
+
   DELETE_FINANCE_RECORD_MODAL: {
     CONFIRMATION_TEXT: 'You are about to delete the following finance record:',
     DELETE_FINANCE_RECORD: 'Delete Finance Record',
@@ -119,6 +124,8 @@ export const FINANCES_COPY = {
 
   STATS: {
     EXPENSES: 'Expenses',
+    EXPENSES_VS_REVENUES: 'Expenses VS Revenues',
+    REVENUES: 'Revenues',
     FETCH_ERROR: 'Error fetching stats. Please try again.',
     RECORD: 'record',
     TOTAL_AMOUNT(args: { amount: number; type: FINANCE_RECORD_TYPE }) {

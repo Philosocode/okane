@@ -8,6 +8,7 @@ import CreateFinanceRecordButton from '@features/financeRecords/components/saveF
 import CreateFinanceRecordModal from '@features/financeRecords/components/saveFinanceRecord/CreateFinanceRecordModal.vue'
 import DeleteFinanceRecordModal from '@features/financeRecords/components/saveFinanceRecord/DeleteFinanceRecordModal.vue'
 import EditFinanceRecordModal from '@features/financeRecords/components/saveFinanceRecord/EditFinanceRecordModal.vue'
+import FinanceCharts from '@features/financeRecords/components/stats/FinanceCharts.vue'
 import FinanceRecordList from '@features/financeRecords/components/financeRecordList/FinanceRecordList.vue'
 import Heading from '@shared/components/nav/Heading.vue'
 import PageLayout from '@shared/components/wrapper/PageLayout.vue'
@@ -43,6 +44,10 @@ provide(FINANCE_RECORD_SEARCH_FILTERS_SYMBOL, useFinanceRecordSearchFiltersProvi
           <TotalRevenueAndExpenses />
           <SearchFiltersSection />
         </Card>
+      </section>
+
+      <section>
+        <FinanceCharts />
       </section>
 
       <section>

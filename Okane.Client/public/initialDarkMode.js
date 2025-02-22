@@ -1,6 +1,6 @@
 'use strict'
 
-let colorScheme = localStorage.getItem('okane-color-scheme')
+let colorScheme = localStorage.getItem('okane-color-mode')
 if (!colorScheme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
   colorScheme = 'dark'
 }

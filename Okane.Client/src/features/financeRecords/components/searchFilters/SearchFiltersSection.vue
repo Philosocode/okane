@@ -22,7 +22,7 @@ const searchProvider = inject(
 <template>
   <section class="section">
     <AppliedSearchFilters />
-    <ModalTrigger class="modal-trigger" @click="searchProvider.setModalIsShowing(true)">
+    <ModalTrigger class="modal-trigger" with-shadow @click="searchProvider.setModalIsShowing(true)">
       {{ FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.EDIT_SEARCH_FILTERS }}
     </ModalTrigger>
   </section>

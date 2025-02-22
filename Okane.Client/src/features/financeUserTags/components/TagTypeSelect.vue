@@ -32,6 +32,7 @@ function updateUserTagType(value: string) {
       :options="FINANCE_RECORD_TYPE_OPTIONS"
       :model-value="provider.userTagType"
       @update:model-value="updateUserTagType"
+      with-shadow
     />
   </div>
 </template>

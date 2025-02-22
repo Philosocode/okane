@@ -74,3 +74,19 @@ test('exposes a buttonRef', async () => {
   await flushPromises()
   expect(button.element).toEqual(document.activeElement)
 })
+
+test('does not display a shadow when withShadow is false', () => {
+  const wrapper = mountComponent({
+    props: { withShadow: false },
+  })
+  const button = wrapper.get('button')
+  expect(button.classes()).not.toContain('with-shadow')
+})
+
+test('does not display a shadow when withShadow is true', () => {
+  const wrapper = mountComponent({
+    props: { withShadow: true },
+  })
+  const button = wrapper.get('button')
+  expect(button.classes()).toContain('with-shadow')
+})

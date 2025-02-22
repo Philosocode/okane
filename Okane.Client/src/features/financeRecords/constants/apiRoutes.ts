@@ -32,8 +32,9 @@ export const financeRecordApiRoutes = {
 
     return `${basePath}?${searchParams.toString()}`
   },
-  getStats(args: { searchFilters: FinanceRecordSearchFilters }) {
+  getStats(args: { searchFilters: FinanceRecordSearchFilters; timeInterval: string }) {
     const searchParams = mapFinanceRecordSearchFilters.to.URLSearchParams(args.searchFilters)
+    searchParams.append('timeInterval', args.timeInterval)
     return `${basePath}/stats?${searchParams.toString()}`
   },
   deleteFinanceRecord: ({ id }: { id: number }) => `${basePath}/${id}`,

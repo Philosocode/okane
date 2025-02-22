@@ -28,6 +28,7 @@ import { wrapInApiResponse } from '@tests/utils/apiResponse'
 import { useToastStore } from '@shared/composables/useToastStore'
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
+import { DEFAULT_FINANCES_TIME_INTERVAL } from '@features/financeRecords/constants/stats'
 
 const mountComponent = getMountComponent(TotalRevenueAndExpenses, {
   global: {
@@ -41,6 +42,7 @@ const mountComponent = getMountComponent(TotalRevenueAndExpenses, {
 const getStatsUrl = getMswUrl(
   financeRecordApiRoutes.getStats({
     searchFilters: DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+    timeInterval: DEFAULT_FINANCES_TIME_INTERVAL,
   }),
 )
 function useStatsHandler(stats: FinanceRecordsStats) {
@@ -90,6 +92,9 @@ const defaultStats: FinanceRecordsStats = {
   totalExpenses: 100.1,
   revenueRecords: 20,
   totalRevenue: 200.5,
+  dates: [],
+  revenuesByDate: [],
+  expensesByDate: [],
 }
 
 test('renders a divider', () => {

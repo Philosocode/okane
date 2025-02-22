@@ -57,7 +57,7 @@ const option = computed(() => ({
         },
         {
           name: FINANCES_COPY.STATS.REVENUES,
-          value: stats.value?.totalRevenue ?? 0,
+          value: stats.value?.totalRevenues ?? 0,
         },
       ],
     },

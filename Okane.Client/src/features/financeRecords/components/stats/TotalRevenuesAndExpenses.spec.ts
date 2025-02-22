@@ -5,7 +5,7 @@ import { http, HttpResponse } from 'msw'
 // Internal
 import CardHeading from '@shared/components/typography/CardHeading.vue'
 import TotalAmountCell from '@features/financeRecords/components/stats/TotalAmountCell.vue'
-import TotalRevenueAndExpenses from '@features/financeRecords/components/stats/TotalRevenueAndExpenses.vue'
+import TotalRevenuesAndExpenses from '@features/financeRecords/components/stats/TotalRevenuesAndExpenses.vue'
 import VerticalDivider from '@shared/components/divider/VerticalDivider.vue'
 
 import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
@@ -30,7 +30,7 @@ import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 import { DEFAULT_FINANCES_TIME_INTERVAL } from '@features/financeRecords/constants/stats'
 
-const mountComponent = getMountComponent(TotalRevenueAndExpenses, {
+const mountComponent = getMountComponent(TotalRevenuesAndExpenses, {
   global: {
     provide: {
       [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: useFinanceRecordSearchFiltersProvider(),
@@ -91,7 +91,7 @@ const defaultStats: FinanceRecordsStats = {
   expenseRecords: 10,
   totalExpenses: 100.1,
   revenueRecords: 20,
-  totalRevenue: 200.5,
+  totalRevenues: 200.5,
   dates: [],
   revenuesByDate: [],
   expensesByDate: [],
@@ -114,7 +114,7 @@ test('does not create an error toast', () => {
 
 test('renders revenue stats', async () => {
   await sharedTests.rendersACell({
-    amount: defaultStats.totalRevenue,
+    amount: defaultStats.totalRevenues,
     count: defaultStats.revenueRecords,
     stats: defaultStats,
     headingText: FINANCES_COPY.RECORD_TYPES.REVENUE,

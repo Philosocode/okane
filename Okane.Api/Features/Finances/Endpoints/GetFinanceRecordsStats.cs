@@ -187,7 +187,7 @@ public class GetFinanceRecordsStats : IEndpoint
             else
             {
                 stats.RevenueRecords += dateStats.Count;
-                stats.TotalRevenue += dateStats.Amount;
+                stats.TotalRevenues += dateStats.Amount;
                 stats.RevenuesByDate[^1] = dateStats.Amount;
             }
 

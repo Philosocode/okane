@@ -25,8 +25,8 @@ watchEffect(() => {
 <template>
   <div class="root">
     <TotalAmountCell
-      :amount="stats?.totalRevenue ?? 0"
-      :class="{ revenue: true, empty: !stats?.totalRevenue, hidden: !stats }"
+      :amount="stats?.totalRevenues ?? 0"
+      :class="{ revenue: true, empty: !stats?.totalRevenues, hidden: !stats }"
       :count="stats?.revenueRecords ?? 0"
       :heading-text="FINANCES_COPY.RECORD_TYPES.REVENUE"
       :loading="!stats"

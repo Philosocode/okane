@@ -22,7 +22,7 @@ const testIds = {
   FinanceCharts: 'FinanceCharts',
   FinanceRecordList: 'FinanceRecordList',
   Heading: 'Heading',
-  TotalRevenueAndExpenses: 'TotalRevenueAndExpenses',
+  TotalRevenuesAndExpenses: 'TotalRevenuesAndExpenses',
   SearchFiltersSection: 'SearchFiltersSection',
 }
 
@@ -51,8 +51,8 @@ const mountComponent = getMountComponent(FinancesPage, {
         template: `<div data-testid="${testIds.SearchFiltersSection}" />`,
       },
       teleport: true,
-      TotalRevenueAndExpenses: {
-        template: `<div data-testid="${testIds.TotalRevenueAndExpenses}" />`,
+      TotalRevenuesAndExpenses: {
+        template: `<div data-testid="${testIds.TotalRevenuesAndExpenses}" />`,
       },
     },
   },
@@ -66,7 +66,7 @@ test('renders a page title', () => {
 
 test('renders total revenue and expenses', () => {
   commonAsserts.rendersElementWithTestId({
-    testId: testIds.TotalRevenueAndExpenses,
+    testId: testIds.TotalRevenuesAndExpenses,
     wrapper: mountComponent(),
   })
 })

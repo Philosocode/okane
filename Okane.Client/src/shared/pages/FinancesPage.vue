@@ -13,7 +13,7 @@ import FinanceRecordList from '@features/financeRecords/components/financeRecord
 import Heading from '@shared/components/nav/Heading.vue'
 import PageLayout from '@shared/components/wrapper/PageLayout.vue'
 import SearchFiltersSection from '@features/financeRecords/components/searchFilters/SearchFiltersSection.vue'
-import TotalRevenueAndExpenses from '@features/financeRecords/components/stats/TotalRevenueAndExpenses.vue'
+import TotalRevenuesAndExpenses from '@features/financeRecords/components/stats/TotalRevenuesAndExpenses.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
@@ -41,7 +41,7 @@ provide(FINANCE_RECORD_SEARCH_FILTERS_SYMBOL, useFinanceRecordSearchFiltersProvi
     <div class="flow">
       <section>
         <Card>
-          <TotalRevenueAndExpenses />
+          <TotalRevenuesAndExpenses />
           <SearchFiltersSection />
         </Card>
       </section>

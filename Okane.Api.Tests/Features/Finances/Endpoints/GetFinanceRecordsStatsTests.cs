@@ -76,7 +76,7 @@ public class GetFinanceRecordsStatsTests(PostgresApiFactory apiFactory) : Databa
             else
             {
                 stats.RevenueRecords++;
-                stats.TotalRevenue += financeRecord.Amount;
+                stats.TotalRevenues += financeRecord.Amount;
             }
         }
     }

@@ -2,7 +2,7 @@ export type FinanceRecordsStats = {
   expenseRecords: number
   revenueRecords: number
   totalExpenses: number
-  totalRevenue: number
+  totalRevenues: number
   expensesByDate: number[]
   revenuesByDate: number[]
   dates: string[]

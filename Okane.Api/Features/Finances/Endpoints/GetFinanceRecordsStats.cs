@@ -32,8 +32,8 @@ public class GetFinanceRecordsStats : IEndpoint
             IFinanceRecordService financeRecordService,
             [AsParameters] FinanceRecordFilterQueryParameters filterParameters,
             IValidator<FinanceRecordFilterQueryParameters> filterParametersValidator,
-            [AsParameters] FinanceRecordStatsQueryParameters statsParameters,
-            IValidator<FinanceRecordStatsQueryParameters> statsParametersValidator,
+            [AsParameters] FinanceRecordsStatsQueryParameters statsParameters,
+            IValidator<FinanceRecordsStatsQueryParameters> statsParametersValidator,
             CancellationToken cancellationToken)
     {
         var validationErrors = await ValidateQueryParameters(
@@ -64,8 +64,8 @@ public class GetFinanceRecordsStats : IEndpoint
     private static async Task<IDictionary<string, string[]>?> ValidateQueryParameters(
         FinanceRecordFilterQueryParameters filterParameters,
         IValidator<FinanceRecordFilterQueryParameters> filterParametersValidator,
-        FinanceRecordStatsQueryParameters statsParameters,
-        IValidator<FinanceRecordStatsQueryParameters> statsParametersValidator,
+        FinanceRecordsStatsQueryParameters statsParameters,
+        IValidator<FinanceRecordsStatsQueryParameters> statsParametersValidator,
         CancellationToken cancellationToken
     )
     {

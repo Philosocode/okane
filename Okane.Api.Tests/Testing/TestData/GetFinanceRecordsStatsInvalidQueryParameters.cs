@@ -12,7 +12,7 @@ public class GetFinanceRecordsStatsInvalidQueryParameters : IEnumerable<object[]
             "timeInterval=invalid",
             new Dictionary<string, string[]>
             {
-                { "TimeInterval", [FinanceRecordStatsQueryParametersValidator.InvalidIntervalError] }
+                { "TimeInterval", [FinanceRecordsStatsQueryParametersValidator.InvalidIntervalError] }
             }
         }
     ];

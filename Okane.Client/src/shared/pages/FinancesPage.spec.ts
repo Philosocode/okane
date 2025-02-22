@@ -19,6 +19,7 @@ const testIds = {
   CreateFinanceRecordModal: 'CreateFinanceRecordModal',
   DeleteFinanceRecordModal: 'DeleteFinanceRecordModal',
   EditFinanceRecordModal: 'EditFinanceRecordModal',
+  FinanceCharts: 'FinanceCharts',
   FinanceRecordList: 'FinanceRecordList',
   Heading: 'Heading',
   TotalRevenueAndExpenses: 'TotalRevenueAndExpenses',
@@ -39,6 +40,9 @@ const mountComponent = getMountComponent(FinancesPage, {
       },
       EditFinanceRecordModal: {
         template: `<div data-testid="${testIds.EditFinanceRecordModal}" />`,
+      },
+      FinanceCharts: {
+        template: `<div data-testid="${testIds.FinanceCharts}" />`,
       },
       FinanceRecordList: {
         template: `<div data-testid="${testIds.FinanceRecordList}" />`,
@@ -63,6 +67,13 @@ test('renders a page title', () => {
 test('renders total revenue and expenses', () => {
   commonAsserts.rendersElementWithTestId({
     testId: testIds.TotalRevenueAndExpenses,
+    wrapper: mountComponent(),
+  })
+})
+
+test('renders finance charts', () => {
+  commonAsserts.rendersElementWithTestId({
+    testId: testIds.FinanceCharts,
     wrapper: mountComponent(),
   })
 })

@@ -83,3 +83,17 @@ test('renders a visually-hidden label when withHiddenLabel is true', () => {
   const label = wrapper.get('label')
   expect(label.classes()).toContain(VISUALLY_HIDDEN_CLASS)
 })
+
+test('does not render with a shadow when withShadow is false', () => {
+  const wrapper = mountComponent({ props })
+  const selectWrapper = wrapper.get('select').element.parentElement
+  expect(selectWrapper?.className).not.toContain('with-shadow')
+})
+
+test('renders with a shadow when withShadow is true', () => {
+  const wrapper = mountComponent({
+    props: { ...props, withShadow: true },
+  })
+  const selectWrapper = wrapper.get('select').element.parentElement
+  expect(selectWrapper?.className).toContain('with-shadow')
+})

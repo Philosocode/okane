@@ -19,7 +19,7 @@ const [isShowingCharts, toggleCharts] = useToggle(false)
 <template>
   <Card class="card">
     <CardHeading>{{ FINANCES_COPY.CHARTS.HEADING }}</CardHeading>
-    <AppButton class="toggle-button" @click="toggleCharts()">{{
+    <AppButton class="toggle-button" with-shadow @click="toggleCharts()">{{
       isShowingCharts ? SHARED_COPY.ACTIONS.HIDE : SHARED_COPY.ACTIONS.SHOW
     }}</AppButton>
 

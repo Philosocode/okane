@@ -1,0 +1,20 @@
+.after-shadow {
+  &:hover::after,
+  &:active::after,
+  &:focus::after {
+    transform: none;
+  }
+
+  &::after {
+    background-color: var(--color-main-gray-dim);
+    content: '';
+    display: block;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transition: transform 200ms ease-in-out;
+    z-index: -1;
+  }
+}

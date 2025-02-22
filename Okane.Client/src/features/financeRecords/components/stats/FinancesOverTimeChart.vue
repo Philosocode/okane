@@ -126,6 +126,7 @@ const option: ComputedRef<ECBasicOption> = computed(() => ({
     :label="SHARED_COPY.TIME_INTERVAL.LABEL"
     name="timeInterval"
     v-model="timeInterval"
+    with-shadow
   />
   <VueChart
     autoresize

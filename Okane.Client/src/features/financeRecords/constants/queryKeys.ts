@@ -13,6 +13,10 @@ const queryKeys = {
     'stats',
     args.filters,
   ],
+  statsWithTimeInterval: (args: { filters: FinanceRecordSearchFilters; timeInterval: string }) => [
+    ...queryKeys.stats(args),
+    args.timeInterval,
+  ],
 }
 
 export const financeRecordQueryKeys = queryKeys

@@ -57,6 +57,14 @@ export const SHARED_COPY = {
     PLACEHOLDER: 'Select tags...',
   },
 
+  TIME_INTERVAL: {
+    DAY: 'Day',
+    LABEL: 'Time Interval',
+    MONTH: 'Month',
+    WEEK: 'Week',
+    YEAR: 'Year',
+  },
+
   TOGGLE_MENU: {
     BUTTON_TITLE: 'Toggle Menu',
   },

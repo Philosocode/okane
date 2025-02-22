@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // External
-import { computed, watchEffect } from 'vue'
+import { watchEffect } from 'vue'
 
 // Internal
 import TotalAmountCell from '@features/financeRecords/components/stats/TotalAmountCell.vue'
@@ -13,8 +13,7 @@ import { useQueryFinanceRecordsStats } from '@features/financeRecords/composable
 import { useToastStore } from '@shared/composables/useToastStore'
 
 const toastStore = useToastStore()
-const { data, isError } = useQueryFinanceRecordsStats()
-const stats = computed(() => data.value?.items[0])
+const { data: stats, isError } = useQueryFinanceRecordsStats()
 
 watchEffect(() => {
   if (isError.value) {

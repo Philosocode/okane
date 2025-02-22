@@ -3,4 +3,7 @@ export type FinanceRecordsStats = {
   revenueRecords: number
   totalExpenses: number
   totalRevenue: number
+  expensesByDate: number[]
+  revenuesByDate: number[]
+  dates: string[]
 }

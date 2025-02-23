@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // External
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useDark } from '@vueuse/core'
 
@@ -8,9 +8,24 @@ import { useDark } from '@vueuse/core'
 import { DARK_MODE_STORAGE_KEY } from '@shared/constants/styles'
 import { SHARED_COPY } from '@shared/constants/copy'
 
-const isDark = useDark({
+const isDarkWatched = useDark({
+  disableTransition: false,
   storageKey: DARK_MODE_STORAGE_KEY,
 })
+const isDark = ref(isDarkWatched.value)
+
+const transitionDurationMs = 50
+
+function toggleColorMode() {
+  isDark.value = !isDark.value
+
+  // This hacky workaround is needed because useDark disables transitions while changing color mode.
+  // useDark exposes a "disableTransition" option, but even when this option is set to false,
+  // the handle transition doesn't work.
+  setTimeout(() => {
+    isDarkWatched.value = !isDarkWatched.value
+  }, transitionDurationMs)
+}
 
 const icon = computed(() => {
   if (isDark.value) return 'fa-solid fa-moon'
@@ -21,15 +36,15 @@ const title = computed(() => {
   if (isDark.value) return SHARED_COPY.ACTIONS.SWITCH_TO_LIGHT_MODE
   return SHARED_COPY.ACTIONS.SWITCH_TO_DARK_MODE
 })
-
-function toggleColorMode() {
-  isDark.value = !isDark.value
-}
 </script>
 
 <template>
-  <button class="switch" :class="{ 'is-dark': isDark }" @click="toggleColorMode">
-    <span class="handle">
+  <button class="switch" @click="toggleColorMode()">
+    <span
+      class="handle"
+      :class="{ 'is-dark': isDark }"
+      :style="{ transitionDuration: `${transitionDurationMs}ms` }"
+    >
       <FontAwesomeIcon class="icon" :icon="icon" :title="title" />
     </span>
   </button>
@@ -44,13 +59,6 @@ function toggleColorMode() {
   height: 1.5rem;
   padding: 0 2px;
   width: 2.75rem;
-
-  display: flex;
-  align-items: center;
-
-  &.is-dark {
-    justify-content: flex-end;
-  }
 }
 
 .handle {
@@ -61,11 +69,17 @@ function toggleColorMode() {
   border-radius: var(--border-roundest);
   font-size: 0.7rem;
   height: var(--handle-size);
+  transform: translateX(100%);
+  transition: transform ease-in-out;
   width: var(--handle-size);
 
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &.is-dark {
+    transform: translateX(0);
+  }
 }
 
 .icon {

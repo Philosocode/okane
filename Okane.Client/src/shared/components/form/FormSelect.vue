@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// External
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
 // Internal
 import FormLabel from '@shared/components/form/FormLabel.vue'
 
@@ -53,6 +56,7 @@ const model = defineModel()
           {{ option.label ?? option.value }}
         </option>
       </select>
+      <FontAwesomeIcon class="caret" icon="fa-solid fa-angle-down" />
     </div>
   </div>
 </template>
@@ -72,6 +76,7 @@ const model = defineModel()
   border: var(--border-main);
   color: var(--color-text);
   display: block;
+  padding-right: 24px;
   position: relative;
   transition: background-color 200ms ease-in-out;
 
@@ -80,5 +85,13 @@ const model = defineModel()
   &:focus {
     background-color: var(--color-main-gray-deep);
   }
+}
+
+.caret {
+  position: absolute;
+  width: 12px;
+  right: 9px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 </style>

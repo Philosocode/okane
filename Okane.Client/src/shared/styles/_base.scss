@@ -48,6 +48,12 @@ body:has([data-disable-document-scroll="true"]) {
   margin-block-start: var(--flow-space, var(--space-md));
 }
 
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
     animation-delay: -1s !important;

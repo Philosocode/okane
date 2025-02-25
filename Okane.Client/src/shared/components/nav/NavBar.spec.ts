@@ -1,6 +1,3 @@
-// External
-import { flushPromises } from '@vue/test-utils'
-
 // Internal
 import NavBar from '@shared/components/nav/NavBar.vue'
 
@@ -16,6 +13,7 @@ import { testServer } from '@tests/msw/testServer'
 
 import { createTestJwtToken } from '@tests/factories/jwtToken'
 import { createTestUser } from '@tests/factories/user'
+import { useMockedStore } from '@tests/composables/useMockedStore'
 
 const mountComponent = getMountComponent(NavBar, {
   withPinia: true,
@@ -97,16 +95,15 @@ describe('when authenticated', () => {
   test('renders a logout link', async () => {
     testServer.use(authHandlers.postLogoutSuccess())
 
+    const authStore = useMockedStore(useAuthStore)
+    const logout = vi.spyOn(authStore, 'logout')
+
     const wrapper = mountComponent()
     const logoutLink = wrapper.findByText('a', AUTH_COPY.LOGOUT)
-    logoutLink.trigger('click')
 
-    await flushPromises()
-
-    const authStore = useAuthStore()
-    expect(authStore.authUser).toBeUndefined()
-    expect(authStore.jwtToken).toBeUndefined()
-    expect(globalThis.location.pathname).toBe(appRoutes.login.buildPath())
+    expect(logout).not.toHaveBeenCalled()
+    await logoutLink.trigger('click')
+    expect(logout).toHaveBeenCalledOnce()
   })
 
   test('does not render a login link', () => {

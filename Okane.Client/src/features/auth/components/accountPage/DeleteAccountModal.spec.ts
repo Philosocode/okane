@@ -113,7 +113,8 @@ describe('when the modal is showing', () => {
       await flushPromises()
     })
 
-    test('redirects to the account deleted page', () => {
+    test('redirects to the account deleted page', async () => {
+      await vi.dynamicImportSettled()
       expect(router.currentRoute.value.name).toBe(ROUTE_NAME.ACCOUNT_DELETED)
     })
   })

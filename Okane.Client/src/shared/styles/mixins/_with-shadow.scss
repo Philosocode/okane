@@ -1,4 +1,4 @@
-.after-shadow {
+@mixin with-shadow() {
   &:hover::after,
   &:active::after,
   &:focus::after {

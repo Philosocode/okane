@@ -18,7 +18,6 @@ const classes = computed(() => ({
   base: true,
   'call-to-action': !props.disabled && props.variant === 'callToAction',
   warning: !props.disabled && props.variant === 'warning',
-  'after-shadow': props.withShadow,
   'with-shadow': props.withShadow,
 }))
 
@@ -57,9 +56,13 @@ onMounted(() => {
   }
 }
 
-.with-shadow::after {
-  height: calc(100% + var(--border-width));
-  transform: translate(8px, 5px);
+.with-shadow {
+  @include with-shadow();
+
+  &::after {
+    height: calc(100% + var(--border-width));
+    transform: translate(8px, 5px);
+  }
 }
 
 .call-to-action {

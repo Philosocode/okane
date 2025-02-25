@@ -36,10 +36,7 @@ const model = defineModel()
       {{ props.label }}
     </FormLabel>
 
-    <div
-      class="select-wrapper"
-      :class="{ 'after-shadow': props.withShadow, 'with-shadow': props.withShadow }"
-    >
+    <div class="select-wrapper" :class="{ 'with-shadow': props.withShadow }">
       <select
         class="form-input select"
         :id="controlId"
@@ -67,8 +64,12 @@ const model = defineModel()
   width: max-content;
 }
 
-.with-shadow::after {
-  transform: translate(5px, 5px);
+.with-shadow {
+  @include with-shadow();
+
+  &::after {
+    transform: translate(5px, 5px);
+  }
 }
 
 .select {

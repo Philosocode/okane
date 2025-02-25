@@ -162,11 +162,14 @@ public class GetFinanceRecordsStats : IEndpoint
         };
 
         var i = 0;
-        while (i < allDateStats.Count)
+        while (i < allDateStats.Count && currDate <= allDateStats[^1].Date)
         {
             // The current data is for a different date. Increment by the time interval and try again.
             var dateStats = allDateStats[i];
-            if (!currDate.Equals(dateStats.Date))
+            var sameDay = currDate.Year == dateStats.Date.Year
+                          && currDate.Month == dateStats.Date.Month
+                          && currDate.Day == dateStats.Date.Day;
+            if (!sameDay)
             {
                 stats.ExpensesByDate.Add(0);
                 stats.RevenuesByDate.Add(0);

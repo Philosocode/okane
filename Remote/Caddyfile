@@ -5,6 +5,10 @@
 }
 
 domain.com {
+    log {
+        format console
+    }
+
     encode gzip
 
     handle /api/* {

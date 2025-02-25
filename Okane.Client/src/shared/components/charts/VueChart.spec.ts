@@ -16,7 +16,7 @@ const TestComponent = defineComponent({
 
 const mountComponent = getMountComponent(TestComponent)
 
-test('renders a VChart with the passed attributes', async () => {
+test('renders a VChart with the passed attributes', () => {
   vi.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(1024)
   vi.spyOn(Element.prototype, 'clientHeight', 'get').mockReturnValue(768)
 

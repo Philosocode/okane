@@ -1,5 +1,6 @@
 // External
 import vue from '@vitejs/plugin-vue'
+import { transformLazyShow } from 'v-lazy-show'
 import { defineConfig, loadEnv } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
 
@@ -16,7 +17,15 @@ export default defineConfig(({ mode }) => {
         '@tests': fileURLToPath(new URL('./src/__tests__', import.meta.url)),
       },
     },
-    plugins: [vue()],
+    plugins: [
+      vue({
+        template: {
+          compilerOptions: {
+            nodeTransforms: [transformLazyShow],
+          },
+        },
+      }),
+    ],
     server: {
       proxy: {
         '/api': {

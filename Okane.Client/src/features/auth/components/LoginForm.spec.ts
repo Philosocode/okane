@@ -122,6 +122,7 @@ describe('when successfully logging in', () => {
     const submitButton = elements.submitButton(wrapper)
     await submitButton.trigger('submit')
 
+    await vi.dynamicImportSettled()
     await flushPromises()
   })
 

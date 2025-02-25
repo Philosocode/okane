@@ -2,16 +2,6 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 // Internal
-import AccountPage from '@shared/pages/AccountPage.vue'
-import AccountDeletedPage from '@shared/pages/AccountDeletedPage.vue'
-import FinancesPage from '@shared/pages/FinancesPage.vue'
-import LoginPage from '@shared/pages/LoginPage.vue'
-import ManageFinanceUserTagsPage from '@shared/pages/ManageFinanceUserTagsPage.vue'
-import RegisterPage from '@shared/pages/RegisterPage.vue'
-import ResetPasswordPage from '@shared/pages/ResetPasswordPage.vue'
-import SendResetPasswordEmail from '@shared/pages/SendResetPasswordEmailPage.vue'
-import VerifyEmailPage from '@shared/pages/VerifyEmailPage.vue'
-
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
 
 import { getQueryClient } from '@shared/services/queryClient/queryClient'
@@ -36,60 +26,60 @@ export const appRoutes: Record<ROUTE_NAME, Route> = {
     path: '/account',
     buildPath: () => '/account',
     name: ROUTE_NAME.ACCOUNT,
-    component: AccountPage,
+    component: () => import('@shared/pages/AccountPage.vue'),
   },
   [ROUTE_NAME.ACCOUNT_DELETED]: {
     path: '/account-deleted',
     buildPath: () => '/account-deleted',
     name: ROUTE_NAME.ACCOUNT_DELETED,
-    component: AccountDeletedPage,
+    component: () => import('@shared/pages/AccountDeletedPage.vue'),
     meta: { isPublic: true, isPublicOnly: true },
   },
   [ROUTE_NAME.FINANCES]: {
     path: '/',
     buildPath: () => '/',
     name: ROUTE_NAME.FINANCES,
-    component: FinancesPage,
+    component: () => import('@shared/pages/FinancesPage.vue'),
   },
   [ROUTE_NAME.LOGIN]: {
     path: '/login',
     buildPath: () => '/login',
     name: ROUTE_NAME.LOGIN,
-    component: LoginPage,
+    component: () => import('@shared/pages/LoginPage.vue'),
     meta: { isPublic: true, isPublicOnly: true },
   },
   [ROUTE_NAME.MANAGE_FINANCE_TAGS]: {
     path: '/manage-finance-tags',
     buildPath: () => '/manage-finance-tags',
     name: ROUTE_NAME.MANAGE_FINANCE_TAGS,
-    component: ManageFinanceUserTagsPage,
+    component: () => import('@shared/pages/ManageFinanceUserTagsPage.vue'),
   },
   [ROUTE_NAME.REGISTER]: {
     path: '/register',
     buildPath: () => '/register',
     name: ROUTE_NAME.REGISTER,
-    component: RegisterPage,
+    component: () => import('@shared/pages/RegisterPage.vue'),
     meta: { isPublic: true, isPublicOnly: true },
   },
   [ROUTE_NAME.RESET_PASSWORD]: {
     path: '/reset-password',
     buildPath: () => '/reset-password',
     name: ROUTE_NAME.RESET_PASSWORD,
-    component: ResetPasswordPage,
+    component: () => import('@shared/pages/ResetPasswordPage.vue'),
     meta: { isPublic: true, isPublicOnly: true },
   },
   [ROUTE_NAME.SEND_RESET_PASSWORD_EMAIL]: {
     path: '/send-reset-password-email',
     buildPath: () => '/send-reset-password-email',
     name: ROUTE_NAME.SEND_RESET_PASSWORD_EMAIL,
-    component: SendResetPasswordEmail,
+    component: () => import('@shared/pages/SendResetPasswordEmailPage.vue'),
     meta: { isPublic: true, isPublicOnly: true },
   },
   [ROUTE_NAME.VERIFY_EMAIL]: {
     path: '/verify-email',
     buildPath: () => '/verify-email',
     name: ROUTE_NAME.VERIFY_EMAIL,
-    component: VerifyEmailPage,
+    component: () => import('@shared/pages/VerifyEmailPage.vue'),
     meta: { isPublic: true, isPublicOnly: true },
   },
 }

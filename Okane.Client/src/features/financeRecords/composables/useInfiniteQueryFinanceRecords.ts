@@ -53,7 +53,8 @@ export function useInfiniteQueryFinanceRecords() {
     initialPageParam: {} as FinanceRecordSearchCursor,
     getNextPageParam: (lastPage, _) => {
       if (!lastPage.hasNextPage) return null
-      return getFinanceRecordsSearchCursor(searchProvider.filters, lastPage.items[0])
+      const n = lastPage.items.length
+      return getFinanceRecordsSearchCursor(searchProvider.filters, lastPage.items[n - 1])
     },
   })
 }

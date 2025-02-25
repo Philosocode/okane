@@ -48,10 +48,13 @@ function mountWithProviders(args: { searchProvider?: FinanceRecordSearchFiltersP
 }
 
 test('makes multiple requests to fetch paginated finance records', async () => {
-  const financeRecord = createTestFinanceRecord()
+  const financeRecords = [
+    createTestFinanceRecord(),
+    createTestFinanceRecord({ id: 2, amount: 720 }),
+  ]
   const getSpy = vi
     .spyOn(apiClient, 'get')
-    .mockResolvedValueOnce(wrapInApiPaginatedResponse(wrapInApiResponse([financeRecord]), {}))
+    .mockResolvedValueOnce(wrapInApiPaginatedResponse(wrapInApiResponse(financeRecords)))
     .mockResolvedValueOnce(
       wrapInApiPaginatedResponse(wrapInApiResponse([]), { hasNextPage: false }),
     )
@@ -80,7 +83,7 @@ test('makes multiple requests to fetch paginated finance records', async () => {
   expect(getSpy).toHaveBeenCalledTimes(2)
   expect(getSpy).toHaveBeenLastCalledWith(
     financeRecordApiRoutes.getPaginatedList({
-      cursor: getFinanceRecordsSearchCursor(searchProvider.filters, financeRecord),
+      cursor: getFinanceRecordsSearchCursor(searchProvider.filters, financeRecords[1]),
       searchFilters: searchProvider.filters,
     }),
     {

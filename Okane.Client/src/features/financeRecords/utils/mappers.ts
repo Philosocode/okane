@@ -122,7 +122,7 @@ function mapFinanceRecordSearchFiltersToURLSearchParams(
 
   // Tags.
   filters.tags.forEach((tag) => {
-    params.append('tagId', tag.id.toString())
+    params.append('tagIds', tag.id.toString())
   })
 
   return params

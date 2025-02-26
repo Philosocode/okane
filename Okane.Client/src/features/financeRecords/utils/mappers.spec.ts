@@ -171,7 +171,7 @@ describe('mapFinanceRecordSearchFilters', () => {
         'happenedBefore',
         'minAmount',
         'maxAmount',
-        'tagId',
+        'tagIds',
         'type',
       ]
 
@@ -190,7 +190,7 @@ describe('mapFinanceRecordSearchFilters', () => {
       const tags = [createTestTag({ id: 1 }), createTestTag({ id: 2 })]
       const filters = { tags }
       const params = getParams(filters)
-      expect(params.getAll('tagId')).toEqual(['1', '2'])
+      expect(params.getAll('tagIds')).toEqual(['1', '2'])
     })
 
     test('type', () => {

@@ -13,7 +13,7 @@ public class FinanceRecordFilterQueryParameters
     public decimal? MinAmount { get; set; }
     public decimal? MaxAmount { get; set; }
 
-    [FromQuery(Name = "tagId")]
+    [FromQuery(Name = "tagIds")]
     public int[]? TagIds { get; set; }
     public FinanceRecordType? Type { get; set; }
 }

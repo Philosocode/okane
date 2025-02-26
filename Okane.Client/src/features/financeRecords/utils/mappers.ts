@@ -16,7 +16,7 @@ import {
 
 import { convertValueAndOperatorToMinMax, isComparisonOperator } from '@shared/utils/search'
 import { createMappers } from '@shared/utils/mappers'
-import { mapDate } from '@shared/utils/dateTime'
+import { mapDate, mapDateOnlyTimestampToLocalizedDate } from '@shared/utils/dateTime'
 
 export const mapFinanceRecord = createMappers({
   saveFinanceRecordFormState(financeRecord: FinanceRecord): SaveFinanceRecordFormState {
@@ -152,10 +152,10 @@ export const mapFinanceRecordSearchFiltersFormState = createMappers({
 
     filters.amountOperator = isComparisonOperator(amountOperator) ? amountOperator : undefined
 
-    const happenedAt1Parsed = new Date(happenedAt1)
+    const happenedAt1Parsed = mapDateOnlyTimestampToLocalizedDate(happenedAt1)
     filters.happenedAt1 = isValidDate(happenedAt1Parsed) ? happenedAt1Parsed : undefined
 
-    const happenedAt2Parsed = new Date(happenedAt2)
+    const happenedAt2Parsed = mapDateOnlyTimestampToLocalizedDate(happenedAt2)
     filters.happenedAt2 = isValidDate(happenedAt2Parsed) ? happenedAt2Parsed : undefined
 
     filters.happenedAtOperator = isComparisonOperator(happenedAtOperator)

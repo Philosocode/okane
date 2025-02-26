@@ -30,6 +30,15 @@ describe('mapDate', () => {
   })
 })
 
+describe('mapDateOnlyTimestampToLocalizedDate', () => {
+  test('converts date-only timestamps to a date in the current timezone', () => {
+    const timestamp = '2024-05-20'
+    const expected = new Date(2024, 4, 20)
+    const actual = dateTimeUtils.mapDateOnlyTimestampToLocalizedDate(timestamp)
+    expect(actual).toEqual(expected)
+  })
+})
+
 test('mapUTCTimestampToLocalDate', () => {
   const utcTimestamp = '2023-06-15T10:30:00.000Z'
   const expectedLocalDate = new Date(2023, 5, 15, 10, 30, 0, 0)

@@ -25,14 +25,9 @@ import {
   SAVE_FINANCE_RECORD_SYMBOL,
   useSaveFinanceRecordProvider,
 } from '@features/financeRecords/providers/saveFinanceRecordProvider'
-import {
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  useFinanceRecordSearchFiltersProvider,
-} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
 provide(DELETE_FINANCE_RECORD_SYMBOL, useDeleteFinanceRecordProvider())
 provide(SAVE_FINANCE_RECORD_SYMBOL, useSaveFinanceRecordProvider())
-provide(FINANCE_RECORD_SEARCH_FILTERS_SYMBOL, useFinanceRecordSearchFiltersProvider())
 </script>
 
 <template>

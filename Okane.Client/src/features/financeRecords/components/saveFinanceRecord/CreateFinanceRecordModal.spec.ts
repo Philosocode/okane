@@ -18,10 +18,6 @@ import { apiClient } from '@shared/services/apiClient/apiClient'
 import { mapSaveFinanceRecordFormState } from '@features/financeRecords/utils/mappers'
 
 import {
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  useFinanceRecordSearchFiltersProvider,
-} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
-import {
   SAVE_FINANCE_RECORD_SYMBOL,
   type SaveFinanceRecordProvider,
   useSaveFinanceRecordProvider,
@@ -50,7 +46,6 @@ function mountWithProviders(args: { saveProvider: SaveFinanceRecordProvider }) {
     global: {
       provide: {
         [SAVE_FINANCE_RECORD_SYMBOL]: args.saveProvider,
-        [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: useFinanceRecordSearchFiltersProvider(),
       },
     },
   })

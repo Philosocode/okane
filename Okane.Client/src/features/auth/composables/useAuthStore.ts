@@ -9,13 +9,13 @@ import { HTTP_HEADER } from '@shared/constants/http'
 import { type AuthenticateResponse } from '@features/auth/types/authResponse'
 import { type User } from '@features/users/types'
 import { type Timeout } from '@shared/types/shared'
+import { type LoginRequest, type RegisterRequest } from '@features/auth/types/authForm'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 import { ROUTE_NAME, getRouter } from '@shared/services/router/router'
 
 import { getQueryClient } from '@shared/services/queryClient/queryClient'
 import { getJwtTokenPayload } from '@features/auth/utils/authResponse'
-import type { LoginRequest, RegisterRequest } from '@features/auth/types/authForm'
 
 export type AuthStore = ReturnType<typeof useAuthStore>
 

@@ -8,12 +8,6 @@ import { financeRecordQueryKeys } from '@features/financeRecords/constants/query
 
 import { useCreateFinanceRecord } from '@features/financeRecords/composables/useCreateFinanceRecord'
 
-import {
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  type FinanceRecordSearchFiltersProvider,
-  useFinanceRecordSearchFiltersProvider,
-} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
-
 import { mapSaveFinanceRecordFormState } from '@features/financeRecords/utils/mappers'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
@@ -21,6 +15,7 @@ import { apiClient } from '@shared/services/apiClient/apiClient'
 import { createTestSaveFinanceRecordFormState } from '@tests/factories/financeRecord'
 import { testQueryClient } from '@tests/queryClient/testQueryClient'
 import { wrapInApiResponse } from '@tests/utils/apiResponse'
+import { useFinanceRecordSearchStore } from '@features/financeRecords/composables/useFinanceRecordSearchStore'
 
 const formState = createTestSaveFinanceRecordFormState()
 const request = mapSaveFinanceRecordFormState.to.createFinanceRecordRequest(formState)
@@ -45,24 +40,14 @@ const TestComponent = defineComponent({
   template: '<div />',
 })
 
-function mountWithProviders(args: { searchProvider?: FinanceRecordSearchFiltersProvider } = {}) {
-  let searchProvider = args.searchProvider
-  if (!searchProvider) searchProvider = useFinanceRecordSearchFiltersProvider()
-
-  return getMountComponent(TestComponent, {
-    global: {
-      provide: {
-        [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: searchProvider,
-      },
-    },
-    withQueryClient: true,
-  })()
-}
+const mountComponent = getMountComponent(TestComponent, {
+  withQueryClient: true,
+})
 
 test('makes a POST request to the expected endpoint', async () => {
   const postSpy = spyOn.post()
 
-  mountWithProviders()
+  mountComponent()
 
   await flushPromises()
 
@@ -72,18 +57,18 @@ test('makes a POST request to the expected endpoint', async () => {
 test('invalidates the expected query keys', async () => {
   spyOn.post()
   const invalidateSpy = spyOn.invalidateQueries()
-  const searchProvider = useFinanceRecordSearchFiltersProvider()
+  const searchStore = useFinanceRecordSearchStore()
 
-  mountWithProviders({ searchProvider })
+  mountComponent()
 
   await flushPromises()
 
   expect(invalidateSpy).toHaveBeenCalledTimes(2)
 
   expect(invalidateSpy).toHaveBeenCalledWith({
-    queryKey: financeRecordQueryKeys.listByFilters({ filters: searchProvider.filters }),
+    queryKey: financeRecordQueryKeys.listByFilters({ filters: searchStore.filters }),
   })
   expect(invalidateSpy).toHaveBeenCalledWith({
-    queryKey: financeRecordQueryKeys.stats({ filters: searchProvider.filters }),
+    queryKey: financeRecordQueryKeys.stats({ filters: searchStore.filters }),
   })
 })

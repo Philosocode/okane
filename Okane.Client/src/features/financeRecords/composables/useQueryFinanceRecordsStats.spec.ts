@@ -6,13 +6,8 @@ import { DEFAULT_FINANCES_TIME_INTERVAL } from '@features/financeRecords/constan
 import { financeRecordApiRoutes } from '@features/financeRecords/constants/apiRoutes'
 import { TIME_INTERVAL } from '@shared/constants/dateTime'
 
+import { useFinanceRecordSearchStore } from '@features/financeRecords/composables/useFinanceRecordSearchStore'
 import { useQueryFinanceRecordsStats } from '@features/financeRecords/composables/useQueryFinanceRecordsStats'
-
-import {
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  type FinanceRecordSearchFiltersProvider,
-  useFinanceRecordSearchFiltersProvider,
-} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
@@ -27,31 +22,20 @@ function getTestComponent(timeInterval?: TIME_INTERVAL) {
   })
 }
 
-function mountWithProviders(
-  args: { searchProvider?: FinanceRecordSearchFiltersProvider; timeInterval?: TIME_INTERVAL } = {},
-) {
-  let searchProvider = args.searchProvider
-  if (!searchProvider) searchProvider = useFinanceRecordSearchFiltersProvider()
-
-  return getMountComponent(getTestComponent(args.timeInterval), {
-    global: {
-      provide: {
-        [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: searchProvider,
-      },
-    },
+function mountComponent(timeInterval?: TIME_INTERVAL) {
+  return getMountComponent(getTestComponent(timeInterval), {
     withQueryClient: true,
   })()
 }
 
 test('makes a request to fetch stats for finance records with the default time interval', () => {
   const getSpy = vi.spyOn(apiClient, 'get').mockResolvedValue(wrapInApiResponse({}))
-  const searchProvider = useFinanceRecordSearchFiltersProvider()
-
-  mountWithProviders({ searchProvider })
+  const searchStore = useFinanceRecordSearchStore()
+  mountComponent()
 
   expect(getSpy).toHaveBeenCalledWith(
     financeRecordApiRoutes.getStats({
-      searchFilters: searchProvider.filters,
+      searchFilters: searchStore.filters,
       timeInterval: DEFAULT_FINANCES_TIME_INTERVAL,
     }),
     { signal: new AbortController().signal },
@@ -60,12 +44,12 @@ test('makes a request to fetch stats for finance records with the default time i
 
 test('makes a request with the passed time interval', () => {
   const getSpy = vi.spyOn(apiClient, 'get').mockResolvedValue(wrapInApiResponse({}))
-  const searchProvider = useFinanceRecordSearchFiltersProvider()
+  const searchStore = useFinanceRecordSearchStore()
   const timeInterval = TIME_INTERVAL.YEAR
-  mountWithProviders({ searchProvider, timeInterval })
+  mountComponent(timeInterval)
 
   expect(getSpy).toHaveBeenCalledWith(
-    financeRecordApiRoutes.getStats({ searchFilters: searchProvider.filters, timeInterval }),
+    financeRecordApiRoutes.getStats({ searchFilters: searchStore.filters, timeInterval }),
     { signal: new AbortController().signal },
   )
 })

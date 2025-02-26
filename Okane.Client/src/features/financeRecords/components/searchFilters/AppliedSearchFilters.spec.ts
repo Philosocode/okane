@@ -8,18 +8,8 @@ import AppliedTagsFilter from '@features/financeRecords/components/searchFilters
 import AppliedTypeFilter from '@features/financeRecords/components/searchFilters/AppliedTypeFilter.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
-import {
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  useFinanceRecordSearchFiltersProvider,
-} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
-const mountComponent = getMountComponent(AppliedSearchFilters, {
-  global: {
-    provide: {
-      [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: useFinanceRecordSearchFiltersProvider(),
-    },
-  },
-})
+const mountComponent = getMountComponent(AppliedSearchFilters)
 
 test('renders a heading', () => {
   const wrapper = mountComponent()

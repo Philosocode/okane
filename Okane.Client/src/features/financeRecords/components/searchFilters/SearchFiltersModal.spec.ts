@@ -5,57 +5,48 @@ import SearchFiltersModal from '@features/financeRecords/components/searchFilter
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
-import {
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  type FinanceRecordSearchFiltersProvider,
-  useFinanceRecordSearchFiltersProvider,
-} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
+import { useFinanceRecordSearchStore } from '@features/financeRecords/composables/useFinanceRecordSearchStore'
 
 import { commonAsserts } from '@tests/utils/commonAsserts'
 
-function mountWithProviders(args?: { searchProvider: FinanceRecordSearchFiltersProvider }) {
-  let searchProvider = args?.searchProvider
-  if (!searchProvider) {
-    searchProvider = useFinanceRecordSearchFiltersProvider()
-    searchProvider.setModalIsShowing(true)
-  }
-
-  return getMountComponent(SearchFiltersModal, {
-    global: {
-      provide: {
-        [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: searchProvider,
-      },
-      stubs: {
-        SearchFiltersForm: true,
-        teleport: true,
-      },
+const mountComponent = getMountComponent(SearchFiltersModal, {
+  global: {
+    stubs: {
+      SearchFiltersForm: true,
+      teleport: true,
     },
-    withQueryClient: true,
-  })()
-}
+  },
+  withPinia: true,
+  withQueryClient: true,
+})
+
+beforeEach(() => {
+  const searchStore = useFinanceRecordSearchStore()
+  searchStore.setModalIsShowing(true)
+})
 
 test('does not render the modal content when modal is hidden', () => {
-  const searchProvider = useFinanceRecordSearchFiltersProvider()
-  searchProvider.setModalIsShowing(false)
+  const searchStore = useFinanceRecordSearchStore()
+  searchStore.setModalIsShowing(false)
 
-  const wrapper = mountWithProviders({ searchProvider })
+  const wrapper = mountComponent()
   const modalHeading = wrapper.findComponent(ModalHeading)
   expect(modalHeading.exists()).toBe(false)
 })
 
 test('renders the modal heading', () => {
-  const wrapper = mountWithProviders()
+  const wrapper = mountComponent()
   const modalHeading = wrapper.getComponent(ModalHeading)
   expect(modalHeading.text()).toBe(FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.EDIT_SEARCH_FILTERS)
 })
 
 test('renders an accessible modal', () => {
-  const wrapper = mountWithProviders()
+  const wrapper = mountComponent()
   commonAsserts.rendersAnAccessibleModal({ wrapper })
 })
 
 test('renders a form to edit finance records search filters', () => {
-  const wrapper = mountWithProviders()
+  const wrapper = mountComponent()
   const form = wrapper.findComponent(SearchFiltersForm)
   expect(form.exists()).toBe(true)
 })

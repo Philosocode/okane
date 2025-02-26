@@ -1,5 +1,5 @@
 // External
-import { computed, inject, toValue } from 'vue'
+import { computed, toValue } from 'vue'
 import { useQuery, type QueryFunctionContext } from '@tanstack/vue-query'
 
 import { type MaybeRef } from '@vueuse/core'
@@ -13,10 +13,7 @@ import { type ApiResponse } from '@shared/services/apiClient/types'
 import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 import { type FinanceRecordsStats } from '@features/financeRecords/types/financeRecordsStats'
 
-import {
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  type FinanceRecordSearchFiltersProvider,
-} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
+import { useFinanceRecordSearchStore } from '@features/financeRecords/composables/useFinanceRecordSearchStore'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
@@ -34,12 +31,10 @@ function fetchStats({
 export function useQueryFinanceRecordsStats(
   timeInterval: MaybeRef<string> = DEFAULT_FINANCES_TIME_INTERVAL,
 ) {
-  const searchProvider = inject(
-    FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  ) as FinanceRecordSearchFiltersProvider
+  const searchStore = useFinanceRecordSearchStore()
   const queryKey = computed(() =>
     financeRecordQueryKeys.statsWithTimeInterval({
-      filters: searchProvider.filters,
+      filters: searchStore.filters,
       timeInterval: toValue(timeInterval),
     }),
   )

@@ -9,19 +9,13 @@ import { SORT_DIRECTION } from '@shared/constants/search'
 
 import * as useCleanUpInfiniteQuery from '@shared/composables/useCleanUpInfiniteQuery'
 import { useInfiniteQueryFinanceRecords } from '@features/financeRecords/composables/useInfiniteQueryFinanceRecords'
+import { useFinanceRecordSearchStore } from '@features/financeRecords/composables/useFinanceRecordSearchStore'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
-import {
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  type FinanceRecordSearchFiltersProvider,
-  useFinanceRecordSearchFiltersProvider,
-} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
-
+import { createTestFinanceRecord } from '@tests/factories/financeRecord'
 import { getFinanceRecordsSearchCursor } from '@features/financeRecords/utils/searchFilters'
 import { wrapInApiPaginatedResponse, wrapInApiResponse } from '@tests/utils/apiResponse'
-
-import { createTestFinanceRecord } from '@tests/factories/financeRecord'
 
 function getTestComponent() {
   return defineComponent({
@@ -33,19 +27,9 @@ function getTestComponent() {
   })
 }
 
-function mountWithProviders(args: { searchProvider?: FinanceRecordSearchFiltersProvider } = {}) {
-  let searchProvider = args.searchProvider
-  if (!searchProvider) searchProvider = useFinanceRecordSearchFiltersProvider()
-
-  return getMountComponent(getTestComponent(), {
-    global: {
-      provide: {
-        [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: searchProvider,
-      },
-    },
-    withQueryClient: true,
-  })()
-}
+const mountComponent = getMountComponent(getTestComponent(), {
+  withQueryClient: true,
+})
 
 test('makes multiple requests to fetch paginated finance records', async () => {
   const financeRecords = [
@@ -59,17 +43,17 @@ test('makes multiple requests to fetch paginated finance records', async () => {
       wrapInApiPaginatedResponse(wrapInApiResponse([]), { hasNextPage: false }),
     )
 
-  const searchProvider = useFinanceRecordSearchFiltersProvider()
-  searchProvider.setFilters({ sortDirection: SORT_DIRECTION.ASCENDING, sortField: 'amount' })
+  const searchStore = useFinanceRecordSearchStore()
+  searchStore.setFilters({ sortDirection: SORT_DIRECTION.ASCENDING, sortField: 'amount' })
 
-  const wrapper = mountWithProviders({ searchProvider })
+  const wrapper = mountComponent()
   await flushPromises()
 
   expect(getSpy).toHaveBeenCalledOnce()
   expect(getSpy).toHaveBeenLastCalledWith(
     financeRecordApiRoutes.getPaginatedList({
       cursor: {},
-      searchFilters: searchProvider.filters,
+      searchFilters: searchStore.filters,
     }),
     {
       signal: new AbortController().signal,
@@ -83,8 +67,8 @@ test('makes multiple requests to fetch paginated finance records', async () => {
   expect(getSpy).toHaveBeenCalledTimes(2)
   expect(getSpy).toHaveBeenLastCalledWith(
     financeRecordApiRoutes.getPaginatedList({
-      cursor: getFinanceRecordsSearchCursor(searchProvider.filters, financeRecords[1]),
-      searchFilters: searchProvider.filters,
+      cursor: getFinanceRecordsSearchCursor(searchStore.filters, financeRecords[1]),
+      searchFilters: searchStore.filters,
     }),
     {
       signal: new AbortController().signal,
@@ -96,11 +80,11 @@ test('cleans up the infinite query', () => {
   vi.spyOn(apiClient, 'get').mockResolvedValue(wrapInApiResponse([]))
 
   const cleanUpSpy = vi.spyOn(useCleanUpInfiniteQuery, 'useCleanUpInfiniteQuery').mockReturnValue()
-  const searchProvider = useFinanceRecordSearchFiltersProvider()
+  const searchStore = useFinanceRecordSearchStore()
 
-  mountWithProviders()
+  mountComponent()
 
   expect(toValue(cleanUpSpy.mock.calls[0][0])).toEqual(
-    financeRecordQueryKeys.listByFilters({ filters: searchProvider.filters }),
+    financeRecordQueryKeys.listByFilters({ filters: searchStore.filters }),
   )
 })

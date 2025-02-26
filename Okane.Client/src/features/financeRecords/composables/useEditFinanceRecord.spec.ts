@@ -7,12 +7,7 @@ import { financeRecordApiRoutes } from '@features/financeRecords/constants/apiRo
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
 
 import { useEditFinanceRecord } from '@features/financeRecords/composables/useEditFinanceRecord'
-
-import {
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  type FinanceRecordSearchFiltersProvider,
-  useFinanceRecordSearchFiltersProvider,
-} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
+import { useFinanceRecordSearchStore } from '@features/financeRecords/composables/useFinanceRecordSearchStore'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
@@ -44,24 +39,14 @@ const TestComponent = defineComponent({
   template: '<div />',
 })
 
-function mountWithProviders(args: { searchProvider?: FinanceRecordSearchFiltersProvider } = {}) {
-  let searchProvider = args.searchProvider
-  if (!searchProvider) searchProvider = useFinanceRecordSearchFiltersProvider()
-
-  return getMountComponent(TestComponent, {
-    global: {
-      provide: {
-        [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: searchProvider,
-      },
-    },
-    withQueryClient: true,
-  })()
-}
+const mountComponent = getMountComponent(TestComponent, {
+  withQueryClient: true,
+})
 
 test('makes a PATCH request to the expected endpoint', async () => {
   const patchSpy = spyOn.patch()
 
-  mountWithProviders()
+  mountComponent()
   await flushPromises()
   expect(patchSpy).toHaveBeenCalledWith(financeRecordApiRoutes.patchFinanceRecord({ id }), {
     amount: parseFloat(changes.amount),
@@ -71,16 +56,16 @@ test('makes a PATCH request to the expected endpoint', async () => {
 test('invalidates the expected query keys', async () => {
   spyOn.patch()
   const invalidateSpy = spyOn.invalidateQueries()
-  const searchProvider = useFinanceRecordSearchFiltersProvider()
+  const searchStore = useFinanceRecordSearchStore()
 
-  mountWithProviders()
+  mountComponent()
   await flushPromises()
 
   expect(invalidateSpy).toHaveBeenCalledTimes(2)
   expect(invalidateSpy).toHaveBeenCalledWith({
-    queryKey: financeRecordQueryKeys.listByFilters({ filters: searchProvider.filters }),
+    queryKey: financeRecordQueryKeys.listByFilters({ filters: searchStore.filters }),
   })
   expect(invalidateSpy).toHaveBeenCalledWith({
-    queryKey: financeRecordQueryKeys.stats({ filters: searchProvider.filters }),
+    queryKey: financeRecordQueryKeys.stats({ filters: searchStore.filters }),
   })
 })

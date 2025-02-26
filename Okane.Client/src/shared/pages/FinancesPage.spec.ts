@@ -4,11 +4,9 @@ import { defineComponent, inject } from 'vue'
 // Internal
 import FinancesPage from '@shared/pages/FinancesPage.vue'
 
-import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
 import * as deleteFinanceRecordProvider from '@features/financeRecords/providers/deleteFinanceRecordProvider'
-import * as financeRecordSearchFiltersProvider from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 import * as saveFinanceRecordProvider from '@features/financeRecords/providers/saveFinanceRecordProvider'
 
 import { commonAsserts } from '@tests/utils/commonAsserts'
@@ -181,47 +179,4 @@ test('provides save finance record state', () => {
 
   expect(wrapper.get('#providerIsCreating').text()).toBe(isCreating.toString())
   expect(wrapper.get('#providerFinanceRecordId').text()).toBe(financeRecord.id.toString())
-})
-
-test('provides search finance records state', () => {
-  const description = 'Cool description'
-  const modalIsShowing = true
-  vi.spyOn(
-    financeRecordSearchFiltersProvider,
-    'useFinanceRecordSearchFiltersProvider',
-  ).mockReturnValue({
-    filters: {
-      ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
-      description,
-    },
-    modalIsShowing,
-    setFilters: vi.fn(),
-    setModalIsShowing: vi.fn(),
-  })
-
-  const ListStub = defineComponent({
-    setup() {
-      const provider = inject(
-        financeRecordSearchFiltersProvider.FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-      )
-      return { provider }
-    },
-    template: `
-      <div>
-        <span id="providerFilters">{{ provider.filters.description }}</span>
-        <span id="providerModalIsShowing">{{ provider.modalIsShowing }}</span>
-      </div>
-    `,
-  })
-
-  const wrapper = mountComponent({
-    global: {
-      stubs: {
-        FinanceRecordList: ListStub,
-      },
-    },
-  })
-
-  expect(wrapper.get('#providerFilters').text()).toBe(description)
-  expect(wrapper.get('#providerModalIsShowing').text()).toBe(`${modalIsShowing}`)
 })

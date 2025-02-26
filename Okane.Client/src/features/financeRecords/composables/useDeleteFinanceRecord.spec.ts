@@ -8,12 +8,6 @@ import { financeRecordQueryKeys } from '@features/financeRecords/constants/query
 
 import { useDeleteFinanceRecord } from '@features/financeRecords/composables/useDeleteFinanceRecord'
 
-import {
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  type FinanceRecordSearchFiltersProvider,
-  useFinanceRecordSearchFiltersProvider,
-} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
-
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
 import { removeItemFromPages } from '@shared/utils/pagination'
@@ -21,6 +15,7 @@ import { removeItemFromPages } from '@shared/utils/pagination'
 import { createTestFinanceRecord } from '@tests/factories/financeRecord'
 import { testQueryClient } from '@tests/queryClient/testQueryClient'
 import { wrapInApiPaginatedResponse, wrapInApiResponse } from '@tests/utils/apiResponse'
+import { useFinanceRecordSearchStore } from '@features/financeRecords/composables/useFinanceRecordSearchStore'
 
 const spyOn = {
   delete() {
@@ -45,24 +40,14 @@ function createTestComponent(financeRecordToDelete = financeRecord) {
 
 const TestComponent = createTestComponent()
 
-function mountWithProviders(args: { searchProvider?: FinanceRecordSearchFiltersProvider } = {}) {
-  let searchProvider = args.searchProvider
-  if (!searchProvider) searchProvider = useFinanceRecordSearchFiltersProvider()
-
-  return getMountComponent(TestComponent, {
-    global: {
-      provide: {
-        [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: searchProvider,
-      },
-    },
-    withQueryClient: true,
-  })()
-}
+const mountComponent = getMountComponent(TestComponent, {
+  withQueryClient: true,
+})
 
 test('makes a DELETE request to the expected endpoint', async () => {
   const deleteSpy = spyOn.delete()
 
-  mountWithProviders()
+  mountComponent()
   await flushPromises()
 
   expect(deleteSpy).toHaveBeenCalledWith(
@@ -84,12 +69,12 @@ test('removes the finance record from the query cache', async () => {
     pageParams: [],
   }
 
-  const searchProvider = useFinanceRecordSearchFiltersProvider()
-  const queryKey = financeRecordQueryKeys.listByFilters({ filters: searchProvider.filters })
+  const searchStore = useFinanceRecordSearchStore()
+  const queryKey = financeRecordQueryKeys.listByFilters({ filters: searchStore.filters })
   testQueryClient.setQueryData(queryKey, initialCachedData)
 
   spyOn.delete()
-  mountWithProviders({ searchProvider })
+  mountComponent()
   await flushPromises()
 
   const cachedData = testQueryClient.getQueryData(queryKey)
@@ -101,15 +86,15 @@ test('removes the finance record from the query cache', async () => {
 test('invalidates the stats query', async () => {
   spyOn.delete()
   const invalidateSpy = vi.spyOn(testQueryClient, 'invalidateQueries')
+  const searchStore = useFinanceRecordSearchStore()
 
-  const searchProvider = useFinanceRecordSearchFiltersProvider()
-  mountWithProviders({ searchProvider })
+  mountComponent()
 
   expect(invalidateSpy).not.toHaveBeenCalled()
 
   await flushPromises()
 
   expect(invalidateSpy).toHaveBeenCalledExactlyOnceWith({
-    queryKey: financeRecordQueryKeys.stats({ filters: searchProvider.filters }),
+    queryKey: financeRecordQueryKeys.stats({ filters: searchStore.filters }),
   })
 })

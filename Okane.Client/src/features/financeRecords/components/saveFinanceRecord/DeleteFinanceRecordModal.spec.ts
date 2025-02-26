@@ -17,10 +17,6 @@ import {
   type DeleteFinanceRecordProvider,
   useDeleteFinanceRecordProvider,
 } from '@features/financeRecords/providers/deleteFinanceRecordProvider'
-import {
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  useFinanceRecordSearchFiltersProvider,
-} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
 import * as deleteMutation from '@features/financeRecords/composables/useDeleteFinanceRecord'
 
@@ -35,7 +31,6 @@ const mountComponent = getMountComponent(DeleteFinanceRecordModal, {
   global: {
     provide: {
       [DELETE_FINANCE_RECORD_SYMBOL]: useDeleteFinanceRecordProvider(),
-      [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: useFinanceRecordSearchFiltersProvider(),
     },
     stubs: {
       teleport: true,

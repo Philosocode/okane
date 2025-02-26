@@ -14,20 +14,15 @@ import { financeRecordHandlers } from '@tests/msw/handlers/financeRecord'
 
 import { useInfiniteQueryFinanceRecords } from '@features/financeRecords/composables/useInfiniteQueryFinanceRecords'
 
-import {
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  useFinanceRecordSearchFiltersProvider,
-} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
-
 import { flattenPages } from '@shared/utils/pagination'
 import { getRange } from '@shared/utils/array'
-import { wrapInApiPaginatedResponse, wrapInApiResponse } from '@tests/utils/apiResponse'
 
 import { createTestFinanceRecord } from '@tests/factories/financeRecord'
 import { getMswUrl } from '@tests/utils/url'
 import { setUpIntersectionObserverMock } from '@tests/mocks/intersectionObserver'
 import { testServer } from '@tests/msw/testServer'
 import { withSearchParams } from '@tests/msw/resolvers/withSearchParams'
+import { wrapInApiPaginatedResponse, wrapInApiResponse } from '@tests/utils/apiResponse'
 
 const testIds = {
   defaultSlot: 'defaultSlot',
@@ -83,14 +78,8 @@ const ObserverStub = defineComponent({
 })
 
 function mountComponent(errorTemplate?: string) {
-  const searchProvider = useFinanceRecordSearchFiltersProvider()
-  searchProvider.setFilters(searchFilters)
-
   return getMountComponent(getTestComponent(errorTemplate), {
     global: {
-      provide: {
-        [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: searchProvider,
-      },
       stubs: {
         FinanceRecordListItem: FinanceRecordListItemStub,
         Loader: {

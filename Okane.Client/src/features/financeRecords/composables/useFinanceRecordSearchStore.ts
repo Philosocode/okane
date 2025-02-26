@@ -1,22 +1,17 @@
 // External
-import { ref, type InjectionKey } from 'vue'
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
 // Internal
 import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
 
 import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 
-export type FinanceRecordSearchFiltersProvider = ReturnType<
-  typeof useFinanceRecordSearchFiltersProvider
->
+export type FinanceRecordSearchStore = ReturnType<typeof useFinanceRecordSearchStore>
 
-export const FINANCE_RECORD_SEARCH_FILTERS_SYMBOL = Symbol(
-  'financeRecordSearchFilters',
-) as InjectionKey<FinanceRecordSearchFiltersProvider>
-
-export function useFinanceRecordSearchFiltersProvider() {
-  const modalIsShowing = ref(false)
+export const useFinanceRecordSearchStore = defineStore('FinanceRecordsSearchStore', () => {
   const filters = ref<FinanceRecordSearchFilters>({ ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS })
+  const modalIsShowing = ref(false)
 
   function setFilters(updates: Partial<FinanceRecordSearchFilters>) {
     filters.value = {
@@ -30,14 +25,10 @@ export function useFinanceRecordSearchFiltersProvider() {
   }
 
   return {
-    get filters() {
-      return filters.value
-    },
-    get modalIsShowing() {
-      return modalIsShowing.value
-    },
+    filters,
+    modalIsShowing,
 
     setFilters,
     setModalIsShowing,
   }
-}
+})

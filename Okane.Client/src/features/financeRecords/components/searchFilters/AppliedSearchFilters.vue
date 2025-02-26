@@ -1,7 +1,4 @@
 <script setup lang="ts">
-// External
-import { inject } from 'vue'
-
 // Internal
 import AppliedAmountFilter from '@features/financeRecords/components/searchFilters/AppliedAmountFilter.vue'
 import AppliedDescriptionFilter from '@features/financeRecords/components/searchFilters/AppliedDescriptionFilter.vue'
@@ -14,14 +11,9 @@ import CardHeading from '@shared/components/typography/CardHeading.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
-import {
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  type FinanceRecordSearchFiltersProvider,
-} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
+import { useFinanceRecordSearchStore } from '@features/financeRecords/composables/useFinanceRecordSearchStore'
 
-const searchProvider = inject(
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-) as FinanceRecordSearchFiltersProvider
+const searchStore = useFinanceRecordSearchStore()
 </script>
 
 <template>
@@ -31,22 +23,22 @@ const searchProvider = inject(
     </CardHeading>
 
     <BulletedList>
-      <AppliedTypeFilter :type="searchProvider.filters.type" />
-      <AppliedDescriptionFilter :description="searchProvider.filters.description" />
+      <AppliedTypeFilter :type="searchStore.filters.type" />
+      <AppliedDescriptionFilter :description="searchStore.filters.description" />
       <AppliedAmountFilter
-        :amount1="searchProvider.filters.amount1"
-        :amount2="searchProvider.filters.amount2"
-        :amount-operator="searchProvider.filters.amountOperator"
+        :amount1="searchStore.filters.amount1"
+        :amount2="searchStore.filters.amount2"
+        :amount-operator="searchStore.filters.amountOperator"
       />
       <AppliedHappenedAtFilter
-        :happened-at1="searchProvider.filters.happenedAt1"
-        :happened-at2="searchProvider.filters.happenedAt2"
-        :happened-at-operator="searchProvider.filters.happenedAtOperator"
+        :happened-at1="searchStore.filters.happenedAt1"
+        :happened-at2="searchStore.filters.happenedAt2"
+        :happened-at-operator="searchStore.filters.happenedAtOperator"
       />
-      <AppliedTagsFilter :tags="searchProvider.filters.tags" />
+      <AppliedTagsFilter :tags="searchStore.filters.tags" />
       <AppliedSorting
-        :sort-direction="searchProvider.filters.sortDirection"
-        :sort-field="searchProvider.filters.sortField"
+        :sort-direction="searchStore.filters.sortDirection"
+        :sort-field="searchStore.filters.sortField"
       />
     </BulletedList>
   </div>

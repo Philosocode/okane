@@ -9,16 +9,13 @@ import TotalRevenuesAndExpenses from '@features/financeRecords/components/stats/
 import VerticalDivider from '@shared/components/divider/VerticalDivider.vue'
 
 import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
+import { DEFAULT_FINANCES_TIME_INTERVAL } from '@features/financeRecords/constants/stats'
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { financeRecordApiRoutes } from '@features/financeRecords/constants/apiRoutes'
+import { HTTP_STATUS_CODE } from '@shared/constants/http'
 
 import { type FinanceRecordsStats } from '@features/financeRecords/types/financeRecordsStats'
-
-import {
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  useFinanceRecordSearchFiltersProvider,
-} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
 import { pluralize } from '@shared/utils/string'
 
@@ -27,15 +24,8 @@ import { testServer } from '@tests/msw/testServer'
 import { wrapInApiResponse } from '@tests/utils/apiResponse'
 import { useToastStore } from '@shared/composables/useToastStore'
 import { createTestProblemDetails } from '@tests/factories/problemDetails'
-import { HTTP_STATUS_CODE } from '@shared/constants/http'
-import { DEFAULT_FINANCES_TIME_INTERVAL } from '@features/financeRecords/constants/stats'
 
 const mountComponent = getMountComponent(TotalRevenuesAndExpenses, {
-  global: {
-    provide: {
-      [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: useFinanceRecordSearchFiltersProvider(),
-    },
-  },
   withQueryClient: true,
 })
 

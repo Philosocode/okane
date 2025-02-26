@@ -1,7 +1,4 @@
 <script setup lang="ts">
-// External
-import { inject } from 'vue'
-
 // Internal
 import AppliedSearchFilters from '@features/financeRecords/components/searchFilters/AppliedSearchFilters.vue'
 import ModalTrigger from '@shared/components/modal/ModalTrigger.vue'
@@ -9,20 +6,15 @@ import SearchFiltersModal from '@features/financeRecords/components/searchFilter
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
-import {
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  type FinanceRecordSearchFiltersProvider,
-} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
+import { useFinanceRecordSearchStore } from '@features/financeRecords/composables/useFinanceRecordSearchStore'
 
-const searchProvider = inject(
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-) as FinanceRecordSearchFiltersProvider
+const searchStore = useFinanceRecordSearchStore()
 </script>
 
 <template>
   <section class="section">
     <AppliedSearchFilters />
-    <ModalTrigger class="modal-trigger" with-shadow @click="searchProvider.setModalIsShowing(true)">
+    <ModalTrigger class="modal-trigger" with-shadow @click="searchStore.setModalIsShowing(true)">
       {{ FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.EDIT_SEARCH_FILTERS }}
     </ModalTrigger>
   </section>

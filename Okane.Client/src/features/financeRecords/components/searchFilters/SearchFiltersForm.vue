@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // External
-import { computed, inject, ref, useTemplateRef } from 'vue'
+import { computed, ref, useTemplateRef } from 'vue'
 
 // Internal
 import AppButton from '@shared/components/button/AppButton.vue'
@@ -24,10 +24,7 @@ import {
 
 import { type FinanceRecordSearchFiltersFormState } from '@features/financeRecords/types/searchFilters'
 
-import {
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  type FinanceRecordSearchFiltersProvider,
-} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
+import { useFinanceRecordSearchStore } from '@features/financeRecords/composables/useFinanceRecordSearchStore'
 
 import { isFinanceRecordType } from '@features/financeRecords/utils/financeRecord'
 import {
@@ -43,13 +40,10 @@ const userTagTypes = computed(() => {
   return [formState.value.type]
 })
 
-const searchProvider = inject(
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-) as FinanceRecordSearchFiltersProvider
-
+const searchStore = useFinanceRecordSearchStore()
 const formRef = useTemplateRef<HTMLFormElement>('form')
 const formState = ref<FinanceRecordSearchFiltersFormState>(
-  mapFinanceRecordSearchFilters.to.financeRecordSearchFiltersFormState(searchProvider.filters),
+  mapFinanceRecordSearchFilters.to.financeRecordSearchFiltersFormState(searchStore.filters),
 )
 
 function handleChange(updates: Partial<FinanceRecordSearchFiltersFormState>) {
@@ -66,7 +60,7 @@ function handleTypeChange(type: string) {
 }
 
 function handleCancel() {
-  searchProvider.setModalIsShowing(false)
+  searchStore.setModalIsShowing(false)
 }
 
 function handleReset() {
@@ -81,7 +75,7 @@ function handleSubmit() {
   const filters = mapFinanceRecordSearchFiltersFormState.to.financeRecordSearchFilters(
     formState.value,
   )
-  searchProvider.setFilters(filters)
+  searchStore.setFilters(filters)
 
   handleCancel()
 }

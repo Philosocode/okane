@@ -1,5 +1,5 @@
 // External
-import { computed, inject } from 'vue'
+import { computed } from 'vue'
 
 import { type QueryFunctionContext, useInfiniteQuery } from '@tanstack/vue-query'
 
@@ -15,11 +15,7 @@ import {
 } from '@features/financeRecords/types/searchFilters'
 
 import { useCleanUpInfiniteQuery } from '@shared/composables/useCleanUpInfiniteQuery'
-
-import {
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  type FinanceRecordSearchFiltersProvider,
-} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
+import { useFinanceRecordSearchStore } from '@features/financeRecords/composables/useFinanceRecordSearchStore'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
@@ -38,11 +34,9 @@ export function fetchPaginatedFinanceRecords({
 }
 
 export function useInfiniteQueryFinanceRecords() {
-  const searchProvider = inject(
-    FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  ) as FinanceRecordSearchFiltersProvider
+  const searchStore = useFinanceRecordSearchStore()
   const queryKey = computed(() =>
-    financeRecordQueryKeys.listByFilters({ filters: searchProvider.filters }),
+    financeRecordQueryKeys.listByFilters({ filters: searchStore.filters }),
   )
 
   useCleanUpInfiniteQuery(queryKey)
@@ -54,7 +48,7 @@ export function useInfiniteQueryFinanceRecords() {
     getNextPageParam: (lastPage, _) => {
       if (!lastPage.hasNextPage) return null
       const n = lastPage.items.length
-      return getFinanceRecordsSearchCursor(searchProvider.filters, lastPage.items[n - 1])
+      return getFinanceRecordsSearchCursor(searchStore.filters, lastPage.items[n - 1])
     },
   })
 }

@@ -1,5 +1,4 @@
 // External
-import { inject } from 'vue'
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
 
 // Internal
@@ -9,11 +8,7 @@ import { type CreateFinanceRecordRequest } from '@features/financeRecords/types/
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
 import { financeRecordQueryKeys } from '@features/financeRecords/constants/queryKeys'
-
-import {
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  type FinanceRecordSearchFiltersProvider,
-} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
+import { useFinanceRecordSearchStore } from '@features/financeRecords/composables/useFinanceRecordSearchStore'
 
 function postFinanceRecord(financeRecord: CreateFinanceRecordRequest) {
   return apiClient.post(financeRecordApiRoutes.postFinanceRecord(), financeRecord)
@@ -21,19 +16,17 @@ function postFinanceRecord(financeRecord: CreateFinanceRecordRequest) {
 
 export function useCreateFinanceRecord() {
   const queryClient = useQueryClient()
-  const searchProvider = inject(
-    FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  ) as FinanceRecordSearchFiltersProvider
+  const searchStore = useFinanceRecordSearchStore()
 
   return useMutation({
     mutationFn: postFinanceRecord,
     onSuccess() {
       void queryClient.invalidateQueries({
-        queryKey: financeRecordQueryKeys.listByFilters({ filters: searchProvider.filters }),
+        queryKey: financeRecordQueryKeys.listByFilters({ filters: searchStore.filters }),
       })
 
       void queryClient.invalidateQueries({
-        queryKey: financeRecordQueryKeys.stats({ filters: searchProvider.filters }),
+        queryKey: financeRecordQueryKeys.stats({ filters: searchStore.filters }),
       })
     },
   })

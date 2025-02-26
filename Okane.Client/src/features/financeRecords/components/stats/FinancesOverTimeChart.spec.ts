@@ -13,11 +13,6 @@ import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { SHARED_COPY } from '@shared/constants/copy'
 import { TIME_INTERVAL, TIME_INTERVAL_OPTIONS } from '@shared/constants/dateTime'
 
-import {
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  useFinanceRecordSearchFiltersProvider,
-} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
-
 import { commonAsserts } from '@tests/utils/commonAsserts'
 import { createTestFinanceRecordsStats } from '@tests/factories/financeRecord'
 import { financeRecordHandlers } from '@tests/msw/handlers/financeRecord'
@@ -32,9 +27,6 @@ async function mountComponent(
 
   const wrapper = getMountComponent(FinancesOverTimeChart, {
     global: {
-      provide: {
-        [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: useFinanceRecordSearchFiltersProvider(),
-      },
       stubs: {
         VueChart: true,
       },

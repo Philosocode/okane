@@ -9,11 +9,6 @@ import VueChart from '@shared/components/charts/VueChart.vue'
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
-import {
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  useFinanceRecordSearchFiltersProvider,
-} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
-
 import { createTestFinanceRecordsStats } from '@tests/factories/financeRecord'
 import { financeRecordHandlers } from '@tests/msw/handlers/financeRecord'
 import { testServer } from '@tests/msw/testServer'
@@ -27,9 +22,6 @@ async function mountComponent(
 
   const wrapper = getMountComponent(FinancesPieChart, {
     global: {
-      provide: {
-        [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: useFinanceRecordSearchFiltersProvider(),
-      },
       stubs: {
         VueChart: true,
       },

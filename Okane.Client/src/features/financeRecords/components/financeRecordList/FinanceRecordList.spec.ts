@@ -17,10 +17,6 @@ import {
   SAVE_FINANCE_RECORD_SYMBOL,
   useSaveFinanceRecordProvider,
 } from '@features/financeRecords/providers/saveFinanceRecordProvider'
-import {
-  FINANCE_RECORD_SEARCH_FILTERS_SYMBOL,
-  useFinanceRecordSearchFiltersProvider,
-} from '@features/financeRecords/providers/financeRecordSearchFiltersProvider'
 
 import { getRange } from '@shared/utils/array'
 
@@ -37,8 +33,6 @@ const financeRecords = getRange({ end: 5 }).map((n) =>
 const mountComponent = getMountComponent(FinanceRecordList, {
   global: {
     provide: {
-      [FINANCE_RECORD_SEARCH_FILTERS_SYMBOL]: useFinanceRecordSearchFiltersProvider(),
-
       // Needed for FinanceRecordListItem.
       [DELETE_FINANCE_RECORD_SYMBOL]: useDeleteFinanceRecordProvider(),
       [SAVE_FINANCE_RECORD_SYMBOL]: useSaveFinanceRecordProvider(),

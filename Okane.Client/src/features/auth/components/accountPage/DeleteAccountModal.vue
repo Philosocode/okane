@@ -13,20 +13,23 @@ import { AUTH_COPY } from '@features/auth/constants/copy'
 import { ROUTE_NAME } from '@shared/services/router/router'
 import { SHARED_COPY } from '@shared/constants/copy'
 
+import { useAuthStore } from '@features/auth/composables/useAuthStore'
 import { useDeleteAccount } from '@features/auth/composables/useDeleteAccount'
 import { useModal } from '@shared/composables/useModal'
 
 const { modalIsShowing, showModal, closeModal } = useModal()
 const modalHeadingId = 'delete-account-modal-heading'
 
+const authStore = useAuthStore()
 const deleteMutation = useDeleteAccount()
-
 const router = useRouter()
 
 function handleDelete() {
   deleteMutation.mutate(undefined, {
     async onSuccess() {
+      authStore.reset()
       await router.push({ name: ROUTE_NAME.ACCOUNT_DELETED })
+      router.go(0)
     },
   })
 }

@@ -12,9 +12,8 @@ import { type Timeout } from '@shared/types/shared'
 import { type LoginRequest, type RegisterRequest } from '@features/auth/types/authForm'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
-import { ROUTE_NAME, getRouter } from '@shared/services/router/router'
+import { getRouter } from '@shared/services/router/router'
 
-import { getQueryClient } from '@shared/services/queryClient/queryClient'
 import { getJwtTokenPayload } from '@features/auth/utils/authResponse'
 
 export type AuthStore = ReturnType<typeof useAuthStore>
@@ -22,13 +21,9 @@ export type AuthStore = ReturnType<typeof useAuthStore>
 export const useAuthStore = defineStore('AuthStore', () => {
   const authUser = ref<User>()
   const jwtToken = ref<string>()
-  const isLoggedIn = computed<boolean>(() => Boolean(authUser.value && jwtToken.value))
   const refreshTokenInterval = ref<Timeout>()
+  const isLoggedIn = computed<boolean>(() => Boolean(authUser.value && jwtToken.value))
 
-  /**
-   * Register a user.
-   * @param request
-   */
   async function register(request: RegisterRequest): Promise<void> {
     await apiClient.post(authApiRoutes.register(), request, {
       headers: {
@@ -37,29 +32,17 @@ export const useAuthStore = defineStore('AuthStore', () => {
     })
   }
 
-  /**
-   * Log in a user and update the auth store.
-   *
-   * @param request
-   */
   async function login(request: LoginRequest) {
     const response = await apiClient.post<AuthenticateResponse>(`/auth/login`, request)
     initState(response)
   }
 
-  /**
-   * Get a new JWT token and update the auth store.
-   */
+  // Get a new JWT token and update the auth store.
   async function handleRefreshToken() {
     const response = await apiClient.post<AuthenticateResponse>(authApiRoutes.refreshToken())
     initState(response)
   }
 
-  /**
-   * Initialize auth store state.
-   *
-   * @param response
-   */
   function initState(response: AuthenticateResponse) {
     if (response.items.length == 0) return
 
@@ -70,22 +53,13 @@ export const useAuthStore = defineStore('AuthStore', () => {
     startRefreshTokenTimer()
   }
 
-  /**
-   * Reset the auth store state.
-   */
-  function resetState() {
-    clearTimeout(refreshTokenInterval.value)
-
+  function reset() {
+    clearInterval(refreshTokenInterval.value)
     authUser.value = undefined
     jwtToken.value = undefined
-
-    const queryClient = getQueryClient()
-    queryClient.clear()
   }
 
-  /**
-   * Start a timer to refresh the JWT token before it expires.
-   */
+  // Start a timer to refresh the JWT token before it expires.
   function startRefreshTokenTimer() {
     if (!isLoggedIn.value || !jwtToken.value) return
 
@@ -98,13 +72,10 @@ export const useAuthStore = defineStore('AuthStore', () => {
     refreshTokenInterval.value = setTimeout(handleRefreshToken, timeout)
   }
 
-  /**
-   * Log out the user and reset the store state.
-   */
   async function logout() {
     await apiClient.post(authApiRoutes.logout())
-    resetState()
-    await getRouter().push({ name: ROUTE_NAME.LOGIN })
+    const router = getRouter()
+    router.go(0)
   }
 
   return {
@@ -116,6 +87,6 @@ export const useAuthStore = defineStore('AuthStore', () => {
     login,
     logout,
     register,
-    resetState,
+    reset,
   }
 })

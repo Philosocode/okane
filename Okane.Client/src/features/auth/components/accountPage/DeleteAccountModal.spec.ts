@@ -1,5 +1,5 @@
 // External
-import { http, HttpResponse } from 'msw'
+import { http, type HttpHandler, HttpResponse } from 'msw'
 import { flushPromises, type VueWrapper } from '@vue/test-utils'
 
 // Internal
@@ -17,17 +17,24 @@ import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { getMswUrl } from '@tests/utils/url'
 import { testServer } from '@tests/msw/testServer'
 
-const router = createAppRouter()
-const mountComponent = getMountComponent(DeleteAccountModal, {
-  global: {
-    stubs: {
-      teleport: true,
+async function mountComponent(router = createAppRouter()) {
+  const wrapper = getMountComponent(DeleteAccountModal, {
+    attachTo: document.body,
+    global: {
+      stubs: {
+        teleport: true,
+      },
     },
-  },
-  withPinia: true,
-  withQueryClient: true,
-  withRouter: router,
-})
+    withPinia: true,
+    withQueryClient: true,
+    withRouter: router,
+  })()
+
+  const modalTrigger = elements.modalTrigger(wrapper)
+  await modalTrigger.trigger('click')
+
+  return wrapper
+}
 
 const elements = {
   cancelButton(wrapper: VueWrapper) {
@@ -41,101 +48,117 @@ const elements = {
   },
 }
 
-test('renders a button to open the modal', () => {
-  const wrapper = mountComponent()
-  const button = elements.modalTrigger(wrapper)
+test('renders the heading', async () => {
+  const wrapper = await mountComponent()
+  const heading = wrapper.getComponent(ModalHeading)
+  expect(heading.text()).toBe(AUTH_COPY.DELETE_ACCOUNT.HEADING)
+})
+
+test('renders the confirmation text', async () => {
+  const wrapper = await mountComponent()
+  const text = wrapper.findByText('p', AUTH_COPY.DELETE_ACCOUNT.CONFIRMATION)
+  expect(text).toBeDefined()
+})
+
+test('renders a focused delete button', async () => {
+  const wrapper = await mountComponent()
+  const button = elements.deleteButton(wrapper)
+  expect(button.element).toBe(document.activeElement)
+})
+
+test('renders a cancel button', async () => {
+  const wrapper = await mountComponent()
+  const button = elements.cancelButton(wrapper)
   expect(button).toBeDefined()
 })
 
-test('does not initially render the modal content', () => {
-  const wrapper = mountComponent()
-  const heading = wrapper.findComponent(ModalHeading)
-  expect(heading.exists()).toBe(false)
+test('does not render an error', async () => {
+  const wrapper = await mountComponent()
+  const error = wrapper.findByText('p', AUTH_COPY.DELETE_ACCOUNT.ERROR)
+  expect(error).toBeUndefined()
 })
 
-describe('when the modal is showing', () => {
+describe('when clicking the cancel button', () => {
   let wrapper: VueWrapper
 
   beforeEach(async () => {
-    wrapper = mountComponent({ attachTo: document.body })
+    wrapper = await mountComponent()
 
-    const modalTrigger = elements.modalTrigger(wrapper)
-    await modalTrigger.trigger('click')
-  })
-
-  test('renders the heading', () => {
-    const heading = wrapper.getComponent(ModalHeading)
-    expect(heading.text()).toBe(AUTH_COPY.DELETE_ACCOUNT.HEADING)
-  })
-
-  test('renders the confirmation text', () => {
-    const text = wrapper.findByText('p', AUTH_COPY.DELETE_ACCOUNT.CONFIRMATION)
-    expect(text).toBeDefined()
-  })
-
-  test('renders a focused delete button', () => {
-    const button = elements.deleteButton(wrapper)
-    expect(button.element).toBe(document.activeElement)
-  })
-
-  test('renders a cancel button', () => {
     const button = elements.cancelButton(wrapper)
+    await button.trigger('click')
+  })
+
+  test('closes the modal', () => {
+    const heading = wrapper.findComponent(ModalHeading)
+    expect(heading.exists()).toBe(false)
+  })
+
+  test('renders a button to open the modal', () => {
+    const button = elements.modalTrigger(wrapper)
     expect(button).toBeDefined()
   })
 
-  test('does not render an error', () => {
+  test('does not render the modal content', () => {
+    const heading = wrapper.findComponent(ModalHeading)
+    expect(heading.exists()).toBe(false)
+  })
+})
+
+async function setUpDeleteAttempt(handler: HttpHandler) {
+  const router = createAppRouter()
+  const goSpy = vi.spyOn(router, 'go').mockImplementation(() => {})
+  const pushSpy = vi.spyOn(router, 'push')
+  testServer.use(handler)
+
+  const wrapper = await mountComponent(router)
+
+  const deleteButton = elements.deleteButton(wrapper)
+  await deleteButton.trigger('click')
+  await flushPromises()
+  await vi.dynamicImportSettled()
+
+  return { goSpy, pushSpy, wrapper }
+}
+
+describe('when account deletion fails', () => {
+  const handler = http.delete(getMswUrl(authApiRoutes.self()), () =>
+    HttpResponse.json(createTestProblemDetails(), {
+      status: HTTP_STATUS_CODE.BAD_REQUEST_400,
+    }),
+  )
+
+  test('renders an error', async () => {
+    const { wrapper } = await setUpDeleteAttempt(handler)
     const error = wrapper.findByText('p', AUTH_COPY.DELETE_ACCOUNT.ERROR)
-    expect(error).toBeUndefined()
+    expect(error).toBeDefined()
   })
 
-  describe('when clicking the cancel button', () => {
-    beforeEach(async () => {
-      const button = elements.cancelButton(wrapper)
-      await button.trigger('click')
-    })
-
-    test('closes the modal', () => {
-      const heading = wrapper.findComponent(ModalHeading)
-      expect(heading.exists()).toBe(false)
-    })
+  test('does not redirect to the success page', async () => {
+    const { pushSpy } = await setUpDeleteAttempt(handler)
+    expect(pushSpy).not.toHaveBeenCalledWith({ name: ROUTE_NAME.ACCOUNT_DELETED })
   })
 
-  describe('when account deletion succeeds', () => {
-    beforeEach(async () => {
-      const handler = http.delete(
-        getMswUrl(authApiRoutes.self()),
-        () => new HttpResponse(null, { status: HTTP_STATUS_CODE.NO_CONTENT_204 }),
-      )
-      testServer.use(handler)
+  test('does not refresh the page', async () => {
+    const { goSpy } = await setUpDeleteAttempt(handler)
+    expect(goSpy).not.toHaveBeenCalled()
+  })
+})
 
-      const deleteButton = elements.deleteButton(wrapper)
-      await deleteButton.trigger('click')
-      await flushPromises()
-    })
+describe('when account deletion succeeds', () => {
+  const handler = http.delete(
+    getMswUrl(authApiRoutes.self()),
+    () => new HttpResponse(null, { status: HTTP_STATUS_CODE.NO_CONTENT_204 }),
+  )
 
-    test('redirects to the account deleted page', async () => {
-      await vi.dynamicImportSettled()
-      expect(router.currentRoute.value.name).toBe(ROUTE_NAME.ACCOUNT_DELETED)
-    })
+  test('redirects to the account deleted page', async () => {
+    const { pushSpy } = await setUpDeleteAttempt(handler)
+    expect(pushSpy).toHaveBeenCalledOnce()
+    expect(pushSpy).toHaveBeenCalledWith({ name: ROUTE_NAME.ACCOUNT_DELETED })
   })
 
-  describe('when account deletion fails', () => {
-    beforeEach(async () => {
-      const handler = http.delete(getMswUrl(authApiRoutes.self()), () =>
-        HttpResponse.json(createTestProblemDetails(), {
-          status: HTTP_STATUS_CODE.BAD_REQUEST_400,
-        }),
-      )
-      testServer.use(handler)
-
-      const deleteButton = elements.deleteButton(wrapper)
-      await deleteButton.trigger('click')
-      await flushPromises()
-    })
-
-    test('renders an error', () => {
-      const error = wrapper.findByText('p', AUTH_COPY.DELETE_ACCOUNT.ERROR)
-      expect(error).toBeDefined()
-    })
+  test('refreshes the page', async () => {
+    const { goSpy } = await setUpDeleteAttempt(handler)
+    expect(goSpy).toHaveBeenCalledOnce()
+    expect(goSpy).toHaveBeenCalledWith(0)
   })
 })

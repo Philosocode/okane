@@ -12,17 +12,15 @@ import { type RegisterRequest } from '@features/auth/types/authForm'
 
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
 
-import * as appQueryClient from '@shared/services/queryClient/queryClient'
-import * as router from '@shared/services/router/router'
-import { createAppRouter, ROUTE_NAME } from '@shared/services/router/router'
+import * as routerService from '@shared/services/router/router'
+import { createAppRouter } from '@shared/services/router/router'
 import { apiClient } from '@shared/services/apiClient/apiClient'
 
-import { testQueryClient } from '@tests/queryClient/testQueryClient'
-import { testServer } from '@tests/msw/testServer'
+import { omitObjectKeys } from '@shared/utils/object'
 
 import { createTestJwtToken } from '@tests/factories/jwtToken'
 import { createTestUser } from '@tests/factories/user'
-import { omitObjectKeys } from '@shared/utils/object'
+import { testServer } from '@tests/msw/testServer'
 import { wrapInApiResponse } from '@tests/utils/apiResponse'
 
 const formData = {
@@ -85,8 +83,8 @@ test('login', async () => {
   expect(authStore.authUser).toEqual(authResponse.items[0].user)
   expect(authStore.jwtToken).toEqual(authResponse.items[0].jwtToken)
 
-  // Need to manually log out after each test to clear the timeout.
-  await authStore.logout()
+  // Need to manually clear the refresh token timeout.
+  authStore.reset()
 })
 
 test('handleRefreshToken', async () => {
@@ -96,42 +94,35 @@ test('handleRefreshToken', async () => {
   expect(authStore.authUser).toEqual(authResponse.items[0].user)
   expect(authStore.jwtToken).toEqual(authResponse.items[0].jwtToken)
 
-  // Need to manually log out after each test to clear the timeout.
-  await authStore.logout()
+  // Need to manually clear the refresh token timeout.
+  authStore.reset()
 })
 
-function setUpResetState() {
+test('reset', () => {
   const authStore = useAuthStore()
-  authStore.$patch({
-    authUser: createTestUser(),
-    jwtToken: createTestJwtToken(),
-  })
+  authStore.authUser = authResponse.items[0].user
+  authStore.jwtToken = authResponse.items[0].jwtToken
 
-  const queryKey = ['hey']
-  testQueryClient.setQueryData(queryKey, 'value')
-  vi.spyOn(appQueryClient, 'getQueryClient').mockReturnValue(testQueryClient)
-
-  return { authStore, queryKey }
-}
-
-test('resetState', async () => {
-  const { authStore, queryKey } = setUpResetState()
-  await authStore.resetState()
-
+  authStore.reset()
   expect(authStore.authUser).toBeUndefined()
   expect(authStore.jwtToken).toBeUndefined()
-  expect(testQueryClient.getQueryData(queryKey)).toBeUndefined()
 })
 
 test('logout', async () => {
+  const postSpy = vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInApiResponse(null))
   const testRouter = createAppRouter()
-  vi.spyOn(router, 'getRouter').mockReturnValue(testRouter)
-  const { authStore, queryKey } = setUpResetState()
+  vi.spyOn(routerService, 'getRouter').mockReturnValue(testRouter)
+  const goSpy = vi.spyOn(testRouter, 'go').mockImplementation(() => {})
+
+  const authStore = useAuthStore()
+  expect(postSpy).not.toHaveBeenCalled()
+  expect(goSpy).not.toHaveBeenCalled()
 
   await authStore.logout()
 
-  expect(authStore.authUser).toBeUndefined()
-  expect(authStore.jwtToken).toBeUndefined()
-  expect(testQueryClient.getQueryData(queryKey)).toBeUndefined()
-  expect(testRouter.currentRoute.value.name).toBe(ROUTE_NAME.LOGIN)
+  expect(postSpy).toHaveBeenCalledOnce()
+  expect(postSpy).toHaveBeenCalledWith(authApiRoutes.logout())
+
+  expect(goSpy).toHaveBeenCalledOnce()
+  expect(goSpy).toHaveBeenCalledWith(0)
 })

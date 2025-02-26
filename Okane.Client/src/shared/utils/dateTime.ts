@@ -1,8 +1,10 @@
 // External
-import { format } from 'date-fns'
+import { format, parse } from 'date-fns'
 
 // Internal
 import { createMappers } from '@shared/utils/mappers'
+
+const dateOnlyTimestampFormat = 'yyyy-MM-dd'
 
 export const mapDate = createMappers({
   /**
@@ -14,9 +16,17 @@ export const mapDate = createMappers({
     return format(d, `yyyy-MM-dd'T'HH:mm`)
   },
   dateOnlyTimestamp(d: Date) {
-    return format(d, 'yyyy-MM-dd')
+    return format(d, dateOnlyTimestampFormat)
   },
 })
+
+/**
+ * Parse a timestamp of format YYYY-MM-DD (returned by input type="date").
+ * Return a new Date set to midnight for the current time zone.
+ */
+export function mapDateOnlyTimestampToLocalizedDate(dateString: string): Date {
+  return parse(dateString, dateOnlyTimestampFormat, new Date())
+}
 
 /**
  * Convert a UTC timestamp to a date.

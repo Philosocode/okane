@@ -13,7 +13,7 @@ import {
 } from '@features/financeRecords/types/searchFilters'
 
 import * as utils from '@features/financeRecords/utils/mappers'
-import { mapDate } from '@shared/utils/dateTime'
+import { mapDate, mapDateOnlyTimestampToLocalizedDate } from '@shared/utils/dateTime'
 
 import { createTestTag } from '@tests/factories/tag'
 import {
@@ -404,8 +404,8 @@ describe('mapFinanceRecordSearchFiltersFormState', () => {
       }
 
       const filters = getFilters(formState)
-      expect(filters.happenedAt1).toEqual(new Date('2024-01-01'))
-      expect(filters.happenedAt2).toEqual(new Date('2024-02-02'))
+      expect(filters.happenedAt1).toEqual(mapDateOnlyTimestampToLocalizedDate('2024-01-01'))
+      expect(filters.happenedAt2).toEqual(mapDateOnlyTimestampToLocalizedDate('2024-02-02'))
     })
   })
 })

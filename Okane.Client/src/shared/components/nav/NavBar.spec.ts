@@ -96,7 +96,7 @@ describe('when authenticated', () => {
     testServer.use(authHandlers.postLogoutSuccess())
 
     const authStore = useMockedStore(useAuthStore)
-    const logout = vi.spyOn(authStore, 'logout')
+    const logout = vi.spyOn(authStore, 'logout').mockImplementation(() => Promise.resolve())
 
     const wrapper = mountComponent()
     const logoutLink = wrapper.findByText('a', AUTH_COPY.LOGOUT)

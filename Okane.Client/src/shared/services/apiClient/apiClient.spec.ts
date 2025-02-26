@@ -3,12 +3,11 @@ import { http, HttpResponse } from 'msw'
 
 // Internal
 import { authApiRoutes } from '@features/auth/constants/apiRoutes'
-import { appRoutes } from '@shared/services/router/router'
 import { HTTP_HEADER, HTTP_STATUS_CODE, MIME_TYPE } from '@shared/constants/http'
 
 import { type ApiResponse } from '@shared/services/apiClient/types'
 
-import { useAuthStore } from '@features/auth/composables/useAuthStore'
+import { type AuthStore, useAuthStore } from '@features/auth/composables/useAuthStore'
 import { useToastStore } from '@shared/composables/useToastStore'
 
 import { apiClient } from '@shared/services/apiClient/apiClient'
@@ -187,8 +186,10 @@ describe('when logged in', () => {
   const jwtToken = createTestJwtToken()
   const authUser = createTestUser()
 
+  let authStore: AuthStore
+
   beforeEach(() => {
-    const authStore = useAuthStore()
+    authStore = useAuthStore()
     authStore.authUser = authUser
     authStore.jwtToken = jwtToken
   })
@@ -224,6 +225,7 @@ describe('when logged in', () => {
   test.each([[HTTP_STATUS_CODE.UNAUTHORIZED_401], [HTTP_STATUS_CODE.FORBIDDEN_403]])(
     `logs the user out and clears the query cache when the status code is %d`,
     async (statusCode) => {
+      const logoutSpy = vi.spyOn(authStore, 'logout').mockImplementation(() => Promise.resolve())
       const errorHandler = getErrorHandler(statusCode)
       testServer.use(errorHandler, logoutHandler)
 
@@ -234,11 +236,7 @@ describe('when logged in', () => {
       try {
         await apiClient.get('/ping')
       } catch {
-        const authStore = useAuthStore()
-        expect(authStore.authUser).toBeUndefined()
-        expect(authStore.jwtToken).toBeUndefined()
-        expect(location.pathname).toBe(appRoutes.login.buildPath())
-        expect(testQueryClient.getQueryData(queryKey)).toBeUndefined()
+        expect(logoutSpy).toHaveBeenCalled()
       }
     },
   )

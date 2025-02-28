@@ -1,45 +1,26 @@
 # Okane
-## Commands
-See the `Makefile`s or more details.
-- start the frontend: `make run-client`
-- start the API: `make run-api`
+## What is this?
+Okane is a full-stack web app for managing expenses and revenues. Main features include:
+- accounts:
+    + create, update, delete account
+    + email verification
+    + password reset
+- finance records (think financial transaction):
+    + create, update, delete finance record
+    + infinite loading with filtering and cursor pagination
+    + tagging
+- statistics:
+    + total expenses & revenues
+    + visualizations
 
-## Set up user secrets
-```text
-dotnet user-secrets init
-```
+
+## Tech stack
+- frontend framework: [Vue.js 3](https://vuejs.org/)
+- backend framework: [ASP.NET 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- ORM & migrations: [EF Core](https://github.com/dotnet/efcore)
+- database: [PostgreSQL](https://www.postgresql.org) (12+)
 
 
-## Set up JWT settings
-You can configure the audience, issuer, and expiration time in `appsettings.json`.
-```text
-dotnet user-secrets set 'JwtSettings:IssuerSigningKey' 'your-secret-key-here'
-```
-
-## Set up EF Core
-### Create the database user
-You'll need to have `psql` installed.
-```text
-psql -U postgres postgres
-
-CREATE USER okane WITH ENCRYPTED PASSWORD 'your-secure-password';
-ALTER USER okane CREATEDB;
-\q
-```
-
-### Add DB connection string to user secrets
-#### Okane.Api
-```text
-dotnet user-secrets set 'DbSettings:ConnectionString' 'Host=localhost;Username=okane;Password=your-secure-password;Database=okane'
-```
-
-### Initialize database
-```text
-dotnet tool install -g dotnet-ef
-
-// If in API project:
-dotnet ef database update
-
-// If in solution root:
-dotnet ef database update --project ./Okane.Api
-```
+## Learn more
+Check out [the wiki](https://github.com/Philosocode/okane/wiki) for instructions on development
+setup, deployment, and other documentation.

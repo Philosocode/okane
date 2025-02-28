@@ -1,5 +1,6 @@
 [env]
 SSH_TARGET = 'user@123.456.789.000'
+PI_SSH_TARGET = 'user@123.456.789.000'
 
 [tools]
 jq = '1.7.1'

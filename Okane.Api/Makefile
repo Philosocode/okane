@@ -12,6 +12,11 @@ help:
 # DEVELOPMENT
 # ==================================================================================== #
 
+## restore: download Nuget packages and ensure they're referenced correctly
+.PHONY: restore
+build:
+	dotnet restore
+
 ## run: restore, build, and run the API
 .PHONY: run
 run:

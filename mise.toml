@@ -1,10 +1,12 @@
 [env]
+# API
 DbSettings__ConnectionString = 'Host=localhost;Username=okane;Password=insertSecurePassword;Database=okane'
 EmailSettings__SmtpHost = 'smtp.ethereal.email'
 EmailSettings__SmtpUser = 'test@ethereal.email'
 EmailSettings__FromEmail = 'test@ethereal.email'
 EmailSettings__SmtpPassword = 'password1234'
 
+# Deploy
 SSH_TARGET = 'user@123.456.789.000'
 PI_SSH_TARGET = 'user@123.456.789.000'
 

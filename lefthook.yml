@@ -4,6 +4,7 @@ pre-commit:
     lint-frontend:
       root: Okane.Client
       run: pnpm lint {staged_files} --max-warnings=0
+      glob: "*.{vue,js,ts}"
     test-frontend:
       root: Okane.Client
       glob: "*.{vue,js,ts}"

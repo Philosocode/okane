@@ -17,6 +17,11 @@ help:
 run:
 	pnpm dev
 
+## run/host: start the frontend dev server and expose to the network
+.PHONY: run-host
+run-host:
+	pnpm dev --host
+
 ## install: install deps
 .PHONY: install
 install:

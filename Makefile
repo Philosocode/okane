@@ -50,19 +50,43 @@ prod/connect:
 .PHONY: prod/deploy
 prod/deploy:
 	@echo 'Building the backend...'
-	make api/publish
+	make api/publish/linux-x64
 	@echo 'Building the frontend...'
 	make client/build
 	@echo 'Transferring files...'
 	rsync -qrP ${API_DIR}/bin/Release/net8.0/linux-x64/Publish ${SSH_TARGET}:~
 	rsync -qrP ${CLIENT_DIR}/dist ${SSH_TARGET}:~
-	rsync -qP ./Remote/okane-api.service ${SSH_TARGET}:~
 	ssh -t ${SSH_TARGET} '\
 		sudo rm -rf /var/www/okane/Api \
 		&& sudo rm -rf /var/www/okane/Client \
 		&& sudo mv Publish /var/www/okane/Api \
 		&& sudo mv dist /var/www/okane/Client \
-		&& sudo mv ~/okane-api.service /etc/systemd/system/ \
-		&& sudo systemctl enable okane-api \
+		&& sudo systemctl restart okane-api \
+	'
+
+# ==================================================================================== #
+# RASPBERRY PI
+# ==================================================================================== #
+
+## pi/connect: connect to Raspberry Pi (ARM 32-bit)
+.PHONY: pi/connect
+pi/connect:
+	ssh ${PI_SSH_TARGET}
+
+## pi/deploy: deploy to Raspberry Pi (ARM 32-bit)
+.PHONY: pi/deploy
+pi/deploy:
+	@echo 'Building the backend...'
+	make api/publish/linux-arm
+	@echo 'Building the frontend...'
+	make client/build
+	@echo 'Transferring files...'
+	rsync -qrP ${API_DIR}/bin/Release/net8.0/linux-arm/Publish ${PI_SSH_TARGET}:~
+	rsync -qrP ${CLIENT_DIR}/dist ${PI_SSH_TARGET}:~
+	ssh -t ${PI_SSH_TARGET} '\
+		sudo rm -rf /var/www/okane/Api \
+		&& sudo rm -rf /var/www/okane/Client \
+		&& sudo mv Publish /var/www/okane/Api \
+		&& sudo mv dist /var/www/okane/Client \
 		&& sudo systemctl restart okane-api \
 	'

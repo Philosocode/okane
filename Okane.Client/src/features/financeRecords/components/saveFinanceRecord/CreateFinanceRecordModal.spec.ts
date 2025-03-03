@@ -94,6 +94,8 @@ test('closes the modal', () => {
 
 describe('with a successful request to create a finance record', () => {
   const formState = createTestSaveFinanceRecordFormState({
+    description: 'Cool description',
+    tags: [{ id: 1, name: 'cool-tag-123' }],
     type: FINANCE_RECORD_TYPE.REVENUE,
   })
 
@@ -127,7 +129,7 @@ describe('with a successful request to create a finance record', () => {
     )
   })
 
-  test('resets the amount and description', async () => {
+  test('resets the expected fields', async () => {
     vi.spyOn(apiClient, 'post').mockResolvedValue(wrapInApiResponse(null))
     const saveProvider = helpers.getCreatingSaveProvider()
     const wrapper = mountWithProviders({ saveProvider })
@@ -143,6 +145,9 @@ describe('with a successful request to create a finance record', () => {
 
     const happenedAtInput = wrapper.get('input[name="happenedAt"]').element as HTMLInputElement
     expect(happenedAtInput.value).toBe(formState.happenedAt)
+
+    const tag = wrapper.findByText('span', formState.tags[0].name)
+    expect(tag).toBeUndefined()
 
     const typeSelect = wrapper.get('select').element as HTMLSelectElement
     expect(typeSelect.value).toBe(formState.type)

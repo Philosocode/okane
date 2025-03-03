@@ -54,6 +54,7 @@ function handleSubmit() {
         ...formState.value,
         amount: '0',
         description: '',
+        tags: [],
       }
 
       createToast(FINANCES_COPY.SAVE_FINANCE_RECORD_MODAL.TOASTS.CREATE_SUCCESS)

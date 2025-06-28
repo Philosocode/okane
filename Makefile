@@ -64,6 +64,20 @@ prod/deploy:
 		&& sudo systemctl restart okane-api \
 	'
 
+## prod/deploy-api
+.PHONY: prod/deploy-api
+prod/deploy-api:
+	@echo 'Building the backend...'
+	make api/publish/linux-x64
+	@echo 'Transferring files...'
+	rsync -qrP ${API_DIR}/bin/Release/net8.0/linux-x64/Publish ${SSH_TARGET}:~
+	ssh -t ${SSH_TARGET} '\
+		sudo rm -rf /var/www/okane/Api \
+		&& sudo mv Publish /var/www/okane/Api \
+		&& sudo systemctl restart okane-api \
+	'
+
+
 # ==================================================================================== #
 # RASPBERRY PI
 # ==================================================================================== #

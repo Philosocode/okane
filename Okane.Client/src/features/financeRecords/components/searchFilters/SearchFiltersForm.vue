@@ -154,8 +154,7 @@ function handleSubmit() {
 
 <style scoped>
 .form {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: var(--space-lg);
 }
 

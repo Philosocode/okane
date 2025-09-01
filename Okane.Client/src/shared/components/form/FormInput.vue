@@ -73,7 +73,8 @@ function handleChange(event: Event) {
   border: var(--border-main);
   border-radius: var(--border-radius);
   color: var(--color-text);
-  display: block;
+  display: flex;
+  align-items: center;
   width: 100%;
 }
 </style>

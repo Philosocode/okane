@@ -55,7 +55,7 @@ public class GetPaginatedFinanceRecordsTests(PostgresApiFactory apiFactory) : Da
         for (var i = 0; i < totalItems; i++)
         {
             var financeRecord = FinanceRecordStubFactory.Create(loginResponse.User.Id);
-            financeRecord.Amount = i + 1;
+            financeRecord.Amount = (decimal)(i + 1.11);
             financeRecords.Add(financeRecord);
         }
 

@@ -9,6 +9,31 @@ using Okane.Api.Infrastructure.Database.Entities;
 
 namespace Okane.Api.Features.Finances.Entities;
 
+[Index(
+    nameof(UserId),
+    nameof(Amount),
+    nameof(Id),
+    Name = "IX_FinanceRecords_UserId_Amount_Id_Asc")]
+[Index(
+    nameof(UserId),
+    nameof(Amount),
+    nameof(Id),
+    IsDescending = [false, true, false],
+    Name = "IX_FinanceRecords_UserId_Amount_Id_Desc"
+)]
+[Index(
+    nameof(UserId),
+    nameof(HappenedAt),
+    nameof(Id),
+    Name = "IX_FinanceRecords_UserId_HappenedAt_Asc"
+)]
+[Index(
+    nameof(UserId),
+    nameof(HappenedAt),
+    nameof(Id),
+    IsDescending = [false, true, false],
+    Name = "IX_FinanceRecords_UserId_HappenedAt_Desc"
+)]
 public class FinanceRecord : IOwnedEntity
 {
     public int Id { get; set; }

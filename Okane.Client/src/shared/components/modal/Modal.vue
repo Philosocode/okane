@@ -47,31 +47,15 @@ onKeyStroke('Escape', () => {
 
 <template>
   <Teleport to="#modal">
-    <div
-      v-if="props.isShowing"
-      class="backdrop"
-      ref="backdropRef"
-      :data-testid="TEST_IDS.MODAL_BACKDROP"
-    >
-      <div
-        aria-modal="true"
-        :aria-labelledby="props.modalHeadingId"
-        class="modal"
-        :data-disable-document-scroll="props.isShowing"
-        ref="modalRef"
-        :data-testid="TEST_IDS.MODAL"
-        v-bind="$attrs"
-      >
+    <div v-if="props.isShowing" class="backdrop" ref="backdropRef" :data-testid="TEST_IDS.MODAL_BACKDROP">
+      <div aria-modal="true" :aria-labelledby="props.modalHeadingId" class="modal"
+        :data-disable-document-scroll="props.isShowing" ref="modalRef" :data-testid="TEST_IDS.MODAL" v-bind="$attrs">
         <UseFocusTrap :options="{ onDeactivate: refocusTrigger }">
           <div class="modal-content flow">
             <div class="top-row">
               <ModalHeading :id="props.modalHeadingId">{{ props.headingText }}</ModalHeading>
-              <IconButton
-                class="close-button"
-                icon="fa-solid fa-xmark"
-                :title="SHARED_COPY.MODAL.CLOSE_BUTTON_TITLE"
-                @click="emit('close')"
-              />
+              <IconButton class="close-button" icon="fa-solid fa-xmark" :title="SHARED_COPY.MODAL.CLOSE_BUTTON_TITLE"
+                @click="emit('close')" />
             </div>
 
             <slot />
@@ -105,6 +89,7 @@ onKeyStroke('Escape', () => {
   overflow-y: auto;
   padding: 0;
   position: relative;
+  max-height: 95vh;
 
   height: 100%;
   width: 100%;
@@ -118,12 +103,14 @@ onKeyStroke('Escape', () => {
     bottom: 0;
     margin: auto;
     height: max-content;
+    max-height: initial;
     max-width: pxToRem(450);
   }
 }
 
 .modal-content {
   padding: var(--space-md);
+  overflow-y: auto;
 }
 
 .top-row {

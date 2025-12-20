@@ -11,7 +11,7 @@ import { isComparisonOperator } from '@shared/utils/search'
 
 type Props = {
   isShowingRange: boolean
-  label: string
+  label?: string
 
   operator?: string
   operatorSelectName: string
@@ -51,7 +51,7 @@ function toggleRange() {
 
 <template>
   <fieldset class="fieldset">
-    <Kicker class="legend" tag="legend">{{ props.label }}</Kicker>
+    <Kicker v-if="props.label" class="legend" tag="legend">{{ props.label }}</Kicker>
 
     <div class="inputs row">
       <div class="row">

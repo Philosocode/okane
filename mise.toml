@@ -12,5 +12,5 @@ PI_SSH_TARGET = 'user@123.456.789.000'
 
 [tools]
 jq = '1.7.1'
-nodejs = '22.13.1'
+nodejs = '22.18.0'
 pnpm = "10.2.0"

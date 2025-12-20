@@ -1,5 +1,5 @@
 // External
-import { startOfMonth } from 'date-fns'
+import { format, startOfDay, subDays } from 'date-fns'
 
 // Internal
 import { FINANCE_RECORD_TYPE_OPTIONS } from '@features/financeRecords/constants/saveFinanceRecord'
@@ -7,7 +7,10 @@ import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { SHARED_COPY } from '@shared/constants/copy'
 import { COMPARISON_OPERATOR, SORT_DIRECTION } from '@shared/constants/search'
 
-import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
+import {
+  HAPPENED_AT_TIMEFRAME,
+  type FinanceRecordSearchFilters,
+} from '@features/financeRecords/types/searchFilters'
 import { type SelectOption } from '@shared/components/form/FormSelect.vue'
 
 import { capitalize } from '@shared/utils/string'
@@ -20,11 +23,35 @@ export const DEFAULT_FINANCE_RECORD_SEARCH_FILTERS: FinanceRecordSearchFilters =
   sortField: 'happenedAt',
 
   amountOperator: COMPARISON_OPERATOR.GTE,
-  happenedAt1: startOfMonth(new Date(Date.now())),
+  happenedAtTimeframe: HAPPENED_AT_TIMEFRAME.PAST_30_DAYS,
+  happenedAt1: startOfDay(subDays(Date.now(), 30)),
   happenedAtOperator: COMPARISON_OPERATOR.GTE,
 
   tags: [],
 }
+
+interface TimeframeOption extends SelectOption {
+  value: HAPPENED_AT_TIMEFRAME
+}
+
+export const SEARCH_FINANCE_RECORDS_TIMEFRAME_OPTIONS: TimeframeOption[] = [
+  {
+    label: FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.PAST_30_DAYS,
+    value: HAPPENED_AT_TIMEFRAME.PAST_30_DAYS,
+  },
+  {
+    label: format(new Date(Date.now()), 'MMMM'),
+    value: HAPPENED_AT_TIMEFRAME.THIS_MONTH,
+  },
+  {
+    label: format(new Date(Date.now()), 'y'),
+    value: HAPPENED_AT_TIMEFRAME.THIS_YEAR,
+  },
+  {
+    label: FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.CUSTOM,
+    value: HAPPENED_AT_TIMEFRAME.CUSTOM,
+  },
+]
 
 export const SEARCH_FINANCE_RECORDS_TYPE_OPTIONS: SelectOption[] = [
   { label: capitalize(SHARED_COPY.COMMON.ALL), value: '' },

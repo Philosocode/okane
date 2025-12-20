@@ -111,6 +111,7 @@ function handleSubmit() {
         :happened-at1="formState.happenedAt1"
         :happened-at2="formState.happenedAt2"
         :happened-at-operator="formState.happenedAtOperator"
+        :happened-at-timeframe="formState.happenedAtTimeframe"
         @change="handleChange"
       />
 

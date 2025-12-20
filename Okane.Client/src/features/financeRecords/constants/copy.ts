@@ -2,13 +2,13 @@
 import { format } from 'date-fns'
 
 // Internal
-import { COMPARISON_OPERATOR, SORT_DIRECTION } from '@shared/constants/search'
+import { COMMON_DATE_FORMAT } from '@shared/constants/dateTime'
 import { SHARED_COPY } from '@shared/constants/copy'
+import { COMPARISON_OPERATOR, SORT_DIRECTION } from '@shared/constants/search'
 
 import { type FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 import { type Tag } from '@shared/types/tag'
-import { COMMON_DATE_FORMAT } from '@shared/constants/dateTime'
 
 export const FINANCES_COPY = {
   CHARTS: {
@@ -115,11 +115,13 @@ export const FINANCES_COPY = {
 
   SEARCH_FINANCE_RECORDS_MODAL: {
     APPLIED_SEARCH_FILTERS: 'Applied Search Filters',
+    CUSTOM: 'Custom',
     EDIT_SEARCH_FILTERS: 'Edit Search Filters',
     HAPPENED_AFTER: 'Happened after',
     HAPPENED_BEFORE: 'Happened before',
     MAX_AMOUNT: 'Max amount',
     MIN_AMOUNT: 'Min amount',
+    PAST_30_DAYS: 'Past 30 Days',
   },
 
   STATS: {

@@ -23,12 +23,12 @@ public class FinanceRecordFilterQueryParametersValidator : AbstractValidator<Fin
             .WithMessage(MinAmountError);
 
         RuleFor(p => p.MaxAmount)
-            .GreaterThan(p => p.MinAmount)
+            .GreaterThanOrEqualTo(p => p.MinAmount)
             .When(p => p.MaxAmount.HasValue && p.MinAmount.HasValue)
             .WithMessage(InvalidAmountsError);
 
         RuleFor(p => p.HappenedAfter)
-            .LessThan(p => p.HappenedBefore)
+            .LessThanOrEqualTo(p => p.HappenedBefore)
             .When(p => p.HappenedBefore.HasValue && p.HappenedAfter.HasValue)
             .WithMessage(InvalidHappenedAtsError);
     }

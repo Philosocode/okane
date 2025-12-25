@@ -33,6 +33,7 @@ test('emits a "change" event with operator when the operator changes', () => {
 test('renders a required amount1 input', () => {
   const wrapper = mountComponent({ props })
   const input = wrapper.get('input[name="amount1"]')
+  expect(input.attributes('min')).toEqual('0')
   expect(input.attributes('required')).toBeDefined()
   expect(input.attributes('step')).toBe(FINANCE_RECORD_MIN_AMOUNT.toString())
   expect((input.element as HTMLInputElement).value).toEqual(props.amount1?.toString())
@@ -52,6 +53,7 @@ test('renders an amount2 input', () => {
   const wrapper = mountComponent({ props })
   const input = wrapper.find('input[name="amount2"]')
   expect(input.exists()).toBe(true)
+  expect(input.attributes('min')).toEqual('0')
   expect(input.attributes('step')).toBe(FINANCE_RECORD_MIN_AMOUNT.toString())
   expect((input.element as HTMLInputElement).value).toEqual(props.amount2?.toString())
 

@@ -42,6 +42,7 @@ const emit = defineEmits<{
             ? FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.MIN_AMOUNT
             : FINANCES_COPY.PROPERTIES.AMOUNT
         "
+        :min="0"
         :required="isShowingRange"
         :step="FINANCE_RECORD_MIN_AMOUNT"
         :type="INPUT_TYPE.NUMBER"
@@ -55,6 +56,7 @@ const emit = defineEmits<{
         @update:model-value="emit('change', { amount2: $event })"
         name="amount2"
         :label="FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.MAX_AMOUNT"
+        :min="0"
         required
         :step="FINANCE_RECORD_MIN_AMOUNT"
         :type="INPUT_TYPE.NUMBER"

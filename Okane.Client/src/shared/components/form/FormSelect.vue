@@ -92,6 +92,7 @@ const model = defineModel()
   position: absolute;
   width: 12px;
   right: 9px;
+  pointer-events: none;
   top: 50%;
   transform: translateY(-50%);
 }

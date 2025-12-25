@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// External
+import { computed } from 'vue'
+
 // Internal
 import ColorModeToggle from '@shared/components/button/ColorModeToggle.vue'
 import Kicker from '@shared/components/typography/Kicker.vue'
@@ -6,13 +9,20 @@ import Link from '@shared/components/Link.vue'
 import NavLink from '@shared/components/nav/NavLink.vue'
 
 import { useAuthStore } from '@features/auth/composables/useAuthStore'
+import { useFinanceRecordSearchStore } from '@features/financeRecords/composables/useFinanceRecordSearchStore'
 
 import { AUTH_COPY } from '@features/auth/constants/copy'
 import { ROUTE_NAME } from '@shared/services/router/router'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { SHARED_COPY } from '@shared/constants/copy'
 
+import { mapFinanceRecordSearchFilters } from '@features/financeRecords/utils/mappers'
+
 const authStore = useAuthStore()
+const searchStore = useFinanceRecordSearchStore()
+const financesQuery = computed(() =>
+  Object.fromEntries(mapFinanceRecordSearchFilters.to.URLSearchParams(searchStore.filters)),
+)
 </script>
 
 <template>
@@ -22,7 +32,7 @@ const authStore = useAuthStore()
         <NavLink
           icon="fa-solid fa-dollar-sign"
           :text="FINANCES_COPY.FINANCES"
-          :to="{ name: ROUTE_NAME.FINANCES }"
+          :to="{ name: ROUTE_NAME.FINANCES, query: financesQuery }"
         />
         <NavLink
           icon="fa-solid fa-tag"

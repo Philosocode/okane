@@ -1,6 +1,8 @@
 // External
 import { flushPromises, type VueWrapper } from '@vue/test-utils'
 
+import { type Router } from 'vue-router'
+
 // Internal
 import FinanceRecordAmountFilter from '@features/financeRecords/components/searchFilters/FinanceRecordAmountFilter.vue'
 import FinanceRecordHappenedAtFilter from '@features/financeRecords/components/searchFilters/FinanceRecordHappenedAtFilter.vue'
@@ -21,16 +23,17 @@ import {
   SORT_DIRECTION_OPTIONS,
 } from '@shared/constants/search'
 
-import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 import { type FinanceUserTagMap } from '@features/financeUserTags/types/financeUserTag'
+import {
+  HAPPENED_AT_TIMEFRAME,
+  type FinanceRecordSearchFilters,
+} from '@features/financeRecords/types/searchFilters'
 
 import { useFinanceRecordSearchStore } from '@features/financeRecords/composables/useFinanceRecordSearchStore'
 
-import { mapDateOnlyTimestampToLocalizedDate } from '@shared/utils/dateTime'
-import {
-  mapFinanceRecordSearchFilters,
-  mapFinanceRecordSearchFiltersFormState,
-} from '@features/financeRecords/utils/mappers'
+import { createAppRouter } from '@shared/services/router/router'
+
+import { mapDate } from '@shared/utils/dateTime'
 
 import { commonAsserts } from '@tests/utils/commonAsserts'
 import { createTestTag } from '@tests/factories/tag'
@@ -57,12 +60,12 @@ const userTagMap: FinanceUserTagMap = {
 
 const userTags = [...userTagMap.Expense, ...userTagMap.Revenue]
 
-async function mountWithHandler() {
+async function mountWithRouter(router?: Router) {
   testServer.use(financeUserTagHandlers.getAllSuccess({ userTags }))
 
   const wrapper = getMountComponent(SearchFiltersForm, {
     attachTo: document.body,
-    withPinia: true,
+    withRouter: router ?? true,
     withQueryClient: true,
   })()
 
@@ -80,7 +83,7 @@ const helpers = {
 
 describe('Description input', () => {
   test('renders an input with the expected properties and label', async () => {
-    const wrapper = await mountWithHandler()
+    const wrapper = await mountWithRouter()
     const input = wrapper.get('input[name="description"]')
     expect(input.attributes('type')).toBe(INPUT_TYPE.TEXT)
 
@@ -88,20 +91,24 @@ describe('Description input', () => {
     expect(label).toBeDefined()
   })
 
-  test('updates the search filters description state', async () => {
-    const searchStore = useFinanceRecordSearchStore()
-    const wrapper = await mountWithHandler()
+  test('updates the description query param', async () => {
+    const router = createAppRouter()
+    const pushSpy = vi.spyOn(router, 'push')
+
+    const wrapper = await mountWithRouter(router)
     const input = wrapper.get('input[name="description"]')
     const description = 'Test description'
 
     await input.setValue(description)
     await helpers.submitForm(wrapper)
 
-    expect(searchStore.filters.description).toBe(description)
+    expect(pushSpy).toHaveBeenCalledWith({
+      query: expect.objectContaining({ description }),
+    })
   })
 
   test('focuses the input on mount', async () => {
-    const wrapper = await mountWithHandler()
+    const wrapper = await mountWithRouter()
     const input = wrapper.get('input[name="description"]')
     expect(input.element).toBe(document.activeElement)
   })
@@ -109,7 +116,7 @@ describe('Description input', () => {
 
 describe('Type select', () => {
   test('renders a select and label', async () => {
-    const wrapper = await mountWithHandler()
+    const wrapper = await mountWithRouter()
     const select = wrapper.find('select[name="type"]')
     expect(select.exists()).toBe(true)
 
@@ -118,7 +125,7 @@ describe('Type select', () => {
   })
 
   test('renders the expected select options', async () => {
-    const wrapper = await mountWithHandler()
+    const wrapper = await mountWithRouter()
 
     commonAsserts.rendersExpectedSelectOptions({
       expectedOptions: SEARCH_FINANCE_RECORDS_TYPE_OPTIONS,
@@ -126,84 +133,99 @@ describe('Type select', () => {
     })
   })
 
-  test('updates the search filters type state and resets the tags', async () => {
+  test('updates the type and tagIds query params', async () => {
+    const router = createAppRouter()
+    const pushSpy = vi.spyOn(router, 'push')
+
     const searchStore = useFinanceRecordSearchStore()
     searchStore.setFilters({ tags: [userTags[0].tag] })
 
-    const wrapper = await mountWithHandler()
+    const wrapper = await mountWithRouter(router)
     const input = wrapper.get('select[name="type"]')
 
     await input.setValue(FINANCE_RECORD_TYPE.REVENUE)
     await helpers.submitForm(wrapper)
 
-    expect(searchStore.filters.type).toBe(FINANCE_RECORD_TYPE.REVENUE)
-    expect(searchStore.filters.tags).toEqual([])
+    expect(pushSpy).toHaveBeenCalledWith({
+      query: expect.objectContaining({
+        type: FINANCE_RECORD_TYPE.REVENUE,
+      }),
+    })
+
+    expect(pushSpy).not.toHaveBeenCalledWith({
+      query: expect.objectContaining({
+        tagIds: userTags[0].tag.id,
+      }),
+    })
   })
 })
 
 describe('Amount filter', () => {
   test('renders an amount filter', async () => {
-    const wrapper = await mountWithHandler()
+    const wrapper = await mountWithRouter()
     const amountFilter = wrapper.findComponent(FinanceRecordAmountFilter)
     expect(amountFilter.exists()).toBe(true)
   })
 
-  test('updates the search filters amount state', async () => {
-    const searchStore = useFinanceRecordSearchStore()
-    const wrapper = await mountWithHandler()
+  test('updates the amount query params', async () => {
+    const router = createAppRouter()
+    const pushSpy = vi.spyOn(router, 'push')
+
+    const wrapper = await mountWithRouter(router)
     const amountFilter = wrapper.findComponent(FinanceRecordAmountFilter)
     const changes = {
       amount1: '1',
       amount2: '2',
-      amountOperator: COMPARISON_OPERATOR.LTE,
+      amountOperator: '',
     }
 
     amountFilter.vm.$emit('change', changes)
     await helpers.submitForm(wrapper)
 
-    expect(searchStore.filters).toEqual(
-      expect.objectContaining({
-        amount1: parseFloat(changes.amount1),
-        amount2: parseFloat(changes.amount2),
-        amountOperator: changes.amountOperator,
+    expect(pushSpy).toHaveBeenCalledWith({
+      query: expect.objectContaining({
+        minAmount: changes.amount1,
+        maxAmount: changes.amount2,
       }),
-    )
+    })
   })
 })
 
 describe('Happened at filter', () => {
   test('renders a happened at filter', async () => {
-    const wrapper = await mountWithHandler()
+    const wrapper = await mountWithRouter()
     const happenedAtFilter = wrapper.findComponent(FinanceRecordHappenedAtFilter)
     expect(happenedAtFilter.exists()).toBe(true)
   })
 
-  test('updates the search filters happenedAt state', async () => {
-    const searchStore = useFinanceRecordSearchStore()
-    const wrapper = await mountWithHandler()
+  test('updates the happened at query params', async () => {
+    const router = createAppRouter()
+    const pushSpy = vi.spyOn(router, 'push')
+
+    const wrapper = await mountWithRouter(router)
     const amountFilter = wrapper.findComponent(FinanceRecordAmountFilter)
+    const happenedAfter = new Date(2024, 0, 1)
     const changes = {
-      happenedAt1: '2024-01-01',
-      happenedAt2: '2024-01-01',
-      happenedAtOperator: COMPARISON_OPERATOR.LTE,
+      happenedAtTimeframe: HAPPENED_AT_TIMEFRAME.CUSTOM,
+      happenedAt1: mapDate.to.dateOnlyTimestamp(happenedAfter),
+      happenedAtOperator: COMPARISON_OPERATOR.GTE,
     }
 
     amountFilter.vm.$emit('change', changes)
     await helpers.submitForm(wrapper)
 
-    expect(searchStore.filters).toEqual(
-      expect.objectContaining({
-        happenedAt1: mapDateOnlyTimestampToLocalizedDate(changes.happenedAt1),
-        happenedAt2: mapDateOnlyTimestampToLocalizedDate(changes.happenedAt2),
-        happenedAtOperator: COMPARISON_OPERATOR.LTE,
+    expect(pushSpy).toHaveBeenCalledWith({
+      query: expect.objectContaining({
+        happenedAtTimeframe: changes.happenedAtTimeframe,
+        happenedAfter: happenedAfter.toISOString(),
       }),
-    )
+    })
   })
 })
 
 describe('Sort by select', () => {
   test('renders a select and label', async () => {
-    const wrapper = await mountWithHandler()
+    const wrapper = await mountWithRouter()
     const select = wrapper.find('select[name="sortBy"]')
     expect(select.exists()).toBe(true)
 
@@ -212,7 +234,7 @@ describe('Sort by select', () => {
   })
 
   test('renders the expected select options', async () => {
-    const wrapper = await mountWithHandler()
+    const wrapper = await mountWithRouter()
 
     commonAsserts.rendersExpectedSelectOptions({
       expectedOptions: FINANCE_RECORD_SORT_FIELD_OPTIONS,
@@ -220,21 +242,27 @@ describe('Sort by select', () => {
     })
   })
 
-  test('updates the search filters sort field state', async () => {
-    const searchStore = useFinanceRecordSearchStore()
-    const wrapper = await mountWithHandler()
+  test('updates the sort field query param', async () => {
+    const router = createAppRouter()
+    const pushSpy = vi.spyOn(router, 'push')
+
+    const wrapper = await mountWithRouter(router)
     const input = wrapper.get('select[name="sortBy"]')
 
     await input.setValue(FINANCE_RECORD_SORT_FIELD_OPTIONS[0].value)
     await helpers.submitForm(wrapper)
 
-    expect(searchStore.filters.sortField).toBe(FINANCE_RECORD_SORT_FIELD_OPTIONS[0].value)
+    expect(pushSpy).toHaveBeenCalledWith({
+      query: expect.objectContaining({
+        sortField: FINANCE_RECORD_SORT_FIELD_OPTIONS[0].value,
+      }),
+    })
   })
 })
 
 describe('Sort direction select', () => {
   test('renders a select and label', async () => {
-    const wrapper = await mountWithHandler()
+    const wrapper = await mountWithRouter()
     const select = wrapper.find('select[name="sortDirection"]')
     expect(select.exists()).toBe(true)
 
@@ -243,7 +271,7 @@ describe('Sort direction select', () => {
   })
 
   test('renders the expected select options', async () => {
-    const wrapper = await mountWithHandler()
+    const wrapper = await mountWithRouter()
 
     commonAsserts.rendersExpectedSelectOptions({
       expectedOptions: SORT_DIRECTION_OPTIONS,
@@ -251,15 +279,19 @@ describe('Sort direction select', () => {
     })
   })
 
-  test('updates the search filters sort direction state', async () => {
-    const searchStore = useFinanceRecordSearchStore()
-    const wrapper = await mountWithHandler()
+  test('updates the sort direction query param', async () => {
+    const router = createAppRouter()
+    const pushSpy = vi.spyOn(router, 'push')
+
+    const wrapper = await mountWithRouter(router)
     const input = wrapper.get('select[name="sortDirection"]')
 
     await input.setValue(SORT_DIRECTION.ASCENDING)
     await helpers.submitForm(wrapper)
 
-    expect(searchStore.filters.sortDirection).toBe(SORT_DIRECTION.ASCENDING)
+    expect(pushSpy).toHaveBeenCalledWith({
+      query: expect.objectContaining({ sortDirection: SORT_DIRECTION.ASCENDING }),
+    })
   })
 })
 
@@ -269,7 +301,7 @@ describe('Tag combobox', () => {
   }
 
   test('renders all tag options when type not set', async () => {
-    const wrapper = await mountWithHandler()
+    const wrapper = await mountWithRouter()
 
     userTags.forEach((userTag) => {
       expect(getTagOption(wrapper, userTag.tag.name).exists()).toBe(true)
@@ -279,7 +311,7 @@ describe('Tag combobox', () => {
   test(`renders expense tag options when type is set to ${FINANCE_RECORD_TYPE.EXPENSE}`, async () => {
     const searchStore = useFinanceRecordSearchStore()
     searchStore.setFilters({ type: FINANCE_RECORD_TYPE.EXPENSE })
-    const wrapper = await mountWithHandler()
+    const wrapper = await mountWithRouter()
 
     userTagMap.Expense.forEach((userTag) => {
       expect(getTagOption(wrapper, userTag.tag.name).exists()).toBe(true)
@@ -293,7 +325,7 @@ describe('Tag combobox', () => {
   test(`renders revenue tag options when type is set to ${FINANCE_RECORD_TYPE.REVENUE}`, async () => {
     const searchStore = useFinanceRecordSearchStore()
     searchStore.setFilters({ type: FINANCE_RECORD_TYPE.REVENUE })
-    const wrapper = await mountWithHandler()
+    const wrapper = await mountWithRouter()
 
     userTagMap.Revenue.forEach((userTag) => {
       expect(getTagOption(wrapper, userTag.tag.name).exists()).toBe(true)
@@ -304,38 +336,49 @@ describe('Tag combobox', () => {
     })
   })
 
-  test('updates the search filters tags state', async () => {
-    const searchStore = useFinanceRecordSearchStore()
-    const wrapper = await mountWithHandler()
+  test('updates the tagIds query param', async () => {
+    const router = createAppRouter()
+    const pushSpy = vi.spyOn(router, 'push')
+
+    const wrapper = await mountWithRouter(router)
     const tagOption = getTagOption(wrapper, userTags[0].tag.name)
     await tagOption.trigger('click')
     await helpers.submitForm(wrapper)
-    expect(searchStore.filters.tags).toEqual([userTags[0].tag])
+
+    expect(pushSpy).toHaveBeenCalledWith({
+      query: expect.objectContaining({ tagIds: userTags[0].tag.id.toString() }),
+    })
   })
 })
 
 describe('Save button', () => {
-  test('updates multiple search filters and closes the modal', async () => {
+  test('updates multiple query params and closes the modal', async () => {
+    const router = createAppRouter()
+    const pushSpy = vi.spyOn(router, 'push').mockResolvedValue()
+
     const searchStore = useFinanceRecordSearchStore()
     searchStore.setModalIsShowing(true)
 
-    const wrapper = await mountWithHandler()
+    const wrapper = await mountWithRouter(router)
     const updates = { description: 'Cool description', type: FINANCE_RECORD_TYPE.REVENUE }
     const descriptionInput = wrapper.get('input[name="description"]')
     await descriptionInput.setValue(updates.description)
     const typeSelect = wrapper.get('select[name="type"]')
     await typeSelect.setValue(updates.type)
 
-    expect(searchStore.filters).toEqual(DEFAULT_FINANCE_RECORD_SEARCH_FILTERS)
-
     const saveButton = wrapper.findByText('button', SHARED_COPY.ACTIONS.SAVE)
     await saveButton.trigger('submit')
 
     expect(searchStore.modalIsShowing).toBe(false)
-    expect(searchStore.filters).toEqual(expect.objectContaining(updates))
+    expect(pushSpy).toHaveBeenCalledWith({
+      query: expect.objectContaining({
+        description: updates.description,
+        type: updates.type,
+      }),
+    })
   })
 
-  test('does not update the search filters state when the form is invalid', async () => {
+  test('does not update query params when the form is invalid', async () => {
     const searchStore = useFinanceRecordSearchStore()
     const initialFilters: FinanceRecordSearchFilters = {
       ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
@@ -346,10 +389,10 @@ describe('Save button', () => {
     }
     searchStore.setFilters(initialFilters)
 
-    const initialFormState =
-      mapFinanceRecordSearchFilters.to.financeRecordSearchFiltersFormState(initialFilters)
+    const router = createAppRouter()
+    const pushSpy = vi.spyOn(router, 'push')
 
-    const wrapper = await mountWithHandler()
+    const wrapper = await mountWithRouter(router)
     const updates = { amount1: '1', amount2: '2' }
 
     const amount1Input = wrapper.get('input[name="amount1"]')
@@ -358,18 +401,18 @@ describe('Save button', () => {
     await saveButton.trigger('submit')
 
     // Shouldn't update because an amount range is showing and amount2 is missing.
-    expect(searchStore.filters).toEqual(initialFilters)
+    expect(pushSpy).not.toHaveBeenCalled()
 
     const amount2Input = wrapper.get('input[name="amount2"]')
     await amount2Input.setValue(updates.amount2)
     await saveButton.trigger('submit')
 
-    // Should update because amount1 and amount2 are both present.
-    const expectedFilters = mapFinanceRecordSearchFiltersFormState.to.financeRecordSearchFilters({
-      ...initialFormState,
-      ...updates,
+    expect(pushSpy).toHaveBeenCalledWith({
+      query: expect.objectContaining({
+        minAmount: updates.amount1,
+        maxAmount: updates.amount2,
+      }),
     })
-    expect(searchStore.filters).toEqual(expectedFilters)
   })
 })
 
@@ -378,7 +421,7 @@ describe('Cancel button', () => {
     const searchStore = useFinanceRecordSearchStore()
     searchStore.setModalIsShowing(true)
 
-    const wrapper = await mountWithHandler()
+    const wrapper = await mountWithRouter()
     const descriptionInput = wrapper.get('input[name="description"]')
     await descriptionInput.setValue('Cool')
 
@@ -399,7 +442,7 @@ describe('Reset button', () => {
     const searchStore = useFinanceRecordSearchStore()
     searchStore.setFilters(initialSearchFilters)
 
-    const wrapper = await mountWithHandler()
+    const wrapper = await mountWithRouter()
     const descriptionInput = wrapper.get('input[name="description"]')
     await descriptionInput.setValue('Updated description')
 

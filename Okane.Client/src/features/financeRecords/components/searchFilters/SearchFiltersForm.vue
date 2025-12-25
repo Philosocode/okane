@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // External
+import { useRouter } from 'vue-router'
 import { computed, ref, useTemplateRef } from 'vue'
 
 // Internal
@@ -45,6 +46,7 @@ const formRef = useTemplateRef<HTMLFormElement>('form')
 const formState = ref<FinanceRecordSearchFiltersFormState>(
   mapFinanceRecordSearchFilters.to.financeRecordSearchFiltersFormState(searchStore.filters),
 )
+const router = useRouter()
 
 function handleChange(updates: Partial<FinanceRecordSearchFiltersFormState>) {
   formState.value = {
@@ -69,13 +71,15 @@ function handleReset() {
   )
 }
 
-function handleSubmit() {
+async function handleSubmit() {
   if (!formRef.value?.checkValidity()) return
 
   const filters = mapFinanceRecordSearchFiltersFormState.to.financeRecordSearchFilters(
     formState.value,
   )
-  searchStore.setFilters(filters)
+  const searchParams = mapFinanceRecordSearchFilters.to.URLSearchParams(filters)
+
+  await router.push({ query: Object.fromEntries(searchParams) })
 
   handleCancel()
 }

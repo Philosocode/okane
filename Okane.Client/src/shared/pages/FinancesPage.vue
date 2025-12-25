@@ -8,6 +8,7 @@ import CreateFinanceRecordButton from '@features/financeRecords/components/saveF
 import CreateFinanceRecordModal from '@features/financeRecords/components/saveFinanceRecord/CreateFinanceRecordModal.vue'
 import DeleteFinanceRecordModal from '@features/financeRecords/components/saveFinanceRecord/DeleteFinanceRecordModal.vue'
 import EditFinanceRecordModal from '@features/financeRecords/components/saveFinanceRecord/EditFinanceRecordModal.vue'
+import ErrorMessage from '@shared/components/typography/ErrorMessage.vue'
 import FinanceCharts from '@features/financeRecords/components/stats/FinanceCharts.vue'
 import FinanceRecordList from '@features/financeRecords/components/financeRecordList/FinanceRecordList.vue'
 import Heading from '@shared/components/nav/Heading.vue'
@@ -17,6 +18,7 @@ import TotalRevenuesAndExpenses from '@features/financeRecords/components/stats/
 
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 
+import { useWatchFinanceQueryParams } from '@features/financeRecords/composables/useWatchFinanceQueryParams'
 import {
   DELETE_FINANCE_RECORD_SYMBOL,
   useDeleteFinanceRecordProvider,
@@ -28,12 +30,15 @@ import {
 
 provide(DELETE_FINANCE_RECORD_SYMBOL, useDeleteFinanceRecordProvider())
 provide(SAVE_FINANCE_RECORD_SYMBOL, useSaveFinanceRecordProvider())
+
+const { isLoading, error } = useWatchFinanceQueryParams()
 </script>
 
 <template>
   <PageLayout>
     <Heading tag="h1">{{ FINANCES_COPY.FINANCES }}</Heading>
-    <div class="flow">
+    <ErrorMessage v-if="error">{{ error }}</ErrorMessage>
+    <div v-if="!isLoading && !error" class="flow">
       <section>
         <Card>
           <TotalRevenuesAndExpenses />

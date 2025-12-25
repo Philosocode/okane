@@ -5,7 +5,6 @@ import { http, HttpResponse } from 'msw'
 import { financeUserTagApiRoutes } from '@features/financeUserTags/constants/apiRoutes'
 import { HTTP_STATUS_CODE } from '@shared/constants/http'
 
-import { type ApiResponse } from '@shared/services/apiClient/types'
 import {
   type CreateFinanceUserTagRequest,
   type FinanceUserTag,
@@ -13,9 +12,9 @@ import {
 
 import { createTestFinanceUserTag } from '@tests/factories/financeUserTag'
 import { createTestTag } from '@tests/factories/tag'
+import { createTestProblemDetails } from '@tests/factories/problemDetails'
 import { getMswUrl } from '@tests/utils/url'
 import { wrapInApiResponse } from '@tests/utils/apiResponse'
-import { createTestProblemDetails } from '@tests/factories/problemDetails'
 
 export const financeUserTagHandlers = {
   getAllSuccess(args: { userTags: FinanceUserTag[] }) {
@@ -38,7 +37,7 @@ export const financeUserTagHandlers = {
     createdTagId: number
     createdUserTagId?: number
   }) {
-    return http.post<never, CreateFinanceUserTagRequest, ApiResponse<FinanceUserTag>>(
+    return http.post<never, CreateFinanceUserTagRequest>(
       getMswUrl(financeUserTagApiRoutes.post()),
       async function resolver({ request }) {
         const requestUserTag = await request.json()

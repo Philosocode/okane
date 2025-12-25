@@ -14,6 +14,11 @@ import { testServer } from '@tests/msw/testServer'
 import { createTestJwtToken } from '@tests/factories/jwtToken'
 import { createTestUser } from '@tests/factories/user'
 import { useMockedStore } from '@tests/composables/useMockedStore'
+import { mapFinanceRecordSearchFilters } from '@features/financeRecords/utils/mappers'
+import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
+import { useFinanceRecordSearchStore } from '@features/financeRecords/composables/useFinanceRecordSearchStore'
+import type { FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
+import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 
 const mountComponent = getMountComponent(NavBar, {
   withPinia: true,
@@ -71,9 +76,22 @@ describe('when authenticated', () => {
     authStore.jwtToken = createTestJwtToken()
   })
 
-  test('renders a finances link', () => {
+  test('renders a finances link with the expected query params', () => {
+    const filters: FinanceRecordSearchFilters = {
+      ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+      type: FINANCE_RECORD_TYPE.REVENUE,
+    }
+    const searchStore = useFinanceRecordSearchStore()
+    searchStore.setFilters(filters)
+
+    const searchParams = mapFinanceRecordSearchFilters.to.URLSearchParams(filters)
+    const decodedSearchParams = decodeURIComponent(searchParams.toString())
+
+    // URLSearchParams automatically encode query params. Vue-router, however, automatically decodes
+    // the query params. We need to decode the above search params to get them to match.
+    const expectedLink = `${appRoutes.finances.buildPath()}?${decodedSearchParams}`
     sharedAsserts.rendersLink({
-      link: appRoutes.finances.buildPath(),
+      link: expectedLink,
       text: FINANCES_COPY.FINANCES,
     })
   })

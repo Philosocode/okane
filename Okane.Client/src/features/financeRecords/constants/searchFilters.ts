@@ -7,11 +7,11 @@ import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { SHARED_COPY } from '@shared/constants/copy'
 import { COMPARISON_OPERATOR, SORT_DIRECTION } from '@shared/constants/search'
 
+import { type SelectOption } from '@shared/components/form/FormSelect.vue'
 import {
   HAPPENED_AT_TIMEFRAME,
   type FinanceRecordSearchFilters,
 } from '@features/financeRecords/types/searchFilters'
-import { type SelectOption } from '@shared/components/form/FormSelect.vue'
 
 import { capitalize } from '@shared/utils/string'
 
@@ -34,7 +34,7 @@ interface TimeframeOption extends SelectOption {
   value: HAPPENED_AT_TIMEFRAME
 }
 
-export const SEARCH_FINANCE_RECORDS_TIMEFRAME_OPTIONS: TimeframeOption[] = [
+export const HAPPENED_AT_TIMEFRAME_OPTIONS: TimeframeOption[] = [
   {
     label: FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.PAST_30_DAYS,
     value: HAPPENED_AT_TIMEFRAME.PAST_30_DAYS,
@@ -72,3 +72,16 @@ export const FINANCE_RECORD_SORT_FIELD_OPTIONS: SortFieldOption[] = [
     value: 'amount',
   },
 ]
+
+export const FINANCE_RECORD_SEARCH_QUERY_PARAM_NAMES = {
+  DESCRIPTION: 'description',
+  HAPPENED_AT_TIMEFRAME: 'happenedAtTimeframe',
+  HAPPENED_BEFORE: 'happenedBefore',
+  HAPPENED_AFTER: 'happenedAfter',
+  MAX_AMOUNT: 'maxAmount',
+  MIN_AMOUNT: 'minAmount',
+  SORT_DIRECTION: 'sortDirection',
+  SORT_FIELD: 'sortField',
+  TAG_IDS: 'tagIds',
+  TYPE: 'type',
+} as const

@@ -1,18 +1,24 @@
 <script setup lang="ts">
-// Internal
-import FinanceRecordHappenedAtCustom from '@features/financeRecords/components/searchFilters/FinanceRecordHappenedAtCustom.vue'
-import FormSelect from '@shared/components/form/FormSelect.vue'
+// External
+import { computed } from 'vue'
 
+// Internal
+import FormInput from '@shared/components/form/FormInput.vue'
+import FormSelect from '@shared/components/form/FormSelect.vue'
+import ToggleableRangeInputs from '@shared/components/form/ToggleableRangeInputs.vue'
+
+import { COMPARISON_OPERATOR } from '@shared/constants/search'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
-import { SEARCH_FINANCE_RECORDS_TIMEFRAME_OPTIONS } from '@features/financeRecords/constants/searchFilters'
+import { HAPPENED_AT_TIMEFRAME_OPTIONS } from '@features/financeRecords/constants/searchFilters'
+import { INPUT_TYPE } from '@shared/constants/form'
 
 import {
-  type FinanceRecordSearchFiltersFormState,
   HAPPENED_AT_TIMEFRAME,
+  type FinanceRecordSearchFiltersFormState,
 } from '@features/financeRecords/types/searchFilters'
-import { COMPARISON_OPERATOR } from '@shared/constants/search'
+
+import { getHappenedAtTimeframeStartDate } from '@features/financeRecords/utils/searchFilters'
 import { mapDate } from '@shared/utils/dateTime'
-import { startOfDay, startOfMonth, startOfYear, subDays } from 'date-fns'
 
 export type FinanceRecordHappenedAtFilterProps = Pick<
   FinanceRecordSearchFiltersFormState,
@@ -24,16 +30,8 @@ const emit = defineEmits<{
   (e: 'change', formState: Partial<FinanceRecordSearchFiltersFormState>): void
 }>()
 
-function handleTimeframeChange(timeframe: string) {
-  const now = Date.now()
-  let startDate: Date | undefined
-  if (timeframe === HAPPENED_AT_TIMEFRAME.PAST_30_DAYS) {
-    startDate = subDays(now, 30)
-  } else if (timeframe === HAPPENED_AT_TIMEFRAME.THIS_MONTH) {
-    startDate = startOfMonth(now)
-  } else if (timeframe === HAPPENED_AT_TIMEFRAME.THIS_YEAR) {
-    startDate = startOfYear(now)
-  }
+function handleTimeframeChange(timeframe: HAPPENED_AT_TIMEFRAME) {
+  const startDate = getHappenedAtTimeframeStartDate(timeframe)
 
   emit('change', {
     happenedAtOperator: COMPARISON_OPERATOR.GTE,
@@ -42,24 +40,56 @@ function handleTimeframeChange(timeframe: string) {
     happenedAtTimeframe: timeframe as HAPPENED_AT_TIMEFRAME,
   })
 }
+
+const isShowingRange = computed(() => !props.happenedAtOperator)
 </script>
 
 <template>
   <div>
     <FormSelect
-      :options="SEARCH_FINANCE_RECORDS_TIMEFRAME_OPTIONS"
+      :options="HAPPENED_AT_TIMEFRAME_OPTIONS"
       :label="FINANCES_COPY.PROPERTIES.HAPPENED_AT"
       name="timeframe"
       :model-value="props.happenedAtTimeframe"
       @update:model-value="handleTimeframeChange($event)"
     />
-    <FinanceRecordHappenedAtCustom
-      v-if="props.happenedAtTimeframe === 'custom'"
+
+    <ToggleableRangeInputs
+      v-if="props.happenedAtTimeframe === HAPPENED_AT_TIMEFRAME.CUSTOM"
       class="custom-inputs"
-      :happened-at1="props.happenedAt1"
-      :happened-at2="props.happenedAt2"
-      :happened-at-operator="props.happenedAtOperator"
-    />
+      :is-showing-range="isShowingRange"
+      :operator="props.happenedAtOperator"
+      @operator-change="emit('change', { happenedAtOperator: $event })"
+      operator-select-name="happenedAtOperator"
+    >
+      <template #input1>
+        <FormInput
+          :model-value="happenedAt1"
+          @update:model-value="emit('change', { happenedAt1: $event })"
+          name="happenedAt1"
+          :label="
+            isShowingRange
+              ? FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.HAPPENED_AFTER
+              : FINANCES_COPY.PROPERTIES.HAPPENED_AT
+          "
+          :required="isShowingRange"
+          :type="INPUT_TYPE.DATE"
+          with-hidden-label
+        />
+      </template>
+
+      <template #input2>
+        <FormInput
+          :model-value="happenedAt2"
+          @update:model-value="emit('change', { happenedAt2: $event })"
+          :label="FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.HAPPENED_BEFORE"
+          name="happenedAt2"
+          required
+          :type="INPUT_TYPE.DATE"
+          with-hidden-label
+        />
+      </template>
+    </ToggleableRangeInputs>
   </div>
 </template>
 

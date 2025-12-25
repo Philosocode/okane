@@ -8,18 +8,23 @@ import { COMPARISON_OPERATOR, SORT_DIRECTION } from '@shared/constants/search'
 
 import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 import {
+  HAPPENED_AT_TIMEFRAME,
   type FinanceRecordSearchFilters,
   type FinanceRecordSearchFiltersFormState,
 } from '@features/financeRecords/types/searchFilters'
 
 import * as utils from '@features/financeRecords/utils/mappers'
+import * as searchFilterUtils from '@features/financeRecords/utils/searchFilters'
 import { mapDate, mapDateOnlyTimestampToLocalizedDate } from '@shared/utils/dateTime'
 
 import { createTestTag } from '@tests/factories/tag'
+import { createTestFinanceUserTag } from '@tests/factories/financeUserTag'
 import {
   createTestFinanceRecord,
   createTestSaveFinanceRecordFormState,
 } from '@tests/factories/financeRecord'
+import type { FinanceUserTagMap } from '@features/financeUserTags/types/financeUserTag'
+import type { LocationQuery } from 'vue-router'
 
 describe('mapFinanceRecord', () => {
   test('saveFinanceRecordFormState', () => {
@@ -352,6 +357,7 @@ describe('mapFinanceRecordSearchFiltersFormState', () => {
       amountOperator: '',
       description: '',
       happenedAtOperator: '',
+      happenedAtTimeframe: HAPPENED_AT_TIMEFRAME.PAST_30_DAYS,
       sortDirection: SORT_DIRECTION.ASCENDING,
       sortField: 'amount',
       tags: [],
@@ -406,6 +412,240 @@ describe('mapFinanceRecordSearchFiltersFormState', () => {
       const filters = getFilters(formState)
       expect(filters.happenedAt1).toEqual(mapDateOnlyTimestampToLocalizedDate('2024-01-01'))
       expect(filters.happenedAt2).toEqual(mapDateOnlyTimestampToLocalizedDate('2024-02-02'))
+    })
+  })
+})
+
+describe('mapLocationQueryToFinanceRecordSearchFilter', () => {
+  function assertDefaultFilters(filters: FinanceRecordSearchFilters) {
+    expect(filters).toEqual({ ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS })
+  }
+
+  function getResult(
+    query: LocationQuery,
+    userTagMap: FinanceUserTagMap = { Expense: [], Revenue: [] },
+  ) {
+    return utils.mapLocationQueryToFinanceRecordSearchFilter(query, userTagMap)
+  }
+
+  test('returns default values when query is empty', () => {
+    assertDefaultFilters(getResult({}))
+  })
+
+  describe('amounts', () => {
+    test('processes minAmount only', () => {
+      const query = { minAmount: '10.5' }
+      expect(getResult(query)).toEqual({
+        ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+        amount1: 10.5,
+        amountOperator: COMPARISON_OPERATOR.GTE,
+      })
+    })
+
+    test('ignores invalid minAmount', () => {
+      const query = { minAmount: 'invalid' }
+      assertDefaultFilters(getResult(query))
+    })
+
+    test('processes maxAmount only', () => {
+      const query = { maxAmount: '100' }
+      expect(getResult(query)).toEqual({
+        ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+        amount2: 100,
+        amountOperator: COMPARISON_OPERATOR.LTE,
+      })
+    })
+
+    test('ignores invalid maxAmount', () => {
+      const query = { maxAmount: 'invalid' }
+      assertDefaultFilters(getResult(query))
+    })
+
+    test('processes both minAmount and maxAmount', () => {
+      const query = { minAmount: '10', maxAmount: '100' }
+      expect(getResult(query)).toEqual({
+        ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+        amount1: 10,
+        amount2: 100,
+        amountOperator: undefined,
+      })
+    })
+  })
+
+  describe('description', () => {
+    test('processes valid description', () => {
+      const query = { description: 'Cool description' }
+      expect(getResult(query)).toEqual({
+        ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+        description: 'Cool description',
+      })
+    })
+
+    test('ignores empty description', () => {
+      const query = { description: '' }
+      assertDefaultFilters(getResult(query))
+    })
+  })
+
+  describe('happened ats', () => {
+    test('parses non-custom timeframe', () => {
+      const startDate = new Date(123456)
+      vi.spyOn(searchFilterUtils, 'getHappenedAtTimeframeStartDate').mockReturnValue(startDate)
+
+      const query = {
+        happenedAtTimeframe: HAPPENED_AT_TIMEFRAME.PAST_30_DAYS,
+
+        // With non-custom timeframe, these query paramsshould be ignored.
+        happenedAfter: startDate.toISOString(),
+        happenedBefore: startDate.toISOString(),
+      }
+
+      expect(getResult(query)).toEqual({
+        ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+        happenedAt1: startDate,
+        happenedAtOperator: COMPARISON_OPERATOR.GTE,
+      })
+    })
+
+    test('ignores invalid happenedAfter', () => {
+      const query = { happenedAfter: 'invalid' }
+      assertDefaultFilters(getResult(query))
+    })
+
+    test('ignores invalid happenedBefore', () => {
+      const query = { happenedBefore: 'invalid' }
+      assertDefaultFilters(getResult(query))
+    })
+
+    test('parses only happenedAfter', () => {
+      const date = new Date(123456)
+      const query = { happenedAfter: date.toISOString() }
+
+      expect(getResult(query)).toEqual({
+        ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+        happenedAt1: date,
+        happenedAtOperator: COMPARISON_OPERATOR.GTE,
+        happenedAtTimeframe: HAPPENED_AT_TIMEFRAME.CUSTOM,
+      })
+    })
+
+    test('parses happenedAfter wth invalid happenedBefore', () => {
+      const date = new Date(123456)
+      const query = { happenedAfter: date.toISOString(), happenedBefore: 'invalid' }
+
+      expect(getResult(query)).toEqual({
+        ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+        happenedAt1: date,
+        happenedAtOperator: COMPARISON_OPERATOR.GTE,
+        happenedAtTimeframe: HAPPENED_AT_TIMEFRAME.CUSTOM,
+      })
+    })
+
+    test('parses only happenedBefore', () => {
+      const date = new Date(123456)
+      const query = { happenedBefore: date.toISOString() }
+
+      expect(getResult(query)).toEqual({
+        ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+        happenedAt2: date,
+        happenedAtOperator: COMPARISON_OPERATOR.LTE,
+        happenedAtTimeframe: HAPPENED_AT_TIMEFRAME.CUSTOM,
+      })
+    })
+
+    test('parses happenedBefore with invalid happenedAfter', () => {
+      const date = new Date(123456)
+      const query = { happenedAfter: 'invalid', happenedBefore: date.toISOString() }
+
+      expect(getResult(query)).toEqual({
+        ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+        happenedAt2: date,
+        happenedAtOperator: COMPARISON_OPERATOR.LTE,
+        happenedAtTimeframe: HAPPENED_AT_TIMEFRAME.CUSTOM,
+      })
+    })
+
+    test('parses happenedAfter and happenedBefore', () => {
+      const date = new Date(123456)
+      const query = { happenedAfter: date.toISOString(), happenedBefore: date.toISOString() }
+
+      expect(getResult(query)).toEqual({
+        ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+        happenedAt1: date,
+        happenedAt2: date,
+        happenedAtOperator: undefined,
+        happenedAtTimeframe: HAPPENED_AT_TIMEFRAME.CUSTOM,
+      })
+    })
+  })
+
+  describe('sortDirection', () => {
+    test('processes valid sortDirection', () => {
+      const query = { sortDirection: SORT_DIRECTION.ASCENDING }
+      expect(getResult(query)).toEqual({
+        ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+        sortDirection: SORT_DIRECTION.ASCENDING,
+      })
+    })
+
+    test('ignores invalid sortDirection', () => {
+      const query = { sortDirection: 'invalid' }
+      assertDefaultFilters(getResult(query))
+    })
+  })
+
+  describe('sortField', () => {
+    test('processes valid sortField', () => {
+      const query = { sortField: 'amount' }
+      expect(getResult(query)).toEqual({
+        ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+        sortField: 'amount',
+      })
+    })
+
+    test('ignores invalid sortField', () => {
+      const query = { sortField: 'invalid' }
+      assertDefaultFilters(getResult(query))
+    })
+  })
+
+  describe('tagIds', () => {
+    test('handles a non-array tag ID', () => {
+      const userTag = createTestFinanceUserTag()
+      const tagMap: FinanceUserTagMap = {
+        Expense: [userTag],
+        Revenue: [],
+      }
+      const query = { tagIds: '1' }
+      expect(getResult(query, tagMap)).toEqual({
+        ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+        tags: [userTag.tag],
+      })
+    })
+
+    test('dedupes tag IDs', () => {
+      const userTag1 = createTestFinanceUserTag({ tag: createTestTag({ id: 1 }) })
+      const userTag2 = createTestFinanceUserTag({ tag: createTestTag({ id: 2 }) })
+      const userTag3 = createTestFinanceUserTag({ tag: createTestTag({ id: 3 }) })
+      const tagMap: FinanceUserTagMap = {
+        Expense: [userTag1, userTag2],
+        Revenue: [userTag1, userTag2, userTag3],
+      }
+      const query = { tagIds: ['1', '2', '3'] }
+      expect(getResult(query, tagMap)).toEqual({
+        ...DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+        tags: [userTag1.tag, userTag2.tag, userTag3.tag],
+      })
+    })
+
+    test('ignores tag IDs not present in the map', () => {
+      const userTag = createTestFinanceUserTag({ tag: createTestTag({ id: 2 }) })
+      const userTagMap: FinanceUserTagMap = {
+        Expense: [userTag],
+        Revenue: [],
+      }
+      const query = { tagIds: ['1'] }
+      assertDefaultFilters(getResult(query, userTagMap))
     })
   })
 })

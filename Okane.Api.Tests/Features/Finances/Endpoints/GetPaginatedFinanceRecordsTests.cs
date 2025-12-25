@@ -157,6 +157,25 @@ public class GetPaginatedFinanceRecordsTests(PostgresApiFactory apiFactory) : Da
         problemDetails?.Errors.Should().BeEquivalentTo(expectedErrors);
     }
 
+    [Fact]
+    public async Task AllowsEqualMinAndMaxAmounts()
+    {
+        await _client.RegisterAndLogInTestUserAsync();
+        var response = await _client.GetAsync("/finance-records?minAmount=1&maxAmount=1");
+        response.Should().HaveStatusCode(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task AllowsEqualHappenedBeforeAndHappenedAfter()
+    {
+        var timestamp = "2025-01-01T07:00:00.000Z";
+        await _client.RegisterAndLogInTestUserAsync();
+        var response = await _client.GetAsync(
+            $"/finance-records?happenedBefore={timestamp}&happenedAfter={timestamp}"
+        );
+        response.Should().HaveStatusCode(HttpStatusCode.OK);
+    }
+
     private async Task AssertFinanceRecordsAreSortedAndFiltered(
         string queryString,
         Func<string, IList<FinanceRecord>> getInputFinanceRecords,

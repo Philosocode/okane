@@ -7,6 +7,7 @@ import FinanceRecordAmountFilter, {
 import { COMPARISON_OPERATOR } from '@shared/constants/search'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
 import { FINANCE_RECORD_MIN_AMOUNT } from '@features/financeRecords/constants/saveFinanceRecord'
+import { SHARED_COPY } from '@shared/constants/copy'
 
 const mountComponent = getMountComponent(FinanceRecordAmountFilter)
 const props: FinanceRecordAmountFilterProps = {
@@ -68,6 +69,20 @@ test('emits a "change" event when the amount2 input value is updated', () => {
   expect(wrapper.emitted('change')).toEqual([[{ amount2: '100' }]])
 })
 
+test('focuses the amount1 input when clicking "Use Single"', () => {
+  const wrapper = mountComponent({
+    attachTo: document.body,
+    props,
+  })
+  const amount1Input = wrapper.get('input[name="amount1"]')
+  expect(amount1Input.element).not.toBe(document.activeElement)
+
+  const toggleButton = wrapper.findByText('button', SHARED_COPY.SEARCH.USE_SINGLE)
+  toggleButton.trigger('click')
+
+  expect(amount1Input.element).toBe(document.activeElement)
+})
+
 describe('when an operator is provided', () => {
   const propsWithOperator = { ...props, amountOperator: COMPARISON_OPERATOR.GTE }
 
@@ -93,5 +108,19 @@ describe('when an operator is provided', () => {
     const wrapper = mountComponent({ props: propsWithOperator })
     const input = wrapper.find('input[name="amount2"]')
     expect(input.exists()).toBe(false)
+  })
+
+  test('focuses the amount1 input when clicking "Use Range"', () => {
+    const wrapper = mountComponent({
+      attachTo: document.body,
+      props: propsWithOperator,
+    })
+    const amount1Input = wrapper.get('input[name="amount1"]')
+    expect(amount1Input.element).not.toBe(document.activeElement)
+
+    const toggleButton = wrapper.findByText('button', SHARED_COPY.SEARCH.USE_RANGE)
+    toggleButton.trigger('click')
+
+    expect(amount1Input.element).toBe(document.activeElement)
   })
 })

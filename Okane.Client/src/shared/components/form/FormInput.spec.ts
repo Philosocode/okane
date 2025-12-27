@@ -1,3 +1,7 @@
+// External
+import { flushPromises } from '@vue/test-utils'
+import { defineComponent, useTemplateRef, watchEffect } from 'vue'
+
 // Internal
 import FormInput from '@shared/components/form/FormInput.vue'
 
@@ -86,6 +90,29 @@ test('typing in the input updates its value', () => {
   const text = 'hello world'
   input.setValue(text)
   expect(input.element.value).toBe(text)
+})
+
+test('exposes an inputRef', async () => {
+  const TestComponent = defineComponent({
+    components: { FormInput },
+    setup() {
+      const inputRef = useTemplateRef<InstanceType<typeof FormInput>>('inputRef')
+
+      watchEffect(() => {
+        inputRef.value?.inputRef?.focus()
+      })
+
+      return { inputRef }
+    },
+    template: `<FormInput name="input" label="Input" ref="inputRef" model-value="Hello" />`,
+  })
+
+  const wrapper = getMountComponent(TestComponent)({
+    attachTo: document.body,
+  })
+  const input = wrapper.get('input')
+  await flushPromises()
+  expect(input.element).toEqual(document.activeElement)
 })
 
 test('does not render error text', () => {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Internal
-import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
+import { FINANCES_SEARCH_FILTERS_COPY } from '@features/financeRecords/constants/searchFiltersCopy'
 
 import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 
@@ -15,7 +15,7 @@ const props = defineProps<AppliedAmountFilterProps>()
 <template>
   <li v-if="props.amountOperator && props.amount1">
     {{
-      FINANCES_COPY.SEARCH_FILTERS.APPLIED_AMOUNT_AND_OPERATOR({
+      FINANCES_SEARCH_FILTERS_COPY.APPLIED_AMOUNT_AND_OPERATOR({
         amount: props.amount1,
         operator: props.amountOperator,
       })
@@ -23,7 +23,7 @@ const props = defineProps<AppliedAmountFilterProps>()
   </li>
   <li v-else-if="props.amount1 && props.amount2">
     {{
-      FINANCES_COPY.SEARCH_FILTERS.APPLIED_AMOUNT_RANGE({
+      FINANCES_SEARCH_FILTERS_COPY.APPLIED_AMOUNT_RANGE({
         amount1: props.amount1,
         amount2: props.amount2,
       })

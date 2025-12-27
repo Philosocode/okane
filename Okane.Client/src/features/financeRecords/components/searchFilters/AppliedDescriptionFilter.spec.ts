@@ -3,7 +3,7 @@ import AppliedDescriptionFilter, {
   type AppliedDescriptionFilterProps,
 } from '@features/financeRecords/components/searchFilters/AppliedDescriptionFilter.vue'
 
-import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
+import { FINANCES_SEARCH_FILTERS_COPY } from '@features/financeRecords/constants/searchFiltersCopy'
 
 const mountComponent = getMountComponent(AppliedDescriptionFilter)
 
@@ -18,7 +18,7 @@ test('renders the description', () => {
   const wrapper = mountComponent({ props })
   const lis = wrapper.findAllByText(
     'li',
-    FINANCES_COPY.SEARCH_FILTERS.APPLIED_DESCRIPTION({ description: props.description }),
+    FINANCES_SEARCH_FILTERS_COPY.APPLIED_DESCRIPTION({ description: props.description }),
   )
   expect(lis).toHaveLength(1)
 })

@@ -4,7 +4,7 @@ import AppliedAmountFilter, {
 } from '@features/financeRecords/components/searchFilters/AppliedAmountFilter.vue'
 
 import { COMPARISON_OPERATOR } from '@shared/constants/search'
-import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
+import { FINANCES_SEARCH_FILTERS_COPY } from '@features/financeRecords/constants/searchFiltersCopy'
 
 const mountComponent = getMountComponent(AppliedAmountFilter)
 
@@ -18,7 +18,7 @@ test('renders the expected text for an amount and an operator', () => {
   const wrapper = mountComponent({ props })
   const lis = wrapper.findAllByText(
     'li',
-    FINANCES_COPY.SEARCH_FILTERS.APPLIED_AMOUNT_AND_OPERATOR({
+    FINANCES_SEARCH_FILTERS_COPY.APPLIED_AMOUNT_AND_OPERATOR({
       amount: props.amount1!,
       operator: props.amountOperator!,
     }),
@@ -31,7 +31,7 @@ test('renders the expected text for an amount range', () => {
   const wrapper = mountComponent({ props })
   const lis = wrapper.findAllByText(
     'li',
-    FINANCES_COPY.SEARCH_FILTERS.APPLIED_AMOUNT_RANGE({
+    FINANCES_SEARCH_FILTERS_COPY.APPLIED_AMOUNT_RANGE({
       amount1: props.amount1!,
       amount2: props.amount2!,
     }),

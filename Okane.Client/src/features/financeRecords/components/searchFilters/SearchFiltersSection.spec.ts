@@ -19,6 +19,7 @@ const mountComponent = getMountComponent(SearchFiltersSection, {
   },
   withPinia: true,
   withQueryClient: true,
+  withRouter: true,
 })
 
 beforeEach(() => {

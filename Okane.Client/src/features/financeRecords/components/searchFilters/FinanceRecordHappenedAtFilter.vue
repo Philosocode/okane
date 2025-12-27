@@ -9,13 +9,13 @@ import ToggleableRangeInputs from '@shared/components/form/ToggleableRangeInputs
 
 import { COMPARISON_OPERATOR } from '@shared/constants/search'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
-import { HAPPENED_AT_TIMEFRAME_OPTIONS } from '@features/financeRecords/constants/searchFilters'
-import { INPUT_TYPE } from '@shared/constants/form'
-
 import {
   HAPPENED_AT_TIMEFRAME,
-  type FinanceRecordSearchFiltersFormState,
-} from '@features/financeRecords/types/searchFilters'
+  HAPPENED_AT_TIMEFRAME_OPTIONS,
+} from '@features/financeRecords/constants/searchFilters'
+import { INPUT_TYPE } from '@shared/constants/form'
+
+import { type FinanceRecordSearchFiltersFormState } from '@features/financeRecords/types/searchFilters'
 
 import { getHappenedAtTimeframeStartDate } from '@features/financeRecords/utils/searchFilters'
 import { mapDate } from '@shared/utils/dateTime'

@@ -15,6 +15,7 @@ import { SHARED_COPY } from '@shared/constants/copy'
 import {
   DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
   FINANCE_RECORD_SORT_FIELD_OPTIONS,
+  HAPPENED_AT_TIMEFRAME,
   SEARCH_FINANCE_RECORDS_TYPE_OPTIONS,
 } from '@features/financeRecords/constants/searchFilters'
 import {
@@ -24,10 +25,7 @@ import {
 } from '@shared/constants/search'
 
 import { type FinanceUserTagMap } from '@features/financeUserTags/types/financeUserTag'
-import {
-  HAPPENED_AT_TIMEFRAME,
-  type FinanceRecordSearchFilters,
-} from '@features/financeRecords/types/searchFilters'
+import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 
 import { useFinanceRecordSearchStore } from '@features/financeRecords/composables/useFinanceRecordSearchStore'
 

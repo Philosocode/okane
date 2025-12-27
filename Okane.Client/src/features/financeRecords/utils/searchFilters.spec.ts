@@ -5,10 +5,9 @@ import { beforeEach, vi } from 'vitest'
 import {
   DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
   FINANCE_RECORD_SORT_FIELD_OPTIONS,
+  HAPPENED_AT_TIMEFRAME,
   HAPPENED_AT_TIMEFRAME_OPTIONS,
 } from '@features/financeRecords/constants/searchFilters'
-
-import { HAPPENED_AT_TIMEFRAME } from '@features/financeRecords/types/searchFilters'
 
 import * as utils from '@features/financeRecords/utils/searchFilters'
 

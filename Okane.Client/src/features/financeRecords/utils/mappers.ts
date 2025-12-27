@@ -8,6 +8,7 @@ import { COMPARISON_OPERATOR } from '@shared/constants/search'
 import {
   DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
   FINANCE_RECORD_SEARCH_QUERY_PARAM_NAMES,
+  HAPPENED_AT_TIMEFRAME,
 } from '@features/financeRecords/constants/searchFilters'
 
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
@@ -15,7 +16,6 @@ import { type FinanceUserTagMap } from '@features/financeUserTags/types/financeU
 import { type MinMax } from '@shared/types/search'
 import { type Tag } from '@shared/types/tag'
 import {
-  HAPPENED_AT_TIMEFRAME,
   type FinanceRecordSearchFilters,
   type FinanceRecordSearchFiltersFormState,
 } from '@features/financeRecords/types/searchFilters'

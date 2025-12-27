@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // External
-import { computed } from 'vue'
+import { computed, useTemplateRef } from 'vue'
 
 // Internal
 import FormInput from '@shared/components/form/FormInput.vue'
@@ -17,15 +17,21 @@ export type FinanceRecordAmountFilterProps = Pick<
   'amount1' | 'amountOperator' | 'amount2'
 >
 const props = defineProps<FinanceRecordAmountFilterProps>()
+const amount1Ref = useTemplateRef<InstanceType<typeof FormInput>>('amount1Ref')
 const isShowingRange = computed(() => !props.amountOperator)
 
 const emit = defineEmits<{
   (e: 'change', formState: Partial<FinanceRecordSearchFiltersFormState>): void
 }>()
+
+function handleFocusInput1() {
+  amount1Ref.value?.inputRef?.focus()
+}
 </script>
 
 <template>
   <ToggleableRangeInputs
+    :focus-input1="handleFocusInput1"
     :is-showing-range="isShowingRange"
     :label="FINANCES_COPY.PROPERTIES.AMOUNT"
     :operator="props.amountOperator"
@@ -43,6 +49,7 @@ const emit = defineEmits<{
             : FINANCES_COPY.PROPERTIES.AMOUNT
         "
         :min="0"
+        ref="amount1Ref"
         :required="isShowingRange"
         :step="FINANCE_RECORD_MIN_AMOUNT"
         :type="INPUT_TYPE.NUMBER"

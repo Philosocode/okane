@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // External
-import { computed } from 'vue'
+import { computed, useTemplateRef } from 'vue'
 
 // Internal
 import FormInput from '@shared/components/form/FormInput.vue'
@@ -29,6 +29,8 @@ const props = defineProps<FinanceRecordHappenedAtFilterProps>()
 const emit = defineEmits<{
   (e: 'change', formState: Partial<FinanceRecordSearchFiltersFormState>): void
 }>()
+const happenedAt1Ref = useTemplateRef<InstanceType<typeof FormInput>>('happenedAt1Ref')
+const isShowingRange = computed(() => !props.happenedAtOperator)
 
 function handleTimeframeChange(timeframe: HAPPENED_AT_TIMEFRAME) {
   const startDate = getHappenedAtTimeframeStartDate(timeframe)
@@ -41,7 +43,9 @@ function handleTimeframeChange(timeframe: HAPPENED_AT_TIMEFRAME) {
   })
 }
 
-const isShowingRange = computed(() => !props.happenedAtOperator)
+function handleFocusInput1() {
+  happenedAt1Ref.value?.inputRef?.focus()
+}
 </script>
 
 <template>
@@ -57,6 +61,7 @@ const isShowingRange = computed(() => !props.happenedAtOperator)
     <ToggleableRangeInputs
       v-if="props.happenedAtTimeframe === HAPPENED_AT_TIMEFRAME.CUSTOM"
       class="custom-inputs"
+      :focus-input1="handleFocusInput1"
       :is-showing-range="isShowingRange"
       :operator="props.happenedAtOperator"
       @operator-change="emit('change', { happenedAtOperator: $event })"
@@ -67,6 +72,7 @@ const isShowingRange = computed(() => !props.happenedAtOperator)
           :model-value="happenedAt1"
           @update:model-value="emit('change', { happenedAt1: $event })"
           name="happenedAt1"
+          ref="happenedAt1Ref"
           :label="
             isShowingRange
               ? FINANCES_COPY.SEARCH_FINANCE_RECORDS_MODAL.HAPPENED_AFTER

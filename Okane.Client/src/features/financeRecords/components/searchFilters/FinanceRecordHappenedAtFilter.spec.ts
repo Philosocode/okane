@@ -6,10 +6,11 @@ import FinanceRecordHappenedAtFilter, {
 
 import { COMPARISON_OPERATOR } from '@shared/constants/search'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
+import { HAPPENED_AT_TIMEFRAME } from '@features/financeRecords/constants/searchFilters'
 import { INPUT_TYPE } from '@shared/constants/form'
+import { SHARED_COPY } from '@shared/constants/copy'
 
 import { mapDate } from '@shared/utils/dateTime'
-import { HAPPENED_AT_TIMEFRAME } from '@features/financeRecords/constants/searchFilters'
 
 const mountComponent = getMountComponent(FinanceRecordHappenedAtFilter)
 
@@ -111,6 +112,20 @@ describe(`when timeframe is ${HAPPENED_AT_TIMEFRAME.CUSTOM}`, () => {
     expect(wrapper.emitted('change')).toEqual([[{ happenedAt2: timestamp }]])
   })
 
+  test('focuses the happenedAt1 input when clicking "Use Single"', () => {
+    const wrapper = mountComponent({
+      attachTo: document.body,
+      props,
+    })
+    const happenedAt1Input = wrapper.get('input[name="happenedAt1"]')
+    expect(happenedAt1Input.element).not.toBe(document.activeElement)
+
+    const toggleButton = wrapper.findByText('button', SHARED_COPY.SEARCH.USE_SINGLE)
+    toggleButton.trigger('click')
+
+    expect(happenedAt1Input.element).toBe(document.activeElement)
+  })
+
   describe('when an operator is provided', () => {
     const propsWithOperator = { ...props, happenedAtOperator: COMPARISON_OPERATOR.GTE }
 
@@ -136,6 +151,20 @@ describe(`when timeframe is ${HAPPENED_AT_TIMEFRAME.CUSTOM}`, () => {
       const wrapper = mountComponent({ props: propsWithOperator })
       const input = wrapper.find('input[name="happenedAt2"]')
       expect(input.exists()).toBe(false)
+    })
+
+    test('focuses the happenedAt1 input when clicking "Use Range"', () => {
+      const wrapper = mountComponent({
+        attachTo: document.body,
+        props: propsWithOperator,
+      })
+      const happenedAt1Input = wrapper.get('input[name="happenedAt1"]')
+      expect(happenedAt1Input.element).not.toBe(document.activeElement)
+
+      const toggleButton = wrapper.findByText('button', SHARED_COPY.SEARCH.USE_RANGE)
+      toggleButton.trigger('click')
+
+      expect(happenedAt1Input.element).toBe(document.activeElement)
     })
   })
 })

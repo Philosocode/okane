@@ -25,10 +25,11 @@ interface Props {
 const emit = defineEmits(['update:modelValue'])
 
 const controlId = getUniqueFormControlId()
-const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
 const props = defineProps<Props>()
-
 const errorLabelId = `${controlId}-error`
+
+const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
+defineExpose({ inputRef })
 
 onMounted(() => {
   if (props.focusOnMount) inputRef.value?.focus()

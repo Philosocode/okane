@@ -8,6 +8,7 @@ import { SHARED_COPY } from '@shared/constants/copy'
 import { commonAsserts } from '@tests/utils/commonAsserts'
 
 const props = {
+  focusInput1: vi.fn(),
   isShowingRange: false,
   label: 'Test Label',
   operator: COMPARISON_OPERATOR.GTE,
@@ -58,11 +59,12 @@ test('does not render the second input when isShowingRange is false', () => {
   expect(secondInput.exists()).toBe(false)
 })
 
-test('clicking the toggle button switches to multiple inputs', async () => {
+test('clicking the toggle button switches to multiple inputs and focuses the first input', async () => {
   const wrapper = mountComponent({ props })
   const toggleButton = wrapper.findByText('button', SHARED_COPY.SEARCH.USE_RANGE)
   await toggleButton.trigger('click')
   expect(wrapper.emitted('operatorChange')?.[0][0]).toBe('')
+  expect(props.focusInput1).toHaveBeenCalledOnce()
 })
 
 describe('when showing a range', () => {
@@ -87,10 +89,11 @@ describe('when showing a range', () => {
     expect(formSelect.exists()).toBe(false)
   })
 
-  test('clicking the toggle button switches to a single input', async () => {
+  test('clicking the toggle button switches to a single input and focuses the first input', async () => {
     const wrapper = mountComponent({ props: propsWithRange })
     const toggleButton = wrapper.findByText('button', SHARED_COPY.SEARCH.USE_SINGLE)
     await toggleButton.trigger('click')
     expect(wrapper.emitted('operatorChange')?.[0][0]).toBe(COMPARISON_OPERATOR.GTE)
+    expect(props.focusInput1).toHaveBeenCalledOnce()
   })
 })

@@ -10,9 +10,9 @@ import { ALL_COMPARISON_OPERATOR_OPTIONS, COMPARISON_OPERATOR } from '@shared/co
 import { isComparisonOperator } from '@shared/utils/search'
 
 type Props = {
+  focusInput1: () => void
   isShowingRange: boolean
   label?: string
-
   operator?: string
   operatorSelectName: string
 }
@@ -46,6 +46,8 @@ function toggleRange() {
   } else {
     useRange()
   }
+
+  props.focusInput1()
 }
 </script>
 

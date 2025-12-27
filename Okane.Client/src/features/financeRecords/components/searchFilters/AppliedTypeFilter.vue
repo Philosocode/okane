@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Internal
-import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
+import { FINANCES_SEARCH_FILTERS_COPY } from '@features/financeRecords/constants/searchFiltersCopy'
 
 import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 
@@ -11,6 +11,6 @@ const props = defineProps<AppliedTypeFilterProps>()
 
 <template>
   <li v-if="props.type">
-    {{ FINANCES_COPY.SEARCH_FILTERS.APPLIED_TYPE({ type: props.type }) }}
+    {{ FINANCES_SEARCH_FILTERS_COPY.APPLIED_TYPE({ type: props.type }) }}
   </li>
 </template>

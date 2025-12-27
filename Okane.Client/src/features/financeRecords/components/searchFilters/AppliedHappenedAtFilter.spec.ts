@@ -4,7 +4,7 @@ import AppliedHappenedAtFilter, {
 } from '@features/financeRecords/components/searchFilters/AppliedHappenedAtFilter.vue'
 
 import { COMPARISON_OPERATOR } from '@shared/constants/search'
-import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
+import { FINANCES_SEARCH_FILTERS_COPY } from '@features/financeRecords/constants/searchFiltersCopy'
 
 const mountComponent = getMountComponent(AppliedHappenedAtFilter)
 
@@ -21,7 +21,7 @@ test('renders the expected text for a date and an operator', () => {
   const wrapper = mountComponent({ props })
   const lis = wrapper.findAllByText(
     'li',
-    FINANCES_COPY.SEARCH_FILTERS.APPLIED_HAPPENED_AT_AND_OPERATOR({
+    FINANCES_SEARCH_FILTERS_COPY.APPLIED_HAPPENED_AT_AND_OPERATOR({
       happenedAt: happenedAt1,
       operator: happenedAtOperator,
     }),
@@ -38,7 +38,7 @@ test('renders the expected text for an amount range', () => {
   const wrapper = mountComponent({ props })
   const lis = wrapper.findAllByText(
     'li',
-    FINANCES_COPY.SEARCH_FILTERS.APPLIED_HAPPENED_AT_RANGE({
+    FINANCES_SEARCH_FILTERS_COPY.APPLIED_HAPPENED_AT_RANGE({
       happenedAt1: date,
       happenedAt2: date,
     }),

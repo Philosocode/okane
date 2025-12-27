@@ -3,7 +3,7 @@ import AppliedTagsFilter, {
   type AppliedTagsFilterProps,
 } from '@features/financeRecords/components/searchFilters/AppliedTagsFilter.vue'
 
-import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
+import { FINANCES_SEARCH_FILTERS_COPY } from '@features/financeRecords/constants/searchFiltersCopy'
 
 import { createTestTag } from '@tests/factories/tag'
 
@@ -19,6 +19,6 @@ test('renders the tags', () => {
   const tags = [createTestTag()]
   const props: AppliedTagsFilterProps = { tags }
   const wrapper = mountComponent({ props })
-  const lis = wrapper.findAllByText('li', FINANCES_COPY.SEARCH_FILTERS.APPLIED_TAGS({ tags }))
+  const lis = wrapper.findAllByText('li', FINANCES_SEARCH_FILTERS_COPY.APPLIED_TAGS({ tags }))
   expect(lis).toHaveLength(1)
 })

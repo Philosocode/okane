@@ -4,7 +4,7 @@ import AppliedTypeFilter, {
 } from '@features/financeRecords/components/searchFilters/AppliedTypeFilter.vue'
 
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
-import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
+import { FINANCES_SEARCH_FILTERS_COPY } from '@features/financeRecords/constants/searchFiltersCopy'
 
 const mountComponent = getMountComponent(AppliedTypeFilter)
 
@@ -20,7 +20,7 @@ test('renders the type', () => {
   const wrapper = mountComponent({ props })
   const lis = wrapper.findAllByText(
     'li',
-    FINANCES_COPY.SEARCH_FILTERS.APPLIED_TYPE({
+    FINANCES_SEARCH_FILTERS_COPY.APPLIED_TYPE({
       type,
     }),
   )

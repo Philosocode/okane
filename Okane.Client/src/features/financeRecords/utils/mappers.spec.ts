@@ -2,13 +2,15 @@
 import { endOfDay } from 'date-fns'
 
 // Internal
-import { DEFAULT_FINANCE_RECORD_SEARCH_FILTERS } from '@features/financeRecords/constants/searchFilters'
+import {
+  DEFAULT_FINANCE_RECORD_SEARCH_FILTERS,
+  HAPPENED_AT_TIMEFRAME,
+} from '@features/financeRecords/constants/searchFilters'
 import { FINANCE_RECORD_TYPE } from '@features/financeRecords/constants/saveFinanceRecord'
 import { COMPARISON_OPERATOR, SORT_DIRECTION } from '@shared/constants/search'
 
 import { type SaveFinanceRecordFormState } from '@features/financeRecords/types/saveFinanceRecord'
 import {
-  HAPPENED_AT_TIMEFRAME,
   type FinanceRecordSearchFilters,
   type FinanceRecordSearchFiltersFormState,
 } from '@features/financeRecords/types/searchFilters'

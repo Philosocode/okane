@@ -4,12 +4,12 @@ import { startOfMonth, startOfYear, subDays } from 'date-fns'
 // Internal
 import {
   FINANCE_RECORD_SORT_FIELD_OPTIONS,
+  HAPPENED_AT_TIMEFRAME,
   HAPPENED_AT_TIMEFRAME_OPTIONS,
 } from '@features/financeRecords/constants/searchFilters'
 
 import { type FinanceRecord } from '@features/financeRecords/types/financeRecord'
 import {
-  HAPPENED_AT_TIMEFRAME,
   type FinanceRecordSearchCursor,
   type FinanceRecordSearchFilters,
 } from '@features/financeRecords/types/searchFilters'

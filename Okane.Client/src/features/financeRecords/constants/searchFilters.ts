@@ -8,12 +8,17 @@ import { SHARED_COPY } from '@shared/constants/copy'
 import { COMPARISON_OPERATOR, SORT_DIRECTION } from '@shared/constants/search'
 
 import { type SelectOption } from '@shared/components/form/FormSelect.vue'
-import {
-  HAPPENED_AT_TIMEFRAME,
-  type FinanceRecordSearchFilters,
-} from '@features/financeRecords/types/searchFilters'
+import { type FinanceRecordSearchFilters } from '@features/financeRecords/types/searchFilters'
 
 import { capitalize } from '@shared/utils/string'
+
+// This enum needs to be here and not in constants to prevent an issue due to circular imports.
+export enum HAPPENED_AT_TIMEFRAME {
+  CUSTOM = 'custom',
+  PAST_30_DAYS = 'past30Days',
+  THIS_MONTH = 'thisMonth',
+  THIS_YEAR = 'thisYear',
+}
 
 export const DEFAULT_FINANCE_RECORD_SEARCH_FILTERS: FinanceRecordSearchFilters = {
   description: '',

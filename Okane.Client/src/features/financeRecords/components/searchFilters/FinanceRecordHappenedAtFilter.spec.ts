@@ -6,10 +6,10 @@ import FinanceRecordHappenedAtFilter, {
 
 import { COMPARISON_OPERATOR } from '@shared/constants/search'
 import { FINANCES_COPY } from '@features/financeRecords/constants/copy'
-import { HAPPENED_AT_TIMEFRAME } from '@features/financeRecords/types/searchFilters'
 import { INPUT_TYPE } from '@shared/constants/form'
 
 import { mapDate } from '@shared/utils/dateTime'
+import { HAPPENED_AT_TIMEFRAME } from '@features/financeRecords/constants/searchFilters'
 
 const mountComponent = getMountComponent(FinanceRecordHappenedAtFilter)
 

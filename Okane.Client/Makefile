@@ -43,5 +43,10 @@ test:
 
 ## build
 .PHONY: build
-build:
+build: dist
+
+# Excluding node_modules and dist, don't rebuild unless a source code file changes.
+SOURCE_FILES := $(shell find . \( -name node_modules -o -name dist \) -prune -o -type f \( -name "*.ts" -o -name "*.js" -o -name "*.json" -o -name "*.vue" -o -name "*.scss" -o -name "*.html" \) -print)
+
+dist: $(SOURCE_FILES)
 	pnpm build

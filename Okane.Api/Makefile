@@ -41,7 +41,7 @@ test:
 publish/linux-x64:
 	dotnet publish --configuration Release --runtime linux-x64 --verbosity quiet
 
-## publish/linux-arm: publish for Linux ARM 32-bit.
+## publish/linux-arm: publish for Linux ARM 64-bit.
 .PHONY: publish/linux-arm
 publish/linux-arm:
-	dotnet publish --configuration Release --runtime linux-arm --self-contained true --verbosity quiet
+	dotnet publish --configuration Release --runtime linux-arm64 --self-contained true --verbosity quiet

@@ -95,7 +95,7 @@ pi/deploy:
 	@echo 'Building the frontend...'
 	make client/build
 	@echo 'Transferring files...'
-	rsync -qrP ${API_DIR}/bin/Release/net8.0/linux-arm/Publish ${PI_SSH_TARGET}:~
+	rsync -qrP ${API_DIR}/bin/Release/net8.0/linux-arm64/Publish ${PI_SSH_TARGET}:~
 	rsync -qrP ${CLIENT_DIR}/dist ${PI_SSH_TARGET}:~
 	ssh -t ${PI_SSH_TARGET} '\
 		sudo rm -rf /var/www/okane/Api \

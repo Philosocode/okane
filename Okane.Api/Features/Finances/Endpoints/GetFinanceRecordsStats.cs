@@ -152,7 +152,7 @@ public class GetFinanceRecordsStats : IEndpoint
         }
 
         // Idea: start from the earliest date and increment by the interval until we've reached
-        // the latest date.
+        // the end.
         var currDate = allDateStats[0].Date;
         var stats = new FinanceRecordsStats
         {
@@ -162,7 +162,7 @@ public class GetFinanceRecordsStats : IEndpoint
         };
 
         var i = 0;
-        while (i < allDateStats.Count && currDate <= allDateStats[^1].Date)
+        while (i < allDateStats.Count)
         {
             // The current data is for a different date. Increment by the time interval and try again.
             var dateStats = allDateStats[i];

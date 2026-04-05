@@ -49,7 +49,7 @@ public class PostFinanceRecord : IEndpoint
         {
             Amount = request.Amount,
             Description = request.Description,
-            HappenedAt = request.HappenedAt,
+            HappenedAt = DateTime.SpecifyKind(request.HappenedAt, DateTimeKind.Local).ToUniversalTime(),
             Tags = [],
             Type = request.Type,
             UserId = userId

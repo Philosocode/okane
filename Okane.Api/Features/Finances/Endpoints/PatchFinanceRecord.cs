@@ -70,7 +70,10 @@ public class PatchFinanceRecord : IEndpoint
 
         if (request.HappenedAt.HasValue)
         {
-            financeRecord.HappenedAt = request.HappenedAt.Value;
+            financeRecord.HappenedAt = DateTime.SpecifyKind(
+                request.HappenedAt.Value,
+                DateTimeKind.Local
+            ).ToUniversalTime();
         }
 
         var tagsAreValid = true;

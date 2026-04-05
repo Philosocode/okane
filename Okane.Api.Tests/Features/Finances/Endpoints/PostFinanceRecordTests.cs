@@ -45,7 +45,7 @@ public class PostFinanceRecordTests(PostgresApiFactory apiFactory) : DatabaseTes
         {
             Amount = s_validRequest.Amount,
             Description = s_validRequest.Description,
-            HappenedAt = s_validRequest.HappenedAt,
+            HappenedAt = DateTime.SpecifyKind(s_validRequest.HappenedAt, DateTimeKind.Local).ToUniversalTime(),
             Tags = [],
             Type = s_validRequest.Type,
             Id = createdRecord.Id

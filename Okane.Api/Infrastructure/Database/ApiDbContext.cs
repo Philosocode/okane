@@ -41,9 +41,9 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options) : IdentityDbCo
 
     // date_trunc
     private static readonly MethodInfo s_dateTruncMethod = typeof(ApiDbContext)
-        .GetRuntimeMethod(nameof(DateTrunc), new[] { typeof(string), typeof(DateTime) })!;
+        .GetRuntimeMethod(nameof(DateTrunc), new[] { typeof(string), typeof(DateTimeOffset) })!;
 
-    public static DateTime DateTrunc(string interval, DateTime dateTime)
+    public static DateTime DateTrunc(string interval, DateTimeOffset dateTime)
     {
         throw new NotSupportedException();
     }

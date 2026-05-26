@@ -47,8 +47,8 @@ public class EmailServiceTests
                     m =>
                         m.To.Equals(expectedEmail.To) &&
                         m.From.Equals(expectedEmail.From) &&
-                        m.Subject.Equals(expectedEmail.Subject)
-                        && m.Body.ToString().Equals(expectedEmail.Body.ToString())
+                        m.Subject!.Equals(expectedEmail.Subject)
+                        && m.Body!.ToString().Equals(expectedEmail.Body.ToString())
                 ),
                 cancellationToken);
             await generator.SmtpClient.Received(1).DisconnectAsync(true, cancellationToken);

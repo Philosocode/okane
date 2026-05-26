@@ -46,7 +46,7 @@ public class FinanceRecord : IOwnedEntity
 
     public NpgsqlTsVector SearchVector { get; set; } = null!;
 
-    public required DateTime HappenedAt { get; set; }
+    public required DateTimeOffset HappenedAt { get; set; }
 
     public required FinanceRecordType Type { get; set; }
 
